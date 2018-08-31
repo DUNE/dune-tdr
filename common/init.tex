@@ -1,0 +1,98 @@
+% This should be \input first thing after \begin{document}
+
+
+\pagestyle{titlepage}
+
+\begin{center}
+   {\Huge  \thedocsubtitle}  %Yes, I know title and subtitle are reversed!
+
+  \vspace{5mm}
+
+  {\Huge  \tdrtitle}  
+
+  \vspace{10mm}
+
+  {\LARGE
+    \textbf{Volume \thevolumenumber{}:}
+
+    \vspace{5mm}
+
+    \thedoctitle}
+
+  \vspace{15mm}
+
+\titleextra
+
+  \vspace{10mm}
+  \today
+    \vspace{15mm}
+    
+    {\large{The DUNE Collaboration}}
+\end{center}
+
+\cleardoublepage
+
+
+%\includepdf[pages={-}]{tdr-authors.pdf}                        <--- add in later
+%\input{dune-institutions} Anne removing for collab review 21 May
+
+\cleardoublepage
+
+
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\thepage}{\roman{page}}
+\setcounter{page}{0}
+
+\pagestyle{plain} 
+
+%\clearpage
+
+\textsf{\tableofcontents}
+%\clearpage
+
+
+\textsf{\listoffigures}
+%\clearpage
+
+\textsf{\listoftables}
+%\clearpage
+
+%For acronym list to appear just after TOC, TOF, TOT
+%\printnomenclature
+%\clearpage
+
+\iffinal\else
+\textsf{\listoftodos}
+\clearpage
+\fi
+
+\renewcommand{\thepage}{\arabic{page}}
+\setcounter{page}{1}
+
+\pagestyle{fancy}
+
+% Set how header/footers look
+\renewcommand{\chaptermark}[1]{%
+\markboth{Chapter \thechapter:\ #1}{}}
+\fancyhead{}
+\fancyhead[RO,LE]{\textsf{\footnotesize \thechapter--\thepage}}
+\fancyhead[LO,RE]{\textsf{\footnotesize \leftmark}}
+
+\fancyfoot{}
+\fancyfoot[RO]{\textsf{\footnotesize The DUNE Technical Design Report}}
+\fancyfoot[LO]{\textsf{\footnotesize \thedoctitle}}
+\fancypagestyle{plain}{}
+
+\renewcommand{\headrule}{\vspace{-4mm}\color[gray]{0.5}{\rule{\headwidth}{0.5pt}}}
+
+% Not all main documents have any citations.
+% When not built in "final" mode, add in one citation just to let the
+% document build.
+% If, after substantial editing a main document still lacks any
+% citations then it should have its whole bibliography removed.
+%\ifdefined\isfinal\nocite{}\else\nocite{CD0}\fi
+\nocite{CD0}
+
+
+% see also preamble.tex
+%\input{common/acronyms}
