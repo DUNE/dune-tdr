@@ -99,13 +99,13 @@ def build(bld):
 
     # explicitly order them here to get a volnum for the per-chapter generation
     voltexs = [
-        "volume-execsum.tex",
-        "volume-physics.tex",
-        "volume-spfdm.tex",
-        "volume-dpfdm.tex",
-        "volume-nd.tex",
-        "volume-sandc.tex",
-        "volume-techcoord.tex"
+        "vol-exec.tex",
+        "vol-physics.tex",
+        "vol-sp.tex",
+        "vol-dp.tex",
+        "vol-nd.tex",
+        "vol-swc.tex",
+        "vol-tc.tex"
     ]
     for volind, voltex in enumerate(voltexs):
         volname = voltex.replace('.tex','')
@@ -122,7 +122,7 @@ def build(bld):
         
         # Tasks to build per chapter
         if bld.options.chapters:
-            for chtex in voldir.ant_glob("chapter-*.tex"):
+            for chtex in voldir.ant_glob("ch-*.tex"):
                 chname = os.path.basename(chtex.name).replace('.tex','')
                 chmaintex = bld.path.find_or_declare("%s-%s.tex" % (volname, chname))
 
