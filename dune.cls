@@ -8,6 +8,13 @@
 
 \RequirePackage[letterpaper,margin=2cm]{geometry}
 
+
+
+\newif\iffinal
+%% Switch between draft or final:
+\finalfalse
+%\finaltrue
+
 % Required values and their setters
 \newcommand\thedoctitle{DRAFT Technical Design Report}
 \newcommand\thedocsubtitle{Deep Underground Neutrino Experiment (DUNE) and Long-Baseline Neutrino Facility (LBNF)}
@@ -301,13 +308,6 @@
 % Use to import pdf files (Anne 4/28/15)
 \RequirePackage{pdfpages}
 
-% this seems overly tortured
-\newif\iffinal
-
-%\finalfalse
-\DeclareOption{final}{
-  \finaltrue
-}
 \ProcessOptions\relax
 
 \iffinal
