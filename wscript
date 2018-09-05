@@ -1,12 +1,34 @@
 #!/usr/bin/env waf
 '''
-This is a Waf build script.  It will:
+Usage:
 
- - build volume PDFs
+Configure the project giving it an optional "installation" directory:
 
- - generate and build chapter PDFs
+  ./waf configure --prefix=/path/to/install
 
- - make minimal tarballs for volume source suitable for submission to arXiv
+Build the main products (volume PDFs).  You can find them under build/.
+
+  ./waf
+
+Install the main products to the prefix.
+
+  ./waf install
+
+Generate and build per-chapter PDFs.  They are under build/.  You can also "install" them.
+
+  ./waf --chapters
+
+Generate volume tar files suitable for submission to the arXiv.  You can also "install" them.
+
+  ./waf --arxiv
+
+Remove build products from build/ but keep configuration.
+
+  ./waf clean
+
+Also remove configuration.  You will need to start over to do more.
+
+  ./waf distclean
 
 '''
 
@@ -119,6 +141,7 @@ def build(bld):
         bld(features='tex', prompt = prompt_level,
             source = voltex,
             target = volpdf)
+        bld.install_files('${PREFIX}', [volpdf])
         
         # Tasks to build per chapter
         if bld.options.chapters:
@@ -146,3 +169,4 @@ def build(bld):
                 prefix = '%s-%s-%s/' % (APPNAME, volname, VERSION),
                 extra = voltex + ' utphys.bst dune.cls graphics/dunelogo_colorhoriz.jpg',
                 rule=tarball)
+            bld.install_files('${PREFIX}', [voltar])
