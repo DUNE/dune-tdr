@@ -1,2 +1,369 @@
 \chapter{Data Acquisition}
 \label{ch:sp-daq}
+
+\fixme{\textbf{Authors:}
+
+  See \url{https://wiki.dunescience.org/wiki/Technical_Design_Report}
+  for general guidance. 
+
+  While this chapter is still in outline, \textbf{check that it hits all
+  the required points} some of which are:
+
+  We are to describe a \textbf{baseline} or \textbf{process to
+  decide a baseline}.
+
+  \textbf{BE SUCCINCT} $TDR \approx IDR + 10\%$, goal is 50 pages for
+  this chapter. 
+
+  You are encouraged to produce \textbf{tech notes} with any
+  supporting verbosity which may be referenced.
+
+  State requirements and demonstrate how they are met, use
+  standardized requirements table.
+
+  Emphasize safety and professionalism (projectisms: cost, schedule,
+  risks, interfaces).}
+
+\metainfo{Some sections of this chapter must be written generically
+  and without any reference to module-specific terms. They are marked
+  with an orange ``fixme'' box. 
+  Yellow info boxes like this one provide guidance for the content. 
+  This guidance is not comprehensive so authors may provide additional
+  information but retaining \textbf{conciseness} and \textbf{not
+    repeating} info in other section is required.}
+
+\section{Introduction}
+\label{sec:fd-daq:introduction}
+\fixme{module-generic}
+
+\metainfo{A brief introduction to this chapter describing what will be
+  described.  This is \textbf{not} an overview of the DAQ itself.
+  Keep it brief. Do \textbf{not} write a conceptual overview here,
+  that is below, reference it. 
+  Do \textbf{not} use module-specific language but \textbf{do}
+  describe how commonalities are described in text shared by both
+  SP/DP volumes and specialized sections appear only in their
+  respective volume. 
+  \textbf{Do} describe the lexicographical convention used to demark
+  shared sections (this needs coordination with other chapters in the
+  same boat).}
+
+\section{DAQ Requirements and Parameters}
+\label{sec:fd-daq:req-and-params}
+\fixme{module-generic}
+
+\metainfo{Sentence explaining requirements are generic to a module and parameters are specific to a module}
+
+\subsection{Requirements}
+\label{sec:fd-daq:requirements}
+\fixme{module-generic}
+
+\metainfo{Include rows of top-level requirements table (``Schmitz''
+  table) here. 
+  Augment that with any additional requirements of our determining. 
+  Eg: accept data from detector electronics, perform reduction to
+  satisfy output rate limit, allow for cross-module triggering,
+  collect beam activity with XX\%, SNB requirements, noise level,
+  total thermal and space envelop, etc....}
+
+\subsection{Parameters}
+\label{sec:sp-daq:requirements}
+\fixme{single-phase module}
+
+\metainfo{Include a table which lists all important parameters driving
+  the design.  Sampling rate and resolution, channel count}
+
+\section{DAQ Design}
+\label{sec:fd-daq:design}
+\fixme{module-generic}
+
+\metainfo{One sentence to introduce the section. 
+  Listing the subsections and describing which are generic and which
+  are X-phase specific.}
+
+\subsection{Overview}
+\label{sec:fd-daq:design-overview}
+\fixme{module-generic}
+
+\begin{dunefigure}{fig:daq-conceptual-overview}{DAQ Conceptual
+    Subsystem Overview. 
+    Concrete hardware or software systems may span multiple subsystems
+    or cover only portions of a subsystem. High level walk through of
+    and referencing the remaining subsections in this section. }
+  \includegraphics[width=0.8\textwidth]{daq-toplevel-conceptual.pdf}
+\end{dunefigure}
+
+\metainfo{This is the \textbf{only} place to describe the conceptual
+  overview. 
+  Do \textbf{not} repeat this info in sections below. 
+  \textbf{Do} use \textbf{module-neutral} terms.
+  \textbf{Do} describe major interface between each subsystem (the edges between the circles in Fig~\ref{fig:daq-conceptual-overview}).
+  \textbf{Do} mention that concrete systems span portions of the
+  conceptual subsystems and how the following subsections are defined
+  along these concrete deliverable lines.}
+
+\metainfo{Include components summary and table here.}
+
+\metainfo{For the remaining sections, place information about
+  validations into section~\ref{sec:sp-daq:design-validation}.}
+  
+
+\subsection{Message Passing System}
+\label{sec:fd-daq:design-messages}
+\fixme{module-generic}
+
+\metainfo{Describe how all the nodes in the DAQ ``bow tie'' graph talk
+  to each other by message passing.
+  Do \textbf{not} describe detailed functionality of the nodes
+  themselves, that comes next.  
+  Do describe the scope in terms of what parts described below
+  participate in the message passing. Include table of running
+  patterns (nominal self trigger, pulser FE calibration, external
+  triggered calibration (eg laser, rad source).}
+
+\subsection{Run Control and Monitoring}
+\label{sec:fd-daq:design-run-control}
+\fixme{module-generic}
+
+\metainfo{Describe run control and DAQ operation monitoring. 
+  How it makes use of the Message Passing System. 
+  What is an ``epoch''.
+  How Epoch Change Requests lead to zero down time reconfiguration. 
+  Public key based ``iron'' authentication between run control
+  processes and the controlled processes. 
+  Describe how partitioning, reconfiguration, run changes, node
+  discovery, configuration, logging, startup, shutdown and failures
+  are handled. Describe how RC will support detector electronics configuration.}
+
+\subsection{Data Receiver Hardware}
+\label{sec:sp-daq:design-front-end}
+\fixme{single-phase module}
+
+The front-end hardware provides the Data Receiver subsystem and front
+end portions of the  Buffer and Trigger subystems.
+
+\metainfo{One or two introductory paragraphs that intentionally
+  consider all the multiple options are being pursued for the Data
+  Receiver role of the SP. 
+  It should describe our strategy for settling on an option. 
+  This section is module specific.}.
+
+\subsection{Data Handling}
+\label{sec:sp-daq:design-fe-data-processing}
+
+\metainfo{One or two sentences that positions the two processing
+  patterns in this section as options. 
+  Say firmware option is used for ``baseline costing''.
+  Processing here includes RAM buffer, SNB buffer, and possibly
+  compression. 
+  It doesn't include the trigger primitive algorithms themselves (for
+  example, that's below in section~\ref{sec::sp-daq:design-selection-algs}).}
+
+
+% \subsubsection{FELIX+FPGA}
+\subsubsection{Firmware-based Option}
+\label{sec:sp-daq:design-felix-fpga}
+\fixme{single-phase module}
+
+\metainfo{Include full hardware scope starting at fibers from CE and
+  ending at the output of trigger processors and the interface between
+  buffer and the Data Selector.
+  Describe the per-APA multiplicity of computers, CPU cores, host
+  system RAM, host system storage, FELIX boards, DPM components (RAM,
+  SSD). 
+  Include thermal estimates itemized by components.}
+
+% \subsubsection{FELIX+CPU}
+\subsubsection{Software-based Option}
+\label{sec:sp-daq:design-felix-cpu}
+\fixme{single-phase module}
+
+\metainfo{Include full hardware scope starting at fibers from CE and
+  ending at the output of trigger processors and the interface between
+  buffer and the Data Selector. 
+  Describe the per-APA multiplicity of computers, CPU cores, host
+  system RAM, SSD and FELIX boards. 
+  Include thermal estimates itemized by components.}
+
+
+\subsubsection{DP data ingest via UDP}
+\label{sec:dp-daq:design-udp-ingest}
+\fixme{dual-phase module, move to DP-DAQ chapter eventually}
+\metainfo{This is a DP section and will be only in the DP volume. 
+  It should describe the ``Bump On Wire'' from the IDR unless we can
+  come up with any new/better ideas.}
+\metainfo{Include full hardware scope starting at fibers from CE and
+  ending at the output of trigger processors and the interface between
+  buffer and the Data Selector.
+  Describe the per-APA multiplicity of computers, CPU cores, host
+  system RAM, host system storage, FELIX boards, DPM components (RAM,
+  SSD). 
+  Include thermal estimates itemized by components.}  
+
+
+\subsection{Data Selection}
+\label{sec:sp-daq:design-selection-algs}
+\fixme{single-phase module}
+
+Data Selection must make the decision about what data will be
+transferred to the Egress Subsystem. 
+It does by providing the core payload software which runs in message
+passing nodes. 
+In particular it provides the trigger primitive, candidate and
+command hierarchy.
+
+\metainfo{One sentence that briefly describes the ``bow tie''
+  hierarchy: primitive, candidate, command, query. 
+  Do not repeat too much what is in the design overview. 
+}
+
+
+\subsubsection{Trigger Primitives}
+\label{sec:sp-daq:design-trigger-primitives}
+\fixme{single-phase module}
+
+\metainfo{Describe what they are, how they are formed, storage size on
+  disk, message schema.}
+\metainfo{Reference the section that provides validation.}
+
+
+
+\subsection{Data Egress System}
+\label{sec:fd-daq:design-data-egress}
+\fixme{module-generic}
+
+\metainfo{This subsystem starts with receiving trigger commands from
+  MTL, based on their content it queries Data Selectors on all front
+  end computers, forms events, writes files to offline buffer disk. 
+  It may perform ``offline'' type processing along the way.}
+
+\subsubsection{Event builder}
+\label{sec:fd-daq:design-event-builder}
+\fixme{module-generic}
+
+\metainfo{Explain artDAQ, handling of trigger commands by
+  asynchronous, parallel queries to front end Data Selector (but take
+  care not to duplicate between here and in the overview).}
+
+\subsubsection{Data Model}
+\label{sec:fd-daq:design-data-model}
+\fixme{module-generic}
+
+\metainfo{Describe the data model. 
+  This isn't a strict schema just things like how various parts of the
+  detector readout map to files, etc.}
+
+%% no wishlists
+% \subsection{Egress Processing}
+% \label{sec:fd-daq:design-egress-processing}
+% \fixme{module-generic}
+% \metainfo{This may be a place to describe additional data
+%   reduction/selection/identification, data quality/condition
+%   monitoring.}
+
+
+\subsection{Timing Distribution}
+\label{sec:sp-daq:design-timing}
+\fixme{single-phase module}
+\fixme{Is it indeed still single-phase specific?}
+
+\metainfo{Hardware, consumers, links.}
+
+\subsection{Design Validation}
+\label{sec:sp-daq:design-validation}
+\fixme{single-phase module}
+
+\metainfo{One sentence to describe our validation strategy: exploit
+  ProtoDUNE, use simulation and develope vertical slice tests. 
+  Put each validation study (performed or future) in a subsubsection
+  and describe either \textbf{how it justifies a decision} or
+  \textbf{how its outcome will be used to make a decision in the
+    future}.}
+
+\subsubsection{FELIX Throughput Demonstration at ProtoDUNE-SP}
+\label{sec:sp-daq:validation-pdune-felix}
+\fixme{single-phase module}
+
+\metainfo{Describe how the FELIX DAQ at ProtoDUNE-SP demonstrates a
+  FELIX+CPU approach. 
+  Describe the elements that are same or similar (full-rate to host
+  RAM buffer) and different (higher-rate but external trigger).}
+
+
+\subsubsection{RCE Throughput Demonstration at ProtoDUNE-SP}
+\label{sec:sp-daq:validation-pdune-rce}
+\fixme{single-phase module}
+
+\metainfo{Describe how RCE DAQ at ProtoDUNE-SP demonstrates an FPGA
+  approach with DUNE.}
+
+\subsubsection{Trigger Primitives in Software}
+\label{sec:sp-daq:validation-software-trigger-primitives}
+\fixme{single-phase module}
+ 
+\metainfo{Succinctly describe algorithm, include physics and computing
+  performance numbers.}
+
+\subsubsection{Trigger Primitives in Firmware}
+\label{sec:sp-daq:validation-firmware-trigger-primitives}
+\fixme{single-phase module}
+
+\metainfo{Succinctly describe algorithm, include physics and computing
+  performance numbers.}
+
+\subsubsection{Vertical Slice Demonstrations}
+\label{sec:sp-daq:validation-demonstrators}
+\fixme{single-phase module}
+
+\metainfo{Describe VST demonstrators and why we must build them.}
+
+\subsubsection{Prototype Message Passing System}
+\label{sec:fd-daq:validation-demonstrators}
+\fixme{module-generic}
+
+\metainfo{This is actually module-generic. 
+  Very briefly describe the prototype message passing. 
+  This will mostly refer to a tech note.}
+
+\subsubsection{Another validation....}
+\fixme{write me, as needed}
+
+\section{Cost, Schedule, and Risk Summary.}
+\label{sec:sp-daq:cost}
+\metainfo{
+Include cost summary and table here.
+Include schedule summary and table here.
+Include risk summary and table here.}
+
+\section{Production, Assembly and Development}
+\label{sec:sp-daq:production}
+
+\metainfo{Describe how hardware, firmware and software will produced. 
+  Discussion is probably needed what this means.}
+
+
+
+\section{Installation, Integration and Assembly}
+\label{sec:sp-daq:installation}
+
+\metainfo{Describe how we get stuff in place underground (and in the
+  ITF), how we will put it all together and make sure it works. 
+  What can we do to minimize the effort needed underground both in
+  terms of physical work but also in working out the bugs both in
+  individual processes and in emergent behavior of the system as a
+  whole?}
+
+\section{Interfaces}
+\label{sec:sp-daq:interfaces}
+\metainfo{Include interface summary and table here.}
+\subsection{TPC Cold Electronics}
+\metainfo{Data reception physical and logical, configuration information delivery.}
+\subsection{PDS Readout System}
+\metainfo{Data reception physical and logical, configuration information delivery.}
+\subsection{Computing}
+\metainfo{Buffer disk. 
+  Agreement on sysadmin support and computer procurement, ssh
+  gateways, non data networks.}
+\subsection{CISC}
+\subsection{Timing}
+\metainfo{This is an ``outgoing'' interface from DAQ Timing to others.}
