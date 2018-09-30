@@ -1,6 +1,12 @@
 \chapter{Data Acquisition}
 \label{ch:sp-daq}
 
+%%% todo
+
+% Assign candidate names to sections and solicit them to write notes and/or presentations.
+
+% Start and maintain a list holding links to all relevant notes and presentations.
+
 \fixme{\textbf{Authors:}
 
   See \url{https://wiki.dunescience.org/wiki/Technical_Design_Report}
@@ -54,10 +60,6 @@
 
 \metainfo{One sentence introducing the contents of this section.}
 
-\subsection{Design Philosophy}
-
-\metainfo{Describe how the design addresses the requirements.}
-
 \subsection{Specifications}
 \label{sec:sd-daq:specifications}
 \fixme{single-phase module}
@@ -73,6 +75,10 @@
 
 \metainfo{Include message passing requirements and domains.}
 
+\subsection{Design Philosophy}
+
+\metainfo{Describe how the design addresses the requirements.}
+
 \subsection{Parameters}
 \label{sec:sp-daq:parameters}
 \fixme{single-phase module}
@@ -81,24 +87,38 @@
   the design.  Sampling rate and resolution, channel count}
 
 
-\subsection{Interfaces}
+\section{Interfaces}
 \label{sec:sp-daq:interfaces}
 \metainfo{Include interface summary and table here.}
-\subsubsection{TPC Cold Electronics}
+\subsection{TPC Cold Electronics}
 \metainfo{Data reception physical and logical, configuration information delivery.}
-\subsubsection{PDS Readout System}
+\subsection{PDS Readout System}
 \metainfo{Data reception physical and logical, configuration information delivery.}
-\subsubsection{Computing}
+\subsection{Computing}
 \metainfo{Buffer disk. 
   Agreement on sysadmin support and computer procurement, ssh gateways, non data networks. 
   Address reference how the data model described above is acceptable.}
-\subsubsection{CISC}
-\subsubsection{Calibration}
-\subsubsection{Timing}
+\subsection{CISC}
+\subsection{Calibration}
+\subsection{Timing}
 \metainfo{Note, this is an ``outgoing'' interface from DAQ's Timing System to various others. 
   Instead of making this section explicit we may instead disperse Timing System interface information among the other Interface sections where appropriate.}
 
-\subsection{ProtoDUNE and DUNE Comparison}
+\section{ProtoDUNE and DUNE Comparison}
+
+\metainfo{Here we write what similarities and differences there are between ProtoDUNE and DUNE DAQ designs.}
+
+\subsection{Detector Readout Hardware}
+
+\metainfo{Compare and contrast design elements related to the detector readout hardware.}
+
+\subsubsection{RCE}
+
+\subsubsection{FELIX}
+
+\subsection{Backend Event Building}
+
+\subsection{Other}
 
 \section{DAQ Design}
 \label{sec:fd-daq:design}
@@ -142,15 +162,12 @@
 \label{sec:fd-daq:design-messages}
 \fixme{module-generic}
 
+\metainfo{Describe the domains requiring message passing.  A domain means parts that shall share the same message passing infrastructure.  Eg, the hierarchical trigger system is one.  The transfer of data between artDAQ nodes is another.  Run control, monitoring and logging is a third.  Some MP domains will exist in other consortia and must interface with DAQ MP domains.  Each internal or external interface must be at least listed.   Describe how effort will be conserved by minimizing the number of distinct domains to the extent it makes sense.  Some examples: two-way comms with CISC (CISC tells DAQ of HV it shut down, DAQ tells CISC about hardware health, DAQ process health, statistics on things like per-unit trigger rates), handling laser triggers (eg, want laser to only fire in between beam spills).}
 
-\metainfo{Describe how all the nodes in the DAQ ``bow tie'' graph talk
-  to each other by message passing.
-  Do \textbf{not} describe detailed functionality of the nodes
-  themselves, that comes next.  
-  Do describe the scope in terms of what parts described below
-  participate in the message passing. Include table of running
-  patterns (nominal self trigger, pulser FE calibration, external
-  triggered calibration (eg laser, rad source).}
+\metainfo{We may not be ready to give concrete designs for every domain.  Where this is the case, we must describe a plan for determining the MP system for each domain.}
+
+\metainfo{Message passing must support redundant paths for trigger information, especially at the MLT level and above, to assure robustness.}
+
 
 \subsection{Run Control and Monitoring}
 \label{sec:fd-daq:design-run-control}
@@ -160,42 +177,22 @@
   How it makes use of the Message Passing System. 
   What is an ``epoch''.
   How Epoch Change Requests lead to zero down time reconfiguration. 
-  Public key based ``iron'' authentication between run control
-  processes and the controlled processes. 
-  Describe how partitioning, reconfiguration, run changes, node
-  discovery, configuration, logging, startup, shutdown and failures
-  are handled. Describe how RC will support detector electronics configuration.}
+  Public key based ``iron'' authentication between run control processes and the controlled processes. 
+  Describe how RC will configure partitioning, initiate reconfiguration, handle ``run'' changes, node discovery, configuration, logging, startup, shutdown and failures are handled. Describe how RC will support detector electronics configuration.}
 
-\subsection{FELIX Hardware}
-\label{sec:sp-daq:design-felix}
-\fixme{single-phase module}
+\subsection{Front-end Data Handling and Processing}
+\label{sec:sp-daq:design-fe-processing}
 
-The front-end hardware provides the Data Receiver subsystem and front
-end portions of the  Buffer and Trigger subystems.
-
-\metainfo{One or two introductory paragraphs that intentionally
-  consider all the multiple options are being pursued for the Data
-  Receiver role of the SP. 
-  It should describe our strategy for settling on an option. 
-  This section is module specific.}.
-
-\metainfo{This may be possible to make generic with DP. 
-  If not, DP's FELIX chapter can be similar.}
-
-\subsection{Data Handling}
-\label{sec:sp-daq:design-fe-data-processing}
+\metainfo{This section describes four functional blocks: (1) 10s RAM buffer (minimum), (2) non-volatile SNB buffer for 30s of data once per month (minimum), (3) hardware for the production of trigger primitive including any data formatting and DPS filtering and (4) compression of selected data.  Note, actual algorithms for trigger primitives are described in Section~\ref{sec:sp-daq:design-selection-algs}.}
 
 \metainfo{One or two sentences that positions the two processing
-  patterns in this section as options. 
-  Say firmware option is used for ``baseline costing''.
-  Processing here includes RAM buffer, SNB buffer, and possibly
-  compression. 
-  It doesn't include the trigger primitive algorithms themselves (for
-  example, that's below in section~\ref{sec::sp-daq:design-selection-algs}).}
+  patterns (FEDHP either before or after FELIX) in this section as options. 
+  Say that the ``FPGA before FELIX'' option is used for ``baseline costing''.}
 
+\metainfo{Include a table with one row for each known compression factor: protoDUNE RCE and FELIX, MicroBooNE before and after noise filter (see docdb), 35t, protoDUNE data after ADC stuck code mitigation or avoidance, simulations.  One column of this table shall give a brief comment of how it applies to DUNE including any caveats or reasons for over/under estimation.}
 
 % \subsubsection{FELIX+FPGA}
-\subsubsection{Firmware-based Option}
+\subsubsection{Upstream FPGA and Firmware}
 \label{sec:sp-daq:design-felix-fpga}
 \fixme{single-phase module}
 
@@ -208,7 +205,7 @@ end portions of the  Buffer and Trigger subystems.
   Include thermal estimates itemized by components.}
 
 % \subsubsection{FELIX+CPU}
-\subsubsection{Software-based Option}
+\subsubsection{Downstream CPU and Software}
 \label{sec:sp-daq:design-felix-cpu}
 \fixme{single-phase module}
 
@@ -218,6 +215,37 @@ end portions of the  Buffer and Trigger subystems.
   Describe the per-APA multiplicity of computers, CPU cores, host
   system RAM, SSD and FELIX boards. 
   Include thermal estimates itemized by components.}
+
+
+\subsubsection{Photon Detection System Interface}
+
+\metainfo{Some motivations for using light to trigger. 
+  (1) want to understand PDS so want to trigger on just the PDS. 
+  (2) background to SNB for which PDS trigger primitives may eliminate. 
+  (3) possibly must rely on light only for SNB triggering, eg if noise is out of control. 
+  Some to all of these should be included.}
+
+\metainfo{Possibly want to \SI{1}{\micro\second} packet for every time a 1-PE threshold is crossed. 
+  PDS is still understanding what they may send. 
+  DAQ needs to be in control of the trigger forming.}
+
+\subsubsection{DP TPC FE issues}
+
+\fixme{dual-phase module}
+
+\metainfo{This is similar to SP except for the need to decompress before any trigger primitive processing.  Decompression can potentially happen on FELIX FPGA or on CPU.  There shall be a table or description of the amount of processing required.}
+
+\subsubsection{DP SP Issues}
+\fixme{dual-phase module}
+
+
+
+
+\subsection{FELIX Hardware}
+\label{sec:fd-daq:design-felix}
+\fixme{module-generic}
+
+\metainfo{Describe how FELIX hardware defines an interface which common to all modules.  Describe how the hardware may handle UDP or other prototocols including bidirectional communication.  Describe how FELIX can be scaled to accept data across a spectrum in order from large to small data rate: the full SP data from the WIBs, full compressed data from the DP, trigger primitive stream from FPGA based units placed between WIBs and FELIX.}
 
 
 \subsubsection{DP data ingest via UDP}
@@ -239,8 +267,11 @@ end portions of the  Buffer and Trigger subystems.
 \label{sec:sp-daq:design-selection-algs}
 \fixme{single-phase module}
 
+\fixme{There are many studies which could go into this section. Some of this may very likely be moved into one or more tech notes and referenced.}
+
+
 Data Selection must make the decision about what data will be
-transferred to the Egress Subsystem. 
+transferred to the Backend Subsystem. 
 It does by providing the core payload software which runs in message
 passing nodes. 
 In particular it provides the trigger primitive, candidate and
@@ -256,28 +287,33 @@ command hierarchy.
 \label{sec:sp-daq:design-trigger-primitives}
 \fixme{single-phase module}
 
-\metainfo{Describe what they are, how they are formed, storage size on
-  disk, message schema.}
-\metainfo{Reference the section that provides validation.}
+\fixme{Trigger primitive algorithms run inside of the hardware of \ref{sec:sp-daq:design-fe-processing} but conceptually are more intimate with the Data Selection.  That section should reference this section.}
+
+\metainfo{Describe what they are, how they are formed, storage size on disk, message schema. 
+  This section describes algorithms with references to where those algorithms may run (FPGA firmware or CPU software)} \metainfo{Reference the section that provides validation.}
 
 
+\metainfo{Include plot and discussion of DUNE trigger primitive rate in protoDUNE. 
+  The fact that this includes many more cosmics will not matter much as the rate is expected to be dominated by Ar39. 
+  Phil has this already but the LAr purity is not yet high enough to see Ar39 across the whole drift distance.}
 
-\subsection{Data Egress System}
-\label{sec:fd-daq:design-data-egress}
+\subsection{Backend System}
+\label{sec:fd-daq:design-backend}
 \fixme{module-generic}
 
-\metainfo{This subsystem starts with receiving trigger commands from
-  MTL, based on their content it queries Data Selectors on all front
-  end computers, forms events, writes files to offline buffer disk. 
+\metainfo{This subsystem starts with receiving trigger commands from MTL, based on their content it queries Data Selectors on all front end computers, forms events, writes files to offline buffer disk. 
   It may perform ``offline'' type processing along the way.}
+
 
 \subsubsection{Event builder}
 \label{sec:fd-daq:design-event-builder}
 \fixme{module-generic}
 
-\metainfo{Explain artDAQ, handling of trigger commands by
-  asynchronous, parallel queries to front end Data Selector (but take
-  care not to duplicate between here and in the overview).}
+\metainfo{Explain artDAQ, handling of trigger commands by asynchronous, parallel queries to front end Data Selector (but take care not to duplicate between here and in the overview).}
+
+\subsubsection{L2 Data Reduction}
+
+\subsubsection{Data Quality Monitoring}
 
 \subsubsection{Data Model}
 \label{sec:fd-daq:design-data-model}
@@ -287,14 +323,9 @@ command hierarchy.
   This isn't a strict schema just things like how various parts of the
   detector readout map to files, etc.}
 
-%% no wishlists
-% \subsection{Egress Processing}
-% \label{sec:fd-daq:design-egress-processing}
-% \fixme{module-generic}
-% \metainfo{This may be a place to describe additional data
-%   reduction/selection/identification, data quality/condition
-%   monitoring.}
+\subsubsection{Output Buffer}
 
+\metainfo{Describe the output buffer system, how it's shared with offline, data hand-off prototocols.  Responsibility scope (eg, who handles transfer to FNAL).}
 
 \subsection{Timing Distribution}
 \label{sec:sp-daq:design-timing}
@@ -303,7 +334,7 @@ command hierarchy.
 
 \metainfo{Hardware, consumers, links.}
 
-\subsection{Design Validation}
+\subsection{Design Validation and Development Plan}
 \label{sec:sp-daq:design-validation}
 \fixme{single-phase module}
 
@@ -362,13 +393,6 @@ command hierarchy.
 \subsubsection{Another validation....}
 \fixme{write me, as needed}
 
-\section{Cost, Schedule, Safety and Risk Summary}
-\label{sec:sp-daq:cost}
-\metainfo{
-Include cost summary and table here.
-Include schedule summary and table here.
-Include risk summary and table here.}
-
 \section{Production, Assembly, Installation and Integration}
 \label{sec:sp-daq:production}
 
@@ -381,4 +405,20 @@ Include risk summary and table here.}
   terms of physical work but also in working out the bugs both in
   individual processes and in emergent behavior of the system as a
   whole?}
+
+\subsection{Computing Hardware}
+
+\subsection{Custom Hardware Fabrication}
+
+\subsection{Software and Firmware Development}
+\metainfo{Processes and practices.}
+
+\subsection{ITF}
+
+\section{Cost, Schedule, Safety and Risk Summary}
+\label{sec:sp-daq:cost}
+\metainfo{
+Include cost summary and table here.
+Include schedule summary and table here.
+Include risk summary and table here.}
 
