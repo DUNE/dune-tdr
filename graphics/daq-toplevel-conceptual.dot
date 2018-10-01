@@ -1,0 +1,40 @@
+digraph top {
+        rankdir=LR;
+        compound=true;
+        
+        graph[layout=dot,splines=true];
+        node[shape=circle,width=1.2, fixedsize=true,fontsize=16];
+        edge[fontsize=16];
+        ce[label="Detetector\nelectronics",shape=box];
+        subgraph cluster_daq {
+                rc[label="Run\nControl"];
+                recv[label="Receiver\nsubsystem"];
+                buf[label="Buffer\nsubsystem"];
+                trig[label="Trigger\nsubsystem"];
+                eb[label="Egress\nsubsystem"];
+                label="DAQ System";
+        }
+        out[label="offline\ndisk",shape=box];
+
+        
+
+        ce->recv[penwidth=8];
+        recv:n->buf:w[penwidth=8,xlabel="data\nall channels     \nfull-stream           "];
+        recv:s->trig:w[penwidth=3,xlabel="data\ncollection channels\nfull-stream"];
+        buf:e->eb:n[xlabel="  data\nall channels,\nselected time range"];
+        trig:e->eb:s[style=dashed,xlabel=" trigger\n     commands"];
+        eb->buf[style=dotted, constraint=false,taillabel="query"];
+
+        eb:e->out:w[label="files"];
+
+        # Run Control connections
+        edge[color=red, style=dotted, dir=both];
+        recv->rc[];
+        rc->eb;
+        edge[constraint=false, color=red, style=dotted];
+        rc->trig
+        rc->buf;
+        edge[dir=forward];
+        rc->ce;
+        
+}
