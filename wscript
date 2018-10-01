@@ -161,7 +161,8 @@ def build(bld):
                     # name target as file name so can use --targets w/out full path
                     target = os.path.basename(str(chmaintex.change_ext('pdf','tex'))))
 
-                bld.install_files('${PREFIX}',chmaintex.change_ext('.pdf', '.tex'))
+                bld.install_files('${PREFIX}/%s'%volname,
+                                  chmaintex.change_ext('.pdf', '.tex'))
 
         if bld.options.arxiv:
             bld(source=[volman, voltex],
