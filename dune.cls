@@ -345,3 +345,13 @@
 \usepackage{tfrupee}
 \usepackage{textcomp}
 
+
+% Comoditize citing DocDB
+%%% Note: this relies on the fact that DocDB is happy getting an empty
+%%% version= parameter.
+%%% So if user doesn't include a version, the link goes to the more
+%%% recent.
+% \citedocdb{12345}
+%% or
+% \citedocdb[3]{12345}
+\newcommand{\citedocdb}[2][]{\href{https://docs.dunescience.org/cgi-bin/private/ShowDocument?docid=#2&version=#1}{DocDB #2}\cite{bib:docdb#2}\xspace}
