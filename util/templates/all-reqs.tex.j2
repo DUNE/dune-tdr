@@ -1,0 +1,106 @@
+\documentclass{article}
+\usepackage[top=0.5in, bottom=2.75cm,right=2cm, left=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{siunitx}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{tabulary}
+\usepackage[table]{xcolor}
+\RequirePackage{booktabs}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\usepackage{etoolbox}
+%%\newcounter{rowcntr}[table]
+%%\renewcommand{\therowcntr}{\thetable.\arabic{rowcntr}}
+%%\newcolumntype{N}{>{\refstepcounter{rowcntr}\therowcntr}c}
+%%\AtBeginEnvironment{tabular}{\setcounter{rowcntr}{0}}
+%%\newcommand\speclabel[1]{\refstepcounter{rowcntr}\label{spec:#1}}
+
+\makeatletter
+\newcommand\newtag[2]{#1\def\@currentlabel{#1}\label{#2}}
+\makeatother
+
+\definecolor{dunetablecolor}{RGB}{125,174,211} % matches lighter blue color from Diana's scheme 
+
+
+
+
+\begin{document}
+
+\section{The Category Specifications}
+
+These tables contain every spec in a given subsystem. 
+Each table corresponds to the subsystem ``tab'' in the spreadsheet.
+
+~{ for specgroup in specs if specgroup }~
+
+\subsection{~{{ specgroup[0].category }}~}
+
+\begin{table}[htp]
+  \caption{Specification for ~{{ specgroup[0].category }}~}
+  \centering
+%  \begin{tabular}{|N|C{1cm}|C{3cm}|L{1cm}|L{4cm}|L{4cm}|}
+  \begin{tabular}{|p{0.3\textwidth}|p{0.45\textwidth}|p{0.25\textwidth}| }
+    \hline
+    ~{ for s in specgroup }~
+    \rowcolor{dunetablecolor}
+    ID: \newtag{~{{ s.category }}~-~{{ s.number }}~}{ spec:~{{ s.label }}~ } (~{{ s.label }}~ )
+    & Name: ~{{ s.title }}~  & Spec:  ~{{ s.requirement }}~ \\
+    \hline
+    Rationale &  \multicolumn{2}{p{0.7\textwidth}|}{ ~{{ s.explanation }}~ } \\
+    \hline
+    ProtoDUNE Validation & \multicolumn{2}{p{0.7\textwidth}|}{ ~{{s.validation.protodune}}~ } \\
+    \hline
+    Simulation Validation & \multicolumn{2}{p{0.7\textwidth}|}{ ~{{s.validation.simulation}}~ } \\
+    \hline
+    ~{ endfor }~
+  \end{tabular}
+  \label{tab:spectable:~{{ specgroup[0].category }}~}
+\end{table}
+
+~{ endfor }~
+
+\section{Full of references}
+
+%% cycle through all specs and reference them.
+~{ for specgroup in specs if specgroup }~
+\subsection{~{{ specgroup[0].category }}~ References}
+
+\begin{description}
+  ~{ for s in specgroup }~
+  \item[ ~{{ s.category }}~ ~{{ s.number }}~ ] ~{{ s.title }}~~\ref{ spec:~{{ s.label }}~ }
+  ~{ endfor }~
+\end{description}
+~{ endfor }~
+
+
+\section{Another section}
+
+
+Here I reference the Specification~\ref{spec:gap-between-apas} in Table~\ref{tab:spectable:DSS} which is in the same section.
+
+
+Here's some other table.
+
+\begin{table}[htp]
+  \caption{Blah}
+  \centering
+  \begin{tabular}{|c|}
+    \hline
+    \label{row:cool} DUNE is cool \\
+    \hline
+  \end{tabular}
+  \label{tab:cool}
+\end{table}
+
+And here it is referenced as Table~\ref{tab:cool}.  
+I can still reference a row in the previous table,
+Table~\ref{tab:spectable:DSS}
+row~\ref{spec:drift-field-uniformity}.
+
+\end{document}

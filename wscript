@@ -53,6 +53,13 @@ def configure(cfg):
                      path_list=[os.path.join(os.path.realpath("."),"util")],
                      mandatory = True)
 
+    # To automate requirements table generation some special programs are needed.  They are optional
+    cfg.find_program('dune-reqs', var='DUNEREQS',
+                     mandatory = False);
+    cfg.find_program('dunegen.sh', var='DUNEGEN',
+                     path_list=[os.path.join(os.path.realpath("."),"util")],
+                     mandatory = False)
+
     cfg.env.PDFLATEXFLAGS += [
         "-file-line-error",
         "-recorder",
@@ -149,7 +156,7 @@ def build(bld):
                 chname = os.path.basename(chtex.name).replace('.tex','')
                 chmaintex = bld.path.find_or_declare("%s-%s.tex" % (volname, chname))
 
-                print chmaintex
+                #print chmaintex
 
                 bld(source=[chaptex, chtex],
                     target=chmaintex,
@@ -171,3 +178,23 @@ def build(bld):
                 extra = voltex + ' utphys.bst dune.cls graphics/dunelogo_colorhoriz.jpg',
                 rule=tarball)
             bld.install_files('${PREFIX}', [voltar])
+
+
+    if bld.env['DUNEREQS']:         # we can rebuild requirements tables if needed
+        import json
+        docids_node = bld.path.find_resource("util/dune-reqs-docids.txt")
+        secret = bld.path.find_resource("docdb.pw").read().strip()
+        for line in docids_node.read().split('\n'):
+            line = line.strip()
+            if not line: continue
+            name,docid = line.split()
+            docid_tagfile = "%s.docid"%name
+            bld(rule="${DUNEREQS} getdocdb -t ${TGT} -U dune -P %s -a tar %s"%(secret, docid),
+                source=docids_node,
+                target=docid_tagfile)
+            
+            tmpl_node = bld.path.find_resource("util/templates/all-reqs.tex.j2")
+            gen_node = bld.path.find_or_declare(name + "-" + tmpl_node.name.replace(".j2",""))
+            
+            bld(rule="${DUNEGEN} reqs ${SRC} ${TGT}",
+                source=[docid_tagfile, tmpl_node], target=[gen_node])
