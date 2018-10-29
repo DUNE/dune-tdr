@@ -181,7 +181,9 @@ def build(bld):
 
 
     if bld.env['DUNEREQS']:         # we can rebuild requirements tables if needed
-        import json
+
+
+
         docids_node = bld.path.find_resource("util/dune-reqs-docids.txt")
         secret = bld.path.find_resource("docdb.pw").read().strip()
         for line in docids_node.read().split('\n'):
@@ -193,8 +195,15 @@ def build(bld):
                 source=docids_node,
                 target=docid_tagfile)
             
-            tmpl_node = bld.path.find_resource("util/templates/all-reqs.tex.j2")
-            gen_node = bld.path.find_or_declare(name + "-" + tmpl_node.name.replace(".j2",""))
             
+            # Despite knowing better, generate into the source directory.
+            tmpl_node = bld.path.find_resource("util/templates/all-reqs.tex.j2")
+            gen_dir = bld.srcnode.make_node('generated')
+            tgt = gen_dir.make_node(name + "-" + tmpl_node.name.replace(".j2",""))
             bld(rule="${DUNEGEN} reqs ${SRC} ${TGT}",
-                source=[docid_tagfile, tmpl_node], target=[gen_node])
+                source=[docid_tagfile, tmpl_node], target=[tgt])
+            # Note, this may lead to hysteresis.  For better way see:
+            # https://waf.io/blog/2010/11/code-generators-and-unknown-files.html
+
+
+            
