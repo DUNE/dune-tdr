@@ -3,18 +3,20 @@ digraph top {
         compound=true;
         
         graph[layout=dot,splines=true];
-        node[shape=circle,width=1.2, fixedsize=true,fontsize=16];
+        node[shape=circle,width=1.4, fixedsize=true,fontsize=16];
         edge[fontsize=16];
         ce[label="Detetector\nelectronics",shape=box];
+        out[label="offline\ndisk",shape=box];
+        node[style=filled,fillcolor="#f19f53"]
         subgraph cluster_daq {
-                rc[label="Run\nControl"];
+                rc[color="#f19f53",fillcolor="#ffd26c",label="Control\nConfiguration\nMonitoring"];
                 recv[label="Receiver\nsubsystem"];
                 buf[label="Buffer\nsubsystem"];
                 trig[label="Trigger\nsubsystem"];
                 eb[label="Egress\nsubsystem"];
                 label="DAQ System";
         }
-        out[label="offline\ndisk",shape=box];
+
 
         
 
@@ -27,11 +29,15 @@ digraph top {
 
         eb:e->out:w[label="files"];
 
+        # orange="#ff671b"
+        # navy="#003b71"
+        # sky="#7daed3"
+
         # Run Control connections
-        edge[color=red, style=dotted, dir=both];
+        edge[color="#ff671b", style=dotted, dir=both];
         recv->rc[];
         rc->eb;
-        edge[constraint=false, color=red, style=dotted];
+        edge[constraint=false, style=dotted];
         rc->trig
         rc->buf;
         edge[dir=forward];
