@@ -191,6 +191,14 @@
     \boldmath
   }l}%
 
+% the DUNE palette
+\definecolor{dunebrown}{RGB}{94,51,39}
+\definecolor{dunenavy}{RGB}{0,59,113}
+\definecolor{dunesky}{RGB}{125,174,211}
+\definecolor{duneorange}{RGB}{255,103,27}
+\definecolor{dunepeach}{RGB}{241,159,83}
+\definecolor{dunegold}{RGB}{255,210,108}
+
 %\definecolor{lightblue}{RGB}{212,236,244} ---Anne is changing (212,236,244 is lightblue)
 \definecolor{dunetablecolor}{RGB}{125,174,211} % matches lighter blue color from Diana's scheme 
 \newcommand{\rowtitlestyle}{
@@ -354,4 +362,4 @@
 % \citedocdb{12345}
 %% or
 % \citedocdb[3]{12345}
-\newcommand{\citedocdb}[2][]{\href{https://docs.dunescience.org/cgi-bin/private/ShowDocument?docid=#2&version=#1}{DocDB #2}\cite{bib:docdb#2}\xspace}
+\newcommand{\citedocdb}[2][]{\href{https://docs.dunescience.org/cgi-bin/private/ShowDocument?docid=#2\&version=#1}{DocDB #2}\cite{bib:docdb#2}\xspace}
