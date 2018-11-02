@@ -271,88 +271,157 @@ It shall be noted that, while the CCM system is instrumental to the definition o
 
 
 
-\subsection{Detector Data Receiver}
-\label{sec:fd-daq:design-felix}
+\subsection{Detector Reaout}
+\label{sec:fd-daq:readout}
 \fixme{module-generic}
 
-\metainfo{Describe how FELIX hardware defines an interface which common to all modules.  Describe how the hardware may handle UDP or other prototocols including bidirectional communication.  Describe how FELIX can be scaled to accept data across a spectrum in order from large to small data rate: the full SP data from the WIBs, full compressed data from the DP, trigger primitive stream from FPGA based units placed between WIBs and FELIX.}
+The DUNE DAQ Readout system is the first element in the data flow chain of the DAQ system.
+Conceptually, this system corresponds to the receiver, buffer and a portion of the trigger subsystems illustrated in Figure~\ref{fig:daq-conceptual-overview}.
+It is physically connected to the detector electronics via optical fiber and buffers and serves data to other DAQ sub-systems, namely the Data Selection and the Event Builder as detailed in Figure~\ref{fig:daq:readout}.\fixme{It would be nice to redraw this using DUNE colors.}
+
+\begin{dunefigure}{fig:daq:readout}{DUNE DAQ Readout system and its connections.}
+  \includegraphics[width=0.8\textwidth]{daq-readout.png}
+\end{dunefigure}
+
+The Readout system is composed of many similar \dword{daqrou}, each connected to a sub-set of electronics from a detector module and interfacing to the DAQ switched network.  Each unit encompasses four functional blocks:
+
+\begin{enumerate}
+\item Data reception
+\item Network based I/O
+\item Data processing
+\item Temporary data storage
+\end{enumerate}
+
+Each of these facets are described below.  In addition and like all other DAQ sub-systems, the readout participates in the common software framework for control, configuration and monitoring as described in Section~\ref{sec:fd-daq:design-run-control}.
+
+\subsubsection{Data reception}
+
+The physical interface between the detector electronics and the DAQ for the purpose of data transmission are 10 Gbps point-to-point serial optical links, running a simple (e.g. 8/10 bit encoded) protocol. 
+The number of links per DUNE module vary from about 1000 to 2000, depending on the adopted detectors technologies.
+
+In order minimize the space and power consumption footprint of the DAQ, 10-20 links are aggregated into \dword{felix} boards hosted in \dword{cots} computers. 
+\dword{felix} is an FPGA-based PCIe board developed initially for ATLAS and now proposed or in use in a number of experiments including ProtoDUNE. 
+Existing firmware shall be adopted and adapted to ensure decoding and format checking of the incoming data and to then marshal the data to the other blocks of the readout sub-system.
+
+\subsubsection{Network based I/O}
+
+The Readout system is connected to the data selection and event building systems through a \dword{cots} switched network.
+While the communication protocols are not yet fully defined and will be chosen in due time to minimize cost and match the required performance, the flow of data in and out of the Readout system are already outlined (see Figure~\ref{fig:daq:readout}). 
+It is assumed that the network I/O will be handled by the \dwords{daqrou} via software and that no dedicated hardware or firmware development will be required for this functional block.
+
+\subsubsection{Data processing}
+
+The data processing functional block is in charge of the identification of active areas in the detector (in the TPC and photon detection systems) as a function of time.
+
+As a preliminary step data may be pre-processed, i.e. organized in the way that best suits the subsequent data analysis. This may imply reorganizing data into different streams, applying noise filtering algorithms, compressing and/or zero-suppressing data.
+
+The identified detector activity (aka ``hit finding'') is summarized by the Readout system into so-called trigger primitives that are forwarded to the Data Selection system, to make correlations and take a decision on whether and which data shall be saved.
+
+This functional block may be implemented onto FPGAs, GPUs, CPUs or in a mixed fashion. A decision on the implementation is premature at this stage and this is one of the main R\&D topics to explore in the Readout area.
+
+\subsubsection{Temporary storage}
+
+In DUNE, the Readout system is in charge of storing the data until the Data Selection system has formed a decision and such that the Egress system may have sufficient time to request the corresponding data.
+There are a number of time scales and data throughput which dictate the technology and its scale which is required to satisfy these requests.
+
+The first is driven by the predominant physics which produces visible activity promptly after interaction and compactly in space and time. 
+The latency to form a trigger condition in this case is dominated by processing speed and pipeline depths and is expected to be on order of one second.  The amount of data which is expected to be requested as a result of such decisions is on order one or two TPC drift times (5-10\si{\milli\second} depending on detector technology).
+
+On the other hand the very rare but important case of a potential \dword{snb} has substantially different and more stringent requirements. 
+Potentially many seconds of activity may occur which is too infrequent and low energy to form a trigger decision but which can have important physics information. 
+In order to capture that, when a \dword{snb} decision is formed the DAQ shall record at least the prior 10 seconds of data. 
+\dword{snb} occurrences are so important that all data shall be recorded over their expected duration. 
+To satisfy that, the DAQ shall record a minimum of 30 seconds of data from a \dword{snb} trigger decision. 
+The data rates and volumes involved in satisfying these requirements are such that different technology and scale must be employed compared to that required to select data from compact interactions.
+
+The worse-case temporary storage requirement for the readout system (using single phase detector technology as a metric) is in the order of 100 TB per DUNE detector module, with a throughout of approximately 10 Tb/s.
+This figure is challenging, but technically achievable already with today’s technologies, with a suited granularity of the \dwords{daqrou}. 
+
+It is expected that in this area requirements will still be refined during the detailed design phase of the DAQ system, taking into account the ability of partially compressing data as well as more realistic estimates on trigger decision latency, etc.
 
 
-\ifdp
-\subsubsection{DP data ingest via UDP}
-\label{sec:dp-daq:design-udp-ingest}
-\fixme{dual-phase module, move to DP-DAQ chapter eventually}
-\metainfo{This is a DP section and will be only in the DP volume. 
-  It should describe the ``Bump On Wire'' from the IDR unless we can
-  come up with any new/better ideas.}
-\metainfo{Include full hardware scope starting at fibers from CE and
-  ending at the output of trigger processors and the interface between
-  buffer and the Data Selector.
-  Describe the per-APA multiplicity of computers, CPU cores, host
-  system RAM, host system storage, FELIX boards, DPM components (RAM,
-  SSD). 
-  Include thermal estimates itemized by components.}  
-\fi
-
-\subsection{Front-end Data Handling and Processing}
-\label{sec:sp-daq:design-fe-processing}
-
-\metainfo{This section describes four functional blocks: (1) 10s RAM buffer (minimum), (2) non-volatile SNB buffer for 30s of data once per month (minimum), (3) hardware for the production of trigger primitive including any data formatting and DPS filtering and (4) compression of selected data.  Note, actual algorithms for trigger primitives are described in Section~\ref{sec:sp-daq:design-selection-algs}.}
-
-\metainfo{One or two sentences that positions the two processing
-  patterns (FEDHP either before or after FELIX) in this section as options. 
-  Say that the ``FPGA before FELIX'' option is used for ``baseline costing''.}
-
-\metainfo{Include a table with one row for each known compression factor: protoDUNE RCE and FELIX, MicroBooNE before and after noise filter (see docdb), 35t, protoDUNE data after ADC stuck code mitigation or avoidance, simulations.  One column of this table shall give a brief comment of how it applies to DUNE including any caveats or reasons for over/under estimation.}
-
-% \subsubsection{FELIX+FPGA}
-\subsubsection{Upstream FPGA and Firmware}
-\label{sec:sp-daq:design-felix-fpga}
-\fixme{single-phase module}
-
-\metainfo{Include full hardware scope starting at fibers from CE and
-  ending at the output of trigger processors and the interface between
-  buffer and the Data Selector.
-  Describe the per-APA multiplicity of computers, CPU cores, host
-  system RAM, host system storage, FELIX boards, DPM components (RAM,
-  SSD). 
-  Include thermal estimates itemized by components.}
-
-% \subsubsection{FELIX+CPU}
-\subsubsection{Downstream CPU and Software}
-\label{sec:sp-daq:design-felix-cpu}
-\fixme{single-phase module}
-
-\metainfo{Include full hardware scope starting at fibers from CE and
-  ending at the output of trigger processors and the interface between
-  buffer and the Data Selector. 
-  Describe the per-APA multiplicity of computers, CPU cores, host
-  system RAM, SSD and FELIX boards. 
-  Include thermal estimates itemized by components.}
+% \metainfo{Describe how FELIX hardware defines an interface which common to all modules.  Describe how the hardware may handle UDP or other prototocols including bidirectional communication.  Describe how FELIX can be scaled to accept data across a spectrum in order from large to small data rate: the full SP data from the WIBs, full compressed data from the DP, trigger primitive stream from FPGA based units placed between WIBs and FELIX.}
 
 
-\subsubsection{Photon Detection System Interface}
+% \ifdp
+% \subsubsection{DP data ingest via UDP}
+% \label{sec:dp-daq:design-udp-ingest}
+% \fixme{dual-phase module, move to DP-DAQ chapter eventually}
+% \metainfo{This is a DP section and will be only in the DP volume. 
+%   It should describe the ``Bump On Wire'' from the IDR unless we can
+%   come up with any new/better ideas.}
+% \metainfo{Include full hardware scope starting at fibers from CE and
+%   ending at the output of trigger processors and the interface between
+%   buffer and the Data Selector.
+%   Describe the per-APA multiplicity of computers, CPU cores, host
+%   system RAM, host system storage, FELIX boards, DPM components (RAM,
+%   SSD). 
+%   Include thermal estimates itemized by components.}  
+% \fi
 
-\metainfo{Some motivations for using light to trigger. 
-  (1) want to understand PDS so want to trigger on just the PDS. 
-  (2) background to SNB for which PDS trigger primitives may eliminate. 
-  (3) possibly must rely on light only for SNB triggering, eg if noise is out of control. 
-  Some to all of these should be included.}
+% \subsection{Front-end Data Handling and Processing}
+% \label{sec:sp-daq:design-fe-processing}
 
-\metainfo{Possibly want to \SI{1}{\micro\second} packet for every time a 1-PE threshold is crossed. 
-  PDS is still understanding what they may send. 
-  DAQ needs to be in control of the trigger forming.}
+% \metainfo{This section describes four functional blocks: (1) 10s RAM buffer (minimum), (2) non-volatile SNB buffer for 30s of data once per month (minimum), (3) hardware for the production of trigger primitive including any data formatting and DPS filtering and (4) compression of selected data.  Note, actual algorithms for trigger primitives are described in Section~\ref{sec:sp-daq:design-selection-algs}.}
 
-\subsubsection{DP TPC FE issues}
+% \metainfo{One or two sentences that positions the two processing
+%   patterns (FEDHP either before or after FELIX) in this section as options. 
+%   Say that the ``FPGA before FELIX'' option is used for ``baseline costing''.}
 
-\fixme{dual-phase module}
+% \metainfo{Include a table with one row for each known compression factor: protoDUNE RCE and FELIX, MicroBooNE before and after noise filter (see docdb), 35t, protoDUNE data after ADC stuck code mitigation or avoidance, simulations.  One column of this table shall give a brief comment of how it applies to DUNE including any caveats or reasons for over/under estimation.}
 
-\metainfo{This is similar to SP except for the need to decompress before any trigger primitive processing.  Decompression can potentially happen on FELIX FPGA or on CPU.  There shall be a table or description of the amount of processing required.}
+% % \subsubsection{FELIX+FPGA}
+% \subsubsection{Upstream FPGA and Firmware}
+% \label{sec:sp-daq:design-felix-fpga}
+% \fixme{single-phase module}
 
-\subsubsection{DP SP Issues}
-\fixme{dual-phase module}
+% \metainfo{Include full hardware scope starting at fibers from CE and
+%   ending at the output of trigger processors and the interface between
+%   buffer and the Data Selector.
+%   Describe the per-APA multiplicity of computers, CPU cores, host
+%   system RAM, host system storage, FELIX boards, DPM components (RAM,
+%   SSD). 
+%   Include thermal estimates itemized by components.}
+
+% % \subsubsection{FELIX+CPU}
+% \subsubsection{Downstream CPU and Software}
+% \label{sec:sp-daq:design-felix-cpu}
+% \fixme{single-phase module}
+
+% \metainfo{Include full hardware scope starting at fibers from CE and
+%   ending at the output of trigger processors and the interface between
+%   buffer and the Data Selector. 
+%   Describe the per-APA multiplicity of computers, CPU cores, host
+%   system RAM, SSD and FELIX boards. 
+%   Include thermal estimates itemized by components.}
 
 
+% \subsubsection{Photon Detection System Interface}
+
+% \metainfo{Some motivations for using light to trigger. 
+%   (1) want to understand PDS so want to trigger on just the PDS. 
+%   (2) background to SNB for which PDS trigger primitives may eliminate. 
+%   (3) possibly must rely on light only for SNB triggering, eg if noise is out of control. 
+%   Some to all of these should be included.}
+
+% \metainfo{Possibly want to \SI{1}{\micro\second} packet for every time a 1-PE threshold is crossed. 
+%   PDS is still understanding what they may send. 
+%   DAQ needs to be in control of the trigger forming.}
+
+% \ifdp
+% \subsubsection{DP TPC FE issues}
+
+% \fixme{dual-phase module}
+
+% \metainfo{This is similar to SP except for the need to decompress before any trigger primitive processing.  Decompression can potentially happen on FELIX FPGA or on CPU.  There shall be a table or description of the amount of processing required.}
+
+% \subsubsection{DP SP Issues}
+% \fixme{dual-phase module}
+% \fi
+
+\subsection{(empty)}
+
+\fixme{This section was merged with above and should be removed.  Leaving it in temporally to not confuse numbered writing assignments.}
 
 
 \subsection{Data Selection}
