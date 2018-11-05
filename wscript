@@ -182,8 +182,6 @@ def build(bld):
 
     if bld.env['DUNEREQS']:         # we can rebuild requirements tables if needed
 
-
-
         docids_node = bld.path.find_resource("util/dune-reqs-docids.txt")
         secret = bld.path.find_resource("docdb.pw").read().strip()
         for line in docids_node.read().split('\n'):
