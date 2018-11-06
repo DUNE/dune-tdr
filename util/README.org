@@ -1,0 +1,214 @@
+#+TITLE: DUNE TDR Util area
+
+This area hold some support utilities that to perform some advanced
+document production for the DUNE TDR and this file holds notes and
+documentation on how to run and develop these features.  This
+information is not required by most collaborators but if you want to
+understand how things work and maybe contribute, this README is for
+you.  These features all all implemented by the ~waf~ build as driven by
+the top level [[../wscript][wscript]] file but you can also exercise some of them
+manually.
+
+
+* Intro
+
+These features are covered:
+
+- chapters :: generating per-chapter main LaTeX files
+- requirements :: generating "requirements" tables
+
+* Generalities 
+
+These extra features rely on the ~waf~ build which should be rather
+portable but does rely on some external packages for some features.
+The general usage is:
+
+#+BEGIN_EXAMPLE
+  $ waf configure
+  $ waf
+#+END_EXAMPLE
+
+The ~configure~ step may warn about missing programs.  This should still
+allow the subsequent ~waf~ command to build the documents but may limit
+which build features may be exercised.
+
+* Chapters
+
+The "chapter PDFs" feature provide stand-alone PDFs holding the
+content of just each chapter of each volume.  Chapter PDFs are not
+built by default.  To build them:
+
+#+BEGIN_EXAMPLE
+  $ waf --chapters
+#+END_EXAMPLE
+
+The ~wscript~ file contains code to which for each chapter tex file
+found by matching:
+
+#+BEGIN_EXAMPLE
+ vol-*/ch-*.tex
+#+END_EXAMPLE
+
+It will: run [[./chapters.sh]] script on [[./chapters.tex]] file to generate a
+main chapter tex file and then build that into a chapter PDF.
+
+The only "user serviceable" parts to this feature is to possible edit
+~chapters.tex~ to change what LaTeX is generated.  Caveats:
+
+- this LaTeX must obey some conventions not described here.  
+- the chapter PDFs are not intended to be production quality.
+
+
+* Requirements
+
+Note: this feature is rather advanced and normal building of the TDR
+does *not* require it to be exercised.  This section is only useful for
+a few people that wish to regenerate requirements tables.
+
+** Regenerating 
+
+To regenerate requirements tables you need to do the following:
+
+1) Make a local file ~dune.pw~ in the top of ~dune-tdr/~ with the DocDB
+   password.  Do *not* commit this file.  There is a ~.gitignore~ entry to
+   stop you doing it accidentally so you'll have to try hard to leak
+   this.
+
+2) Install and setup for use the [[https://github.com/DUNE/dune-params][dune-params]] package in order to have
+   the ~dune-reqs~ command.  Despite what it's README may say currently,
+   the recommended way is to do this is:
+
+#+BEGIN_EXAMPLE
+  $ virtualenv venv
+  $ source venv/bin/activate
+  $ git clone https://github.com/DUNE/dune-params.git
+  $ cd dune-params
+  $ python setup.py install
+  $ dune-reqs --help
+#+END_EXAMPLE
+
+Upon subsequent usage in a fresh shell you need repeat only the first
+two lines.
+
+3) In an "activated" shell, configure and build the TDR:
+
+#+BEGIN_EXAMPLE
+  $ cd dune-tdr/
+  $ waf configure
+  $ waf
+#+END_EXAMPLE
+
+If all goes well, any updates made to the various DocDB entries
+holding requirements documents have been downloaded, their Excel
+spreadsheet contents have been parsed and the TeX files regenerated
+via the template files.  See [[Troubleshooting]] below if problems are
+encountered.
+
+Unlike most ~waf~ build products, the generation of requirements TeX
+files places the results *inside* the source tree under the [[../generated/][~generated/~]]
+subdirectory.  Once the results build clean you should *commit* and *push*
+these files.  Normally one should *never* put generated files into the
+source area let alone commit them but in order to shield casual
+builders of the TDR from this expert feature machinery, this is
+necessary.
+
+#+BEGIN_EXAMPLE
+  $ git status
+  $ git add generated/req-<NEW-CODE-NAME>-*.tex
+  $ git commit -am "Added initial NEW-CODE-NAME generated tex files"
+  $ git push
+#+END_EXAMPLE
+
+** Adding a new subsystem
+
+To add an entirely new subsystem not yet represented, one must first
+provide a spreadsheet following [[https://docs.dunescience.org/cgi-bin/private/ShowDocument?docid=11074][DocDB 11074]] and uploading a modified
+copy to a different DocDB entry.  See elsewhere for instructions on
+how this spreadsheet should be filled in.  
+
+This new DocDB entry must be recorded to [[./dune-reqs-docids.txt]] with a
+line like:
+
+#+BEGIN_EXAMPLE
+  NEW-CODE-NAME <XXXX>
+#+END_EXAMPLE
+
+The ~NEW-CODE-NAME~ should be taken from one of the tabs in the 11074
+spreadsheet and the ~<XXXX>~ is the DocDB entry number.  For DocDB 11074
+itself, which provides the "top-level requirements", it has a special
+"code name" of "TOP".
+
+Once this is done, follow the [[Regenerating]] instruction above.
+
+** Adding a new template
+
+With the Excel spreadsheets as input and given some [[http://jinja.pocoo.org/][Jinja2]] templates
+one can generate, well, just about anything.  The requirements tables
+are generated in the form of TeX files and by convention the template
+which drive their generation go under [[./templates/][~util/templates/~]] and end them
+with ~.tex.j2~ file name extensions.  After testing, ~git add/commit/push~ them.
+
+There are currently two general patterns implemented for generating
+TeX files with this feature:
+
+1) One output file for each Excel spreadsheet.
+2) One output file for each row of a spreadsheet plus one for all rows.
+
+If any other pattern is needed then ~dune-reqs~ needs modification and
+when new template files are added the ~wscript~ file needs changes.
+Both of these things require more effort to document how to do them
+than to actually do them so just ask Brett for help.
+
+** Manually generating from a template
+
+The ~dune-reqs~ program from the ~dune-params~ package must be available
+(see [[Regenerating]] above).  The commands to use are:
+
+#+BEGIN_EXAMPLE
+  # Generate one output per spreadsheet
+  $ dune-reqs render --help
+  # Generate one output per row + one for all rows
+  $ dune-reqs render-one --help
+#+END_EXAMPLE
+
+Read the help and if it's not clear, ask.  Here is an example of
+generating the per-requirement tables as well as the TeX file that
+uses ~\input~ to include each.
+
+#+BEGIN_EXAMPLE
+  $ mkdir junk
+  $ dune-reqs render-one -C TOP \
+    -t util/templates/spec-table-one.tex.j2 \
+    -T util/templates/spec-table-all.tex.j2 \
+    -o 'junk/req-TOP-{label}.tex' \
+    -O junk/req-TOP-all.tex \
+    spreadsheet-from-docdb-11074.xlsx
+#+END_EXAMPLE
+
+
+** Troubleshooting
+
+Generally all this should "just work".  Problems tend to be due to bad
+input.
+
+*** Requirements Excel file has bad LaTeX
+
+The columns in the spreadsheet destined for LaTeX should have LaTeX
+forms.  It's easy to make "LaTeX'os" and hard to detect them unless
+one actually runs LaTeX.  To fix these problems, ultimately the Excel
+file must be corrected and its DocDB entry updated with the fix.
+However, it's crazy to have to upload to DocDB each time to test a new
+edit.  Instead, one can directly call ~dune-reqs~ such as in the example
+above (but replace directory ~junk/~ with ~generated/~) and then rebuild
+the PDFs with ~waf~.  Because the manually regenerated files will be
+newer they should be not overwritten by ~waf~.  After all problems are
+fixed, upload the new Excel spreadsheet to its DocDB entry and run one
+last ~waf~ build to see it's downloaded and applied.
+
+
+
+
+
+
+
+
