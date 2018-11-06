@@ -354,7 +354,7 @@
 \usepackage{textcomp}
 
 
-% Comoditize citing DocDB
+% Comoditize citing DocDB (moved to defs, requires version number-Anne)
 %%% Note: this relies on the fact that DocDB is happy getting an empty
 %%% version= parameter.
 %%% So if user doesn't include a version, the link goes to the more
@@ -368,3 +368,4 @@
 \makeatletter
 \newcommand\newtag[2]{#1\def\@currentlabel{#1}\label{#2}}
 \makeatother
+
