@@ -179,7 +179,8 @@ def build(bld):
         "vol-swc.tex",
         "vol-tc.tex"
     ]
-    alltexs = list()
+    
+    maintexs = list()
     for volind, voltex in enumerate(voltexs):
         volnode = bld.path.find_resource(voltex)
         volname = voltex.replace('.tex','')
@@ -187,29 +188,27 @@ def build(bld):
         volpdf = bld.path.find_or_declare(volname + '.pdf')
         voltar = bld.path.find_or_declare('%s-%s.tar.gz' % (volname, VERSION))
         volman = bld.path.find_or_declare(volname + '.manifest')
-        alltexs.append(volnode)
+        maintexs.append(volnode)
 
         # Task to build the volume
         bld(features='tex', prompt = prompt_level,
             source = volnode,
             target = volpdf)
-        for reqnode in reqsdeps:
-            bld.add_manual_dependency(volnode, reqnode)
+        #for reqnode in reqsdeps:
+        #    bld.add_manual_dependency(volnode, reqnode)
         bld.install_files('${PREFIX}', [volpdf])
         
-
+        
         # Tasks to build per chapter
         if bld.options.chapters:
             for chtex in voldir.ant_glob("ch-*.tex"):
                 chname = os.path.basename(chtex.name).replace('.tex','')
                 chmaintex = bld.path.find_or_declare("%s-%s.tex" % (volname, chname))
-                alltexs.append(chmaintex)
-                #print chmaintex
-
+                maintexs.append(chmaintex)
                 bld(source=[chaptex, chtex],
                     target=chmaintex,
                     rule="${CHAPTERS} ${SRC} ${TGT} '%s' '%s' %d" % (volname, chname, volind+1))
-
+                
                 bld(features='tex',
                     prompt = prompt_level,
                     source = os.path.basename(str(chmaintex)),
@@ -228,3 +227,6 @@ def build(bld):
             bld.install_files('${PREFIX}', [voltar])
 
 
+    #assert len(maintexs) == len(set(maintexs))
+    #print (maintexs)
+    print (reqsdeps)
