@@ -30,6 +30,26 @@ dunegen-reqs () {
     xlsf=$(dunegen-untar $tf)
     dune-reqs render -t $templ -o $out $xlsf
 }
+dunegen-reqs-one-and-all () {
+    ccode="$1" ; shift
+    docid="$1" ; shift
+    onetempl="$1" ; shift
+    alltempl="$1" ; shift
+
+    oneout="$1"; shift
+    allout="$1"; shift
+    oneout="$(dirname $allout)/$oneout" # make sure target correct directory
+
+    if [ ! -f "$docid" ] ; then
+        exit -1
+    fi
+    tf="$(dirname $docid)/$(cat $docid).tar"
+    xlsf="$(dunegen-untar $tf)"
+    # use default '-c collection' option.
+    set -x
+    dune-reqs render-one -C "$ccode" -t "$onetempl" -T "$alltempl" -o "$oneout" -O "$allout" "$xlsf"
+    set +x
+}
 
 
 dunegen-help () {
