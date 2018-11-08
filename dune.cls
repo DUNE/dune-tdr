@@ -38,6 +38,14 @@
 %% https://tex.stackexchange.com/a/60212
 % Provide finer-grained sectioning.
 \RequirePackage{titlesec}
+%% bug in titlesec as provided by Ubuntu 16.04, fix with:
+%% https://tex.stackexchange.com/a/300259
+\RequirePackage{etoolbox}
+\makeatletter
+\patchcmd{\ttlh@hang}{\parindent\z@}{\parindent\z@\leavevmode}{}{}
+\patchcmd{\ttlh@hang}{\noindent}{}{}{}
+\makeatother
+
 \titleclass{\subsubsubsection}{straight}[\subsection]
 
 \newcounter{subsubsubsection}[subsubsection]
