@@ -1,0 +1,48 @@
+digraph control {
+        nodesep=0.4
+        ranksep=1.
+        rankdir=LR
+        splines=ortho
+        node[shape=box,style=rounded]
+        edge[color="#003b71"]
+        subgraph cluster_gl {
+                label="Global"
+                color="#f19f53"
+                node[style="rounded,filled",fillcolor="#ffd26c"]
+                {rank=same;
+                        gns[label="Global naming\nservice"];
+                        rm[label="Resource\n management"];
+                        pm[label="Process\n management"];
+                        am[label="Access\n management"]}
+
+        }
+        subgraph cluster_part {
+                label="Partition"
+                labelloc=bottom;
+                color="#003b71"
+                node[style="rounded,filled",fillcolor="#7daed3"]
+                pns[label="Partition naming\nservice"];
+                super[label="Supervisor"];
+                rc[label="Run\nControl"];
+                {rank=same;
+                        rc,pns}
+        }
+        human[label="",image="human-right.png",shape=plaintext]
+        ui[label="User\ninterface",style="rounded,filled",fillcolor="#ff671b"];
+
+        edge[constraint=false];
+        pns->gns[xlabel="register"]
+        rc->pm[xlabel="start/stop\nprocesses"]
+        ui->am
+        ui->rm
+        edge[constraint=true];
+        rc->pns[xlabel="queries  "]
+        rc->super[xlabel="starts"]
+        super->rc[xlabel=" command"]
+        ui->rc[xlabel="command"]
+
+        pm->am[xlabel="uses  "]
+        rm->pm[dir=back,xlabel="uses  "]
+        rm->pm[xlabel="stop\n processes"]
+        human->ui[xlabel="uses"]
+}

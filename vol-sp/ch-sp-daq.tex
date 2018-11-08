@@ -64,6 +64,26 @@ The sections below begin with the requirements for and interfaces between DAQ an
 
 \metainfo{One sentence introducing the contents of this section.}
 
+\fixme{The following are notes that need integration.}
+\begin{itemize}
+\item Requirements derived from Giovanna's CCM note:
+\begin{itemize}
+\item It shall be possible to take data simultaneously and independently from different subsets of the \dword{fd}.  Each subset is called a \dword{daqpart}.
+\item The DAQ shall minimize downtime for data acquisition and whenever possible continue nominal operations in parallel with any subset being taken offline or employed for any exceptional use.
+\item Transitioning between \dwords{daqrun} shall require little to no downtime and shall require no downtime for \dwords{daqpart} unrelated to the transition.  
+\end{itemize}
+\item Design guidelines from CCM note:
+  \begin{itemize}
+  \item A \dword{daqrun} is identified with a \dword{daqrunnum}.
+  \item The components of the DAQ shall be asynchronous and loosely coupled and in particular no global control of their state shall be centrally controlled.  Synchronization shall be performed dynamically and in a distributed fashion. 
+  \item The DAQ shall be robust against intentional and unexpected removal and addition of individual components. 
+    Single points of failure should not exist and may only be allowed based on a cost/risk analysis.
+  \item Detector coverage and DAQ data selection criteria shall be recorded.  Coincident with intentional changes and upon discovery of unintentional changes the DAQ shall transition to a new \dword{daqrun}.
+  \item Unexpected failures in the operation of DAQ components should be automatically detected, reported, and handled so as to minimize system and human reaction time and to minimize reliance on human intervention.
+  \end{itemize}
+\end{itemize}
+\fixme{The above are notes that need integration.}
+
 \subsection{Specifications}
 \label{sec:sd-daq:specifications}
 \fixme{single-phase module}
@@ -247,29 +267,150 @@ For example, a two way exchange of information between DAQ and \dword{cisc} shal
   Public key based ``iron'' authentication between run control processes and the controlled processes. 
   Describe how RC will configure partitioning, initiate reconfiguration, handle ``run'' changes, node discovery, configuration, logging, startup, shutdown and failures are handled. Describe how RC will support detector electronics configuration.}
 
-The \dword{ccm} subsystem encompasses all the software that is needed to control, configure and monitor the rest of the DAQ and to some extent its own subsystem. 
+The \dword{ccm} subsystem encompasses all the software that is needed to control, configure and monitor the rest of the DAQ and to some extent elements of its own subsystem. 
 It acts as a glue for the different DAQ components allowing them to be treated and managed as a coherent system, while not dealing directly with the primary transport of physics data, nor with their selection, nor with the orchestration of the data movement. 
 A pictorial view of the central role of the \dword{ccm} within the complete DAQ system was shown in Figure~\ref{fig:daq-conceptual-overview}.
 
-The \dword{ccm} is composed of three main sub-systems, the Control, the Configuration and the Monitoring, each with a well-defined role:
-\begin{itemize}
-\item The Control sub-system is in charge of managing the lifetime of the DAQ software processes, ensuring the respect of access and resource management policies; it is responsible for distributing commands to the different DAQ components and of detecting and handling errors; last, but not least, it offers a user interface allowing the operators and experts to act on the different DAQ system instances (Partitions).
-\item The Configuration sub-system consists of a database, a historic view of configurations used for data taking, a unique run number service, a configuration editor allowing experts to define the parameters needed for all components of the DAQ, and a data access layer allowing DAQ applications to retrieve relevant configuration parameters.
-\item The Monitoring sub-system provides the mechanisms for applications to publish and subscribe to information, messages and a sub-set of event data, for the purpose of monitoring and diagnosing the behavior of the DAQ system as well as the quality of the physics data.
-  In addition, it offers the possibility of archiving information, messages and histograms, thus allowing to keep a history of the system behavior and to carry out a posteriori system analysis when needed.
-\end{itemize}
+The \dword{ccm} is composed of three main sub-systems are briefly defined here and then detailed in the following sections.
+\begin{description}
 
-The three \dword{ccm} sub-systems interact and operate together to guarantee efficient data taking. As an example, as shown in Figure~\ref{fig:daq-ccm-subsys}, the Control sub-system relies on the Configuration to know which components participate the a DAQ instance, which policies to apply for resource management and error handling and uses the Monitoring in order to retrieve the status of DAQ components and detect any anomalies.
+\item[Control] sub-system actively manages DAQ software process lifetimes, asserts access control policies, executes commands, initiates change, detects and handles exceptions and provides human interface.
 
-It shall be noted that, while the CCM system is instrumental to the definition of the data taking conditions, the conditions database, as well as the definition of which conditions are important for offline analysis are not part of the CCM. The CCM will provide the required information on request.
+
+\item[Configuration] sub-system retains and provides access to current and historical information about the intended configuration of the high-level structure of the \dwords{daqpart} and the low-level configuration applied to each of their connected components.
+
+\item[Monitoring] sub-system accepts, stores and makes available current and historical status information collected from \dwords{daqpart} and their components.
+
+\end{description}
 
 \begin{dunefigure}{fig:daq-ccm-subsys}{Main interaction between the three CCM sub-systems.}
   \includegraphics[width=0.8\textwidth]{daq-ccm-subsys.pdf}
 \end{dunefigure}
 
-\fixme{There are still requirements and then detailed subsections on the three CCMs subsystems to consider adding.}
+The three \dword{ccm} sub-systems interact and operate together to guarantee efficient data taking.  As shown in Figure~\ref{fig:daq-ccm-subsys}, the Control sub-system relies on the Configuration to know which components participate the DAQ instance, which policies to apply for resource management and error handling and uses the Monitoring in order to retrieve the status of DAQ components and detect any anomalies.
+
+It shall be noted that, while the CCM system is instrumental to the definition of the data taking conditions, the conditions database, as well as the definition of which conditions are important for offline analysis are not part of the CCM. The CCM will provide any required information in response to network requests.
+
+\subsubsection{Control}
+\label{sec:daq:design:ccm:control}
+
+The DAQ Control sub-system is composed of a number of functional blocks in global or partition scope as illustrated in Figure~\ref{fig:daq-ccm-control}. 
+Those blocks shown in partition scope have instances created for each partition. 
+
+\fixme{I (bv) redrew this from Giovanna's to get vector PDF and match DUNE color palette.  I made two content changes: 1: move UI out of partition as it can't both initiate a partition and be inside it and likely will allow for creation/viewing of more than just one partition.  2: I had to guess on how garbage collection might go and so addded a line from RM to PM. }
+
+\begin{dunefigure}{fig:daq-ccm-control}{Roles and services which compose the DAQ Control sub-system.}
+  \includegraphics[width=0.8\textwidth]{daq-ccm-control.pdf}
+\end{dunefigure}
+
+The functional blocks represent one or more semi-autonomous and redundant agents each with defined roles, capabilities and access.  First the blocks at partition scope are described.
+
+\begin{description}
+\item[Partition naming service] This block provides \dword{daqdispre} at the scope of one \dword{daqpart}. 
+  The block provides a mechanism for a component in the partition to learn of the existence of others, their identities as well as determine if they are currently operational or have become unresponsive.
+
+\item[Run control] Starting a \dword{rc} block is the first step toward initiating a \dword{daqpart}. 
+  The \dword{rc} shall accept, interpret and validate input commands.  The commands shall describe the desired initial state of the aggregate of all components which are to comprise the \dword{daqpart}.  \dword{rc} may query other blocks to perform validation and then shall execute the commands by allocating processes through Process management.  Once successfully allocated, their lifetime is managed by \dword{rc}.  Throughout their lifetime \dword{rc} may reconfigure existing processes, destroy them or allocate additional processes.  \dword{rc} may query the Partition naming service to resolve resource identifiers referenced in commands to network endpoints.  
+
+\item[Supervisor] The initiation of a \dword{rc} block shall coincide with the initiating of a Supervisor block.  This block shall augment human commands with automated ones such as those needed for \dword{rc} to initiate actions to recover from some exception.
+
+\end{description}
+
+Global scope controls DAQ components for all \dwords{daqpart} across all \dword{fd} modules\footnote{DAQ instances at locations other than the \dword{fd} cavern are expected to be wholly distinct.}.  It consists of the following blocks.
 
 
+\begin{description}
+\item[Global naming service] This role aggregates the \dword{daqdispre} information across the partitions and in particular regarding the \dword{rc} instances.
+
+\item[Process management] This role allocates and may reclaim sets of processes on behalf of a requesting component (specifically \dword{rc} and Resource management). 
+  An allocation request shall include a complete description of the processes and their initial configuration information. 
+  A successful allocation shall occur only after this role initiates all processes and confirms their presence. 
+  Process management shall only allocate if the requester has sufficient access privileges as determined by Access management and if sufficient resources exist as determined by Resource management.
+  
+\item[Resource management] This role shall determine if any process allocation may proceed and provides process garbage collection. 
+  Resource management shall monitor the presence of all successful allocations as well as that of their requester.  
+  An allocation shall be accepted only if the resulting aggregate of processes violate no constraints maintained by Resulting management.
+  Resource management shall notify Process management of any remaining processes from an allocation when it detects that the requester has ceased to assert presence.
+  This role shall also support allocation pre-validation queries. 
+  The response to shall indicate whether the allocation would succeed at the current time but such a query shall not be interpreted as an allocation. 
+  No guarantee may be provided that the allocation may succeed or fail if subsequently requested.
+
+  
+\item[Access management] This role is responsible for providing authentication and authorization for all DAQ functions which require access control.  
+
+\end{description}
+
+\fixme{Should Process management return a partial allocation is a portion of processes fail?}
+
+Finally, a small number of applications shall provide human interfaces to the Control sub-system. 
+In particular, an application shall be developed which allows a trained operator to construct and issue commands required to initiate, configure, potentially reconfigure and finally terminate \dwords{daqpart}. 
+The UI shall confirm the user possesses sufficient authentication and authorization for a command to be executed by the \dword{rc} prior to allowing the user to attempt to construct it. 
+The UI may pre-validate that there are currently sufficient resources to execute the command to be issued.
+
+\fixme{Re the above paragraph: The line from UI to RM feels ``wrong'' to me. 
+  It sets up a race condition and requires the same type of message to go along two different paths.  It also causes a second line to AM.  I think better, the ``pre-validate'' of a allocation should be made via UI to PM whereby UI tells PM ``just checking''.  This leaves just race condition but makes the message paths simpler.  To remove the race condition then I think we need some kind of ``ticket'' mechanism whereby UI (or others) pre-allocate with PM.  PM either allocates then or in some way reserves the allocation, then then returns a cookie.  The cookie is passed in the command to RC which then uses it to ``claim'' the allocation.  Somewhat convoluted but no race.}
+
+\subsubsection{Configuration}
+\label{sec:daq:design:ccm:configuration}
+
+The DAQ Configuration sub-system shall a persistent data store for all historic, current and potential future configuration information applicable to the DAQ.
+Further, it shall maintain a record of the use of any configuration for every \dword{daqrun} and it shall provide for allocation of unique \dwords{daqrunnum}. 
+All data stores shall be insert-only and shall not support updating or deletion of existing records.
+The stores shall support the following types of information.
+
+\begin{description}
+
+\item[Partition structure] shall contain descriptions of the multiplicity and connectivity of DAQ components for any partition which has or may be formed. 
+  Structure shall be expressed in an abstract manner and ultimately in terms identifiers associated with logical addresses of detector electronics. \footnote{Mapping from abstract to concrete addressing may be done through the discovery and presence provided by naming services described in Section~\ref{sec:daq:design:ccm:control}.}
+
+\item[Component parameters] shall contain descriptions of configuration parameter sets associated with any DAQ component that has or may be initiated.  It shall accommodate data schema specific to each type of component. 
+
+\item[Run number] shall provide a sole source atomic allocation of unique, monotonically increasing \dwords{daqrunnum}.
+
+\item[Partition instances] shall provide a record, associated with a run number, of the partition structure and set of component parameters used to initiate a \dword{daqpart} or applied to a subsequent reconfiguration.  Records may consist of references into the subsequent stores.
+
+\item[Constraints] shall provide definitions of all constraints that have been or may be considered by Resource management. 
+  It shall record which constraint was employed by Resource management over time.
+\end{description}
+
+
+All stores provided by the Configuration subsystem shall provide a redundant access mechanism that assures any other requirement such as atomic run number allocations. 
+The access mechanism may be provided as a layer between client access and store implementation.
+For stores of data structures of complexity prohibitive to manual construction configuration editors and generators shall be developed.
+
+backups, offsite replication
+
+
+\subsubsection{Monitoring}
+
+The DAQ Monitoring sub-system is intended assist humans and expert systems in the detection, diagnosis and correction of anomalous activity, observation of intended operation and provide a historical record.
+It shall accept the required information produced by any DAQ component (here called ``status'').
+Status shall be stored a period not less than that required for the corresponding detector data to undergo initial offline data quality validation.
+Status shall be made available in a form suitable for human understanding promptly. 
+The required latency defining promptness needs further study and is expected to vary depending on the type of status and the purpose of its consumption.  
+Status shall be retrieved based on the time it was produced and the logical and physical addresses associated with its producer.
+This may be satisfied by developing status views accessing the status stores or it may be provided by views which subscribe to one or more of the status feeds provided by individual components.
+
+The precise implementation of the production, acceptance, store, post-processing, querying, visualization of monitored status requires additional development. 
+However, the selected \textit{linuga franca} IPC system described in Section~\ref{sec:fd-daq:design-messages} shall be used to deliver status information to the Monitoring sub-system. 
+Where this may conflict with a native IPC used by some subsystem a proxy may be supplied. 
+
+In general, the \dword{pubsub} network communication pattern shall be followed. 
+The Monitoring system may be further decomposed into a number high-level IPC protocols which are specified in terms of their message types and schema and the behavioral expectations at either endpoint of a connection.
+These are categorized as:
+
+
+\begin{description}
+\item[Common] all protocols shall have commonalities in terms of message identifiers including: \dword{pubsub} topic, sub-protocol type, message type, sender, host computer time and where applicable associated detector data time.  Specific protocols extend this by providing additional ``payload'' to their messages as described in the following items.
+ 
+\item[Logging] payload consists of an integer determining subjective importance (eg, enumerating categories: debug, info, warning, error, fatal) and a succinct, human-readable information string providing explanation of what led to the occurrence including static type and variable information. 
+\item[Metrics] payload consist of message in structure schema and carrying specific information about predefined aspects of the sender.  This is much like logging but the messages support automated consumption by expert systems.  
+\item[Quality] payload consists of summary information derived from the detector data (eg waveforms) or its metadata (eg timestamps, error codes) while it is in flight through the DAQ.
+\end{description}
+
+Some status feeds accepted by the Monitoring sub-system may be processed and only the resulting data sent to permanent store. 
+In particular the quality stream data rate may be prohibitively excessive so as to disallow long term storage in forms that meet the query requirements given above. 
+For example, this stream may be summarized into histograms or other statistical representations which shall be saved while the full input quality stream shall be discarded.
 
 \subsection{Detector Reaout}
 \label{sec:fd-daq:readout}
