@@ -377,3 +377,4 @@
 \newcommand\newtag[2]{#1\def\@currentlabel{#1}\label{#2}}
 \makeatother
 
+\usepackage{multirow}
