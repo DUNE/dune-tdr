@@ -354,7 +354,7 @@
 \usepackage{textcomp}
 
 
-% Comoditize citing DocDB
+% Comoditize citing DocDB (moved to defs, requires version number-Anne)
 %%% Note: this relies on the fact that DocDB is happy getting an empty
 %%% version= parameter.
 %%% So if user doesn't include a version, the link goes to the more
@@ -363,3 +363,9 @@
 %% or
 % \citedocdb[3]{12345}
 \newcommand{\citedocdb}[2][]{\href{https://docs.dunescience.org/cgi-bin/private/ShowDocument?docid=#2\&version=#1}{DocDB #2}\cite{bib:docdb#2}\xspace}
+
+% This is used for making row labels inside tables
+\makeatletter
+\newcommand\newtag[2]{#1\def\@currentlabel{#1}\label{#2}}
+\makeatother
+
