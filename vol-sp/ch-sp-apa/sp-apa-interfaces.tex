@@ -1,0 +1,101 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Interfaces}
+\label{sec:fdsp-apa-intfc}
+
+The interface between the \dword{apa} consortium and other detector consortia, facilities, and working groups covers a wide range of activities. Table~\ref{tab:apa_interface_docdb} summarizes the interface control documents under development. In the following, we elaborate slightly on the interfaces with the TPC readout electronics and the \dword{pds}, as well as the connections between neighboring \dwords{apa} in the \dword{spmod} and cable routing.  Other important interfaces are to the TPC \dword{hv} system (the \dword{fc}) and the \dword{dss} inside the DUNE cryostats.  
+
+\begin{dunetable}
+[\dword{apa} Interface Links]
+{p{0.4\textwidth}p{0.2\textwidth}}
+{tab:apa_interface_docdb}
+{\dword{apa} Interface Links }
+Interfacing System & Linked Reference \\ \toprowrule
+TPC electronics & \citedocdb{6670} \\ \colhline 
+Photon detector system & \citedocdb{6667} \\ \colhline
+Drift high voltage system & \citedocdb{6673} \\ \colhline
+DAQ & \citedocdb{6676} \\ \colhline
+Slow controls and cryogenics infrastructure & \citedocdb{6679} \\ \colhline
+Integration facility & \citedocdb{7021} \\ \colhline
+Facility interfaces (Detector Hall, Cryostat, and Cryogenics) & \citedocdb{6967} \\ \colhline
+Installation & \citedocdb{6994} \\ \colhline
+Calibration & \citedocdb{7048} \\ \colhline
+Software computing & \citedocdb{7102} \\ \colhline
+Physics & \citedocdb{7075} \\
+%CISC & \citedocdb{6787}{1} \\ \colhline
+%... & \citedocdb{nnnn}{n} \\ \colhline
+%(last item)& \citedocdb{}{} \\
+\end{dunetable}
+
+\begin{comment}
+\begin{dunetable}[\dword{apa} interface control documents]{lr}{tab:apa_interface_docdb}
+{Summary of interface control documents being developed.}  
+  Interface Document & DUNE doc-db number \\\colhline 
+  Interface to TPC electronics & 6670 \\ \colhline 
+  Interface to photon detector system & 6667 \\ \colhline
+  Interface to drift high voltage system & 6673 \\ \colhline
+  Interface to DAQ & 6676 \\ \colhline
+  Interface to slow controls and cryogenics infrastructure & 6679 \\\specialrule{1.5pt}{1pt}{1pt}
+  Integration facility interface & 7021 \\ \colhline
+  Facility interfaces (Detector Hall, Cryostat, and Cryogenics) & 6967 \\ \colhline
+  Installation interface & 6994 \\ \colhline
+  Calibration interface & 7048 \\\specialrule{1.5pt}{1pt}{1pt}
+  Software computing interface & 7102 \\ \colhline
+  Physics interface & 7075 \\ \colhline
+\end{dunetable}
+\end{comment}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{TPC Cold Electronics}
+\label{sec:fdsp-apa-intfc-elec}
+
+The TPC readout electronics are directly mounted to the \dword{apa} immersed in \lar to reduce the input capacitance and thus inherent electronic noise.  With the wire-wrapped design, all \num{2560} wires to be read out (recall \num{960} are $G$-plane wires used for charge shielding only and so are not read out) terminate on wire boards that stack along one end (the head) of the \dword{apa} frame.  The \num{2560} channels are read out by \num{20} \dword{fe} motherboards (\num{128} channels per board), each of which includes eight \num{16}-channel \dword{fe} ASICs, eight \num{16}-channel ADC ASICs, low-voltage regulators, and input signal protection circuits.  Figure~\ref{fig:apa_ce} provides a schematic view of the head end of an \dword{apa} with electronics installed and a cable tray mounted above. 
+
+\begin{dunefigure}[\dword{apa} interface with TPC electronics]{fig:apa_ce}
+{The head region of an \dword{apa} frame showing the 10 wire board stacks on each side, \num{20} \dword{fe} motherboard boxes, and the cable tray mounted above.}
+\includegraphics[width=0.85\textwidth,trim=10mm 0mm 10mm 20mm, clip]{sp-apa-elec-interface.png}
+\end{dunefigure}
+
+The interface between the \dword{apa} and TPC \dword{ce} involves a wide range of topics, including the hardware design and production, testing, integration, installation, and commissioning. The hardware interface has two basic components: mechanical and electrical. The mechanical interface includes the support of the \num{20} \dword{ce} boxes, each housing a \num{128} channel \dword{fe} motherboard.  They are the gray, vertically oriented boxes shown in Figure~\ref{fig:apa_ce}. 
+
+The electrical interface covers the choice of wire-bias voltages to the four wire planes so that \num{100}\% transparency can be achieved for drifting ionization electrons, cable connection for the wire bias voltages from the cryostat feedthroughs to the CR boards, interface boards connecting CR boards and \dword{ce} boxes, filtering of wire-bias voltages through CR boards to suppress potential electronic noise, and an overall grounding scheme and electrical isolation scheme for each \dword{apa}. The last item is particularly important to achieve the required low electronic noise levels.  See Chapter~\ref{ch:fdsp-tpc-elec} for information on all parts of the \dword{fe} electronics system.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Photon Detection System}
+\label{sec:fdsp-apa-intfc-pds}
+
+While the design of the \dword{pds} is still being developed, we expect to integrate it into the \dword{apa} frame to form a single unit for detecting both ionization charge and scintillation light.  The \dword{apa} frame design must also accommodate Cables for the \dwords{pd} .  Figure~\ref{fig:apa-pd} shows the interface for a light-guide bar based \dword{pds} like that deployed in \dword{pdsp}. Individual bars were inserted through \num{10} slots left on the side steel tubes of the frame. Rails mounted in the \dword{apa} frame, as shown in Figure~\ref{fig:apa-frame-2}, support the bars in their final positions. 
+
+\begin{dunefigure}[\dword{apa} interface with \dwords{pd} in \dword{pdsp}]{fig:apa-pd}
+{Installation of a light-guide bar photon detector module into the available slots in the \dword{apa} frame. Also shown is a concept for routing \dword{pds} cables through the rib tubes of the \dword{apa} frame and up the central vertical tube section.}
+\includegraphics[height=0.3\textheight]{sp-apa-light-bar-detail.png}\qquad\qquad
+\includegraphics[height=0.3\textheight]{sp-apa-light-bar-insert.png}\qquad\qquad
+\includegraphics[height=0.3\textheight]{sp-apa-light-bar-cable.png}
+\end{dunefigure}
+
+As with the \dword{ce}, the interface between the \dword{pds} and \dwords{apa} involves a wide range of topics, including the hardware design and production, testing, integration, installation, and commissioning. Depending on the final design of the \dword{pds}, the geometry of the \dword{apa}, including access slot dimensions, locations, and number, may require modification. Any proposed changes by the \dword{pds} consortium must be evaluated by the \dword{apa} consortium to consider structural effects or interference with other components.  The electrical interface includes a grounding scheme and electrical insulation. The strict requirements on noise from the \dword{ce} means the electrical interface must be defined together with the \single electronics consortium. 
+
+For more information on the photon system, see Chapter~\ref{ch:fdsp-pd} % the Photon Detector Chapter in the \dword{tdr}.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Cable Routing}
+\label{sec:fdsp-apa-intfc-cables}
+
+Cable routing schemes for both the TPC electronics and \dword{pds} are actively being developed.  We are currently evaluating running the cables of the \dword{pds} inside the crossing rib tubes to the central beam tube of the \dword{apa} frames to get to the top.  The \dword{ce} signal and power cables also must be routed so that the head end of the lower \dword{apa} in the two-\dword{apa} assembly can be reached. The current concept is to route the electronics cables inside the two side beams of the \dword{apa} frames. The right panel of Figure~\ref{fig:apa-cabling} depicts such a cable routing scheme. To fully accommodate the cables from two \dwords{apa}, %it is being considered to modify the \dword{apa} frame design 
+we are considering using larger hollow tube sections. The final design is in progress, and prototyping is planned for later this year to verify a cabling and installation solution.     
+
+\begin{dunefigure}[\dword{apa}-to-\dword{apa} connection and cable routing]{fig:apa-cabling}
+{%Left: Conceptual design for the \dword{apa}-to-\dword{apa} connection.  The green insulator pieces act to electrically isolate the two frames as required by the \dword{fe} electronics.  Right: 
+A concept for TPC electronics and \dword{pds} cable routing. Photon detector cables would go through the central beam and be distributed inside the supporting tubes of the \dword{apa} frame.  \Dword{ce} cables (both data and power) from the bottom \dword{apa} electronics would go through the outside tubes to reach the top of the stack.}
+%\setlength{\fboxsep}{0pt}
+%\setlength{\fboxrule}{0.5pt}
+%\fbox{\includegraphics[height=0.26\textheight]{apa-apa-mating.png}}\qquad \quad
+%\includegraphics[height=0.26\textheight]{apa-cable-routing.png}
+%\includegraphics[height=0.26\textheight]{sp-apa-apa-mating.png} \qquad
+\includegraphics[height=0.35\textheight]{sp-apa-cable-routing.png}
+\end{dunefigure}
+
+
