@@ -67,11 +67,11 @@ The sections below begin with the requirements for and interfaces between DAQ an
 \fixme{The following are notes that need integration.}
 \begin{itemize}
 \item Requirements derived from Giovanna's CCM note:
-\begin{itemize}
-\item It shall be possible to take data simultaneously and independently from different subsets of the \dword{fd}.  Each subset is called a \dword{daqpart}.
-\item The DAQ shall minimize downtime for data acquisition and whenever possible continue nominal operations in parallel with any subset being taken offline or employed for any exceptional use.
-\item Transitioning between \dwords{daqrun} shall require little to no downtime and shall require no downtime for \dwords{daqpart} unrelated to the transition.  
-\end{itemize}
+  \begin{itemize}
+  \item It shall be possible to take data simultaneously and independently from different subsets of the \dword{fd}.  Each subset is called a \dword{daqpart}.
+  \item The DAQ shall minimize downtime for data acquisition and whenever possible continue nominal operations in parallel with any subset being taken offline or employed for any exceptional use.
+  \item Transitioning between \dwords{daqrun} shall require little to no downtime and shall require no downtime for \dwords{daqpart} unrelated to the transition.  
+  \end{itemize}
 \item Design guidelines from CCM note:
   \begin{itemize}
   \item A \dword{daqrun} is identified with a \dword{daqrunnum}.
@@ -132,6 +132,14 @@ The sections below begin with the requirements for and interfaces between DAQ an
 \section{ProtoDUNE and DUNE Comparison}
 
 \metainfo{Here we write what similarities and differences there are between ProtoDUNE and DUNE DAQ designs.}
+
+\fixme{Notes:}
+ProtoDUNE-SP/DUNE differences from Kurt's DFO and EB doc.
+\begin{itemize}
+\item Motivation: need to accommodate changes in the overall system and provide greater flexibility and granularity.
+\item DUNE: input to DFO is the trigger command and provides all space/time addressing required to identify which data to collect.  Also includes is information about the trigger decision itself but the DFO merely passes this through to output.  The addressing contains all info needed for the DFO to act.
+\item DUNE: The EB updates DFO as to what resources (buffers) it has available
+\end{itemize}
 
 \subsection{Detector Readout Hardware}
 
@@ -415,6 +423,7 @@ For example, this stream may be summarized into histograms or other statistical 
 \subsection{Detector Reaout}
 \label{sec:fd-daq:readout}
 \fixme{module-generic}
+\fixme{Add words on the Data Selectors which front the Buffer.}
 
 The DUNE DAQ Readout system is the first element in the data flow chain of the DAQ system.
 Conceptually, this system corresponds to the receiver, buffer and a portion of the trigger subsystems illustrated in Figure~\ref{fig:daq-conceptual-overview}.
@@ -476,7 +485,7 @@ To satisfy that, the DAQ shall record a minimum of 30 seconds of data from a \dw
 The data rates and volumes involved in satisfying these requirements are such that different technology and scale must be employed compared to that required to select data from compact interactions.
 
 The worse-case temporary storage requirement for the readout system (using single phase detector technology as a metric) is in the order of 100 TB per DUNE detector module, with a throughout of approximately 10 Tb/s.
-This figure is challenging, but technically achievable already with today’s technologies, with a suited granularity of the \dwords{daqrou}. 
+This figure is challenging, but technically achievable already with today's technologies, with a suited granularity of the \dwords{daqrou}. 
 
 It is expected that in this area requirements will still be refined during the detailed design phase of the DAQ system, taking into account the ability of partially compressing data as well as more realistic estimates on trigger decision latency, etc.
 
@@ -603,8 +612,32 @@ command hierarchy.
 \label{sec:fd-daq:design-backend}
 \fixme{module-generic}
 
-\metainfo{This subsystem starts with receiving trigger commands from MTL, based on their content it queries Data Selectors on all front end computers, forms events, writes files to offline buffer disk. 
-  It may perform ``offline'' type processing along the way.}
+The DAQ back-end system encompasses essentially the Egress conceptual subsystem and interfaces to the Buffer and Trigger sub-systems illustrated in Figure~\ref{fig:daq-conceptual-overview}. 
+It accepts trigger commands produced by the Data Selection system as described in Section~\ref{sec:sp-daq:design-selection-algs}. 
+It queries the front-end buffer interfaces and accepts returned data as described in Section~\ref{sec:fd-daq:readout}. 
+Finally, it records trigger command and associated select data to the output storage buffer where it becomes offline responsibility.
+
+\subsubsection{Dataflow Orchestration}
+
+In order to minimize data extraction latency, the back-end Egress sub-system must not execute trigger commands to completion in a serial manner. 
+This asynchronous execution is termed \dword{daqdfo} and shall operate in the following manner and as illustrated in Figure~\ref{fig:daq:backend}:
+
+\begin{dunefigure}{fig:daq:backend}{Illustration of DUNE DAQ back-end operation.}
+  \includegraphics[width=0.8\textwidth]{daq-backend.pdf}
+\end{dunefigure}
+
+\begin{itemize}
+\item \dword{daqdfo} shall accept a stream of time ordered trigger commands and shall dispatch each for execution.
+\item It may evaluate the scope of a trigger command against a configurable set of constraints and segment it into multiple commands which contiguously and without overlap span the original command.
+\item Each trigger command segment shall be dispatched to a process, termed an \dword{eb}, for execution.
+\item \dword{eb} shall execute by requesting data covering the time period and detector span addressed by the trigger command segment.
+\item Requests shall be made to the all associated \dwords{daqfbi} and the \dword{eb} may expect a response from all including if the buffer has already purged the requested data.
+\item The returned data may undergo processing and further aggregation.
+\item The returned data shall be saved to one or more files on the output storage system after which their custody is transferred to the offline.
+\end{itemize}
+\fixme{Add time order requirement on DS above}
+\fixme{Add return-empty-response requirement to buffer above}
+
 
 
 \subsubsection{Event builder}

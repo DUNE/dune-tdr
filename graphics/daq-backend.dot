@@ -1,0 +1,69 @@
+digraph backend {
+        rankdir=LR;
+        splines=ortho
+
+        ranksep=1.5
+        node[style="filled,rounded",shape=box,fillcolor="#f19f53"]
+        subgraph cluster_trig {
+                label="Data\nSelection\nSystem"
+                ptl[shape=point];
+        }
+
+        subgraph cluster_buf {
+                label="Front-end\nBuffer\nInterfaces"
+                feb1[label="FE #1"]
+                feb2[label="FE #2"]
+                //feb3[label="FE #3"]
+                //feb4[label="FE #4"]
+                febN[label="FE #N"]
+                {rank=same;
+                        feb1;
+                        feb2;
+                        febN}
+                feb1->feb2->febN[style=invis]
+        }
+        subgraph cluster_be {
+                label="Egress subsystem"
+                dfo[label="Dataflow\nOrchestration"]
+                subgraph cluster_active {
+                        label="Active EBs"
+                        eb1[label="Event\nBuilder"]
+                        eb2[label="Event\nBuilder"]
+                        eb3[label="Event\nBuilder"]
+                        {rank=same;
+                                eb1;
+                                eb2;
+                                eb3}
+                        eb1->eb2->eb3[style=invis]
+                }
+                subgraph cluster_ebpool {
+                        label="EB Idle\nPool"
+                        eb5[label="Event\nBuilder"]
+                        eb6[label="Event\nBuilder"]
+                        eb7[label="Event\nBuilder"]
+                }
+        }
+        disk[label="output\nstorage\nsystem",fillcolor=gray]
+
+        ptl->dfo[label="trigger commands\n(time ordered)"];
+        
+        edge[color=red, constraint=false]
+        dfo->eb1[constraint=true]
+        dfo->eb2
+        eb1->feb1[dir=both,xlabel="request\ntrigger 2\ndata", constraint=true]
+        eb2->feb2[dir=both,constraint=true]
+
+        edge[color=blue]
+        dfo->eb3[xlabel="dispatch trigger\ncommand segments"]
+
+        eb3->feb1[dir=both]
+        eb3->feb2[dir=both,xlabel="request\ntrigger 1\ndata"]
+
+        edge[color=black,dir=forward]
+        disk->eb1[dir=back,constraint=true,xlabel="save to file"]
+        eb2->disk
+        eb3->disk
+
+
+
+}
