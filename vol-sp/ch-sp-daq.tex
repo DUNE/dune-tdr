@@ -673,29 +673,48 @@ It is expected that in this area requirements will still be refined during the d
 
 \fixme{There are many studies which could go into this section. Some of this may very likely be moved into one or more tech notes and referenced.}
 
+The Data Selection sub-system (DS) is responsible for real-time processing
+of data from all detector subcomponents; based on processing
+outcomes and external inputs, it is responsible for making decisions
+about what data must be transferred to the Backend System, and
+distributing those decisions to the Egress sub-system. Data processing is executed in various stages of firmware and
+software, and the overall sub-system is designed in such way as to
+provide flexibility on where the core processing payload functionality
+resides. 
 
-Data Selection must make the decision about what data will be
-transferred to the Backend Subsystem. 
-It does by providing the core payload software which runs in message
-passing nodes. 
-In particular it provides the trigger primitive, candidate and
-command hierarchy.
-
-\metainfo{One sentence that briefly describes the ``bow tie''
-  hierarchy: primitive, candidate, command, query. 
-  Do not repeat too much what is in the design overview. 
-}
-
+The DS follows a hierarchical level structure, where low-level
+decisions and forward-fed into higher-level ones, ultimately
+determining the issuing of a  module-level ``trigger''. The hierarchy
+structure is illustrated in Fig.~\ref{}. The hierarchy structure
+consists of four levels of processing: Trigger Primitive Generation;
+Trigger Candidate Generation; Module Level Trigger; and High Level
+Trigger. Each are described in subsequent sections.
 
 \subsubsection{Trigger Primitives}
 \label{sec:sp-daq:design-trigger-primitives}
 \fixme{single-phase module}
 
-\fixme{Trigger primitive algorithms run inside of the hardware of \ref{sec:sp-daq:design-fe-processing} but conceptually are more intimate with the Data Selection.  That section should reference this section.}
+A Trigger Primitive (TP) is defined nominally on a per-channel basis, and
+in the case of the SP TPC, it is identified with a per-wire
+``hit''. TPs are generated in the front-end readout part of the DAQ
+system, either in FPGA firmware, or in CPU or GPU software. 
 
-\metainfo{Describe what they are, how they are formed, storage size on disk, message schema. 
-  This section describes algorithms with references to where those algorithms may run (FPGA firmware or CPU software)} \metainfo{Reference the section that provides validation.}
+Algorithms for trigger primitive generation are under continuing development
+\cite{}. An example algorithm is one which ....
 
+This algorithm has been validated with both Monte Carlo
+for the DUNE FD and real data from protoDUNE. The performance is
+summarized in Sec.~\ref{xx}.
+
+Each trigger primitive consists of the following information:
+\begin{itemize}
+\item
+\end{itemize}
+
+The anticipated trigger primitive rate is expected to be dominated by
+Ar39 rates. Assumes the above TP format prescriptiont, the anticipated
+trigger primitive rate is expected to be xx . The subsequent stage of
+the DS must be able to absorb and process this TP rate in real time.
 
 \metainfo{Include plot and discussion of DUNE trigger primitive rate in protoDUNE. 
   The fact that this includes many more cosmics will not matter much as the rate is expected to be dominated by Ar39. 
