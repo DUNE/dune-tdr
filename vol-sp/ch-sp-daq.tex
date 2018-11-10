@@ -66,12 +66,21 @@ The sections below begin with the requirements for and interfaces between DAQ an
 
 \fixme{The following are notes that need integration.}
 \begin{itemize}
+\item Requirements for Buffering and Data Selection
+  \begin{itemize}
+  \item Front-end Buffer sub-system shall provide sufficient continuous storage of the full detector data flow to allow for the delay needed by the Data Selection subsystem to form a trigger decision, for the resulting trigger command to be executed by the back-end Egress sub-system and for the selected data to be received by the back-end.
+  \item The Buffer sub-system shall further provide sufficient continuous storage of the full detector data flow to allow selecting a subset prior to an SNB trigger decision for a period of time indicated by current SBN models. 
+    This pre-trigger time is taken to be $\approx$10s.
+
+  \end{itemize}
+
 \item Requirements derived from Giovanna's CCM note:
   \begin{itemize}
   \item It shall be possible to take data simultaneously and independently from different subsets of the \dword{fd}.  Each subset is called a \dword{daqpart}.
   \item The DAQ shall minimize downtime for data acquisition and whenever possible continue nominal operations in parallel with any subset being taken offline or employed for any exceptional use.
   \item Transitioning between \dwords{daqrun} shall require little to no downtime and shall require no downtime for \dwords{daqpart} unrelated to the transition.  
   \end{itemize}
+
 \item Design guidelines from CCM note:
   \begin{itemize}
   \item A \dword{daqrun} is identified with a \dword{daqrunnum}.
@@ -234,26 +243,44 @@ There will also be a DAQ presence in the \dword{itf} to support the work there d
 \subsection{Inter-process Communication}
 \label{sec:fd-daq:design-messages}
 \fixme{module-generic}
+\fixme{This can maybe moved toward the end of the section.}
 
-The DAQ must transfer data of various schema, latency and throughput. 
-For the most part these transfers must be reliable in that once data is sent it is received if the recipient is accessible on the network and operational. 
-As detailed in Section~\ref{sec:sp-daq:design-selection-algs}, one particularly critical element is the unit which makes the pinnacle trigger decision. 
-It shall be developed to support redundancy. 
-This will largely be satisfied by having IPC communication units follow the \dword{pubsub}.
+The DAQ must transfer data between elements inside the DAQ and with external sources. 
+This data is characterized by a variety of schema, latency and throughput. 
+The system which provides for such transfers is generally termed \dfirst{ipc}.
+For the most part, any \dword{ipc} system shall be reliable in that once a unit of data is sent it is successfully received as long as the recipient is accessible on the network and is operational. 
+IPC systems should be robust against temporary interruption of network connectivity. 
+A related and required function, described in Section~\ref{sec:fd-daq:design-run-control}, is that of \dword{daqdispre}. 
+An IPC system may provide that functionality.
 
+IPC, by construction, represents a system with a high degree of interconnection and associated complexity. 
+It is recognized that implementations for different DAQ subsystems may provide their own native IPC solutions. 
+The DAQ design shall support multiple such IPC \textit{domains} where they may be required to satisfy special requirements or if they are part of an existing sub-system solution. 
+The number of domain IPC systems shall otherwise be minimized and where selected shall have well defined and non-overlapping scopes of usage. 
+One IPC which is here termed the \textit{lingua franca} IPC, shall be selected after identifying options and evaluating them in terms of their performance, documentation, development simplicity and expectation of long term, open source and broad community support. 
+The \textit{lingua franca} IPC system will form the basis of any new sub-system development which otherwise lacks an \textit{domain} IPC system and for connecting domain IPC systems via translating proxies.
 
-Choices of IPC systems impact performance, functionality, development and support costs among others. 
-Some subsystem solutions bring their own IPC system while developers of the required novel systems must select a suitable IPC system. 
-The choice is one which must balance trade-offs. 
-The development philosophy is to minimize the number of distinct IPC systems while embracing existing ones which accompany high quality solutions for implementing subsystems.
-
-In general, an IPC domain covers IPC units which have support for the associated IPC system. 
-The DUNE FD DAQ shall select and develop a \textit{lingua franca} IPC system to be used for inter-domain IPC and as a candidate for direct use in any required novel development.  Any domain that does not naively support the \textit{lingua franca} IPC shall have a proxy or gateway unit developed that translates between the two.
-
-An example of a subsystem that shall support the IPC \textit{lingua franca} is the hierarchical trigger processing system provided by the data selection (Section~\ref{sec:sp-daq:design-selection-algs}. 
-An example of a subsystem providing its own IPC domain is artDAQ which shall provide the heart of the egress system (Section~\ref{sec:fd-daq:design-backend}).
+An example of a subsystem that may support the \textit{lingua franca} IPC is the hierarchical trigger processing system provided by the data selection (Section~\ref{sec:sp-daq:design-selection-algs}. 
+An a domain IPC is that which is employed by artDAQ which may provide the heart of the egress subsystem as described in Section~\ref{sec:fd-daq:design-backend}.
 The DAQ shall also interface with external domains. 
-For example, a two way exchange of information between DAQ and \dword{cisc} shall be developed as described in Section~\ref{sec:sp-daq:interfaces-cisc}.
+For example, a two-way exchange of information shall exist between DAQ and \dword{cisc} as described in Section~\ref{sec:sp-daq:interfaces-cisc}.  
+
+The protocols of the \textit{lingua franca} IPC shall be developed in conjunction with the DAQ sub-systems that use it. 
+Across all usage, some commonalities are required. 
+Every message shall carry a prefix of a fixed schema which shall include the following fields
+
+\begin{itemize}
+\item Identity of the dialect or version of \textit{lingua franca} IPC.  Mixing of dialects in one operation should not be performed.
+\item Identifier of the protocol within the IPC.
+\item Message type identifier.
+\item A \textit{data time}.
+\item Payload data following a message-type specific schema.
+\end{itemize}
+
+The \textit{data time} shall stamp the time of data acquisition of the data found in the message payload. 
+As new output IPC messages are derived input the \textit{data time} shall be forwarded.
+See Section~\ref{sec:daq:design:ccm:control} for how this timestamp is used to enact zero-downtime reconfiguration.
+
 
 \fixme{Shall we name ZeroMQ specifically as the basis for the \textit{lingua franca} IPC?}
 
@@ -271,7 +298,7 @@ For example, a two way exchange of information between DAQ and \dword{cisc} shal
 \metainfo{Describe run control and DAQ operation monitoring. 
   How it makes use of the Message Passing System. 
   What is an ``epoch''.
-  How Epoch Change Requests lead to zero down time reconfiguration. 
+  How Epoch Change Requests lead to zero downtime reconfiguration. 
   Public key based ``iron'' authentication between run control processes and the controlled processes. 
   Describe how RC will configure partitioning, initiate reconfiguration, handle ``run'' changes, node discovery, configuration, logging, startup, shutdown and failures are handled. Describe how RC will support detector electronics configuration.}
 
@@ -333,7 +360,10 @@ Global scope controls DAQ components for all \dwords{daqpart} across all \dword{
 \item[Process management] This role allocates and may reclaim sets of processes on behalf of a requesting component (specifically \dword{rc} and Resource management). 
   An allocation request shall include a complete description of the processes and their initial configuration information. 
   A successful allocation shall occur only after this role initiates all processes and confirms their presence. 
-  Process management shall only allocate if the requester has sufficient access privileges as determined by Access management and if sufficient resources exist as determined by Resource management.
+  Process management shall only allocate if the requester has sufficient access privileges as determined by Access management and if sufficient resources exist as determined by Resource management. 
+  Process management may support pre-allocation where sufficient access is determined and resources are confirmed and reserved and a token (``cookie'') is returned to the requester. 
+  This cookie may be presented to complete the allocation and claim the processes. 
+  After a configured timeout period the cookie may be invalidated.\footnote{This will be required if the race condition between multiple UIs and RCs is a problem.}  
   
 \item[Resource management] This role shall determine if any process allocation may proceed and provides process garbage collection. 
   Resource management shall monitor the presence of all successful allocations as well as that of their requester.  
@@ -348,15 +378,12 @@ Global scope controls DAQ components for all \dwords{daqpart} across all \dword{
 
 \end{description}
 
-\fixme{Should Process management return a partial allocation is a portion of processes fail?}
+The last block in Figure~\ref{fig:daq-ccm-control} represents applications which shall provide user interfaces (UI) to the Control sub-system which shall be developed to allow a trained operator to construct and issue commands required to initiate, configure, potentially reconfigure and finally terminate \dwords{daqpart}. 
+The UI may validate user commands prior to issuing them to an \dword{rc} by directly querying the process manager block. 
+If sufficient resources are currently unavailable or if the user lacks sufficient access the response shall include a descriptive error which the UI shall present to the human.
+If validation passes the UI shall send the command to the \dword{rc} for execution. 
+Additional UI elements shall be developed as described in Sections~\ref{sec:daq:design:ccm:configuration} and~\ref{sec:daq:design:ccm:monitoring}.
 
-Finally, a small number of applications shall provide human interfaces to the Control sub-system. 
-In particular, an application shall be developed which allows a trained operator to construct and issue commands required to initiate, configure, potentially reconfigure and finally terminate \dwords{daqpart}. 
-The UI shall confirm the user possesses sufficient authentication and authorization for a command to be executed by the \dword{rc} prior to allowing the user to attempt to construct it. 
-The UI may pre-validate that there are currently sufficient resources to execute the command to be issued.
-
-\fixme{Re the above paragraph: The line from UI to RM feels ``wrong'' to me. 
-  It sets up a race condition and requires the same type of message to go along two different paths.  It also causes a second line to AM.  I think better, the ``pre-validate'' of a allocation should be made via UI to PM whereby UI tells PM ``just checking''.  This leaves just race condition but makes the message paths simpler.  To remove the race condition then I think we need some kind of ``ticket'' mechanism whereby UI (or others) pre-allocate with PM.  PM either allocates then or in some way reserves the allocation, then then returns a cookie.  The cookie is passed in the command to RC which then uses it to ``claim'' the allocation.  Somewhat convoluted but no race.}
 
 \subsubsection{Configuration}
 \label{sec:daq:design:ccm:configuration}
@@ -390,6 +417,7 @@ backups, offsite replication
 
 
 \subsubsection{Monitoring}
+\label{sec:daq:design:ccm:monitoring}
 
 The DAQ Monitoring sub-system is intended assist humans and expert systems in the detection, diagnosis and correction of anomalous activity, observation of intended operation and provide a historical record.
 It shall accept the required information produced by any DAQ component (here called ``status'').
@@ -420,12 +448,77 @@ Some status feeds accepted by the Monitoring sub-system may be processed and onl
 In particular the quality stream data rate may be prohibitively excessive so as to disallow long term storage in forms that meet the query requirements given above. 
 For example, this stream may be summarized into histograms or other statistical representations which shall be saved while the full input quality stream shall be discarded.
 
-\subsection{Detector Reaout}
+In addition to this DAQ \dword{ccm} Monitoring sub-system there is a separate system that shall be used monitoring the quality of the content of the detector data itself.  See Section~\ref{sec:fd-daq:design-data-quality} for its description.
+
+\subsubsection{Partition Lifetime}
+\label{sec:daq:partition-lifetime}
+
+The partition lifetime is described here in a somewhat linear narrative but it must be stressed that the components shall not rely on any strict inter-component synchronization that is not explicitly constructed through a suitable protocol. 
+In particular, components shall be robust to the order in which peers are discovered.
+
+After the partition's processes are started through the allocation mechanism described in Section~\ref{sec:daq:design:ccm:control}, each component shall apply its initial configuration. 
+This information shall include any personal identifiers the component will assert as part of \dword{daqdispre} as well as the identifiers required to locate any other partition components required to bootstrap its own operation. 
+In particular, components shall be provided the identity of the partition's \dword{rc} instances so that it may take directives.
+
+The central directive the shall observe involves receiving and subsequent configuration which is used to construct the overall partition structure and connectivity.  
+This mechanism shall enable \textit{zero-downtime reconfiguration} as described next.
+The partition components shall accept and enact a \textit{configuration change command} (CCC) received from their identified \dword{rc}. 
+A CCC shall provide at least the following pieces of information:
+
+\begin{description}
+\item[run number] is a globally unique integer drawn from a monotonically increasing sequence managed by the DAQ Configuration sub-system as described in Section~\ref{sec:daq:design:ccm:configuration}. 
+  the \textit{run number} identities the instance of the partition as a collective whole which is to be constructed by the CCC that have been distributed.
+\item[activation time stamp] (ACT) states the \textit{data time} (see Section~\ref{sec:fd-daq:design-messages}) at which the CCC shall take effect. 
+\item[configuration payload] provides the component-specific configuration to be enacted and may include  pre-ACT actions that shall be made to assure a zero-downtime transition.
+\end{description}
+
+Upon receipt, a component shall create any new connections to peers and enact any other pre-ACT actions as directed by the CCC and it shall begin (or continue) to monitor the \textit{data time} of received messages. 
+If the component was operational prior to the receipt of the CCC as part of an earlier partition it shall continue its otherwise normal operations until the ACT is reached. 
+Upon receiving input containing a \textit{data time} at or after the ACT it shall apply the new configuration specified in the CCC. 
+At this point, any pre-ACT data which may be buffered by the component shall be flushed to its output. 
+Any input or output connections which are no longer applicable for the new partition definition shall be dropped. 
+Finally, the component shall renew operations starting with the data passing the ACT threshold and which initiated the reconfiguration.
+
+In order for this mechanism to truly provide zero-downtime reconfiguration the CCC messages must be received by the partition components sufficiently in advance of input data passing the ACT time.
+This requires the human-UI-\dword{rc} chain to select an ACT with knowledge of recent \textit{data time} and typical latency of the mechanism. 
+It is expected that a lead time of on order 1-10s is required. 
+
+After cycling through zero or more run numbers, the partition may be terminated. 
+Termination shall be initiated by the partition's \dword{rc} issuing a final round of CCCs. 
+As above these shall instruct the components to continue processing until the ACT is reached and after which any buffers shall be flushed to output. 
+Unlike zero-downtime reconfiguration the component shall then destroy all connections and exit. 
+The \dword{rc} shall notify the UI and Process manager of this destruction of the partition (saving briefly the \dword{rc} itself). 
+The Process manager shall forward to the Resource manager that the resources have been released. 
+The \dword{rc} shall then itself terminate and the partition is no more.
+The Resource manager shall confirm partition processes have terminated through \dword{daqdispre}. 
+In the exceptional case that the \dword{rc} aborts without cleanly terminating the partition its absence shall be detected and the remaining partition processes shall be reaped through the garbage collection mechanism described in Section~\ref{sec:daq:design:ccm:control}.
+
+\subsubsection{Self-healing}
+\label{sec:daq:self-healing}
+
+The above zero-downtime reconfiguration mechanism is intentional and typically driven by human action or via automated run sequencing algorithms. 
+In a similar manner, the partition shall \textit{self-healing} in the face of unexpected failures that render peers unresponsive or when unexpected information content is received by partition components.  
+Extending the metaphor, self-healing involves these phases: \textit{detection} of an injury to the partition, \textit{diagnosis} of the scope of the injury and \textit{intervention} by executing an action on the partition.
+
+Detection shall be performed by the DAQ Control sub-system Supervisor functional block in at least one of two methods.
+First, if a partition component become unresponsive (ie it ``crashes'' or ``hangs'') the Supervisor shall receive notification via DAQ \dword{daqdispre}. 
+Second, if a partition component detects injury such as receiving unexpected data it shall report the occurrence via IPC to the Supervisor.
+
+Upon any detection the Supervisor shall determine which partition components are impacted.  The heuristics and methods to perform this diagnosis may evolve as failure modes are discovered and/or removed.  The 
+
+Finally, the Supervisor shall respond to the detection. 
+Response shall in all cases include notifications to the Monitoring sub-system. 
+Any addition response is in the form of sending commands to the \dword{rc} to initiate a reconfiguration or a termination. 
+When initiating a reconfiguration, as with any, the command to the \dword{rc} shall include information required by the \dword{rc} to issue CCC messages. 
+As a consequence, the partition shall be reconfigured (and thus begin a new run number) as described in Section~\ref{sec:daq:partition-lifetime}.
+
+
+\subsection{Detector Readout}
 \label{sec:fd-daq:readout}
 \fixme{module-generic}
 \fixme{Add words on the Data Selectors which front the Buffer.}
 
-The DUNE DAQ Readout system is the first element in the data flow chain of the DAQ system.
+The Readout system shall be the first DAQ element in the data flow chain of the DAQ system.
 Conceptually, this system corresponds to the receiver, buffer and a portion of the trigger subsystems illustrated in Figure~\ref{fig:daq-conceptual-overview}.
 It is physically connected to the detector electronics via optical fiber and buffers and serves data to other DAQ sub-systems, namely the Data Selection and the Event Builder as detailed in Figure~\ref{fig:daq:readout}.\fixme{It would be nice to redraw this using DUNE colors.}
 
@@ -455,9 +548,9 @@ Existing firmware shall be adopted and adapted to ensure decoding and format che
 
 \subsubsection{Network based I/O}
 
-The Readout system is connected to the data selection and event building systems through a \dword{cots} switched network.
-While the communication protocols are not yet fully defined and will be chosen in due time to minimize cost and match the required performance, the flow of data in and out of the Readout system are already outlined (see Figure~\ref{fig:daq:readout}). 
-It is assumed that the network I/O will be handled by the \dwords{daqrou} via software and that no dedicated hardware or firmware development will be required for this functional block.
+The Readout system shall provide access to the data selection and back-end egress systems through a \dword{cots} switched network as illustrated in Figure~\ref{fig:daq:readout}).
+The network communication protocol shall be as described in Section~\ref{sec:fd-daq:design-messages}.
+The network I/O shall be handled by the \dwords{daqrou} via software and in particular, dedicated hardware or firmware development is not required.
 
 \subsubsection{Data processing}
 
@@ -471,8 +564,8 @@ This functional block may be implemented onto FPGAs, GPUs, CPUs or in a mixed fa
 
 \subsubsection{Temporary storage}
 
-In DUNE, the Readout system is in charge of storing the data until the Data Selection system has formed a decision and such that the Egress system may have sufficient time to request the corresponding data.
-There are a number of time scales and data throughput which dictate the technology and its scale which is required to satisfy these requests.
+In DUNE, the Readout system is in charge of storing the data until the Data Selection system has formed a decision and such that the Egress system may have sufficient time to request and receive the corresponding data.
+There are a number of time scales and data throughput which dictate the technology and its scaling which is required to satisfy these requests.
 
 The first is driven by the predominant physics which produces visible activity promptly after interaction and compactly in space and time. 
 The latency to form a trigger condition in this case is dominated by processing speed and pipeline depths and is expected to be on order of one second.  The amount of data which is expected to be requested as a result of such decisions is on order one or two TPC drift times (5-10\si{\milli\second} depending on detector technology).
@@ -612,14 +705,14 @@ command hierarchy.
 \label{sec:fd-daq:design-backend}
 \fixme{module-generic}
 
-The DAQ back-end system encompasses essentially the Egress conceptual subsystem and interfaces to the Buffer and Trigger sub-systems illustrated in Figure~\ref{fig:daq-conceptual-overview}. 
+The DAQ back-end system conceptually encompasses the egress subsystem and interfaces to the buffer and trigger sub-systems illustrated in Figure~\ref{fig:daq-conceptual-overview}. 
 It accepts trigger commands produced by the Data Selection system as described in Section~\ref{sec:sp-daq:design-selection-algs}. 
 It queries the front-end buffer interfaces and accepts returned data as described in Section~\ref{sec:fd-daq:readout}. 
-Finally, it records trigger command and associated select data to the output storage buffer where it becomes offline responsibility.
+Finally, it records the trigger command along with the corresponding selected data to the output storage buffer at which point data custody is transferred to the offline.
 
 \subsubsection{Dataflow Orchestration}
 
-In order to minimize data extraction latency, the back-end Egress sub-system must not execute trigger commands to completion in a serial manner. 
+In order to minimize data extraction latency, the back-end egress sub-system must not execute trigger commands to completion in a serial manner. 
 This asynchronous execution is termed \dword{daqdfo} and shall operate in the following manner and as illustrated in Figure~\ref{fig:daq:backend}:
 
 \begin{dunefigure}{fig:daq:backend}{Illustration of DUNE DAQ back-end operation.}
@@ -629,7 +722,7 @@ This asynchronous execution is termed \dword{daqdfo} and shall operate in the fo
 \begin{itemize}
 \item \dword{daqdfo} shall accept a stream of time ordered trigger commands and shall dispatch each for execution.
 \item It may evaluate the scope of a trigger command against a configurable set of constraints and segment it into multiple commands which contiguously and without overlap span the original command.
-\item Each trigger command segment shall be dispatched to a process, termed an \dword{eb}, for execution.
+\item Each trigger command segment shall be dispatched to a process, termed an \dword{eb} and described in Section~\ref{sec:fd-daq:design-event-builder}, for execution.
 \item \dword{eb} shall execute by requesting data covering the time period and detector span addressed by the trigger command segment.
 \item Requests shall be made to the all associated \dwords{daqfbi} and the \dword{eb} may expect a response from all including if the buffer has already purged the requested data.
 \item The returned data may undergo processing and further aggregation.
@@ -646,9 +739,30 @@ This asynchronous execution is termed \dword{daqdfo} and shall operate in the fo
 
 \metainfo{Explain artDAQ, handling of trigger commands by asynchronous, parallel queries to front end Data Selector (but take care not to duplicate between here and in the overview).}
 
+The DAQ back-end subsystem shall provide instances of a process (\dfirst{eb}) which shall request data from each \dfirst{daqfbi} addressed by the consumed trigger command segment.  An \dword{eb} shall marshal the returned data to the output storage system.  It may apply addition processing of this data for the purpose of data reduction (Section~\ref{sec:fd-daq:design-data-reduction}) and quality monitoring (Section~\ref{sec:fd-daq:design-data-quality}) as the data are in flight. 
+Resulting output files shall follow data schema and file formats as described in Section~\ref{sec:fd-daq:design-data-model}.
+
+
 \subsubsection{L2 Data Reduction}
+\label{sec:fd-daq:design-data-reduction}
+
+To retain high efficiency for collecting activity of interest while minimizing selection and content bias as well as reducing output data rate it is expected that some high level data reduction processing may be required. 
+This is termed second-level (L2) data reduction as it follows from the first-level provided by the Data Selection system as described in Section~\ref{sec:sp-daq:design-selection-algs}.
+Simulation-based studies are expected to be performed during the lead-up to construction and initial data analysis after operation may also be required in order to fully understand the amount and type of data reduction which may be beneficial. 
+The DAQ back-end sub-system thus shall allow for some form of L2 processing but its scale it yet to be determined. 
+The back-end subsystem should facilitate development of processing modules in an offline context and their porting or direct application to the back-end processing system.
+
+
 
 \subsubsection{Data Quality Monitoring}
+\label{sec:fd-daq:design-data-quality}
+
+Section~\ref{sec:daq:design:ccm:monitoring} described a monitoring system in the context of the \dword{ccm} sub-systems. 
+Monitoring of the quality of the information held in the detector data itself is critical to promptly responding to unexpected conditions and maximizing the quality of the acquired data. 
+A system for continuously processing a subset of the detector data and promptly providing summaries for human consumption shall be developed and is termed DAQ \dfirst{dqm}.
+The exact suite of products is expected to evolve and the \dword{dqm} subsystem shall be designed to facilitate this evolution. 
+As many software modules are expected to be developed in an offline context the \dword{dqm} subsystem shall facilitate their reuse when applied to the sample of detector data accepted by the sub-system.
+
 
 \subsubsection{Data Model}
 \label{sec:fd-daq:design-data-model}
@@ -661,6 +775,18 @@ This asynchronous execution is termed \dword{daqdfo} and shall operate in the fo
 \subsubsection{Output Buffer}
 
 \metainfo{Describe the output buffer system, how it's shared with offline, data hand-off prototocols.  Responsibility scope (eg, who handles transfer to FNAL).}
+
+The output buffer system is a hardware resource provided by the DAQ and operated by the DUNE offline effort. 
+It has two primary purposes. 
+First it decouples the operation of the DAQ in producing its contents from the operation of transferring its contents from the far site and to archive storage units and offline processing. 
+Second, it provides local storage that is sized sufficient to allow uninterrupted DAQ operation in the unlikely event that connectivity between the \dword{fd} and the Internet is lost. 
+Based on the very unusual occurrences of connectivity loss at major labs as well as \dword{fd} sites of other long-baseline neutrino experiments the output buffer shall provide storage capacity sufficient to retain one week of output given nominal data production rate. 
+The maximum data production rate for the \dword{fd} is set to be \SI{30}{\peta\byte/\year}. 
+Thus the output storage buffer must have a capacity of approximately \SI{0.5}{\peta\byte} to service the entire \dword{fd}.
+\fixme{How to reference the 30PB/yr requirement?}
+
+
+
 
 \subsection{Timing Distribution}
 \label{sec:sp-daq:design-timing}
