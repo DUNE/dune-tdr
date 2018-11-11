@@ -677,48 +677,171 @@ The Data Selection sub-system (DS) is responsible for real-time processing
 of data from all detector subcomponents; based on processing
 outcomes and external inputs, it is responsible for making decisions
 about what data must be transferred to the Backend System, and
-distributing those decisions to the Egress sub-system. Data processing is executed in various stages of firmware and
+distributing those decisions to the Egress sub-system. Data processing
+is executed in various stages of firmware and/or 
 software, and the overall sub-system is designed in such way as to
 provide flexibility on where the core processing payload functionality
-resides. 
+resides (hardware, firmware, or software). 
 
-The DS follows a hierarchical level structure, where low-level
+A key sub-system requirement is to select data associated with beam
+interactions, atmospheric neutrinos, rare baryon number violating events,
+and cosmic ray events depositing visible energy in excess of 100 MeV
+with $\gt$99\% efficiency. A second key requirement is to select data
+associated with potential galactic supernova bursts. This implies that
+the data selection sub-system must be capable of self-triggering on
+supernova bursts with $\gt$95\% efficiency. In order to also keep with the
+requirement that the DUNE FD maintain a $\lt$30~PB per yr to permanent
+tape, the DS sub-system must effectively reduce the generated data
+volume by four orders of magnitude, and maintain a fake supernova
+burst trigger rate of less than 1 per month.
+
+The DS sub-system design follows a hierarchical level structure, where low-level
 decisions and forward-fed into higher-level ones, ultimately
 determining the issuing of a  module-level ``trigger''. The hierarchy
-structure is illustrated in Fig.~\ref{}. The hierarchy structure
+structure is illustrated in Figure~\ref{fig:daq:data-selection}. The hierarchy structure
 consists of four levels of processing: Trigger Primitive Generation;
 Trigger Candidate Generation; Module Level Trigger; and High Level
 Trigger. Each are described in subsequent sections.
 
-\subsubsection{Trigger Primitives}
+\begin{dunefigure}{fig:daq:data-selection}{Block diagram of DUNE DAQ
+    Data Selection sub-system, illustrating hierarchical structure of
+    sub-system design.}
+%  \includegraphics[width=0.8\textwidth]{daq-data-selection.pdf}
+\end{dunefigure}
+
+Two general classes of trigger decisions are envisioned for the first
+stage of operations:
+\begin{itemize}
+ \item Localized (in time and space) activity triggers: These are
+   low-latency triggers and are intended to prompt readout of
+   high-energy events (depositing $\gt$100~MeV of visible energy) 
+   and potentially also low-energy events
+   (e.g. from solar neutrino interactions). In association with a
+   localized trigger, a total of 5.4 ms worth of data is recorded from
+   the entire 10-kton module that generated the trigger, including
+   both TPC and PDS subsystems.   
+\item Extended (in time and space) activity triggers: These are
+  high-latency (up to 10 seconds) triggers and are intended to prompt readout of
+  supernova burst-associated activity. This activity spans multiple
+  tens of seconds and comprises multiple supernova neutrino
+  interactions as part of a $\sim$10-second burst (from ~a few to
+  ~thousands of interactions in the case of a galactic supernova
+  burst). In association with an extended trigger, a total of 30-100
+  seconds worth of data is recorded from the 10-kton module that
+  generated the trigger, including both TPC and PDS subsystems, as
+  well as from the other three 10-kton modules, regardless of whether
+  the latter have generated an extended trigger of their own or not.  
+\end{itemize}
+
+To facilitate partitioning, the Data Selection sub-system must also be
+informed and aware of detector configuration and conditions in real
+time, and apply certain masks on subdetectors or components
+in its decision making. It is also required to provide to the Egress sub-system a list of
+subcomponents to read out, in association
+with any module-level trigger.
+
+\subsubsection{Trigger Primitive Generation}
 \label{sec:sp-daq:design-trigger-primitives}
 \fixme{single-phase module}
 
-A Trigger Primitive (TP) is defined nominally on a per-channel basis, and
-in the case of the SP TPC, it is identified with a per-wire
-``hit''. TPs are generated in the front-end readout part of the DAQ
-system, either in FPGA firmware, or in CPU or GPU software. 
+A Trigger Primitive is defined nominally on a per-channel basis, and,
+in the case of the SP TPC, it is identified with a per-collection-wire
+``hit''. Trigger Primitives provide summary information
+such as the start time of the pulse on a collection wire, the total
+charge or peak of the collection-wire pulse, and the time the pulse
+stays above some pre-determined threshold. Trigger Primitives for the
+TPC are generated in the front-end readout part of the DAQ 
+system, either in FPGA firmware, or in CPU or GPU software. For the
+PDS, TPs are generated in the PDS hardware and streamed to the DAQ
+DS sub-system.
 
 Algorithms for trigger primitive generation are under continuing development
-\cite{}. An example algorithm is one which ....
-
-This algorithm has been validated with both Monte Carlo
-for the DUNE FD and real data from protoDUNE. The performance is
-summarized in Sec.~\ref{xx}.
+\cite{docid-11275}. An example algorithm is one which a priori establishes
+channel baseline, applies baseline subtraction and thresholding, and
+identifies a hit over threshold \cite{docid-11236}. This algorithm has been
+validated with both Monte Carlo simulations and real data from protoDUNE. The performance is
+summarized in Section~\ref{sec:sp-daq:design-validation}.
 
 Each trigger primitive consists of the following information:
 \begin{itemize}
-\item
+\item channel address \[32 bit\]
+\item time of hit \[64 bit\]
+\item time over threshold \[16 bit\]
+\item ADC sum \[32 bit\]
+\item error flag \[16 bit\]
 \end{itemize}
+corresponding to a total of 20 Bytes.
 
-The anticipated trigger primitive rate is expected to be dominated by
-Ar39 rates. Assumes the above TP format prescriptiont, the anticipated
-trigger primitive rate is expected to be xx . The subsequent stage of
-the DS must be able to absorb and process this TP rate in real time.
+The anticipated trigger primitive rate  is expected to be dominated by
+$^{39}$Ar rates (10 MHz per module). Assuming the above TP format
+prescription, the anticipated trigger primitive rate is expected to be
+200 MB/s . The subsequent stage of the DS must be able to absorb and
+process this TP rate in real time, providing Trigger Candidate decisions. 
 
 \metainfo{Include plot and discussion of DUNE trigger primitive rate in protoDUNE. 
   The fact that this includes many more cosmics will not matter much as the rate is expected to be dominated by Ar39. 
   Phil has this already but the LAr purity is not yet high enough to see Ar39 across the whole drift distance.}
+
+\subsubsection{Trigger Candidate Generation}
+
+Trigger Primitives are streamed from the front-end DAQ readout to a
+higher level of data selection which examines those on a per
+subdetector (e.g. per APA) basis. This higher level of data selection examines
+whether the Primitives from that subdetector constitute a potential
+Trigger Candidate. Trigger Candidates are generated by looking for
+clusters of multiple hits in a narrow time window, the total ADC sum of one or a
+cluster of hits, or a large time-over-threshold. Trigger 
+Candidates will be generated with both a “low” and “high”-energy threshold. The former
+will be used for supernova burst triggering, the latter for triggers on beam, atmospheric
+neutrinos, cosmics, and other high-energy interactions in the detector. 
+
+A Trigger Candidate includes not only timing and subdetector
+identifier information, but also a rudimentary estimate of the detector
+activity which led to its formation, so that further downstream (at
+the Module Level Trigger stage) a decision can be made on 
+whether a particular Trigger Candidate should be counted as part of a possible supernova
+burst, or a different type of trigger. For example,
+a candidate with an estimated energy of 100~MeV would be considered a
+localized high energy trigger, while
+one with an estimated energy of 5~MeV would only be considered as potentially part of a
+supernova burst.
+
+\subsubsection{Module Level Trigger}
+Trigger Candidates are passed upstream to a “Module Level Trigger'' that collects candidates
+and makes the final decision on whether a valid localized high-energy
+activity (necessitating a module-wide readout trigger for a relatively
+short, 5.4~ms duration) has occured,
+or a possible supernova burst (necessitating a module-wide readout
+trigegr for a minimum of 30 seconds) has occured. The Module Level Trigger passes
+Trigger Commands, via the Egress sub-system, down to the front-end DAQ
+Readout, prompting the readout of a pre-determined amount of data depending
+on the type of Module Level trigger that has occurred. 
+
+The Module Level also takes inputs 
+from an “External Trigger,” including information from other
+modules, SNEWS alerts, and other external signals such as
+calibrations, 
+and it also sends information to the External Trigger so that other modules or
+detectors can be triggered.
+
+\subsubsection{High Level Trigger}
+
+The last processing stage of the data selection sub-system is the High
+Level Trigger, which resides in the
+Back-end part of the DAQ, and is further described in Section~\ref{sec:fd-daq:design-data-reduction}. The High Level Trigger acts on events that have already been triggered, read out,
+and built by the Event Builder, and it serves several purposes: It
+serves to limit the total triggered data rate that goes to disk, by
+applying more refined selection criteria that removes events that are clearly uninteresting. For example, instrumentally-generated events
+(e.g.~correlated noise) might lead to Trigger Candidates and a Module
+Level Trigger, but upon more detailed inspection those can be clearly determined
+to be non-physics events. It can also serve to reduce the triggered
+data set through further identification and localization of
+interesting activity.
+
+Beacuse the HLT is in the DAQ Back-end and operates on Event-built data, the rate
+of which is expected to be low, developing more sophisticated
+algorithms to eliminate empty APAs from the data 
+stream is possible.
 
 \subsection{Back-end System}
 \label{sec:fd-daq:design-backend}
