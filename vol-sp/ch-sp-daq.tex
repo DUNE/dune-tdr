@@ -135,8 +135,10 @@ The sections below begin with the requirements for and interfaces between DAQ an
 \label{sec:sp-daq:interfaces-cisc}
 \subsection{Calibration}
 \subsection{Timing}
-\metainfo{Note, this is an ``outgoing'' interface from DAQ's Timing System to various others. 
-  Instead of making this section explicit we may instead disperse Timing System interface information among the other Interface sections where appropriate.}
+Because the Timing System of the DUNE Far Detector interfaces with almost all detector systems and has
+a uniform interface to each of them, rather than comprising a set of
+bilateral interface documents, a single interface document
+\cite{docid-11224} describes all timing interfaces. 
 
 \section{ProtoDUNE and DUNE Comparison}
 
@@ -932,10 +934,61 @@ Thus the output storage buffer must have a capacity of approximately \SI{0.5}{\p
 
 \subsection{Timing Distribution}
 \label{sec:sp-daq:design-timing}
-\fixme{single-phase module}
-\fixme{Is it indeed still single-phase specific?}
+%\fixme{single-phase module}
+%\fixme{Is it indeed still single-phase specific?}
+%\metainfo{Hardware, consumers, links.}
 
-\metainfo{Hardware, consumers, links.}
+All components of the far detector are driven with clocks derived
+from a single GPS disciplined source, and all module components
+are synchronized to a 62.5 MHz clock. In order make full use of the
+information from the photon detection system (PDS), the common clock
+must be aligned within a single detector unit with an accuracy of
+O(1ns). In order to form a common trigger for supernova neutrino burst
+(SNB) between detector modules, the timing between them must be
+aligned with an accuracy of O(1ms). However, a tighter constraint is
+the need to calibrate the common clock to universal time (derived from
+GPS) in order to adjust the data selection algorithm inside an
+accelerator spill, which requires an absolute accuracy of O(1$\mu$s).
+
+The DUNE FD uses a development of the ProtoDUNE-SP timing
+system, whose design principle is to transmit synchronization messages over
+a serial data stream with the clock embedded in the data. The format
+is described in \cite{docid-1651}. The timing system design is
+described in detail in \cite{docid-11233}.
+
+Central to the timing system are four types of signals:
+\begin{itemize}
+\item a 10 MHz reference used to discipline a stable master clock,
+\item a one-pulse-per-second (1PPS) signal from the GPS,
+\item an NTP signal providing an absolute time for each 1PPS signal, and
+\item an Inter-Range Instrumentation Group (IRIG) time code signal
+  used to set the timing system 64-bit time stamp.
+\end{itemize}
+The timing system relates its time counter onto GPS time by
+timestamping the 1 PPS signal onto its own clock, and reading
+the corresponding time in software in NTP time.
+
+The timing system synchronization codes are distributed to the DAQ
+Readout components in the CUC as well as readout components on the
+cryostat via single mode fibers and passive splitters/combiners. All
+custom electronic components of the timing system are contained in two
+$\mu$TCA shelves; at any time, one is active while the other serves as
+a hot spare. The 10 MHz reference clock and the 1PPS signal
+are received by a single-width Advanced Mezzanine Card (AMC) at the
+center of the $\mu$TCA shelf. This master timing AMC is a custom board
+and is responsible for producing the timing system signals and encode them onto
+a serial data stream. This serial datastream is distributed over a backplane to 
+a number of fanout AMCs. The fanout AMC is an off-the-self board,
+carrying two custom FPGA Mezzanine Cards (FMCs). Each FMC has four SFP
+cages, where fibers connect the timing system to each detector
+component (e.g. APA), or Direct Attach cables connect
+to other systems in the CUC.
+
+In order to provide redundancy, two independent GPS systems are used,
+one with an antenna at the surface of the Ross Shaft, and the other
+with an antenna at the surface of the Yates Shaft. Signals from either
+GPS are fed through optical single mode fibers to the CUC, where
+either GPS signal can act as a hot spare while the other is active. 
 
 \subsection{Design Validation and Development Plan}
 \label{sec:sp-daq:design-validation}
