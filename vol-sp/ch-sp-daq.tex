@@ -1233,26 +1233,37 @@ either GPS signal can act as a hot spare while the other is active.
 \label{sec:sp-daq:design-validation}
 \fixme{single-phase module}
 
-The \dword{dune} \dword{fd} \dword{daq} validation strategy is four-fold: 
+The \dword{dune} \dword{fd} \dword{daq} design validation and development strategy is to:
 \begin{itemize}
-\item It exploits \dword{protodune} as a
-demonstration and development platform. 
-\item It uses \dword{fd} MonteCarlo simulation studies.
-\item It uses Vertical Slice Teststands for development and testing of
-  individual \dword{daq} subsystems as well as the overall \dword{daq}.
-\item It benefits from development and measurements from other ongoing
+\item Use \dword{protodune} as a design demonstration platform. 
+\item Use Vertical Slice Teststands for further development and testing of
+  individual \dword{daq} sub-systems as well as for key aspects of the
+  overall \dword{daq}. 
+\item Use \dword{fd} MonteCarlo simulations and studies to augment
+  demonstrations at \dword{protodune} and testing at Vertical Slice Teststands.
+\item Cross-check against developments and measurements from other ongoing
   LArTPC experiments.
 \end{itemize}
 
+The above strategy is reflected in the current DAQ project schedule, which
+comprises several phases, including an intense development phase
+taking place through 2020, which culminates into an Engineering Design
+Review (EDR) in Q4 of 2020. By this milestone, the system design will have been
+finalized, and shown to be capable of meeting the requirements of the
+final \dword{DAQ} system. Subsequent to the development phase, a
+pre-production phase ensues which ends with a Production Readiness
+Review (PRR), for which final designs of all components
+will be complete.
+
 The following subsections summarize past, ongoing, and planned
-validation studies, and identify how anticipated outcomes
-will be used to make a design decision.
+development and validation studies, and identify how anticipated outcomes
+will be used in finalizing the \dword{daq} design.
 %  Put each validation study (performed or future) in a subsubsection
  % and describe either \textbf{how it justifies a decision} or
  % \textbf{how its outcome will be used to make a decision in the
   %  future}.}
 
-\subsubsection{FELIX Throughput Demonstration at \dword{protodune}}
+\subsubsection{Ongoing FELIX Throughput Demonstration at \dword{protodune}}
 \label{sec:sp-daq:validation-pdune-felix}
 %\fixme{single-phase module}
 
@@ -1261,51 +1272,124 @@ will be used to make a design decision.
  % Describe the elements that are same or similar (full-rate to host
  % RAM buffer) and different (higher-rate but external trigger).}
 
-The FELIX \dword{daq} at \dword{protodune} demonstrates the readout scheme for
+The FELIX \dword{daq} at \dword{protodune} partly demonstrates the Front-end Readout scheme for
 the PDS system, as well as the FELIX+CPU readout approach for the
 TPC. The elements of the \dword{protodune} FELIX \dword{daq} which are the
-same are the reception of raw data at full rate from a single APA to a
-FELIX card and FELIX host RAM buffer, where upon external trigger the
+same as \dword{dune} and have already been demonstrated are the
+reception of raw data at full rate from a single APA to a 
+FELIX card and FELIX host RAM buffer, where upon the reception of an external trigger the
 data is propagated to the Back-end system. The Back-end system
-operates similarly to \dword{dune}. What differs from the final \dword{dune}
-implementation is the (lack of) processing of data in the host CPU or GPU, for
+operates similarly to \dword{dune}. To first order, what differs from the final \dword{dune}
+implementation is the (lack of) processing of data in the host CPU or
+GPU, or in added FPGA functionality, for
 the purpose of trigger primitive generation and subsequent processing
-of trigger primitives by the Data Selection System. Future development
+of trigger primitives by the Data Selection System. Another
+significant difference is the rate of data propagation from the
+host RAM to the Back-end system at \dword{protodune}, which is much higher
+than that anticipated for \dword{dune}. Future development
 efforts will concentrate on data processing and data selection
-development. On the other hand, the rate of data propagation from the
-host RAM to the Back-end system at \dword{protodune} is much higher
-than that anticipated for \dword{dune}.
+development.  This is described in more detail in Section~\ref{sec:sp-daq:validation-pd-demonstrator}.
 
-\subsubsection{RCE Throughput Demonstration at \dword{protodune}}
+\subsubsection{Ongoing RCE Throughput Demonstration at \dword{protodune}}
 \label{sec:sp-daq:validation-pdune-rce}
-\fixme{single-phase module}
+%\fixme{single-phase module}
 
 The RCE \dword{daq} at \dword{protodune} demonstrates part of the readout scheme for
 the FELIX+FPGA readout approach for the TPC. In particular, it
-facilitates the demonstration of real-time TPC data processing for lossy
-and lossless compression. In the future, the system will be used
-to demonstrate the generation of trigger primitives in FPGA.
+demonstrates that real-time TPC data processing for lossy
+and lossless compression can be facilitates in FPGA, achieving
+compression factors consistent with those expected based on observed
+\dword{protodune} noise levels. In the future, the system will be used
+to demonstrate the generation of trigger primitives in FPGA, as
+described in Section~\ref{sec:sp-daq:validation-pd-demonstrator}.
 
-\subsubsection{Trigger Primitives in Software}
+\subsubsection{Past Validation of Trigger Primitives in Software}
 \label{sec:sp-daq:validation-software-trigger-primitives}
-\fixme{single-phase module}
- 
-\metainfo{Succinctly describe algorithm, include physics and computing
-  performance numbers.}
+%\fixme{single-phase module}
 
+Although trigger primitive generation in CPU or GPU software has not
+yet been demonstrated in situ at \dword{protodune}, it has been
+demonstrated with simulation and real data from \dword{protodune} on a
+server with specs similar to those 
+of the FELIX host server at \dword{protodune}.
 
-\subsubsection{Trigger Primitives in Firmware}
+The algorithm is described in detail in \cite{docid-11236}, and has been
+demonstrated with MonteCarlo to be capable of real-time processing of one APAs worth
+of collection wire data. This test was performed on a Xeon Gold 6140
+system, where four (4) threads (cores) were found sufficient to keep
+up with the detector data rate. The algorithm begins with pedestal removal by
+finding the mean of any given wire waveform baseline using a ``frugal
+streaming'' approach. A ``look-ahead'' approach is used to stop
+updating the pedestal when it becomes clear that a potential signal
+has been found. Noise filtering in the form of a 7-tap low-pass FIR
+filter is be applied as an intermediate step
+between pedestal subtraction and hit finding. The hit finding
+algorithm is a simple threshold-discriminator. Using MonteCarlo, a hit
+threshold of 10 ADC counts, corresponding to 1\/4 MIP for deposits that
+originate at the cathode, yields hit primitives which are dominated by
+$^39$Ar, and maintains 100\% efficiency to MIP hits. This has been
+shown to be robust against noise level 
+increases of 50\% above the default \dword{dune} MonteCarlo settings \cite{docid-11275}. 
+
+Tests of Trigger Primitive generation on very early \dword{protodune} data have also been
+performed. Because of its surface
+location and known ``noisy'' channels included in this study,
+\dword{protodune} trigger primitive generation rates level off to a ``floor'' rate above a threshold
+of about 16 ADC counts. Although the total rates are much higher than
+anticipated for DUNE, the algorithm performance is promising and is
+expected to improve as ProtoDUNE continues
+to run and improve its noise understanding.
+
+\subsubsection{Past Validation of Trigger Primitives in Firmware}
 \label{sec:sp-daq:validation-firmware-trigger-primitives}
-\fixme{single-phase module}
+%\fixme{single-phase module}
 
-\metainfo{Succinctly describe algorithm, include physics and computing
-  performance numbers.}
+While trigger primitive generation in firmware has not yet been
+demonstrated with the RCE system in \dword{protodune}, candidate
+algorithms are being developed and are planned to be deployed in FPGA
+for both \dword{protodune} and other demonstrators. 
 
-\subsubsection{Vertical Slice Demonstrations}
-\label{sec:sp-daq:validation-demonstrators}
-\fixme{single-phase module}
+On the other hand, MicroBooNE has demonstrated
+successful implementation of dynamic baseline estimate and subtraction
+for region-of-interest (``hit'') finding in FPGA \cite{NNN18}.
+%\metainfo{Succinctly describe algorithm, include physics and computing
+%  performance numbers.}
 
-\metainfo{Describe VST demonstrators and why we must build them.}
+\subsubsection{Past Validation of Trigger Candidates in Software}
+
+
+\subsubsection{Past Validation of High Level Trigger}
+
+
+\subsubsection{Planned \dword{protodune} \dword{daq} Demonstrator}
+\label{sec:sp-daq:validation-pd-demonstrator}
+
+A demonstration of the DAQ system design based at \dword{protodune} is
+planned for 2020. The key components are the Front-End Readout, Timing
+System, and Data Selection Systems. A full vertical slice through the
+timing and readout system will be constructed, with
+TPC and PDS detectors, as well as calibration systems. Although a full-scale
+demonstration of the Data Selection cannot be achieved with
+\dword{protoDUNE}, the basic infrastructure will be demonstrated and
+used to self-trigger \dword{protodune}.
+
+The high-level goals will be to demonstrate and validate:
+\begin{itemize}
+\item Integration of Front-End with TPC and PDS electronics.
+\item Data throughput for a single Front-End instance.
+\item Readout data processing for a single Front-End instance.
+\item Trigger primitive generation for a single Front-End instance.
+\item Distribution of timing and control signals to detector front-ends.
+\item Data Selection infrastructure and self-triggering.
+\item Integration with calibration systems.
+\end{itemize}
+
+The components that will be used in the \dword{protodune}
+demonstrator will be assembled during 2019, and their operation will
+be verified in standalone tests. In the case of FPGA processing, the
+initial version of firmware will be demonstrated in FPGA development
+cards and an integration test will be conducted in 2019 with a
+prototype FPGA processing module and the FELIX Front-end.
 
 \subsubsection{Prototype Message Passing System}
 \label{sec:fd-daq:validation-demonstrators}
@@ -1315,8 +1399,34 @@ to demonstrate the generation of trigger primitives in FPGA.
   Very briefly describe the prototype message passing. 
   This will mostly refer to a tech note.}
 
-\subsubsection{Another validation....}
-\fixme{write me, as needed}
+\subsubsection{Planned Vertical Slice Teststands}
+\label{sec:sp-daq:validation-demonstrators}
+%\fixme{single-phase module}
+%\metainfo{Describe VST demonstrators and why we must build them.}
+
+A number of Vertical Slice Teststands will be built to allow
+development and testing of individual parts of the \dword{daq} system,
+or testing of key aspects of the design and overall scalability. At minimum, the following teststands
+will be constructed:
+\begin{itemize}
+\item Data Selection: List aims. One option is to construct a
+  full-scale Data Selection system using fake data 
+sources, which could be either simulation or real (pre-recorded) data,
+or both. However, it is not clear if this is feasible or sufficient
+resources exist to construct this. Another option is to identify
+likely failure points and/or bottlenecks and perform
+small-scale tests that stress the critical parts of the corresponding
+infrastructrure. The criteria for those tests will be defined a priori.
+\item Back-end System: List aims.
+\end{itemize}
+
+Besides the above dedicated Vertical Slice Teststands, a number of
+\dword{daq} development kits will be made available to other detector and
+calibration consortia, to support 
+their own development, production, and quality assurance programmes. The DAQ
+kit will also form the basis for testing at the ITF from the start of 2022. This will
+also allow validation of the detector and \dword{daq} interfaces. A
+single \dword{daq} kit will be capable of handling data from a single APA. 
 
 \section{Production, Assembly, Installation and Integration}
 \label{sec:sp-daq:production}
