@@ -50,7 +50,7 @@
 %   shared sections (this needs coordination with other chapters in the
 %   same boat).}
 
-The design of the \dword{dune} \dword{fd} \dfirst{daq} system is described in this chapter.  The \dword{daq} services all \dword{fd} \dwords{detmodule}.  Most  aspects of the design are identical across the different \dwords{detmodule} and they are described in sections below which are reproduced verbatim in this \dword{daq} chapter in each \dword{detmodule} TDR volume.  A minority portion of the \dword{daq} design that must be tailored to meet module-specific requirements are documented in sections below which are unique to each \dword{detmodule} TDR volume.  These sections are identified simply by their module-specific language.
+The design of the \dword{dune} \dword{fd} \dword{daq} system is described in this chapter.  The \dword{daq} services all \dword{fd} \dwords{detmodule}.  Most  aspects of the design are identical across the different \dwords{detmodule} and they are described in sections below which are reproduced verbatim in this \dword{daq} chapter in each \dword{detmodule} TDR volume.  A minority portion of the \dword{daq} design that must be tailored to meet module-specific requirements are documented in sections below which are unique to each \dword{detmodule} TDR volume.  These sections are identified simply by their module-specific language.
 
 The sections below begin with the requirements for and interfaces between \dword{daq} and other \dword{dune} systems.  A section comparing the \dword{protodune} experiment with \dword{dune} is given to highlight important information learned from that prototype and what still must be understood.  The subsequent section describes the design itself.  The chapter finishes with giving details on project management issues such as production, installation, cost, schedule, safety, and other items.
 
@@ -67,86 +67,8 @@ specifications provided in the following subsection. Some of those
 specifications are derived from the overall \dword{dune} \dword{fd} top level requirements.
 
 \fixme{Add requirements table.}
+%\input{generated/req-sp-daq.tex} 
 
- \input{generated/req-sp-daq.tex} 
-
-% \begin{dunetable}
-% [Requirements of the \dword{dune} \dword{fd} \dword{daq} System.]
-% {cllcll}
-% {tab:fd-daq:requirements}
-% {The requirements of the \dword{dune} \dword{fd} \dword{daq} System.}
-% Requirement ID & Name & Description & Value & Rationale & Validation \\ \toprowrule
-% 1 & High-energy Trigger & The detector shall trigger on the visible
-% energy of underground physics events with $>$99\% efficiency. &
-% $>$\SI{100}{\MeV} & Study of these events is part of the \dword{dune} mission.
-% Cosmic rays are also essential for calibration. & Refer to physics
-% TDR. \\ \colhline
-% 2 & Low-energy Trigger & The detector shall be capable of triggering
-% on the visible energy of single low energy neutrino interactions with
-% $>$50\% efficiency. &
-% $>$\SI{10}{\MeV} & Study of these events enables supernova and solar
-% neutrino physics studies and provides monitoring of detector. & Refer
-% to physics TDR. This value is an achievable parameter; lower
-% thresholds may be possible. \\ \colhline
-% 3 & Beam Trigger & The detector shall trigger on the visible energy of
-% beam interactions with efficiency high enough that it has a
-% sub-dominant impact on physics sensitivity. & $>$\SI{100}{\MeV} &
-% Study of these events is the primary \dword{dune} mission. & Techniques for
-% doing this have been run succesfully in MINOS, NOvA and T2K. This value
-% is an achievable parameter; lower thresholds are possible. \\
-% \colhline
-% 4 & Calibration Trigger & The detector shall provide triggers to and
-% trigger on calibration stimuli and tag the data from these triggers as
-% such. & & Calibration is essential to attain required detector
-% performance. & Refer to physics TDR. \\ \colhline
-% 5 & SNB Trigger & A trigger shall be generated when a collection of
-% low-energy trigger candidates is detected that constitute a candidate
-% supernova burst. & $<$1\/month on average & Study of SNB is part of
-% the \dword{dune} mision, this is one of the ways to collect such data. & Refer
-% to physics TDR. \\ \colhline
-% 6 & Physics Event Records & The \dword{daq} shall merge the data from one
-% physics trigger together in a data unit suitable for offline
-% analysis. Furthermore, tags shall be provided along with it to allow the data
-% collection conditions at the time and the livetime to be determined. &
-% & Allows the data conditions and the livetime at the time of the
-% record to be determined. & Required for offline physics analysis. \\ \colhline
-% 7 & \dword{daq} Deadtime & The \dword{daq} shall operate without any deadtime between
-% acquisition of data for single neutrino interactions and
-% backgrounds. & 0\% & Zero deadtime makes physics analysis bookeeping
-% for overall livetime much simpler, and allows acquisition of neutrino
-% evens even with accidentals from backgrounds such as radiologicals. &
-% 0\% is an achievable inter-event deadtime but a small deadtime would
-%  not significantly compromise physics sensitivity. \\ \colhline
-% 8 & High-level Trigger & The \dword{daq} architecture shall provide a parallel
-% processing farm once events have been built to enhance data selection
-% capability and leaverage the available bandwidth to permanent
-% storage. & & & \\ \colhline
-% 12 & Readout Data Buffering & Each readout shall store
-% data continuously in a ring so that when a trigger condition is
-% satisfied, the data from earlier (covering the trigger decision
-% latency and some additional lookback) is possible. & $>$\SI{4}{s} & \\
-% 101 & Supernova Deadtime Minimization & The \dword{daq} system shall allow
-% data collection to continue in some parts of the detector when a fault
-% or crash interrupts data collecting in one part. & & & \\ \colhline
-% 102 & Remote operation & The data collection shall be controllable
-% easilly from remote locations and the authentication shall be
-% implemented to allow exclusive control. & & & \\ \colhline
-% 103 & Expert mobile notification\/status & & & Viewing the status and
-% receiving notifications on mobile devices shall be facilitated.  & & &
-% \\ \colhline
-% 105 & Combined Operation & The SP \dword{daq} shall be integrated fully with
-% and operate consistently to the DP \dword{daq} and the near detector \dword{daq} to
-% allow shifts of all to be taken from one location by a small number of
-% operators. & & & \\ \colhline
-% 106 & Remote power and reset & Some form of slow control system & & &
-% \\ \colhline
-% 111 & Partitioning & The \dword{daq} system shall permit concurrent runing of
-% different subsets of the \dword{fd} elements in \dword{daqpart} to permit
-% detector development or specialised runs in parallel with standard
-% data taking. & & & \\ \colhline
-% 112 & Data Flow Orchestrator & & & & \\ \colhline
-% 113 & Configuration & & & & \\ 
-% \end{dunetable}
 
 %\fixme{The following are notes that need integration.}
 %  \item Front-end Buffer sub-system shall provide sufficient continuous storage of the full detector data flow to allow for the delay needed by the Data Selection subsystem to form a trigger decision, for the resulting trigger command to be executed by the back-end Egress sub-system and for the selected data to be received by the back-end.
@@ -190,6 +112,36 @@ listed in Table~\ref{tab:sec-daq:specifications}.
 %   level requirements of the \dword{dune} \dword{fd}.} 
 % Requirement ID & Name & Description & Value & Rationale & Validation \\ \toprowrule
 % %THE FOLLOWING ARE selected from top level requirements, Nov. 5 version of xls sheet
+% 8 & High-level Trigger & The \dword{daq} architecture shall provide a parallel
+% processing farm once events have been built to enhance data selection
+% capability and leaverage the available bandwidth to permanent
+% storage. & & & \\ \colhline
+% 12 & Readout Data Buffering & Each readout shall store
+% data continuously in a ring so that when a trigger condition is
+% satisfied, the data from earlier (covering the trigger decision
+% latency and some additional lookback) is possible. & $>$\SI{4}{s} & \\
+% 101 & Supernova Deadtime Minimization & The \dword{daq} system shall allow
+% data collection to continue in some parts of the detector when a fault
+% or crash interrupts data collecting in one part. & & & \\ \colhline
+% 102 & Remote operation & The data collection shall be controllable
+% easilly from remote locations and the authentication shall be
+% implemented to allow exclusive control. & & & \\ \colhline
+% 103 & Expert mobile notification\/status & & & Viewing the status and
+% receiving notifications on mobile devices shall be facilitated.  & & &
+% \\ \colhline
+% 105 & Combined Operation & The SP \dword{daq} shall be integrated fully with
+% and operate consistently to the DP \dword{daq} and the near detector \dword{daq} to
+% allow shifts of all to be taken from one location by a small number of
+% operators. & & & \\ \colhline
+% 106 & Remote power and reset & Some form of slow control system & & &
+% \\ \colhline
+% 111 & Partitioning & The \dword{daq} system shall permit concurrent runing of
+% different subsets of the \dword{fd} elements in \dword{daqpart} to permit
+% detector development or specialised runs in parallel with standard
+% data taking. & & & \\ \colhline
+% 112 & Data Flow Orchestrator & & & & \\ \colhline
+% 113 & Configuration & & & & \\ 
+% \end{dunetable}
 % 1 & Minimum Drift Field & The drift field in the TPC shall be greater
 % than \mindriftfield, with a goal of \mindriftfieldgoal. & $>$250 V\/cm
 % (goal 500 V\/cm) & This provides a specification for the maximum
@@ -425,7 +377,7 @@ bilateral interface documents, a single interface document
 
 \subsection{Other}
 
-\section{\dword{daq} Design}
+\section{DAQ Design}
 \label{sec:fd-daq:design}
 % \fixme{module-generic}
 
