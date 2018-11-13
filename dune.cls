@@ -330,14 +330,20 @@
 \presetkeys{todonotes}{disable}{}
 \newcommand{\hlfix}[2]{}
 \newcommand{\fixme}[1]{}
+\newcommand{\fixmehl}[1]{}
 \newcommand{\metainfo}[1]{}
 %\linenumbers  %<---- uncomment if you want ONLY linenumbers with otherwise print-ready copy
 \else
 % "draft"
 %Set default style for todonotes
 \presetkeys{todonotes}{fancyline}{}
+% highlight some text (arg #1) and attach a todo to it
 \newcommand{\hlfix}[2]{\texthl{#1}\todo{#2}}
+% inline via highlighting
+\newcommand{\fixmehl}[1]{\hl{#1}}
+% a fixme block
 \newcommand{\fixme}[1]{\todo[inline]{#1}}
+% a meta info block
 \newcommand{\metainfo}[1]{\todo[inline,backgroundcolor=yellow]{#1}}
 
 \linenumbers
