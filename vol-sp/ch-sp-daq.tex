@@ -63,8 +63,9 @@ The sections below begin with the requirements for and interfaces between \dword
 The \dword{dune} \dword{fd} \dword{daq} system must meet the requirements 
 summarized in Table~\ref{tab:fd-daq:requirements}. The system is
 designed to meet these requirements, and does so by following the key
-specifications provided in the following subsection. Some of those
-specifications are derived from the overall \dword{dune} \dword{fd} top level requirements.
+specifications provided in Table~\ref{tab:fd-daq:specifications}. Some of those
+specifications are derived from the overall \dword{dune} \dword{fd} \dword{daq}
+top level requirements, as indicated in the table.
 
 \fixme{Add requirements table.}
 %\input{generated/req-sp-daq.tex} 
@@ -78,9 +79,9 @@ specifications are derived from the overall \dword{dune} \dword{fd} top level re
  % \item The \dword{daq} shall minimize downtime for data acquisition and whenever possible continue nominal operations in parallel with any subset being taken offline or employed for any exceptional use.
 %  \item Transitioning between \dwords{daqrun} shall require little to no downtime and shall require no downtime for \dwords{daqpart} unrelated to the transition.  
  
-\subsection{Specifications}
-\label{sec:sd-daq:specifications}
-\fixme{single-phase module}
+%\subsection{Specifications}
+%\label{sec:sd-daq:specifications}
+%\fixme{single-phase module}
 
 %\item A \dword{daqrun} is identified with a \dword{daqrunnum}.
  % \item The components of the \dword{daq} shall be asynchronous and loosely coupled and in particular no global control of their state shall be centrally controlled.  Synchronization shall be performed dynamically and in a distributed fashion. 
@@ -89,9 +90,7 @@ specifications are derived from the overall \dword{dune} \dword{fd} top level re
   %\item Detector coverage and \dword{daq} data selection criteria shall be recorded.  Coincident with intentional changes and upon discovery of unintentional changes the \dword{daq} shall transition to a new \dword{daqrun}.
  % \item Unexpected failures in the operation of \dword{daq} components should be automatically detected, reported, and handled so as to minimize system and human reaction time and to minimize reliance on human intervention.
 
-The overall \dword{dune} \dword{fd} requirements which drive the key specifications of the
-\dword{daq} system, as well as additional key \dword{daq} system specifications, are
-listed in Table~\ref{tab:sec-daq:specifications}.
+
 
 %\metainfo{Include rows of top-level requirements table (``Schmitz''
 % table) here. 
@@ -105,168 +104,95 @@ listed in Table~\ref{tab:sec-daq:specifications}.
 
 \fixme{Add Specifications}
 
-%   [Specifications for the \dword{dune} \dword{fd} \dword{daq} System.]
-% {cllcll}
-% {tab:fd-daq:specifications}
-% {The \dword{dune} \dword{fd} \dword{daq} specifications, derived by either the \dword{daq} or the top
-%   level requirements of the \dword{dune} \dword{fd}.} 
-% Requirement ID & Name & Description & Value & Rationale & Validation \\ \toprowrule
+\begin{dunetable}
+[Specifications for the \dword{dune} \dword{fd} \dword{daq} System.]
+{cllc}
+{tab:fd-daq:specifications}
+{The \dword{dune} \dword{fd} \dword{daq} specifications, derived from
+  the \dword{daq} top-level requirements.}  
+Specification & Name & Description & Value \\ \toprowrule
 % %THE FOLLOWING ARE selected from top level requirements, Nov. 5 version of xls sheet
-% 8 & High-level Trigger & The \dword{daq} architecture shall provide a parallel
-% processing farm once events have been built to enhance data selection
-% capability and leaverage the available bandwidth to permanent
-% storage. & & & \\ \colhline
-% 12 & Readout Data Buffering & Each readout shall store
-% data continuously in a ring so that when a trigger condition is
-% satisfied, the data from earlier (covering the trigger decision
-% latency and some additional lookback) is possible. & $>$\SI{4}{s} & \\
-% 101 & Supernova Deadtime Minimization & The \dword{daq} system shall allow
-% data collection to continue in some parts of the detector when a fault
-% or crash interrupts data collecting in one part. & & & \\ \colhline
-% 102 & Remote operation & The data collection shall be controllable
-% easilly from remote locations and the authentication shall be
-% implemented to allow exclusive control. & & & \\ \colhline
-% 103 & Expert mobile notification\/status & & & Viewing the status and
-% receiving notifications on mobile devices shall be facilitated.  & & &
-% \\ \colhline
-% 105 & Combined Operation & The SP \dword{daq} shall be integrated fully with
-% and operate consistently to the DP \dword{daq} and the near detector \dword{daq} to
-% allow shifts of all to be taken from one location by a small number of
-% operators. & & & \\ \colhline
-% 106 & Remote power and reset & Some form of slow control system & & &
-% \\ \colhline
-% 111 & Partitioning & The \dword{daq} system shall permit concurrent runing of
-% different subsets of the \dword{fd} elements in \dword{daqpart} to permit
-% detector development or specialised runs in parallel with standard
-% data taking. & & & \\ \colhline
-% 112 & Data Flow Orchestrator & & & & \\ \colhline
-% 113 & Configuration & & & & \\ 
-% \end{dunetable}
-% 1 & Minimum Drift Field & The drift field in the TPC shall be greater
-% than \mindriftfield, with a goal of \mindriftfieldgoal. & $>$250 V\/cm
-% (goal 500 V\/cm) & This provides a specification for the maximum
-% readout integration time for the \dword{daq} & \\ \colhline
-% 2 & Front-end electronics noise & The FE electronics shall contribute
-% no more than \elecnoisefe of noise, with a goal of ALARA. This
-% requirement is on total system noise; it is expected that random noise
-% on the FE will dominate. & $<$ 1000 enc & This provides a
-% specification for the data reduction that can be achieved by the \dword{daq}. & \\ \colhline
-% %3 & Light Yield & The light yield shall be sufficient for measuring
-% %event time (and total intensity) of events with visible energy above
-% %\SI{200}{MeV}.  Goal is to make possible a \num{10}\% energy
-% %measurement for events with a visible energy of \SI{10}{MeV}. & $>$
-% %0.5 pe\/MeV & & \\ \colhline
-% 4 & Time Resolution & The time resolution shall be less than \timeres
-% in order to assign a unique event time. & $<$ 1 microsecond & This
-% determines the required timing resolution of the \dword{daq}
-% timing distribution and synchronization system. & \\ \colhline
-% %5 & Liquid Argon Purity & The LAr purity shall remain lower than
-% %\larpurity (with a goal of < \larpuritygoal). This corresponds to e-
-% %lifetime of 3 (10) ms. & $<$ 100 ppt (goal 30 ppt) & & \\ \colhline
-% 12 & HV power supply ripple contribution to system noise & Power
-% supply ripple shall be adequately attenuated to guarantee that its
-% contribution to the overall system electronics noise (at
-% \SI{50}{\hertz} and in the \SI{30}{\kilo\hertz} region) is negligible.
-% & $<$ 100 enc & This provides a
-% specification for the data reduction that can be achieved by the \dword{daq}.  & \\ \colhline
-% %16 & Detector Live Time & The detector shall operate stably at least
-% %\livetime of the time in order to collect the required physics data. &
-% %$>$ 90\% & The \dword{daq} should contribute to the detector
-% %downtime by more than 1\%. & \\ \colhline
-% 19 & ADC Sampling Frequency & The ADC sampling frequency shall be set
-% so as to extract maximal information without unecessarily increasing
-% data rate. & 2 MHz & This determines the size of data associated with
-% each trigger record. & \\ \colhline
-% 20 & ADC dynamic range & The ADC dynamic range shall be at least
-% \adcdynrange, with a goal of \num{4070}:\num{1}. & $>$3000:1 (goal
-% 4070:1) & This determines the size of data associated with
-% each trigger record. & \\ \colhline
-% 22 & Data Rate to Tape & The \dword{daq} shall provide capability for
-% triggering on events of interest in order to limit the total bandwidth
-% for events stored on tape. & $<$30 PB/year & This determines the
-% overall data reduction factor to be provided by the \dword{daq}. &  \\ \colhline
-% 25 & Non-FE Noise Contributions & All non-FE noise contributions shall
-% be much lower than the targeted noise level for the collection wires.
-% & $\ll$ 500 enc & This provides a
-% specification for the data reduction that can be achieved by the \dword{daq}. \\ \colhline
-% 27 & Introduced Radioactivity & Introduced radioactivity shall be less
-% than that from 39Ar. & ALARA & This provides a
-% specification for the data reduction that can be achieved by the \dword{daq}.
-% & \\ \colhline
-% %28 & Dead Channels & Detector components shall be sufficiently
-% %reliable so as to ensure that dead channels do not exceed
-% %\deadchannels over the lifetime of the experiment. & $<$ 1\% & & \\
-% %THE Following are selected from josh klein's edited version of
-% %oct. 26 daq requirements sheet from Giles
-% 11 & Localization of trigger & The trigger system shall be capable of
-% recording the time and the aproximate APA location of each trigger for
-% use in data reduction & & & \\ \colhline
-% 13 & Trigger decision latency & The trigger decision time for single
-% interactions shall be made and delivered back to the continuous
-% storage element within a time of 1s 99\% of the time and within 2s 100\%
-% of the time and ALARA. & $<$\SI{1}{s} & & \\ \colhline
-% 14 & Trigger window & The data around a trigger will be collected in a
-% programmable time window that is configurable by trigger type.
-% Excepting the SNB trigger (where data are writren to a different
-% destination), this shall be programmable within a minimum time of 20us
-% and a maximum of 30ms. & $<$\SI{20}{ms} & 30ms is well over 3 drift
-% times in even the lowest fields and seems to be easy to implement.
-% Programmable by trigger type allows optimisation of bandwidth in
-% system. & \dword{protodune} trigger window \\ \colhline
-% 15 & SNB trigger window & When a SNB trigger is activated, the data
-% from the pre-trigger buffer and then the further incoming data shall
-% be stored in a non-volatile solid-state-drive  & & Primary physics
-% mission & \\ \colhline
-% 16 & SNB deadtime & When the unallocated space in the SNB
-% solid-state-drives runs out, the SNB trigger shall not
-% overwriteexisting data in the solid-state-drives. & & The deallocation
-% of SSD space should be done rapidly, and is better than a policy of
-% overwriting by default. & \\ \colhline
-% 17 & Livetime of triggers & A software programmable trigger priority
-% scheme shall be provided, this shall be implemented in a way that the
-% main physics triggers are never or rarely inhibited to enable the
-% live-time of these triggers to be easilly determined. & & For example,
-% to hold off calibration when the beam is expected, or to stop certain
-% triggers (e.g. calibration) during an SNB trigger.  Also to prioritize
-% an atmospheric neutrino trigger above a solar-neutrino trigger & \\
-% \colhline
-% 21 & Trigger primitives from APAs & A real-time algorith shall
-% generate trigger primitives by search for "hits" on collection
-% wires. Trigger Primitves will include information that is at least the
-% channel number, the hit time, the pulse height or integral, and pulse
-% width. Trigger Primitive generation will have a latency that is small
-% enough that it can keep up with the detector data rate. & & & \\
-% \colhline
-% 22 & Trigger candidates from APAs & A real-time algorithm shall search
-% for trigger candidates in each APA based on clustering of hit
-% collection wires, total event charge, and pulse widths. "Low-energy"
-% candidates will be identified for use in a supernova burst
-% trigger. The latency from the processing time shall be small enough
-% that candidate generation keeps up with data rate. & & & \\ \colhline
-% 23 & Trigger Primitives from PDs & A real-time algorothm shall provide
-% trigger primitives by searching for "hits" in photon detectors and
-% provide. Trigger primitives will include at least channel number, hit
-% time and pulse height information. The latency shall be small enough
-% that it can keep up with detector data rate. & & & \\ \colhline
-% 31 & Collection trigger primitives & The APA readout is currently only
-% required to generate trigger primitives from the collection planes,
-% and only on the wires facing the active detector. & & & \\
-% 32 & Data compression & The APA readout may be losslessly compressed,
-% but no general lossy compression should be applied.   The compression
-% factor shall be at least 2. & 2 & & \\ \colhline
-% 33 & Dead channels & Channels may be flagged by an operator as dead
-% and the \dword{daq} shall disregard them in the trigger & & & \\ \colhline
-% 34 & Noisy channels & Channels may be flagged by an operator as noisy
-% and the \dword{daq} may disregard them in the trigger and apply a filtering
-% before compression to improve compresibility of these channels & & We
-% require that the compression algorithm does not inflate the data when
-% averaged over times of 10s of milliseconds, to avoid needing to build
-% in complex buffer management downstream for edge cases.  This
-% technique enables that simplification. & Examples of filtering that
-% could be applied to especially noisy channels would be to zero out the
-% low-significant-bits of the noisy channel, or to add adjacent channels
-% together to downsample to 1MHz. \\
-% \end{dunetable}
+ 8 & High-level Trigger & The \dword{daq} architecture shall provide a
+ parallel processing farm once events have been built to enhance data selection
+  capability and leaverage the available bandwidth to permanent
+  storage. &  \\ \colhline
+ 11 & Localization of trigger & The trigger system shall be capable of
+ recording the time and the aproximate APA location of each trigger for
+use in data reduction &  \\ \colhline
+ 12 & Readout Data Buffering & Each readout shall store
+ data continuously in a ring so that when a trigger condition is
+ satisfied, the data from earlier (covering the trigger decision
+ latency and some additional lookback) is possible. & $>$\SI{4}{s}  \\
+ \colhline
+13 & Trigger decision latency & The trigger decision time for single
+ interactions shall be made and delivered back to the continuous
+storage element within a time of 1s 99\% of the time and within 2s 100\%
+of the time and ALARA. & $<$\SI{1}{s} \\ \colhline
+14 & Trigger window & The data around a trigger will be collected in a
+programmable time window that is configurable by trigger type.
+Excepting the SNB trigger (where data are writren to a different
+destination), this shall be programmable within a minimum time of 20us
+and a maximum of 30ms. & $<$\SI{20}{ms} \\ \colhline
+15 & SNB trigger window & When a SNB trigger is activated, the data
+from the pre-trigger buffer and then the further incoming data shall
+be stored in a non-volatile solid-state-drive & \\ \colhline
+16 & SNB deadtime & When the unallocated space in the SNB
+solid-state-drives runs out, the SNB trigger shall not
+overwriteexisting data in the solid-state-drives. & \\ \colhline
+17 & Livetime of triggers & A software programmable trigger priority
+scheme shall be provided, this shall be implemented in a way that the
+main physics triggers are never or rarely inhibited to enable the
+live-time of these triggers to be easilly determined. & \\
+\colhline
+21 & Trigger primitives from APAs & A real-time algorith shall
+generate trigger primitives by search for "hits" on collection
+wires. Trigger Primitves will include information that is at least the
+channel number, the hit time, the pulse height or integral, and pulse
+width. Trigger Primitive generation will have a latency that is small
+enough that it can keep up with the detector data rate. & \\
+\colhline
+22 & Trigger candidates from APAs & A real-time algorithm shall search
+for trigger candidates in each APA based on clustering of hit
+collection wires, total event charge, and pulse widths. "Low-energy"
+candidates will be identified for use in a supernova burst
+trigger. The latency from the processing time shall be small enough
+that candidate generation keeps up with data rate. & \\ \colhline
+23 & Trigger Primitives from PDs & A real-time algorothm shall provide
+trigger primitives by searching for "hits" in photon detectors and
+provide. Trigger primitives will include at least channel number, hit
+time and pulse height information. The latency shall be small enough
+that it can keep up with detector data rate. & \\ \colhline
+31 & Collection trigger primitives & The APA readout is currently only
+required to generate trigger primitives from the collection planes,
+and only on the wires facing the active detector. & \\
+32 & Data compression & The APA readout may be losslessly compressed,
+but no general lossy compression should be applied.   The compression
+factor shall be at least 2. & 2 \\ \colhline
+33 & Dead channels & Channels may be flagged by an operator as dead
+and the \dword{daq} shall disregard them in the trigger & \\ \colhline
+34 & Noisy channels & Channels may be flagged by an operator as noisy
+and the \dword{daq} may disregard them in the trigger and apply a filtering
+before compression to improve compresibility of these channels & \\
+ 101 & Supernova Deadtime Minimization & The \dword{daq} system shall allow
+ data collection to continue in some parts of the detector when a fault
+ or crash interrupts data collecting in one part. & \\ \colhline
+ 102 & Remote operation & The data collection shall be controllable
+ easilly from remote locations and the authentication shall be
+ implemented to allow exclusive control. & \\ \colhline
+ 103 & Expert mobile notification\/status & & \\ \colhline
+ 105 & Combined Operation & The SP \dword{daq} shall be integrated fully with
+ and operate consistently to the DP \dword{daq} and the near detector \dword{daq} to
+allow shifts of all to be taken from one location by a small number of
+operators. & \\ \colhline
+106 & Remote power and reset & Some form of slow control system & 
+\\ \colhline
+111 & Partitioning & The \dword{daq} system shall permit concurrent runing of
+different subsets of the \dword{fd} elements in \dword{daqpart} to permit
+detector development or specialised runs in parallel with standard
+data taking. & \\ \colhline
+112 & Data Flow Orchestrator & &  \\ \colhline
+113 & Configuration & &  \\ 
+\end{dunetable}
 
 \subsection{Design Philosophy}
 
