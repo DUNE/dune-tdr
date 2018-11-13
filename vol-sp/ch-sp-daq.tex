@@ -276,25 +276,25 @@ Underground Installation & \citedocdb{} \\
 \end{dunetable}
 
 \subsection{TPC Cold Electronics}
-The \dword{daq} and TPC Cold Electronics interface is specified in \cite{docid-6742}.
+The \dword{daq} and TPC Cold Electronics interface is specified in \citedocdb{6742}.
 \metainfo{Data reception physical and logical, configuration information delivery.}
 \subsection{PDS Readout}
-The \dword{daq} and PDS Readout interface is specified in \cite{docid-6727}.
+The \dword{daq} and PDS Readout interface is specified in \citedocdb{6727}.
 \metainfo{Data reception physical and logical, configuration information delivery.}
 \subsection{Computing}
-The \dword{daq} and Computing interface is specified in \cite{docid-7123}.
+The \dword{daq} and Computing interface is specified in \citedocdb{7123}.
 \metainfo{Buffer disk.  Agreement on sysadmin support and computer procurement, ssh gateways, non data networks.  Address reference how the data model described above is acceptable.}
 \subsection{CISC}
 \label{sec:sp-daq:interfaces-cisc}
-The \dword{daq} and CISC interface is specified in \cite{docid-6790}.
+The \dword{daq} and CISC interface is specified in \citedocdb{6790}.
 \subsection{Calibration}
-The \dword{daq} and Calibration interface is specified in \cite{docid-7069}.
+The \dword{daq} and Calibration interface is specified in \citedocdb{7069}.
 \subsection{Timing System}
 Because the Timing System of the \dword{dune} \dword{fd} interfaces with
 almost all detector systems and has a uniform interface to each of
 them, rather than comprising a set of 
 bilateral interface documents, a single interface document
-\cite{docid-11224} describes all timing interfaces. 
+\citedocdb{11224} describes all timing interfaces. 
 
 \section{\dword{protodune} and \dword{dune} Comparison}
 
@@ -372,7 +372,7 @@ More details are provided as technical notes as listed in Table~\ref{tab:sp-daq:
 An illustration of the conceptual parts which make up the \dword{dune} \dword{fd} \dword{daq} is given in Figure~\ref{fig:daq-conceptual-overview}. 
 It applies to all \dword{fd} modules. 
 The box in the illustration indicates the overall scope of the \dword{daq}.
-Each of the various concrete hardware and software subsystems describe later in this section provide a portion of one or more of the conceptual subsystems represented by the circles in the figure.
+Each of the various concrete hardware and software subsystems described later in this section provide a portion of one or more of the conceptual subsystems represented by the circles in the figure.
 Approximately following the data flow through the \dword{daq}, the concept starts with receiving input via optical fibers from the detector electronics (see Section~\ref{sec:fd-daq:design-felix}). 
 The flow then bifurcates. 
 The entirety of the input flow is buffered for a period of time sufficient to satisfy triggering and readout requirements (see Section~\ref{sec:sp-daq:design-fe-processing}). 
@@ -827,14 +827,13 @@ It is expected that in this area requirements will still be refined during the d
 
 \subsection{Data Selection}
 \label{sec:sp-daq:design-selection-algs}
-\fixme{single-phase module}
-
+%\fixme{single-phase module}
 \fixme{There are many studies which could go into this section. Some of this may very likely be moved into one or more tech notes and referenced.}
 
-The Data Selection sub-system (DS) is responsible for real-time processing
-of data from all detector subcomponents; based on processing
+The Data Selection \dword{ds} sub-system is responsible for real-time processing
+of data from all TPC and PDS subdetectors; based on data processing
 outcomes and external inputs, it is responsible for making decisions
-about what data must be transferred to the Backend System, and
+about what data must be transferred to the Back-end System, and
 distributing those decisions to the Egress sub-system. Data processing
 is executed in various stages of firmware and/or 
 software, and the overall sub-system is designed in such way as to
@@ -844,22 +843,24 @@ resides (hardware, firmware, or software).
 A key sub-system requirement is to select data associated with beam
 interactions, atmospheric neutrinos, rare baryon number violating events,
 and cosmic ray events depositing visible energy in excess of 100 MeV
-with $>$99\% efficiency. A second key requirement is to select data
+with high (targeted at $>$99\%) efficiency. A second key requirement is to select data
 associated with potential galactic supernova bursts. This implies that
 the data selection sub-system must be capable of self-triggering on
-supernova bursts with $>$95\% efficiency. In order to also keep with the
-requirement that the \dword{dune} \dword{fd} maintain a $>$30~PB per yr to permanent
-tape, the DS sub-system must effectively reduce the generated data
+galactic supernova bursts with galactic coverage\footnote{Galactic
+  coverage is defined as efficiency-weighted probability of galactic supernova
+burst} of $>$95\% efficiency. In order to also keep with the
+requirement that the \dword{dune} \dword{fd} maintain a $<$30~PB per yr to permanent
+tape, the \dword{ds} sub-system must effectively reduce the generated data
 volume by four orders of magnitude, and maintain a fake supernova
-burst trigger rate of less than 1 per month.
+burst trigger rate of less than \num{1} per month.
 
-The DS sub-system design follows a hierarchical level structure, where low-level
+The \dword{ds} sub-system design follows a hierarchical level structure, where low-level
 decisions and forward-fed into higher-level ones, ultimately
 determining the issuing of a  module-level ``trigger''. The hierarchy
 structure is illustrated in Figure~\ref{fig:daq:data-selection}. The hierarchy structure
 consists of four levels of processing: Trigger Primitive Generation;
 Trigger Candidate Generation; Module Level Trigger; and High Level
-Trigger. Each are described in subsequent sections.
+Trigger. Each of those is described in subsequent sections.
 
 \begin{dunefigure}{fig:daq:data-selection}{Block diagram of \dword{dune} \dword{daq}
     Data Selection sub-system, illustrating hierarchical structure of
@@ -875,16 +876,16 @@ stage of operations:
    high-energy events (depositing $>$100~MeV of visible energy) 
    and potentially also low-energy events
    (e.g. from solar neutrino interactions). In association with a
-   localized trigger, a total of 5.4 ms worth of data is recorded from
-   the entire 10-kton module that generated the trigger, including
+   localized trigger, a total of minimum two drift windows worth of data is recorded from
+   the entire 10-kton module that generated the trigger, from
    both TPC and PDS subsystems.   
 \item Extended (in time and space) activity triggers: These are
-  high-latency (up to 10 seconds) triggers and are intended to prompt readout of
+  high-latency (but no more than 10 seconds) triggers and are intended to prompt readout of
   supernova burst-associated activity. This activity spans multiple
   tens of seconds and comprises multiple supernova neutrino
   interactions as part of a $\sim$10-second burst (from ~a few to
   ~thousands of interactions in the case of a galactic supernova
-  burst). In association with an extended trigger, a total of 30-100
+  burst). In association with an extended trigger, a total of \num{100}
   seconds worth of data is recorded from the 10-kton module that
   generated the trigger, including both TPC and PDS subsystems, as
   well as from the other three 10-kton modules, regardless of whether
@@ -931,9 +932,9 @@ Each trigger primitive consists of the following information:
 corresponding to a total of 20 Bytes.
 
 The anticipated trigger primitive rate  is expected to be dominated by
-$^{39}$Ar rates (10 MHz per module). Assuming the above TP format
+$^{39}$Ar rates (10~MHz per module). Assuming the above TP format
 prescription, the anticipated trigger primitive rate is expected to be
-200 MB/s . The subsequent stage of the DS must be able to absorb and
+200~MB/s . The subsequent stage of the DS must be able to absorb and
 process this TP rate in real time, providing Trigger Candidate decisions. 
 
 \metainfo{Include plot and discussion of \dword{dune} trigger primitive rate in \dword{protodune}. 
@@ -968,9 +969,9 @@ supernova burst.
 Trigger Candidates are passed upstream to a “Module Level Trigger'' that collects candidates
 and makes the final decision on whether a valid localized high-energy
 activity (necessitating a module-wide readout trigger for a relatively
-short, 5.4~ms duration) has occured,
+short, two-drift duration) has occured,
 or a possible supernova burst (necessitating a module-wide readout
-trigegr for a minimum of 30 seconds) has occured. The Module Level Trigger passes
+trigger for 100 seconds) has occured. The Module Level Trigger passes
 Trigger Commands, via the Egress sub-system, down to the front-end \dword{daq}
 Readout, prompting the readout of a pre-determined amount of data depending
 on the type of Module Level trigger that has occurred. 
@@ -985,8 +986,10 @@ detectors can be triggered.
 \subsubsection{High Level Trigger}
 
 The last processing stage of the data selection sub-system is the High
-Level Trigger, which resides in the
-Back-end part of the \dword{daq}, and is further described in Section~\ref{sec:fd-daq:design-data-reduction}. The High Level Trigger acts on events that have already been triggered, read out,
+Level Trigger (HLT), which resides in the
+Back-end part of the \dword{daq}, and is further described in
+Section~\ref{sec:fd-daq:design-data-reduction}. The High Level Trigger
+acts on events that have already been triggered, read out, 
 and built by the Event Builder, and it serves several purposes: It
 serves to limit the total triggered data rate that goes to disk, by
 applying more refined selection criteria that removes events that are clearly uninteresting. For example, instrumentally-generated events
@@ -1328,9 +1331,9 @@ will be constructed:
 \begin{itemize}
 \item Data Selection: List aims. One option is to construct a
   full-scale Data Selection system using fake data 
-sources, which could be either simulation or real (pre-recorded) data,
-or both. However, it is not clear if this is feasible or sufficient
-resources exist to construct this. Another option is to identify
+sources, which could be either simulation or real (pre-recorded)
+\dword{protodune} data,
+or both, subject to available resources. Another option is to identify
 likely failure points and/or bottlenecks and perform
 small-scale tests that stress the critical parts of the corresponding
 infrastructrure. The criteria for those tests will be defined a priori.
@@ -1339,11 +1342,11 @@ infrastructrure. The criteria for those tests will be defined a priori.
 
 Besides the above dedicated Vertical Slice Teststands, a number of
 \dword{daq} development kits will be made available to other detector and
-calibration consortia, to support 
-their own development, production, and quality assurance programmes. The DAQ
+Calibration Consortia, to support 
+their own development, production, and quality assurance programs. The DAQ
 kit will also form the basis for testing at the ITF from the start of 2022. This will
-also allow validation of the detector and \dword{daq} interfaces. A
-single \dword{daq} kit will be capable of handling data from a single APA. 
+also allow validation of the detector and \dword{daq} interfaces. %A
+%single \dword{daq} kit will be capable of handling data from a single APA. 
 
 \section{Production, Assembly, Installation and Integration}
 \label{sec:sp-daq:production}
