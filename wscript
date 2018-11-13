@@ -129,7 +129,7 @@ def build(bld):
     # First, if we are so configured then we may try to rebuild requirements tables.
     reqsdeps = list()
     if not bld.env['DUNEREQS']:
-        print ("No dune-reqs found, will not try to rebuild requirements files")
+        print ("Note: dune-reqs found, will not try to rebuild requirements files")
     else:
 
         docids_node = bld.path.find_resource("util/dune-reqs-docids.txt")
@@ -229,4 +229,4 @@ def build(bld):
 
     #assert len(maintexs) == len(set(maintexs))
     #print (maintexs)
-    print (reqsdeps)
+    #print (reqsdeps)
