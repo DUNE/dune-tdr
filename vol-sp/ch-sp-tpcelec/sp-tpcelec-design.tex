@@ -46,7 +46,7 @@ The \dword{pdsp} version of the \dword{femb} (which uses a single \dword{fpga} o
 \subsubsection{Front-End ASIC}
 \label{sec:fdsp-tpcelec-design-femb-fe}
 
-The analog front-end (FE) ASIC\cite{DeGeronimo:2011zz} receives current signals from the TPC sense wires and provides a means to amplify and shape the signals for downstream signal digitization.  The FE ASIC has 16 channels, and is implemented using the TSMC 180nm CMOS process. It integrates a band-gap reference (BGR) to generate all the internal bias voltages and currents. This guarantees a high stability of the operating point over a wide range of temperatures, including cryogenic temperatures. The channel schematic of the FE ASIC is shown in Figure~\ref{fig:feasic1}. 
+The analog front-end (FE) ASIC~\cite{DeGeronimo:2011zz} receives current signals from the TPC sense wires and provides a means to amplify and shape the signals for downstream signal digitization.  The FE ASIC has 16 channels, and is implemented using the TSMC 180nm CMOS process. It integrates a band-gap reference (BGR) to generate all the internal bias voltages and currents. This guarantees a high stability of the operating point over a wide range of temperatures, including cryogenic temperatures. The channel schematic of the FE ASIC is shown in Figure~\ref{fig:feasic1}. 
 
 \begin{dunefigure}
 [FE ASIC channel schematic]
@@ -88,14 +88,82 @@ P3 FE ASIC will be further evaluated on FEMBs in various integration test stands
 \label{sec:fdsp-tpcelec-design-femb-alt}
 
 %%%%%%%%%
-\subsubsection{CRYO}
+\subsubsubsection{CRYO Option}
 \label{sec:fdsp-tpcelec-design-femb-alt-cryo}
 
+The SLAC CRYO \dword{asic} differs from the baseline three-chip design in that it combines the functions of an analog preamplifier, \dword{adc}, and data serialization and transmission for \num{64}~wire channels, into a single chip.
+It is based on a design developed for the nEXO experiment\footnote{Enriched Xenon Observatory, \url{https://www-project.slac.stanford.edu/exo/about.html}.} and differs from it only in the design of the preamplifier, which is modified to account for the higher capacitance of the DUNE \dword{spmod} wires compared to the small pads of nEXO.
+The \dwords{femb} constructed using this chip would use only two \dwords{asic}, compared to the \num{18} (eight~FE, eight~\dword{adc} and two~COLDATA) needed in the baseline design.
+This drastic reduction in part count may significantly improve \dword{femb} reliablity, reduce power, and reduce costs related to production and testing. 
+
+Figure~\ref{fig:cryo-architecture} shows the overall architecture of the CRYO \dword{asic}, which will be implemented in \SI{130}{nm} \dword{cmos}.
+It comprises two identical, \num{32}-channel blocks. 
+The current signal from each wire is amplified using a preamplifier with pole zero cancellation and an anti-alias fifth-order Bessel filter applied. 
+Provisions are also made for injection of test pulses. 
+Gain and peaking time are adjustable to values similar to those of the baseline design.
+
+\begin{dunefigure}
+[Overall architecture of the CRYO \dword{asic}.]
+{fig:cryo-architecture}
+{Overall architecture of the CRYO \dword{asic}.}
+\includegraphics[width=0.8\textwidth]{sp-tpcelec-cryo-schematic.png}
+\end{dunefigure}
+
+The \dword{adc} uses \SI{8}{MHz} successive approximation registration (SAR), so that four input channels are multiplexed onto a single \dword{adc}. The data serialization and transmission block employs a custom 12b/14b encoder, so that \num{32} channels of \num{12}-bit, \SI{2}{MHz} data can be transmitted with a digital bandwidth of only \SI{896}{Mbps}, which is significantly less than the required bandwidth of the baseline, which is \SI{1.28}{Gbps}.
+
+One key concern with mixed signal \dwords{asic} is the possibility of interference from the digital side causing noise on the very sensitive preamplifier. 
+Fortunately, there are well established techniques for substrate isolation described in the literature~\cite{yeh}, which have been successfully employed in previous \dwords{asic} produced by the SLAC group.% Figure \ref{fig:cryo-substrate} shows how substrate isolation is achieved. 
+
+%\begin{dunefigure}
+%[Depiction of the substrate isolation technique that allows combining analog and digital circuitry on the same CRYO \dword{asic}.]
+%{fig:cryo-substrate}
+%{Depiction of the substrate isolation technique that allows combining analog and digital circuitry on the same CRYO \dword{asic}.}
+%\includegraphics[width=0.6\textwidth]{tpcelec-cryo_substrate.png}
+%\end{dunefigure}
+
+The infrastructure requirements for a CYRO \dword{asic}-based system are similar to those of the baseline option. However, in most cases, somewhat fewer resources are needed:
+\begin{itemize}
+\item{A single voltage is needed for the power supply. This is used to generate two supply voltages using internal voltage regulators.}
+\item{The output digital bandwidth on each of the four lines in an \dword{femb} is \SI{896}{Mbps}. This is lower than the baseline option due to the custom 12b/14b encoder of the CRYO chip. }
+\item{The warm interface is different. Only a single clock is needed (\SI{56}{MHz}) and the configuration protocol is the SLAC \dword{asic} Control Interface (SACI)~\cite{SACI} rather than I2C.}
+\end{itemize}
+
+The first iteration of the CRYO \dword{asic} design was submitted for fabrication to MOSIS in November 2018.  The first protoypes are expected to be received in January, 2019. Simulation-based studies have already been performed; at \SI{0.8}{\micro\second} peaking time and an input capacitance of \SI{200}{pF} (similar to that expected in the DUNE \dword{spmod}), the \dword{enc} is approximately \num{500}\,e$^-$.  This noise level is similar to that expected with the baseline \dword{fe} and \dword{adc} \dword{asic} design in \lar with the same input capacitance.  Submission to the \dword{asic} foundry is imminent and the first prototypes should be received by summer 2018. They will first be tested in an existing test stand at SLAC. Subsequent tests are planned for a small test TPC at \fnal and on an \dword{apa} in the \dword{pdsp} cold box; these test facilities are described in Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
+
+In January 2019, stand-alone tests of the CRYO \dword{asic} will begin. In addition to standard ``bringing-up'' tests, measurements of noise (Equivalent Noise Charge), linearity (Equivalent Number of Bits) and bit-error rate will be performed. Figure~\ref{fig:cryo-results} shows ``place-holder'' plots of the type that will be produced in the initial stand-alone tests.
+
+\begin{dunefigure}
+[Results of stand-alone tests of the CRYO \dword{asic}.]
+{fig:cryo-results}
+{Results of stand-alone tests of the CRYO \dword{asic}. Top row shows Equivalent Noise Charge measured in each channel at room temperature (left) and Liquid Nitrogen Temperature (right). Bottom row shows the Equivalent Number of Bits (ENOB). }
+\includegraphics[width=0.8\textwidth]{sp-tpcelec-cryo-results.png}
+\end{dunefigure}
+
 %%%%%%%%%
-\subsubsection{COTS (Commercial Off The Shelf)}
+\subsubsubsection{COTS ADC Option}
 \label{sec:fdsp-tpcelec-design-femb-alt-cots}
 
+The SBND collaboration has been exploring the COTS (``Commercial Off The Shelf'') ADC option for the TPC readout electronics development since Spring 2017~\cite{Chen:2018zic}. Market survey was carried out, few candidate ADCs in SAR architecture were identified with 100\% cold yield. Since July 2017, a lifetime study plan was developed to evaluate COTS ADC in two different phases, exploratory phase and validation phase. The lifetime study was focused on the ADI AD7274 implemented in TSMC 350nm CMOS technology given the optimum performance in cryogenic operation compared to other candidates.
 
+During the exploratory phase, fresh samples of COTS ADC AD7274 were stressed with higher than nominal operation voltage, such as 5 V, while power consumption (current drawn) was monitored continuously. Periodically the sample would be operated at nominal voltage (V$_{DD}$ = 2.5V and V$_{REF}$ = 1.8V) for performance characterization test, where both DNL (Differential Non-Linearity) and INL (Integral Non-Linearity) were monitored and analyzed in addition to the current monitoring. Stress test results were used to extrapolate the lifetime of the COTS ADC. It was determined that the current drop of 1\% on the V$_{DD}$ is used as degradation criteria for lifetime study. In the validation phase, more devices have been tested following the criteria developed, to collect more data to validate what was learned in the exploratory phase.
+
+The lifetime projection of COTS ADC AD7274 from the stress test with V$_{DD} >$ 5V is shown in Figure~\ref{fig:cotsadc-lifetime}. With ADC7274 operated at 2.5V which is less than the nominal 3.6V for 350nm CMOS technology, the projected lifetime is more than than 10$^6$ years.
+
+\begin{dunefigure}
+[Lifetime projection of COTS ADC]
+{fig:cotsadc-lifetime}
+{Lifetime projection of COTS ADC AD7274 from the stress test with V$_{DD} >$ 5V. The current drop of 1\% on the V$_{DD}$ is used as degradation criteria. With nominal operation voltage of 3.6V for 350nm CMOS technology, the lifetime is projected more than 100 years. For SBND and DUNE far detector, the AD7274 will be operated at 2.5V to gain further margin, the expected lifetime is more than 10$^6$ years.}
+\includegraphics[width=0.8\linewidth]{sp-tpcelec-cotsadc-lifetime.pdf}
+\end{dunefigure}
+
+Based on the lifetime study of AD7274, an FEMB with COTS ADC has been developed and characterized for SBND experiment. The integration test was carried out with 40\% APA at BNL and showed satisfactory noise performance in Figure~\ref{fig:cotsadc-fembenc}. The COTS ADC AD7274 serves as a backup solution for DUNE far detector TPC readout electronics system. The current plan is to evaluate it in the small TPC ICEBERG at Fermilab. Ten FEMBs with COTS ADC are being produced and will be used to instrument ICEBERG TPC for system integration test in early 2019. 
+
+\begin{dunefigure}
+[ENC measurement of FEMB with COTS ADC]
+{fig:cotsadc-fembenc}
+{The ENC measurement of FEMB with COTS ADC mounted on 40\% APA at BNL. The picture of FEMB is shown in the top left corner. The induction plane (4 m wire) has ENC $\sim$ 400$e^-$ with 1$\mu$s peaking time, and the collection plane (2.8 m wire) has ENC $\sim$ 330$e^-$ with 1$\mu$s peaking time.}
+\includegraphics[width=0.99\linewidth]{sp-tpcelec-cotsadc-fembenc.pdf}
+\end{dunefigure}
 
 %%%%%%%%%%%%%%%%%%
 \subsubsection{Procedure and Timeline for ASIC Selection}
