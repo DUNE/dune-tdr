@@ -102,6 +102,8 @@ time.
 The initial spectra get further processed (permuted) by flavor oscillations and understanding these oscillations is very important for extracting physics from the detected signal.
 
 
+\section{Low-Energy Events in DUNE}
+
 \subsection{Detection Channels and Interaction Rates}
 
 Liquid argon should have a particular sensitivity to the $\nu_e$
@@ -126,6 +128,160 @@ Another process of interest for supernova detection in LAr detectors, not yet fu
 The predicted event rate from a supernova burst may be calculated by
 folding expected neutrino differential energy spectra with cross
 sections for the relevant channels, and with detector response; we do this using SNOwGLoBES~\cite{snowglobes}, which uses Icarus detector resolution~\cite{Amoruso:2003sw} and assumes a detection threshold of 5 MeV.
+
+
+
+\subsection{Event Simulation and Reconstruction}
+
+Supernova neutrino events, due to their low energies, will manifest
+themselves as small, perhaps few tens of cm, stub-like tracks from
+electrons (or positrons from the rarer $\bar{\nu}_e$ interactions).
+Events from $\nu_e $ charged-current interactions, $\nu_e+{}^{40}{\rm
+  Ar}\rightarrow e^{-}+{}^{40}{\rm K}^{*}$, are likely to be
+accompanied by de-excitation products-- gamma rays and/or ejected
+nucleons. Gamma-rays are in principle observable via energy deposition
+from Compton scattering, which will show up as small charge blips in
+the TPC.  
+Ejected nucleons may result in loss of observed energy for
+the event.  Elastic scattering on electrons will result in single
+scattered electrons, and single gamma rays may result from NC
+excitations of the argon nucleus.   Each event category has, in principle, a
+distinctive signature.
+
+The canonical reconstruction task is to identify the interaction
+channel, the neutrino flavor for CC events, and to determine the
+4-momentum of the incoming neutrino; this overall task is the same for
+low-energy events as for high-energy ones.  The challenge is to
+reconstruct the properties of the lepton (if present), and to the extent
+possible, to tag the interaction channel by the pattern of final-state
+particles.
+
+So far, reconstruction algorithms for low-energy neutrinos in DUNE are
+relatively poorly developed with respect to those for high-energy events.  While
+some physics study and detector requirements work in the SNB/LE group
+uses a fast event-rate calculation tool called $\snowglobes$, most
+activity is towards development of realistic and comprehensive
+simulation and reconstruction tools, from neutrino interaction event
+generators through full event reconstruction in both single and
+dual-phase detectors with LArSoft.
+
+
+\subsubsection{MARLEY}
+
+MARLEY (Model of Argon Reaction Low Energy Yields)~\cite{marley} simulates tens-of-MeV
+neutrino-nucleus interactions in liquid argon. Currently, MARLEY can only
+simulate charged-current $\nu_e$ scattering on $^{40}$Ar, but other
+reaction channels will be added in the future.
+
+MARLEY weights the incident neutrino spectrum, selects an initial excited state
+of the residual $^{40}$K$^*$ nucleus, and samples an outgoing electron
+direction using the allowed approximation for the $\nu_e$ CC differential cross
+section.\footnote{That is, the zero momentum transfer and zero nucleon velocity
+limit of the tree-level $\nu_e$ CC differential cross section, which may be
+written as
+\[
+\frac{d\sigma}{d\cos \theta}
+= \frac{G_F^2 |V_{ud}|^2}{2\pi} |\mathbf{p}_e|\, E_e \,F(Z_f, \beta_e)
+\left[(1+\beta_e \cos\theta)B(F) + \left(\frac{3 - \beta_e \cos\theta}
+{3}\right)B(GT)\right].
+\]
+In this expression, $\theta$ is the angle between the incident neutrino and the
+outgoing electron, $G_F$ is the Fermi constant, $V_{ud}$ is the quark mixing
+matrix element, $F(Z_f, \beta_e)$ is the Fermi function, and $|\mathbf{p}_e|$,
+$E_e$, and $\beta_e$ are the outgoing electron's three momentum, total energy,
+and velocity, respectively. $B(F)$ and $B(GT)$ are the Fermi and Gamow-Teller
+matrix elements.
+}
+MARLEY computes this cross section using a table of Fermi and Gamow-Teller
+nuclear matrix elements. Their values are taken from experimental measurements
+at low excitation energies and a quasiparticle random phase approximation
+(QRPA) calculation at high excitation energies. As the code develops, a more
+sophisticated treatment of this cross section will likely be included.
+
+After simulating the initial two-body $^{40}${Ar}($\nu_e$,
+$e^{-}$)$^{40}$K$^*$ reaction for an event, MARLEY
+also handles the subsequent nuclear de-excitation. For bound nuclear
+states, the de-excitation $\gamma$-rays are sampled using tables of
+experimental branching ratios. These tables are supplemented with
+theoretical estimates when experimental data are unavailable. For
+particle-unbound nuclear states, MARLEY simulates the competition between
+$\gamma$-ray and nuclear fragment\footnote{ Nucleons and light nuclei up to
+$^{4}${He} are considered.} emission using the Hauser-Feshbach
+statistical model.
+
+Although many refinements remain to be made, MARLEY's treatment of high-lying
+Gamow-Teller strength and nuclear de-excitations represents a significant
+improvement over existing tools for simulating supernova $\nu_e$ CC events.  MARLEY has been now been fully incorporated into the LArSoft code base 
+and is being used in studies.
+
+%Users who wish to
+%perform supernova studies using MARLEY or obtain a copy of MARLEY as a
+%standalone tool are encouraged to contact Steven Gardiner
+%(\href{mailto:sjgardiner@ucdavis.edu}{sjgardiner@ucdavis.edu}) for more
+%information and support.
+
+
+\begin{dunefigure}[MARLEY event]{fig:marleydist}{Visualization of an example MARLEY-simulated event.}
+\includegraphics[width=0.6\textwidth]{n_event_tracks-1.png}
+\end{dunefigure}
+
+
+\subsubsection{SNOwGLoBES}
+
+Most supernova neutrino studies done for DUNE so far, including of the
+plots included in the CDR~\cite{Acciarri:2015uup}, have employed
+$\snowglobes$\cite{sglobes}, a fast event-rate computation tool.  This
+uses $\globes$ front-end software~\cite{Huber:2004ka,globes} to
+convolve fluxes with cross-sections and detector parameters.  The
+output is in the form of interaction rates for each channel as a
+function of neutrino energy, and ``smeared'' rates as a function of
+detected energy for each channel (\textit{i.e.} the spectrum that
+actually be observed in a detector).  
+The smearing (transfer) matrices incorporate both
+interaction product spectra for a given neutrino energy, and detector
+response. 
+Time dependence in $\snowglobes$ can be straightforwardly
+handled by providing multiple files with fluxes divided into different
+time bins. \footnote{Note that $\snowglobes$ is \textit{not} a Monte-Carlo
+code--- it calculates mean event rates using a transfer matrix to
+convert neutrino spectra to observed spectra.}
+
+For default $\snowglobes$, a
+detection threshold of 5 MeV in LAr is assumed as well as energy resolution
+from Ref.~\cite{Amoruso:2003sw}.    Furthermore, the current default detector
+response smearing for LAr in $\snowglobes$ assumes that all energy from
+de-excitation products is captured, which is likely a poor assumption. 
+User-created transfer matrices have also been used
+for some studies~\cite{gleb, glebdocdb}.
+
+While $\snowglobes$ is, and will continue to be, a fast, useful tool,
+it has limitations with respect to a full simulation.  One loses correlated
+event-by-event angular and energy information, for example.
+Ideally one does studies with high-statistics simulated data with
+realistic event generators and detector response.
+When full simulation studies are constrained by computational resources,
+one can update transfer matrices using improved simulation and still use
+$\snowglobes$ to draw useful conclusions.
+
+
+\subsubsection{Smearing Matrices }
+
+\subsubsection{Photons}
+
+\subsubsection{Pointing}
+
+\subsubsection{Backgrounds}
+
+Understanding of backgrounds is also critical for understanding of how
+well we can reconstruct low energy events, and for setting detector requirements.  Small single-hit blips
+from $^{39}$Ar or other impurities may fake de-excitation gammas and also affect
+triggering.  Backgrounds may be especially important for photon
+detectors (which in turn may be important for energy resolution by
+correcting for attenuation of charge during drift)--- see Section~\ref{sec:snb_photons}.  Work on
+backgrounds is done in collaboration with the DUNE Radiopurity group.
+
+\section{Expected Supernova Signals}
+
 
 Table~\ref{tab:argon_events} shows rates calculated  for the dominant interactions in argon for
 the ``Livermore'' model~\cite{Totani:1997vj} (out of date, but included for comparison with literature), and the ``GKVM''
@@ -193,17 +349,6 @@ The number of signal events scales with mass and inverse square of distance as s
 \includegraphics[width=5in]{argon_sn.pdf}
 \end{dunefigure}
 
-\section{Low-Energy Events in DUNE}
-
-\subsection{MARLEY}
-
-\subsection{Event Reconstruction}
-
-\subsubsection{Smearing Matrices }
-
-\subsubsection{Photons}
-
-\subsubsection{Pointing}
 
 \section{Neutrino Physics and Other Particle Physics}
 \label{sec:physics-snblowe-neutrino-physics}
@@ -236,7 +381,8 @@ e.g.,~\cite{Duan:2005cp,Fogli:2007bk,Raffelt:2007cb,Raffelt:2007xt,EstebanPretel
 % \end{dunefigure}
 
 
-\begin{dunefigure}[Expected event rates as a function of time for the electron-capture \dword{snb} model in~\cite{Huedepohl:2009wh} for \SI{40}{kt} of argon during early stages of the event -- the neutronization burst and early accretion phases, for which self-induced effects are unlikely to be important.  Shown is the event rate for the unrealistic case of no flavor transitions (blue), the event rate including the effect of mat
+\begin{dunefigure}[Event rates with hierarchy effects at early times]{fig:early}
+{Expected event rates as a function of time for the electron-capture model in~\cite{Huedepohl:2009wh} for \SI{40}{kt} of argon during early stages of the event -- the neutronization burst and early accretion phases, for which self-induced effects are unlikely to be important.  Shown is the event rate for the unrealistic case of no flavor transitions (blue), the event rate including the effect of mat
 ter transitions for the normal (red)  and inverted (green) hierarchies.  Error bars are statistical, in unequal time bins.}
 \includegraphics[width=0.8\textwidth]{early_time_argon.pdf}
 \end{dunefigure}
