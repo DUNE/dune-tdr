@@ -1,0 +1,35 @@
+digraph parts {
+        rankdir=LR
+        // data
+        node[shape=record];
+        rwf[label="detector data\n(all waveforms)"];
+        bwf[label="detector data\n(collection waveforms)"];
+        tprim[label="{trigger\nprimitive}|{(per-channel)}|{chan,t,dt,ADC}"];
+        tcand[label="{(self) trigger\ncandidate}|{(per-det unit)}|{APA/face,t,dt,chans\nforwards primitives}"];
+        tother[label="{(other) trigger\ncandidate}|{(to all partitions)}|{some description}"];        
+        tcmd[label="{trigger\ncommand}|{(per-partition)}|{t,dt x chans to readout\nforwards candidates}"];
+        tcmd2[label="{trigger\ncommand}|{(per-EB instance)}|{t,dt x chans to readout\nforwards candidates}"];
+        req[label="{data\nrequest}|{(per-FEC)}|{t,dt x chans}"];
+        frag[label="{data\nfragment}|{(per-FEC)}|{detector data}"];
+        rec[label="{data record\n(\"event\")}|{(per-partition)}|{all fragments\ntrigger command\ntrigger candidates\ntrigger primitives}"];
+
+        // processes
+        node[shape=circle];
+        recv[label="data\nreceiver\n+ buffer"];
+        tpp[label="trigger\nprimitive\nproducer"];
+        tcp[label="trigger\ncandidate\nproducer"];
+        ptl[label="partition\ntrigger\nlogic unit"];
+        dfo[label="dataflow\norchestrator\n(dispatches)"];
+        bis[label="buffer\ninferface\nservice"];
+        eb[label="event\nbuilder"];
+        out[label="output\ndisk\nbuffer"];
+
+        etl[label="external\ntrigger\nlogic unit\n(distributes)"]
+        
+        rwf->recv->bwf->tpp->tprim->tcp->tcand->ptl->tcmd->dfo->tcmd2->eb->req->bis->frag->eb->rec->out;
+        
+        tcmd->etl->tother;
+        ptl->tother[dir=back];
+        
+
+}
