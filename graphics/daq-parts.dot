@@ -2,34 +2,53 @@ digraph parts {
         rankdir=LR
         // data
         node[shape=record];
+        ele[label="detector\nelectronics",shape=diamond];
+        
         rwf[label="detector data\n(all waveforms)"];
         bwf[label="detector data\n(collection waveforms)"];
-        tprim[label="{trigger\nprimitive}|{(per-channel)}|{chan,t,dt,ADC}"];
-        tcand[label="{(self) trigger\ncandidate}|{(per-det unit)}|{APA/face,t,dt,chans\nforwards primitives}"];
-        tother[label="{(other) trigger\ncandidate}|{(to all partitions)}|{some description}"];        
-        tcmd[label="{trigger\ncommand}|{(per-partition)}|{t,dt x chans to readout\nforwards candidates}"];
-        tcmd2[label="{trigger\ncommand}|{(per-EB instance)}|{t,dt x chans to readout\nforwards candidates}"];
-        req[label="{data\nrequest}|{(per-FEC)}|{t,dt x chans}"];
-        frag[label="{data\nfragment}|{(per-FEC)}|{detector data}"];
-        rec[label="{data record\n(\"event\")}|{(per-partition)}|{all fragments\ntrigger command\ntrigger candidates\ntrigger primitives}"];
+        tp[label="{TP: trigger\nprimitive}|{(per-channel)}|{chan,t,dt,ADC\nprimtive type\npartition ID}"];
+        tc[label="{TC: trigger\ncandidate}|{(per-det unit)}|{APA/face,t,dt,chans\npartition ID\nforwards primitives}"];
+        tr[label="{TR: trigger\nrequest}|{(per-partition)}|{requested t,dt, chans\npartition ID\nforwards primitives}"];
+        ext[label="{EXT: external\ntrigger request}|{(to all partitions)}|{some description}"];        
+        td[label="{TD: trigger\ndecision}|{(front-end addressing)}|{t,dt x chans\nforwards candidates}"];
+        rr[label="{RR: record request}|{(per-EB instance)}|{t,dt x chans to readout\nforwards candidates}"];
+        fr[label="{FR: fragment\nrequest}|{(per-FEC)}|{t,dt x chans}"];
+        df[label="{DF: data\nfragment}|{(per-FEC)}|{detector data}"];
+        dr[label="{DR: data record\n(\"event\")}|{(as per trig. cmd.)}|{all fragments\ntrigger command\ntrigger candidates\ntrigger primitives}"];
 
         // processes
         node[shape=circle];
-        recv[label="data\nreceiver\n+ buffer"];
-        tpp[label="trigger\nprimitive\nproducer"];
-        tcp[label="trigger\ncandidate\nproducer"];
-        ptl[label="partition\ntrigger\nlogic unit"];
-        dfo[label="dataflow\norchestrator\n(dispatches)"];
-        bis[label="buffer\ninferface\nservice"];
-        eb[label="event\nbuilder"];
-        out[label="output\ndisk\nbuffer"];
+        recv[label="Front-end\ndata receiver\n+ buffer"];
+        tpp[label="TPP:\nTrigger\nPrimitive\nProducer"];
+        tcp[label="TCP:\nTrigger\nCandidate\nProducer"];
+        plt[label="PLT: Partition\n Level Trigger"];
+        mlt[label="MLT: Module\nLevel Trigger"];
+        dfo[label="DFO: Dataflow\nOrchestrator\n(dispatches)"];
+        bis[label="BIS: Buffer\nInferface\nService"];
+        eb[label="EB: Event\nBuilder\n(instance)"];
+        out[label="output\ndisk\nbuffer",shape=octagon];
 
-        etl[label="external\ntrigger\nlogic unit\n(distributes)"]
+        etl[label="ETL:\nExternal\nTrigger Logic\n(distributes)"]
         
-        rwf->recv->bwf->tpp->tprim->tcp->tcand->ptl->tcmd->dfo->tcmd2->eb->req->bis->frag->eb->rec->out;
+        //ele->rwf->recv->bwf->tpp;
+        tpp->bwf->recv->rwf->ele[dir=back];
         
-        tcmd->etl->tother;
-        ptl->tother[dir=back];
-        
+        tpp->tp->tcp->tc->plt;
+        plt->tr->mlt;
 
+        //mlt->tcmd->dfo->tcmd2->eb->req->bis->frag->eb->rec->out;
+        td->mlt[dir=back];
+        dfo->td[dir=back];
+        rr->dfo[dir=back];
+        eb->rr[dir=back];
+        fr->eb[dir=back];
+        bis->fr[dir=back];
+        bis->df->eb->dr->out;
+        
+        td->etl->ext;
+        mlt->ext[dir=back];
+
+        edge[style=invis];
+        {rank=same;
+                plt->dfo->out;}
 }
