@@ -368,15 +368,18 @@
 \usepackage{textcomp}
 
 
-% Comoditize citing DocDB (moved to defs, requires version number-Anne)
-%%% Note: this relies on the fact that DocDB is happy getting an empty
-%%% version= parameter.
-%%% So if user doesn't include a version, the link goes to the more
-%%% recent.
-% \citedocdb{12345}
-%% or
-% \citedocdb[3]{12345}
-\newcommand{\citedocdb}[2][]{\href{https://docs.dunescience.org/cgi-bin/private/ShowDocument?docid=#2\&version=#1}{DocDB #2}\cite{bib:docdb#2}\xspace}
+% Comoditize citing DocDB esp for interface documents in TDR.
+% Using "as of" allows us to control which version is associated with the TDR by date.
+\newcommand{\citedocdb}[1]{DocDB #1~\cite{bib:docdb#1}\xspace}
+%It requires bib entries with labels and urls of this form:
+% @techreport{bib:docdbNNNN,
+%    title = "{DUNE FD Interface Document: SP TPC Electronics to joint DAQ}",
+%    type = {DUNE doc} or {LBNF doc},
+%    number = {NNNN},
+%    year = {20NN},
+%    note = "\url{https://docs.dunescience.org/cgi-bin/private/ShowDocument?docid=NNNN\&asof=2019-7-15}"
+% To cite in text: \citedocdb{6730}
+
 
 % This is used for making row labels inside tables
 \makeatletter
