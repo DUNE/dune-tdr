@@ -28,7 +28,7 @@ dunegen-reqs () {
     fi
     tf="$(dirname $docid)/$(cat $docid).tar"
     xlsf=$(dunegen-untar $tf)
-    dune-reqs render -t $templ -o $out $xlsf
+    dune-reqs render -t $templ -o $out $xlsf || exit 1
 }
 dunegen-reqs-one-and-all () {
     ccode="$1" ; shift
@@ -48,7 +48,7 @@ dunegen-reqs-one-and-all () {
     # use default '-c collection' option.
     set -x
 
-    dune-reqs render-one -C "$ccode" -t "$onetempl" -T "$alltempl" -o "$oneout" -O "$allout" "$xlsf"
+    dune-reqs render-one -C "$ccode" -t "$onetempl" -T "$alltempl" -o "$oneout" -O "$allout" "$xlsf" || exit 1
     set +x
 }
 
