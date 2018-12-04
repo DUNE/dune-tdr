@@ -136,10 +136,18 @@ def build(bld):
         secret = bld.path.find_resource("docdb.pw").read().strip()
         for line in docids_node.read().split('\n'):
             line = line.strip()
-            if not line: continue
-            name,docid = line.split()
+            if not line or line.startswith("#"):
+                continue
+
+            rule="${DUNEREQS} getdocdb -t ${TGT}"
+            parts = line.split()
+            if len(parts) == 3:
+                name,docid,docver = line.split()
+                rule += " -V %s" % docver
+            else:
+                name,docid = line.split()
             docid_tagfile = "%s.docid"%name
-            rule="${DUNEREQS} getdocdb -t ${TGT} -U dune -P %s -a tar %s"%(secret, docid)
+            rule += " -U dune -P %s -a tar %s"%(secret, docid)
             if bld.options.debug:
                 print(rule)
             bld(rule=rule,
@@ -180,7 +188,8 @@ def build(bld):
         "vol-dp.tex",
         "vol-nd.tex",
         "vol-swc.tex",
-        "vol-tc.tex"
+        "vol-tc.tex",
+#        "vol-spec.tex"
     ]
     
     maintexs = list()
@@ -196,7 +205,7 @@ def build(bld):
         # Task to build the volume
         bld(features='tex', prompt = prompt_level,
             source = volnode,
-            target = volpdf)
+            target = volpdf.name)
         #for reqnode in reqsdeps:
         #    bld.add_manual_dependency(volnode, reqnode)
         bld.install_files('${PREFIX}', [volpdf])
