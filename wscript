@@ -126,11 +126,16 @@ def build(bld):
         prompt_level = 1
 
 
-    # First, if we are so configured then we may try to rebuild requirements tables.
+    # First, if we are so configured then try rebuild things from the "requirements" spreadsheets.
     reqsdeps = list()
     if not bld.env['DUNEREQS']:
         print ("Note: dune-reqs found, will not try to rebuild requirements files")
     else:
+
+        # Despite knowing better, generate into the source directory.
+        gen_dir = bld.srcnode.make_node('generated')
+        reqdefs = gen_dir.make_node('reqdefs.tex')
+        reqdefs.write('% generated file, do not edit','w')
 
         docids_node = bld.path.find_resource("util/dune-reqs-docids.txt")
         secret = bld.path.find_resource("docdb.pw").read().strip()
@@ -155,9 +160,6 @@ def build(bld):
                 target=docid_tagfile)
             
             
-            # Despite knowing better, generate into the source directory.
-            gen_dir = bld.srcnode.make_node('generated')
-
             # Generate the subsys per-requirement tables and their roll-up
             one_tmpl = bld.path.find_resource("util/templates/spec-table-one.tex.j2")
             all_tmpl = bld.path.find_resource("util/templates/spec-table-all.tex.j2")
@@ -170,13 +172,15 @@ def build(bld):
                 target=[all_targ])
 
 
-            #tmpl_node = bld.path.find_resource("util/templates/all-reqs.tex.j2")
-            #tgt = gen_dir.make_node(name + "-" + tmpl_node.name.replace(".j2",""))
-            #bld(rule="${DUNEGEN} reqs ${SRC} ${TGT}",
-            #    source=[docid_tagfile, tmpl_node], target=[tgt])
+            # This one generates defs
+            tmpl = bld.path.find_resource("util/templates/reqdefs.tex.j2")
+            out = gen_dir.make_node("reqdefs-%s.tex"%name)
+            reqdefs.write('\\input{generated/%s}\n' % out.name[:-4], 'a')
+            reqsdeps.append(out)
+            bld(rule="${DUNEGEN} reqs %s ${SRC} ${TGT}"%(name,),
+                source=[docid_tagfile, tmpl],
+                target=[out])
 
-            # Note, this may lead to hysteresis.  For better way see:
-            # https://waf.io/blog/2010/11/code-generators-and-unknown-files.html
 
     chaptex = bld.path.find_resource("util/chapters.tex")
 
