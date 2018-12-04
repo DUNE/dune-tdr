@@ -8,7 +8,7 @@ dunegen-untar () {
     tf="$1"; shift
     if [ -z "$tf" ] ; then exit; fi
 
-    tdir=$(mktemp -d '/tmp/dunegen-XXXXX')
+    tdir=$(mktemp -d "/tmp/dunegen-$(basename $tf .tar)-XXXXX")
     for one in $(tar -C $tdir -xvf $tf)
     do
         if [[ $one =~ ^.*\.xlsx$ ]] ; then
@@ -47,6 +47,7 @@ dunegen-reqs-one-and-all () {
     xlsf="$(dunegen-untar $tf)"
     # use default '-c collection' option.
     set -x
+
     dune-reqs render-one -C "$ccode" -t "$onetempl" -T "$alltempl" -o "$oneout" -O "$allout" "$xlsf"
     set +x
 }

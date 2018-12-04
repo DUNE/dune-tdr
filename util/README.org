@@ -212,3 +212,105 @@ last ~waf~ build to see it's downloaded and applied.
 
 
 
+
+
+* Troubleshooting
+
+** Requirements TeX tables are not being updated
+
+- Is the corresponding DocDB entry being updated?  If not, contact
+  chapter editors and Anne.
+
+- Does the chapter have an entry in [[./dune-reqs-docids.txt]]?  If not,
+  tell Brett the DocDB ID number.
+
+- O.w. tell Brett.
+
+
+Testing the parts:
+
+Get a DocDB entry, providing password:
+
+#+BEGIN_EXAMPLE
+  $ cd build/
+  $ cat SP-PDS.docid 
+  DUNE-doc-6422-v5
+  $ dune-reqs getdocdb -t SP-PDS.docid -U dune -P <<<redacted>>> -a tar 6422
+  DUNE-doc-6422-v8.tar
+  $ cat SP-PDS.docid 
+  DUNE-doc-6422-v8
+#+END_EXAMPLE
+
+Should get latest version.  Scope out the contents.
+
+#+BEGIN_EXAMPLE
+$ ../util/dunegen.sh untar DUNE-doc-6422-v8.tar 
+/tmp/dunegen-DUNE-doc-6422-v8-CUVDu/DUNE-req-spec-SP-PDS-20nov2018.xlsx
+$ ls -l /tmp/dunegen-DUNE-doc-6422-v8-CUVDu/DUNE-req-spec-SP-PDS-20nov2018.xlsx
+-rw-r--r-- 1 bviren bviren 0 Dec 31  1969 /tmp/dunegen-DUNE-doc-6422-v8-CUVDu/DUNE-req-spec-SP-PDS-20nov2018.xlsx
+#+END_EXAMPLE
+
+Well, there's your problem. Specific versions can be retrieved.
+
+#+BEGIN_EXAMPLE
+  $ dune-reqs getdocdb -V 6 -t SP-PDS.docid -U dune -P nusciencedocs -a tar 6422
+  DUNE-doc-6422-v6.tar
+#+END_EXAMPLE
+
+This will also update the ~.docid~ file.
+
+** Generated TeX is bad
+
+With the requirements spreadsheets, it's very easy to mistakenly add
+bad TeX.  When the build fails in some file under [[./generated/]] here
+are some things to try.
+
+Reproduce the problem with a verbose, single-threaded debug build
+
+#+BEGIN_EXAMPLE
+ $ waf --debug -j1 -vv [--chapters]
+#+END_EXAMPLE
+
+This should tell which TeX file has the failure.  Based on that you
+know what requirements spreadsheet has the problem ("SP-PDS" in this
+example).  Rerun w/out the noisy ~-debug~ to find the ~dune-reqs~ command
+that is being run.  If it isn't shown you may need to remove its
+products to trigger Waf to rerun it.
+
+#+BEGIN_EXAMPLE
+  $ rm generated/req-SP-PDS-*
+  $ waf -j1 -vv 
+#+END_EXAMPLE
+
+Look for a Waf "runner" running ~util/dunegen.sh~.  If desired, you can
+manually rerun this command:
+
+#+BEGIN_EXAMPLE
+  $ cd build
+  $ ../util/dunegen.sh reqs-one-and-all SP-PDS SP-PDS.docid ../util/templates/spec-table-one.tex.j2 ../util/templates/spec-table-all.tex.j2 req-SP-PDS-{label}.tex ../generated/req-SP-PDS-all.tex
+#+END_EXAMPLE
+
+As it unpacks a tar file to get the Excel file it's not most useful
+for debugging.  But it also prints the ~dune-reqs~ command which
+actually consumes the Excel file.  You can run that (still in ~build/~):
+
+#+BEGIN_EXAMPLE
+  $ dune-reqs render-one -C SP-PDS -t ../util/templates/spec-table-one.tex.j2 -T ../util/templates/spec-table-all.tex.j2 -o '../generated/req-SP-PDS-{label}.tex' -O ../generated/req-SP-PDS-all.tex /tmp/dunegen-DUNE-doc-6422-v5-JssZO/DUNE-req-spec-SP-PDS-20nov2018.xlsx
+#+END_EXAMPLE
+
+You are now all set to loop: 
+
+1) Open the ~.xlsx~ file.  You may do this either directly in the ~/tmp~ directory displayed or you may first copy it to some other place and adjust the ~dune-reqs~ command accordingly.
+2) Modify the spreadsheet to fix the problems and save, keeping the same format.
+3) Rerun the ~dune-reqs~ command
+4) Rebuild the doc to see if the fix is in (~cd .. && waf && cd build/~).  If this build causes ~dune-reqs~ to be run it will undo your fixes and you will need to rerun step 3 and then do this step again. 
+5) Goto 1 until everything works.
+
+Once the fixes are in, re-upload the spreadsheet file to its DocDB
+entry and then redo the normal Waf build.  It should show the new
+version being downloaded.  This can be confirmed with:
+
+#+BEGIN_EXAMPLE
+  $ cat build/SP-PDS.docid 
+#+END_EXAMPLE
+

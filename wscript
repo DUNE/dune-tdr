@@ -139,7 +139,10 @@ def build(bld):
             if not line: continue
             name,docid = line.split()
             docid_tagfile = "%s.docid"%name
-            bld(rule="${DUNEREQS} getdocdb -t ${TGT} -U dune -P %s -a tar %s"%(secret, docid),
+            rule="${DUNEREQS} getdocdb -t ${TGT} -U dune -P %s -a tar %s"%(secret, docid)
+            if bld.options.debug:
+                print(rule)
+            bld(rule=rule,
                 source=docids_node,
                 target=docid_tagfile)
             
