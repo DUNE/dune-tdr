@@ -852,7 +852,7 @@ In this area, requirements will still need refinement during the detailed design
 \subsection{Data Selection}
 \label{sec:sp-daq:design-selection-algs}
 %\fixme{single-phase module}
-\fixme{There are many studies which could go into this section. Some of this may very likely be moved into one or more tech notes and referenced.}
+%\fixme{There are many studies which could go into this section. Some of this may very likely be moved into one or more tech notes and referenced.}
 
 The \dfirst{daqdsn} sub-system is responsible for real-time processing
 of data from all TPC and PDS subdetectors; using data processing
@@ -868,15 +868,16 @@ The sub-system must select data associated with beam
 interactions, atmospheric neutrinos, rare baryon number violating events,
 and cosmic ray events depositing visible energy in excess of 100 MeV
 with high (targeted at $>$99\%) efficiency. It also must select data
-associated with potential galactic supernova bursts, indicating that
+associated with potential galactic \dfirst{snb}, indicating that
 the data selection sub-system must be able to self-trigger on
-galactic supernova bursts with galactic coverage\footnote{Galactic
+galactic \dword{snb} with galactic coverage\footnote{Galactic
   coverage is defined as efficiency-weighted probability of galactic supernova
 burst} of $>$95\% efficiency. Moreover, to meet the
-requirement that the \dword{dune} \dword{fd} maintain a $<$30~PB per yr to permanent
-tape, the \dword{daqdsn} sub-system must effectively reduce the generated data
-volume by four orders of magnitude, \fixme{I strongly suggest saying "reduce the generated data by a quarter..." instead of using "four orders of magnitude" (mostly because of audience).} and maintain a fake supernova
-burst trigger rate of less than \num{1} \fixme{I also suggest spelling out the number here--numbers from 1-10 should be spelled out.} per month.
+requirement that the \dword{dune} \dword{fd} maintain a $<$\SI{30}{\peta\byte/\year} to permanent
+storage, the \dword{daqdsn} sub-system must reduce the generated data
+volume by almost four orders of magnitude,
+% \fixme{I strongly suggest saying "reduce the generated data by a quarter..." instead of using "four orders of magnitude" (mostly because of audience).}
+and maintain an average (false positive) \dword{snb} trigger rate of less than one per month.
 
 The \dword{daqdsn} sub-system design follows a hierarchical structure, where low-level
 decisions are fed forward into higher-level ones until a  module-level trigger is activated. The hierarchy
@@ -891,139 +892,199 @@ Trigger. Each is described in subsequent sections.
   \includegraphics[width=0.8\textwidth]{DUNE_TDR_SP_DAQ_DS_Figure.pdf}
 \end{dunefigure}
 
-The first
-stage of operations will have two general classes of trigger decisions:
-\begin{itemize}
- \item Localized (in time and space) activity triggers: These are
-   low-latency triggers intended to prompt readout of
-   high-energy events (depositing $>$100~MeV of visible energy) 
-   and could also prompt readout of low-energy events
-   (e.g., from solar neutrino interactions). In association with a
-   localized trigger, a total of minimum two drift windows worth of data is recorded from
-   the entire 10-kton module that generated the trigger from
-   both TPC and PDS subsystems. \fixme{I read this as "...a minimum total of two drift windows..."}  
-\item Extended (in time and space) activity triggers: These are
-  high-latency (but no more than 10 seconds) triggers intended to prompt readout of
-  activity associated with supernova bursts. This activity spans multiple
-  tens of seconds \fixme{How long is multiple tens of seconds?} comprising several supernova neutrino
-  interactions as part of an approximately 10-second burst (from a few to
-  thousands of interactions for a galactic supernova
-  burst). Associated with an extended trigger, a total of \num{100}
-  seconds worth of data is recorded from the 10-kton module that
-  generated the trigger, including both TPC and PDS subsystems, as
-  well as from the other three 10-kton modules, whether
-  the latter have generated an extended trigger of their own or not.  
-\end{itemize}
+The first stage of operations will have two general classes of trigger
+decisions which are categorized in terms of the distribution of activity
+in time and space from which they are derived:
+\begin{description}
+\item[Localized activity triggers] are low-latency triggers intended to
+  initiate the readout of high-energy events (depositing $>$100~MeV of
+  visible energy). 
+  They may also initiate the readout of low-energy events (e.g., from
+  solar neutrino interactions).
+  Data from all channels of the detector module and for a period
+  spanning two drift times around the time of the localized activity
+  trigger will be read out.\footnote{Strictly, all channels in the DAQ partition.}
+\item[Extended activity triggers] are high-latency
+  (but no more than 10 seconds) triggers intended to initiate readout of
+  activity associated with \dword{snb}. 
+  Noticeable \dword{snb} activity is expected to span many tens of
+  seconds and be comprised of a few thousand individual supernova
+  neutrino interactions (eg in the case of a galactic \dword{snb}) which
+  are spaced throughout the detector module and peaking over a time
+  period of approximately ten seconds.
+  When a module asserts an \dword{snb} trigger it is sent to the
+  \dword{etl} and passed to other modules. 
+  Regardless of its origin, a detector module will read out data which
+  arrived \snbpretime prior to the trigger time and will read out a
+  total of \snbtime data. 
+  This data will be readout from all detector module electronics
+  channels in both the PDS and TPC systems. 
+  After sufficient confirmation of quality the \dword{snb} trigger will
+  also be sent to global coincidence trigger recipients such as
+  \dword{snews}.
+\end{description}
 
 To facilitate partitioning, the data selection sub-system must also be
-informed and aware of detector configuration and conditions in real
-time and apply certain masks on subdetectors or components
-in its decision making. It must also provide the Egress sub-system with a list of
-subcomponents to read out in association
-with any module-level trigger.
+informed and aware of current detector configuration and conditions and
+apply certain masks and mapping on subdetectors or their fragments in
+its decision making. 
+Ultimately, each trigger decision culminates in a command sent to Egress
+sub-system. 
+This command contains all the logical detector addresses and time ranges
+required such that an \dword{eb} may properly query the front-end
+buffers and finally collect and output the corresponding detector data
+and the corresponding trigger data.  The details for forming this
+command are described next and the operation of the Egress sub-system is
+described in Section~\ref{sec:fd-daq:design-backend}.
 
 \subsubsection{Trigger Primitive Generation}
 \label{sec:sp-daq:design-trigger-primitives}
 \fixme{single-phase module}
 
-A trigger primitive is defined nominally per-channel and,
-in the case of the SP TPC, identified with a per-collection-wire
-hit. Trigger primitives provide summary information
-like the start time of the pulse on a collection wire, the total
-charge or peak of the collection-wire pulse, and the time the pulse
-remains above some pre-determined threshold. Trigger primitives for the
-TPC are generated in the front-end readout part of the \dword{daq} 
-system, either in FPGA firmware or in CPU or GPU software. For the
-PDS, TPs are generated in the PDS hardware and streamed to the \dword{daq}
-DS sub-system.
+A trigger primitive is defined nominally per-channel and, in the case of
+the SP TPC, identified as a collection-channel signal rising above some
+noise-driven threshold for some minimum period of time (here called a
+``hit'').
+A trigger primitive takes the form of an information packet which
+summarizes the above-threshold waveform information in terms of its
+threshold crossing times and statistical measures its samples. 
+In addition, these packets carry a flag indicating the occurrence of any
+failures or other exceptional behavior.
+
+Trigger primitives derived from TPC data
+are produced in the front-end readout part of the \dword{daq} system,
+either in FPGA firmware or in CPU or GPU software as described in
+Section~\ref{sec:fd-daq:readout}.
+Any trigger primitives derived from PDS data are produced by this system
+for consumption by the \dword{daq} Data Selection sub-system.
 
 Algorithms for generating trigger primitives are still under development
-\cite{docid-11275}. An example algorithm is one that a priori \fixme{This is a Latin term and should be in italics.} establishes a
-channel baseline, applies baseline subtraction and thresholding, and
-identifies a hit over that threshold \cite{docid-11236}. This algorithm has been
-validated using both Monte Carlo simulations and real data from \dword{protodune}. Its performance is
-summarized in Section~\ref{sec:sp-daq:design-validation}.
+\cite{docid-11275}. 
+One example algorithm\cite{docid-11236} establishes a waveform baseline
+for a given channel, subtracts this baseline from each sample, maintains
+a measure of the noise and searches for the waveform to cross a
+threshold defined in terms of the noise level.
+This algorithm has been validated using both Monte Carlo simulations and
+real data from \dword{protodune}. 
+Its performance is summarized in
+Section~\ref{sec:sp-daq:design-validation}.
 
-Each trigger primitive contains the following information:
-\begin{itemize}
-\item channel address \[32 bit\]
-\item time of hit \[64 bit\]
-\item time over threshold \[16 bit\]
-\item ADC sum \[32 bit\]
-\item error flag \[16 bit\]
-\end{itemize}
-corresponding to a total of 20 bytes.\fixme{This phrase needs to be attached to an appropriate noun. Is it the trigger primitive that requires 20 bytes? Or is it the information contained in the trigger primitive (that is, the bulleted list) that requires 20 bytes? If the first, this can be phrased "Each trigger primitive, corresponding to a total of 20 bytes, contains the following information:" If the second, this can be rephrased "Each trigger primitive conains the following information, corresponding to a total of 20 bytes:"}
+The format and schema of trigger primitives require study and
+optimization and this may be tightly coupled with the formation of
+trigger candidates discussed next. 
+Initial estimates show that 20 bytes provides a generous data
+representation. 
+Their rate will be dominated by the rate of decay of naturally occurring
+$^{39}$Ar which is about \SI{10}{\mega\hertz} per module.
+This leads to a detector module aggregate rate of
+\SI{200}{\mega\byte/\second}.
+The subsequent stage of the Data Selection must continuously absorb and process this
+rate providing trigger candidates as described next.
 
-The anticipated trigger primitive rate  will be dominated by
-$^{39}$Ar rates (10~MHz per module). Assuming the above \fixme{Where is this? ...the TP format described on page xx...} TP format
-prescription, the anticipated trigger primitive rate should \fixme{You may want to do a search for all "is expected to". Most can be replaced with "should" or another auxiliary verb.} be
-200~MB/s. The subsequent stage of the DS must absorb and
-process this TP rate in real time, providing trigger candidate decisions. 
-
-\metainfo{Include plot and discussion of \dword{dune} trigger primitive rate in \dword{protodune}. 
-  The fact that this includes many more cosmics will not matter much as the rate is expected to be dominated by Ar39. 
-  Phil has this already but the LAr purity is not yet high enough to see Ar39 across the whole drift distance.}
+%\metainfo{Include plot and discussion of \dword{dune} trigger primitive rate in \dword{protodune}. 
+%  The fact that this includes many more cosmics will not matter much as the rate is expected to be dominated by Ar39. 
+%  Phil has this already but the LAr purity is not yet high enough to see Ar39 across the whole drift distance.}
 
 \subsubsection{Trigger Candidate Generation}
 
-Trigger primitives are streamed from the front-end \dword{daq} readout to a
-higher level of data selection that examines those on a per
-subdetector (e.g., per APA) basis. This higher level of data selection decides
-whether primitives from that subdetector constitute a potential
-trigger candidate. Trigger candidates are generated by looking for
-clusters of several hits in a narrow time window, the total ADC sum of one or a
-cluster of hits, or a large time-over-threshold. Trigger 
-candidates will be generated with both a low- and high-energy threshold. The former
-will be used for supernova burst triggering, the latter for triggers on beam, atmospheric
-neutrinos, cosmics, and other high-energy interactions in the detector. 
+Trigger primitives from individual, contiguous fragments of the detector
+module are consumed in order that cross-channel clustering may be
+performed and possibly resulting in the output of trigger candidates.
+Once activity is localized in time and channel (``space'') it is
+possible to apply a rough energy-based threshold based on combining the
+statistical metrics carried by the input trigger primitives.
 
-A trigger candidate includes not only timing and subdetector
-identifier information, but also a rudimentary estimate of the detector
-activity that led to the candidate's formation, so that further downstream (at
-the module level trigger stage), a decision can be made on 
-whether a particular trigger candidate should be counted as part of a possible supernova
-burst or a different type of trigger. For example,
-a candidate with an estimated energy of 100~MeV would be considered a
-localized high energy trigger, while
-one with an estimated energy of 5~MeV would only be considered as potentially part of a
-supernova burst.\fixme{The second part of this sentence is not entirely clear.}
+A trigger candidate packet carries information about all the trigger
+primitives that were used in its formation. 
+In particular, it provides a measure of the total activity represented
+by these primitives.
+This measure will be used downstream to allow the final trigger
+decision, as described more in the next section.
+
+Prior to output of, a candidate is subject to a selection criteria.
+While the selection applied in the previous stage was driven by a
+measure of noise, here it is driven by background activity.  
+In particular, candidates which are consistent with activity from the
+very high rate, low energy $^{39}$Ar decays will be strongly prescaled. 
+The higher energy, lower rate but still numerous candidates consistent
+with activity from the $^{42}$Ar decay chain will also be prescaled to
+an extent. 
+Additional studies are expected but nominally individual candidates, or
+groups of candidates nearby in detector space in time, with measures of
+energy greater than these two types of decays will be passed with little
+or no prescaling.
+
 
 \subsubsection{Module Level Trigger}
-Trigger candidates are passed upstream to a module level trigger that collects candidates
-and makes the final decision on what has occurred: a valid localized high-energy
-activity (necessitating a module-wide readout trigger for a relatively
-short, two-drift duration) or a possible supernova burst (necessitating a module-wide readout
-trigger for 100 seconds). The module level trigger passes
-trigger Commands, via the Egress sub-system, down to the front-end \dword{daq}
-readout, prompting a readout of a pre-determined amount of data depending
-on what type of module level trigger has occurred. 
 
-The module level also takes inputs 
-from an external trigger, including information from other
-modules, SNEWS alerts, and other external signals such as
-calibrations. 
-It also sends information to the external trigger so that other modules or
-detectors can be triggered.
+Trigger information is further aggregated as all candidates are consumed
+by the module level trigger in order to form the final trigger decision. 
+The channel and time extent as well as the energy measure of the
+candidates are used at this stage to categorize the activity. 
+The category drives the algorithm applied to form a decision.
+For example, isolated, low energy candidates may be used toward
+satisfying a condition that indicates a potential \dword{snb}. 
+Individual high energy candidates, or lower energy candidates
+distributed over a nearby region of detector space and time would be
+applied toward satisfying a high-energy condition. 
+
+When a particular condition in a category is satisfied, the trigger
+decision is made and a trigger command is formed. 
+This packet includes information of the candidates (and thus primitives)
+that were used to form it. 
+The decision also provides direction as to what set of detector channels
+to be read out and over what time period.
+As described at the start of this section, localized activity will lead
+to the readout of the entire detector module for a period equal to one
+or two drift times.  Extended activity triggers (\dword{snb}) will
+direct the readout of much longer period.
+
+The module level trigger will send its produced trigger commands to the
+Egress sub-system for the detector module.  The
+Egress sub-system will dispatch the command to a \dword{eb} for
+execution as described in Section~\ref{sec:fd-daq:design-backend}.
+
+Trigger commands are also sent to the external trigger logic unit which
+forwards them to other detector modules. 
+This is particularly needed in order to allow for cross-module
+coincidences to be formed and thus produce a overall lower threshold for
+capturing potential \dword{snb} occurrences. 
+The external trigger logic unit will also forward \dword{snb} trigger
+commands, after suitable quality confirmation, to external recipients
+such as \dword{snews}.
+
+In addition to accepting cross-module triggers via the external trigger
+logic unit it may also takes inputs from out-of-band sources such as
+needed for calibration or random triggering. 
+If meaningful sources of triggering information that is external to
+DUNE can be provided promptly enough so that the corresponding data
+still resides in the front-end buffers, they may also be considered.
+
+\fixme{Do we talk about the beam trigger?  It's not required for nominal
+  readout but it will be useful to, for example, veto any laser
+  calibration pulses.}
 
 \subsubsection{High Level Trigger}
 
-The last processing stage in the data selection sub-system is the high
-level trigger (HLT), \fixme{I believe this needs to be defined in the Dune list of terms? If so, a search and replace can take care of the further use of this abbreviation.} which resides in the
-back-end part of the \dword{daq} and is further described in
-Section~\ref{sec:fd-daq:design-data-reduction}. The high level trigger
-acts on events that have already been triggered, read out, 
-and built by the event builder and serves several purposes. It
-limits the total triggered data rate that goes to disk by
-applying more refined selection criteria to remove events that are clearly uninteresting. For example, instrumentally-generated events
-(e.g.~correlated noise) might generate trigger candidates and a module
-level trigger, which, upon inspection, can be clearly seen
-as non-physics events. Second, it can also reduce the triggered
-data set by further identifying and localizing interesting activity.
+The last processing stage in the data selection sub-system is the
+\dfirst{hlt} which resides in the back-end part of the \dword{daq} and
+is further described in Section~\ref{sec:fd-daq:design-data-reduction}.
+The high level trigger acts on triggered, read out and aggregated data,
+produced by an \dword{eb}. 
+The \dword{hlt} serves several purposes.
+It may further reduce the rate of data saved to final output storage by
+applying refined selection criteria which may otherwise be prohibitive
+to apply to the pre-trigger data stream.  
+For example, instrumentally-generated signals (e.g.~correlated noise)
+may produce trigger candidates that can not be rejected by the module
+level trigger and if left unmitigated may lead to an undesired high
+output data rate. 
+Post processing the triggered data may allow reducing this unwanted
+contamination.
+% I (bv) don't agree with this next statement.
+Second, it can also reduce the triggered data set by further identifying
+and localizing interesting activity.
 
-Beacuse the HLT is in the \dword{daq} back-end and operates on event-built data, for which the rate
-should be low, developing more sophisticated
-algorithms to eliminate empty APAs from the data 
-stream is possible.
 
 \subsection{Back-end System}
 \label{sec:fd-daq:design-backend}
@@ -1118,17 +1179,10 @@ Thus, the output storage buffer must have a capacity of approximately \SI{0.5}{\
 %\fixme{Is it indeed still single-phase specific?}
 %\metainfo{Hardware, consumers, links.}
 
-All components of the \dword{fd} use clocks derived
-from a single GPS disciplined source, and all module components
-are synchronized to a 62.5 MHz clock. To make full use of the
-information from the photon detection system (PDS) \fixme{Should this abbreviation go into the set of overall Dune abbreviations?} , the common clock
-must be aligned within a single detector unit with an accuracy of
-\bigo{\SI{1}{\nano\second}} \fixme{I can't tell if this is an O or a zero. I see another few instances of this later.} . For a common trigger for a supernova neutrino burst
-(SNB) \fixme{Another abbreviation that may need to be in the overall definitions.} between detector modules, the timing must have
-an accuracy of \bigo{\SI{1}{\milli\second}}. However, a still tighter constraint is
-the need to calibrate the common clock to universal time (derived from
-GPS) \fixme{Another abbreviation here that is not in LATEX form.} so the data selection algorithm can be adjusted inside an
-accelerator spill, which again requires an absolute accuracy of \bigo{\SI{1}{\micro\second}}.
+All components of the \dword{fd} use clocks derived from a single GPS disciplined source, and all module components are synchronized to a 62.5 MHz clock. 
+To make full use of the information from the \dword{pds}, the common clock must be aligned within a single detector unit with an accuracy of \bigo{\SI{1}{\nano\second}}. 
+For a common trigger for a \dword{snb} between detector modules, the timing must have an accuracy of \bigo{\SI{1}{\milli\second}}.
+However, a still tighter constraint is the need to calibrate the common clock to universal time derived from \dword{gps} so the data selection algorithm can be adjusted inside an accelerator spill, which again requires an absolute accuracy of \bigo{\SI{1}{\micro\second}}.
 
 The \dword{dune} \dword{fd} uses a version of the \dword{protodune} timing
 system, where a design principle is to transmit synchronization messages over
@@ -1138,31 +1192,23 @@ described in detail in \cite{docid-11233}.
 
 Central to the timing system are four types of signals:
 \begin{itemize}
-\item a 10 MHz reference used to discipline a stable master clock,
-\item a one-pulse-per-second (1PPS) signal from the GPS,
-\item an NTP signal providing an absolute time for each 1PPS signal, and
-\item an inter-range instrumentation group (IRIG) time code signal
+\item a \SI{10}{\mega\hertz} reference used to discipline a stable master clock,
+\item a \dfirst{pps} from the GPS,
+\item a \dword{ntp} signal providing an absolute time for each \dword{pps}, and
+\item an \dfirst{irig} time code signal
   used to set the timing system 64-bit time stamp.
 \end{itemize}
 The timing system relates its time counter onto GPS \fixme{I read this as "The timing system correlates its time counter to GPS time by timestamping..."} time by
-timestamping the 1 PPS signal onto its own clock and reading
-the corresponding time in software in NTP time.
+timestamping the \dword{pps} onto its own clock and reading
+the corresponding time in software in \dword{ntp} time.
 
-The timing system synchronization codes are distributed to the \dword{daq}
-readout components in the CUC and the readout components on the
-cryostat via single mode fibers and passive splitters/combiners. All
-custom electronic components of the timing system are contained in two
-$\mu$TCA shelves; at any time, one is active while the other serves as
-a hot spare. The 10 MHz reference clock and the 1PPS signal
-are received through a single-width advanced mezzanine card (AMC) at the
-center of the $\mu$TCA shelf. This master timing AMC is a custom board
-and produces the timing system signals, encoding them onto
-a serial data stream. This serial datastream \fixme{Is data stream one word or two?} is distributed over a backplane to 
-a number of fanout AMCs. The fanout AMC is an off-the-self board
-with two custom FPGA mezzanine cards (FMCs). Each FMC has four SFP
-cages where fibers connect the timing system to each detector
-component (e.g., APA) or where direct attach cables connect
-to other systems in the CUC.
+The timing system synchronization codes are distributed to the \dword{daq} readout components in the \dfirst{cuc} and the readout components on the cryostat via single mode fibers and passive splitters/combiners.
+All custom electronic components of the timing system are contained in two $\mu$TCA shelves; at any time, one is active while the other serves as a hot spare.
+The 10 MHz reference clock and the \dword{pps} signal are received through a single-width advanced mezzanine card (AMC) at the center of the $\mu$TCA shelf.
+This master timing AMC is a custom board and produces the timing system signals, encoding them onto a serial data stream.
+This serial data stream is distributed over a backplane to a number of fanout AMCs.
+The fanout AMC is an off-the-self board with two custom \dwords{fmc}.
+Each \dword{fmc} has four SFP cages where fibers connect the timing system to each detector component (e.g., APA) or where direct attach cables connect to other systems in the CUC.
 
 To provide redundancy, two independent GPS systems are used,
 one with an antenna at the surface of the Ross shaft, and the other
@@ -1246,7 +1292,7 @@ described in Section~\ref{sec:sp-daq:validation-pd-demonstrator}.
 %\fixme{single-phase module}
 
 Generating trigger primitives in CPU or GPU software has not
-yet been demonstrated in situ \fixme{This is a Latin term that may need to be in italics.} in \dword{protodune}, but it has been
+yet been demonstrated \textit{in situ} in \dword{protodune}, but it has been
 demonstrated in simulations, using real data from \dword{protodune}, on a
 server with specs similar to those 
 of the FELIX host server at \dword{protodune}.
@@ -1271,7 +1317,7 @@ performed. Because of its surface
 location and the known noisy channels included in this study,
 \dword{protodune} trigger primitive generation rates level off to a floor rate higher than a threshold
 of approximately 16 ADC counts. Although the total rates are much higher than
-anticipated for DUNE, the algorithm performance is promising and should improve as ProtoDUNE \fixme{LATEX form?} continues
+anticipated for DUNE, the algorithm performance is promising and should improve as \dword{protodune} continues
 to run and improve its noise understanding.
 
 \subsubsection{Validation of Trigger Primitives in Firmware}
@@ -1295,13 +1341,49 @@ for region-of-interest (hit) finding in FPGA \cite{NNN18}.
 \subsubsection{Validation of High Level Trigger in Software}
 
 
-\subsubsection{Prototype Message Passing System}
+\subsubsection{Prototype Inter-process Communication System}
 \label{sec:fd-daq:validation-demonstrators}
 \fixme{module-generic}
 
-\metainfo{This is actually module-generic. 
-  Very briefly describe the prototype message passing. 
-  This will mostly refer to a tech note.}
+A prototype \dfirst{ipc} system is currently under development. 
+Some of the goals of this prototype are:
+
+\begin{itemize}
+\item Evaluate raw data throughput, particularly via inter-thread communication transport.
+\item Evaluate packet rate limitations, particularly those relevant to the hierarchical trigger layers of the Data Selection system described in Section~\ref{sec:sp-daq:design-selection-algs}.
+\item Understand the required message schema and protocols.
+\item Prototype high-level functionality described in Section~\ref{sec:fd-daq:design-messages} such as zero-downtime reconfiguration, self healing and the patterns required \dword{ccm} as described in Section~\ref{sec:fd-daq:design-run-control}.
+\item Investigate scaling in terms of performance and software complexity management.
+\item Provide functional support for the ``vertical'' and ``horizontal'' slice tests described above.
+\end{itemize}
+
+The prototype software development follows some design principles:
+
+\begin{itemize}
+\item The DAQ is modeled as a cyclic, data flow graph.
+\item Graph nodes in the graph perform transformations and may consume data input from and produce data output to other nodes.
+\item Graph edges connect nodes through ports which are associated with a network socket.
+\item Graph construction emerges by initiating connections locally.
+\item Executable processes provide one or more nodes which operate asynchronously from one-another governed only by the flow of messages across their shared edges.
+\item Construction of nodes in executable processes and larger graph construction is dynamic governed by initial user configuration and later by messages flowing in the graph itself.
+\end{itemize}
+
+The prototype development is based on the well-established, high-quality Free Software from the ZeroMQ group.
+Some of the reasons for selecting their technology include:
+\begin{itemize}
+\item ZeroMQ software follows a well layered set of software libraries which emphasize portability, high-performance, fault tolerance, minimal software dependency and long-lived use and support.
+\item A wide variety of language bindings exist, importantly C/C++ for high performance and Python for fast development are two of the best supported.
+\item ZeroMQ abstracts functionality in important ways such as concrete implementation of high level communication patterns (eg, pub/sub) and high-level independence from low-level transport mechanism (three are supported: inter-thread queues, inter-process Unix-domain sockets and inter-computer network sockets). 
+\item It supports a truly decentralized system design (this is the ``Zero'' in ``ZeroMQ'') critical to satisfying the requirements on robustness.  In particular the ZeroMQ project Zyre provides a distributed, low-latency \dword{daqdispre} system.
+\item Has been evaluated favorably CERN~\cite{cernzeromq} and has been used in various DAQ contexts in other experiments.
+\end{itemize}
+
+Initial prototype tests have demonstrated that the raw data throughput of ZeroMQ inter-thread transport is sufficient for use in even the highest rate DAQ context (input to trigger primitive production).
+Rate tests of small packets have been performed to gauge ZeroMQ ability to handle high packet rate trigger primitive or trigger candidate data. 
+These tests have so far been performed merely on Gbps networks. 
+Given reasonably linear scaling as well as benchmarks preformed on faster networks by others, ZeroMQ will perform adequately for DUNE FD DAQ purposes.
+
+The ZeroMQ-based prototype software will continue to be developed with the goal to understand how to manage software and configuration complexity and to participate in the other demonstrators described in this section. 
 
 
 \subsubsection{Planned \dword{protodune} \dword{daq} Demonstrator}
