@@ -318,9 +318,6 @@
 
 
 
-% Hyperref typically needs to come at the end of all \usepackages 
-\RequirePackage[pdftex,bookmarks,hidelinks]{hyperref}
-
 % Use to import pdf files (Anne 4/28/15)
 \RequirePackage{pdfpages}
 
@@ -353,19 +350,18 @@
 \RequirePackage{tocbibind}
 
 % Use to include authorlist in PDF format
-\usepackage{pdfpages}
+\RequirePackage{pdfpages}
 
 %for \lesssim symbol
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{amsmath}
-\usepackage{cleveref} %To use vref suggested by A Habig Feb 2018
-\usepackage{makecell} % To allow linebreaking within table cells (AH Feb 2018)
+\RequirePackage{amsfonts}
+\RequirePackage{amssymb}
+\RequirePackage{amsmath}
+\RequirePackage{makecell} % To allow linebreaking within table cells (AH Feb 2018)
 
-\usepackage{cprotect}
-\usepackage{eurosym}
-\usepackage{tfrupee}
-\usepackage{textcomp}
+\RequirePackage{cprotect}
+\RequirePackage{eurosym}
+\RequirePackage{tfrupee}
+\RequirePackage{textcomp}
 
 
 % Comoditize citing DocDB esp for interface documents in TDR.
@@ -386,4 +382,8 @@
 \newcommand\newtag[2]{#1\def\@currentlabel{#1}\label{#2}}
 \makeatother
 
-\usepackage{multirow}
+\RequirePackage{multirow}
+
+
+
+% see preamble for hyperref related.

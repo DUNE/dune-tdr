@@ -73,10 +73,7 @@ def configure(cfg):
                      path_list=[os.path.join(os.path.realpath("."),"util")],
                      mandatory = False)
 
-    cfg.env.PDFLATEXFLAGS += [
-        "-file-line-error",
-        "-recorder",
-    ]
+    cfg.env.PDFLATEXFLAGS += [ "-file-line-error", "-recorder", ]
 
 def nice_path(node):
     return node.path_from(node.ctx.launch_node())
@@ -133,9 +130,7 @@ def spreadsheet_updater(bld):
     secret = bld.options.docdb_password
     if not secret:
         print ('Note: no --docdb-password given, spreadsheets will not be updated.')
-        def no_op(name, docid, docver=""):
-            return "%s.docid"%name
-        return no_op
+        return None
     username = bld.options.docdb_username
 
     docids_node = bld.path.find_resource("util/dune-reqs-docids.txt")
@@ -160,9 +155,12 @@ def regenerate(bld):
     '''
     reqsdeps = list()
     if not bld.env['DUNEREQS']:
-        print ("Note: dune-reqs found, will not try to rebuild requirements files")
+        print ("Note: dune-reqs not found, will not try to rebuild requirements files")
         return reqsdeps
     
+    ssup = spreadsheet_updater(bld)
+    if ssup is None:
+        return reqsdeps
 
     # Despite knowing better, generate into the source directory.
     gen_dir = bld.srcnode.make_node('generated')
@@ -170,9 +168,6 @@ def regenerate(bld):
     reqdefs.write('% generated file, do not edit','w')
 
     docids_node = bld.path.find_resource("util/dune-reqs-docids.txt")
-
-    ssup = spreadsheet_updater(bld)
-
 
     for line in docids_node.read().split('\n'):
         line = line.strip()
@@ -211,6 +206,7 @@ def regenerate(bld):
 
     return reqsdeps
 
+
 def build(bld):
 
 
@@ -237,6 +233,7 @@ def build(bld):
 #        "vol-spec.tex"
     ]
     
+
     maintexs = list()
     for volind, voltex in enumerate(voltexs):
         volnode = bld.path.find_resource(voltex)
@@ -248,8 +245,10 @@ def build(bld):
         maintexs.append(volnode)
 
         # Task to build the volume
-        bld(features='tex', prompt = prompt_level,
-            source = volnode,
+        bld(features='tex',
+            prompt = prompt_level,
+            type = 'pdflatex',
+            source = [volnode],
             target = volpdf.name)
         #for reqnode in reqsdeps:
         #    bld.add_manual_dependency(volnode, reqnode)
