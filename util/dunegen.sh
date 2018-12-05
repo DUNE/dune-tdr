@@ -9,13 +9,14 @@ dunegen-untar () {
     if [ -z "$tf" ] ; then exit; fi
 
     tdir=$(mktemp -d "/tmp/dunegen-$(basename $tf .tar)-XXXXX")
-    for one in $(tar -C $tdir -xvf $tf)
+    tar -C $tdir -xf $tf
+    for one in $tdir/*.xlsx
     do
-        if [[ $one =~ ^.*\.xlsx$ ]] ; then
-            echo "$tdir/$one"
-            return
-        fi
+        # take first
+        echo "$tdir/$one"
+        return
     done
+    # here if fail
     rm -rf $tdir
 }
 
@@ -33,6 +34,11 @@ dunegen-reqs () {
     set -x
     
     dune-reqs render -C "$ccode" -t "$templ" -o $out $xlsf || exit 1
+
+    tdir=$(dirname $xlsf)
+    if [ -d "$tdir" ] ; then
+        rm -rf "$tdir"
+    fi
 
     set +x
 }
