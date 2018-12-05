@@ -59,6 +59,8 @@ def options(opt):
                    help='The DocDB user name for downloading the requirements spreadsheets.')
     opt.add_option('--docdb-password', default="",
                    help='The DocDB password for downloading requirements spreadsheets.')
+    opt.add_option('--docdb-password-file', default="",
+                   help='A file holding the DocDB password for downloading requirements spreadsheets.')
 
 def configure(cfg):
     cfg.load('tex')
@@ -128,8 +130,10 @@ class manifest(Task):
 
 def spreadsheet_updater(bld):
     secret = bld.options.docdb_password
+    if not secret and bld.options.docdb_password_file:
+        secret = bld.path.find_resource().read(bld.options.docdb_password_file).strip()
     if not secret:
-        print ('Note: no --docdb-password given, spreadsheets will not be updated.')
+        print ('Note: no --docdb-password[-file] given, spreadsheets will not be updated.')
         return None
     username = bld.options.docdb_username
 
