@@ -13,7 +13,7 @@ dunegen-untar () {
     for one in $tdir/*.xlsx
     do
         # take first
-        echo "$tdir/$one"
+        echo "$one"
         return
     done
     # here if fail
