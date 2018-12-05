@@ -65,6 +65,20 @@ dunegen-reqs-one-and-all () {
     set +x
 }
 
+dunegen-render-specs () {
+    ccode="$1" ; shift
+    xlsfile="$(readlink -f $1)"; shift
+
+    origdir=$(pwd)
+    mydir=$(dirname $(readlink -f $BASH_SOURCE))
+    topdir=$(dirname $mydir)
+    blddir="$topdir/build"
+    cd $blddir
+    dune-reqs render-one -C $ccode -t "../util/templates/spec-table-one.tex.j2" -T "../util/templates/spec-table-all.tex.j2" -o "../generated/req-${ccode}-{label}.tex" -O "../generated/req-${ccode}-all.tex" "$xlsfile"
+    cd $origdir
+
+}
+
 
 dunegen-help () {
     cat <<EOF
