@@ -4,32 +4,41 @@ Usage:
 
 Configure the project giving it an optional "installation" directory:
 
-  ./waf configure --prefix=/path/to/install
+./waf configure --prefix=/path/to/install
 
-Build the main products (volume PDFs).  You can find them under build/.
+Build the main products (volume PDFs).  You can find them under
+build/.
 
-  ./waf
+./waf
 
-Install the main products to the prefix.
+To include regenerating TeX files from spreadsheets in DUNE DocDB you
+must provide DocDB authentication information:
 
-  ./waf install
+./waf --docdb-password=<thepassword>
 
-Generate and build per-chapter PDFs.  They are under build/.  You can also "install" them.
+The default user is "dune" and that can be changed with --docdb-username=otheruser.
 
-  ./waf --chapters
+Generate and build per-chapter PDFs.  They are under build/.  You can
+also "install" them.
 
-Generate volume tar files suitable for submission to the arXiv.  You can also "install" them.
+./waf --chapters
 
-  ./waf --arxiv
+Install the main products to the prefix, optionall may include installing chapter PDFs.
+
+./waf install [--chapters]
+
+Generate volume tar files suitable for submission to the arXiv.  You
+can also "install" them.
+
+./waf --arxiv
 
 Remove build products from build/ but keep configuration.
 
-  ./waf clean
+./waf clean
 
 Also remove configuration.  You will need to start over to do more.
 
-  ./waf distclean
-
+./waf distclean
 '''
 
 import os
@@ -46,6 +55,10 @@ def options(opt):
                    help="generate and build per-chapter PDFs")
     opt.add_option('--arxiv', default=False, action='store_true',
                    help="make a tarbal for each volume suitable for upload to arXiv")
+    opt.add_option('--docdb-username', default="dune",
+                   help='The DocDB user name for downloading the requirements spreadsheets.')
+    opt.add_option('--docdb-password', default="",
+                   help='The DocDB password for downloading requirements spreadsheets.')
 
 def configure(cfg):
     cfg.load('tex')
@@ -64,8 +77,6 @@ def configure(cfg):
         "-file-line-error",
         "-recorder",
     ]
-
-
 
 def nice_path(node):
     return node.path_from(node.ctx.launch_node())
@@ -118,6 +129,88 @@ class manifest(Task):
                 fp.write(nice_path(node) + '\n')
     
 
+def spreadsheet_updater(bld):
+    secret = bld.options.docdb_password
+    if not secret:
+        print ('Note: no --docdb-password given, spreadsheets will not be updated.')
+        def no_op(name, docid, docver=""):
+            return "%s.docid"%name
+        return no_op
+    username = bld.options.docdb_username
+
+    docids_node = bld.path.find_resource("util/dune-reqs-docids.txt")
+
+    def ssup(name, docid, docver=""):
+        rule="${DUNEREQS} getdocdb -t ${TGT}"
+        if docver:
+            rule += " -V %s" % docver
+        docid_tagfile = "%s.docid"%name
+        rule += " -U dune -U %s -P %s -a tar %s"%(username, secret, docid)
+        if bld.options.debug:
+            print(rule)
+        bld(rule=rule,
+            source=docids_node,
+            target=docid_tagfile)
+        return docid_tagfile
+    return ssup
+
+def regenerate(bld):
+    '''
+    Make tasks to regenerate files from "requirements" spreadsheets. 
+    '''
+    reqsdeps = list()
+    if not bld.env['DUNEREQS']:
+        print ("Note: dune-reqs found, will not try to rebuild requirements files")
+        return reqsdeps
+    
+
+    # Despite knowing better, generate into the source directory.
+    gen_dir = bld.srcnode.make_node('generated')
+    reqdefs = gen_dir.make_node('reqdefs.tex')
+    reqdefs.write('% generated file, do not edit','w')
+
+    docids_node = bld.path.find_resource("util/dune-reqs-docids.txt")
+
+    ssup = spreadsheet_updater(bld)
+
+
+    for line in docids_node.read().split('\n'):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+
+        parts=line.split()
+        if len(parts) == 3:
+            name,docid,docver = parts
+        else:
+            name,docid = parts
+            docver=""
+
+        docid_tagfile = ssup(name,docid,docver)
+
+        # Generate the subsys per-requirement tables and their roll-up
+        one_tmpl = bld.path.find_resource("util/templates/spec-table-one.tex.j2")
+        all_tmpl = bld.path.find_resource("util/templates/spec-table-all.tex.j2")
+        one_file = "req-%s-{label}.tex"%name
+        all_targ = gen_dir.make_node("req-%s-all.tex"%name)
+        reqsdeps.append(all_targ)
+        bld(rule="${DUNEGEN} reqs-one-and-all %s ${SRC} %s ${TGT}"%(name, one_file),
+            source=[docid_tagfile,
+                    one_tmpl, all_tmpl],
+            target=[all_targ])
+
+
+        # This one generates defs
+        tmpl = bld.path.find_resource("util/templates/reqdefs.tex.j2")
+        out = gen_dir.make_node("reqdefs-%s.tex"%name)
+        reqdefs.write('\\input{generated/%s}\n' % out.name[:-4], 'a')
+        reqsdeps.append(out)
+        bld(rule="${DUNEGEN} reqs %s ${SRC} ${TGT}"%(name,),
+            source=[docid_tagfile, tmpl],
+            target=[out])
+
+    return reqsdeps
+
 def build(bld):
 
 
@@ -127,59 +220,7 @@ def build(bld):
 
 
     # First, if we are so configured then try rebuild things from the "requirements" spreadsheets.
-    reqsdeps = list()
-    if not bld.env['DUNEREQS']:
-        print ("Note: dune-reqs found, will not try to rebuild requirements files")
-    else:
-
-        # Despite knowing better, generate into the source directory.
-        gen_dir = bld.srcnode.make_node('generated')
-        reqdefs = gen_dir.make_node('reqdefs.tex')
-        reqdefs.write('% generated file, do not edit','w')
-
-        docids_node = bld.path.find_resource("util/dune-reqs-docids.txt")
-        secret = bld.path.find_resource("docdb.pw").read().strip()
-        for line in docids_node.read().split('\n'):
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-
-            rule="${DUNEREQS} getdocdb -t ${TGT}"
-            parts = line.split()
-            if len(parts) == 3:
-                name,docid,docver = line.split()
-                rule += " -V %s" % docver
-            else:
-                name,docid = line.split()
-            docid_tagfile = "%s.docid"%name
-            rule += " -U dune -P %s -a tar %s"%(secret, docid)
-            if bld.options.debug:
-                print(rule)
-            bld(rule=rule,
-                source=docids_node,
-                target=docid_tagfile)
-            
-            
-            # Generate the subsys per-requirement tables and their roll-up
-            one_tmpl = bld.path.find_resource("util/templates/spec-table-one.tex.j2")
-            all_tmpl = bld.path.find_resource("util/templates/spec-table-all.tex.j2")
-            one_file = "req-%s-{label}.tex"%name
-            all_targ = gen_dir.make_node("req-%s-all.tex"%name)
-            reqsdeps.append(all_targ)
-            bld(rule="${DUNEGEN} reqs-one-and-all %s ${SRC} %s ${TGT}"%(name, one_file),
-                source=[docid_tagfile,
-                        one_tmpl, all_tmpl],
-                target=[all_targ])
-
-
-            # This one generates defs
-            tmpl = bld.path.find_resource("util/templates/reqdefs.tex.j2")
-            out = gen_dir.make_node("reqdefs-%s.tex"%name)
-            reqdefs.write('\\input{generated/%s}\n' % out.name[:-4], 'a')
-            reqsdeps.append(out)
-            bld(rule="${DUNEGEN} reqs %s ${SRC} ${TGT}"%(name,),
-                source=[docid_tagfile, tmpl],
-                target=[out])
+    reqsdeps = regenerate(bld)        
 
 
     chaptex = bld.path.find_resource("util/chapters.tex")
