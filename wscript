@@ -208,6 +208,13 @@ def regenerate(bld):
             source=[docid_tagfile, tmpl],
             target=[out])
 
+        # This one generates longtable
+        tmpl = bld.path.find_resource("util/templates/spec-longtable.tex.j2")
+        out = gen_dir.make_node("req-longtable-%s.tex"%name)
+        bld(rule="${DUNEGEN} reqs %s ${SRC} ${TGT}"%(name,),
+            source=[docid_tagfile, tmpl],
+            target=[out])
+
     return reqsdeps
 
 
