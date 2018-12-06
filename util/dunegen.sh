@@ -79,6 +79,23 @@ dunegen-render-specs () {
 
 }
 
+dunegen-validate () {
+    ccode="$1" ; shift
+    xlsfile="$(readlink -f $1)"; shift
+    ofile="$1"; shift
+
+    if [[ ! $ofile =~ ^.*\.tex$ ]];     then
+        echo "Got unexpected output file extension: $ofile"
+        echo "usage: dunegen.sh validate <code> <xlsfile> <texfile>"
+        exit 1
+    fi
+
+    mydir="$(dirname $(readlink -f $BASH_SOURCE))"
+
+    tmpl="$mydir/templates/all-reqs.tex.j2"
+    dune-reqs render -C "$ccode" -t "$tmpl" -o "$ofile" "$xlsfile"
+}
+
 
 dunegen-help () {
     cat <<EOF
