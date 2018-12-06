@@ -87,7 +87,7 @@ responsible for the \dword{asic} design. These tests may use either
 packaged parts or dice mounted directly on a printed circuit board 
 and wire bonded to the board.  The goal of these tests is to determine 
 the extent to which the \dword{asic} functions as intended, both at room 
-temperature and at liquid Nitrogen temperature.  For all chips these tests 
+temperature and at \lntwo temperature.  For all chips these tests 
 include exercising digital control logic and all modes of operation. Tests 
 of \dword{fe} \dwords{asic} include measurements of the noise as a function 
 of input capacitance, baseline recovery from large pulses, cross-talk, linearity, 
@@ -152,6 +152,10 @@ with this new configuration of \dword{pdsp} is being planned for 2021-2022. This
 allow for another opportunity to check for interference between the readout of the \dword{apa} 
 wires and either the \dword{pds} or other cryogenic instrumentation.
 
+\fixme{Results from the actual commissioning of the 7th ProtoDUNE APA could be
+added here in Spring 2019, and possibly comparisons with the COTS solution for the
+ASICs}
+
 %%%%%%%%%%%%%%%%%%
 \subsubsection{Small Test TPC (ICEBERG)}
 \label{sec:fdsp-tpcelec-qa-facilities-testtpc}
@@ -168,11 +172,14 @@ detector with dimensions 125~cm~$\times$~125~cm~$\times$~60~cm. For DUNE
 purposes this cryostat will house a 1,280 channels \dword{tpc} shown in
 Figure~\ref{fig:ICEBERG-tpcdaq}, with an \dword{apa} and two \dwords{fc} each 
 enclosing a sensitive volume with a maximum drift distance of 25~cm. The \dword{apa} 
-has been built using the same boards as for \dword{pdsp} and has dimensions of 
-1/10th of a DUNE \dword{apa}. The \dword{apa} mechanics is designed to accommodate 
+has been built using the same wire boards and anchoring elements of  \dword{pdsp} 
+described in Section~\ref{sec:fdsp-apa-boards}. It has dimensions of 
+1/10$^{th}$ of a DUNE \dword{apa}. The \dword{apa} mechanics is designed to accommodate 
 two half-length \dword{pdsp} bars with dimensions and connectors that already 
 include the design modifications planned for DUNE. Power, readout, and controls 
-use equipment identical to those used for \dword{pdsp}. The \dword{tpc} is
+use equipment identical to those used for \dword{pdsp}. The interface between the 
+\dwords{femb} and the \dword{apa} wires is realised using the same CR boards used 
+for \dword{pdsp} and described in Section~\ref{sec:fdsp-apa-boards}. The \dword{tpc} is
 read-out via a \dword{daq} system (also shown in Figure~\ref{fig:ICEBERG-tpcdaq})
 identical to that of \dword{pdsp}. The power and signal cables for the detector 
 are routed through a Tee installed on the center port of a movable flange on the 
@@ -203,31 +210,60 @@ designed to provide 25 cm of drift space on both sides of the \dword{apa}. The c
 plane is made of a printed circuit board coated with copper and will be powered with 
 -15~kV DC power. There is a 1 G$\Omega$ resistance between the strips of the \dword{fc}
 creating a gradient field changing from -15~kV at the cathode to -1~kV near the 
-\dword{apa}. The two sides of the \dwords{fc} cages are terminated on the \dword{apa}
+\dword{apa}. The sides of the \dwords{fc} are terminated on the \dword{apa}
 ground with 156~M$\Omega$ resistors. 
 
-The DUNE Cold Electronics is interfaced with the \dword{apa} using the printed circuit board on the top of the \dword{apa}.
+The \dword{iceberg} power system that provides power to the detector, electronics, 
+\dword{daq}, and cryogenics controls has been designed with an extreme care to 
+isolate the detector and building grounds, following the same principles adopted
+for \dword{pdsp}, including a new 480~V transformer. The impedance between the detector
+and building grounds is continuously monitored. The distribution panel, which is 
+at detector ground, provides 208 and 120~V power for the \dword{ce} rack, that
+provides both the low voltage power to the \dword{ce} components and the bias 
+voltage to the \dword{apa} wire planes, through the \dword{wiec} and \dword{shv}
+connectors located on the cryostat penetration. A single WIENER MPOD  provides 
+-665, -370, 0 and 820~V to the grid, U, V and X planes of the \dword{apa},
+respectively. It is also used to provide the -15~kV to the cathode plane. A Wiener 
+PL506 provides 18, 48, 12 and -12~V to the \dword{ptc} located in the Tee at
+the top of the cryostat. 
 
-The \dword{iceberg} power system that would power the detector, electronics, DAQ and cryogenics controls has been designed with an extreme care to isolate the detector and building grounds. A new 480 Volts transformer has been installed at the Proton Assembly Building to provide detector power for the TPC and the Cold Electronics. The impedance is continuously monitored by a ZMON rack. 
+The \dword{daq} for \dword{iceberg} is a copy of the system used for the read-out
+of five of the \dword{pdsp} \dword{apa}s at CERN. The core of the \dword{daq} system 
+consists of two Linux PCs which communicate over 10 Gbps optical fiber
+to processing units called RCEs (Reconfigurable Cluster Element), which are 
+housed on industry-standard ATCA shelves on COB (cluster-on-board) motherboards.
+The RCEs can perform data compression or zero-suppressions. They also buffer
+the data and then send it to the Linux PCs where the data can be analyzed 
+using the artDAQ framework. A pair of scintillators located at the top and bottom 
+of the cryostat generates a cosmic trigger for the DAQ  using a Trigger Logic Unit (TLU).
+The system is modular and could be upgraded to follow the overall DUNE \dword{daq} 
+development. 
 
-The distribution panel, which is at detector ground provides 208 and 120 volts power for the COLD Electronics Rack, which provides power to both the Cold Electronics and TPC in the cryostat through the Warm Interface Board and Power Points located in the Tee (see Figure~\ref{fig:ICEBERG-cryotee}). The MPOD in CE Power Rack provides -665, -370, 0 and 820 Volts to Grid, U, V and X planes respectively. It also provides -15 k Volts to the cathode plane. The Wiener PL506 provides 18, 48, 12 and -12 volts to the Power and Timing Card (PTC) located in the Tee at the top of the cryostat. These voltages are distributed to FEMB through the Warm Interface Board through the back plane of the crate.
+As for the tests that will be performed in the cold box at CERN using the seventh
+\dword{pdsp} \dword{apa} the baseline performance of the \dword{iceberg} \dword{tpc}
+will be established using \dword{pdsp} \dwords{femb}. Later new prototypes, equipped
+with the new \dwords{asic} under development, will be tested. The main advantage
+relative to the tests performed at CERN in the cold box is the performance of the
+\dword{ce} prototypes will be measured with actual tracks from cosmic rays 
+reconstructed within the \dword{tpc}. In addition, system studies with new 
+prototypes of the \dword{pds} will be performed, since the \dword{apa} is
+mechanically compatible with the new design of the \dword{pds}, which is not
+the case for the seventh \dword{pdsp} \dword{apa}.
 
-The Data Acquisition (DAQ) System for the \dword{iceberg} consists of several subsystem currently being utilized at the ProtoDUNE at CERN.
-
-The system is modular and could be upgraded to follow the overall DUNE DAQ development. The core of the DAQ system consists of two Scientific LINUX CPUs which communicates over 10 Gbps optical fiber links to Cluster on Board (COB). COB collects raw data from the Cold Electronics Warm Interface Board (WIB) over fiber and packages them for analysis by artDAQ running of the UNIX CPU. A pair of scintillators located at the top and bottom of the cryostat generates a cosmic trigger for the DAQ  using a Trigger Logic Unit (TLU).
-
-The \dword{iceberg} will be primarily used for the development of the DUNE Cold Electronics. The initial system to establish a baseline for future comparison and development closely resembles the DUNE CE installed in ProtoDUNE at CERN. It consists of a 128 channels Front-End Mother Board, which is enclosed in a RF Box and connected with a Power and Signal cables to Warm Interface Board. The Warm Interface Board is located in a crate inside the Tee (Fig 1 (b)) and is powered using a Power and Timing Card.
-
-In the 1st run of the cryostat we will establish the baseline performance of the DUNE Cold Electronics. Studies will be carried out to understand noise in the electronics and measures to reduce them. A new FEMB is under design by the collaboration. All the FEMB will be replaced with new electronics and studies will be performed to verify that the new design meets the DUNE requirements. The facility could be utilized for QA/QC if the electronics before installing them in the Far Detector.
+\fixme{Results from the actual commissioning of the ICEBERG TPC could be
+added here in Spring 2019, and possibly comparisons with the COTS solution for the
+ASICs}
 
 %%%%%%%%%%%%%%%%%%
 \subsubsection{Additional Test Facilities}
 \label{sec:fdsp-tpcelec-qa-facilities-additional}
 
-For \dword{ce} development, testing single prototypes at both room and cryogenic temperature is the first 
-step, as many problems can be identified quickly without a full or partial TPC wire readout. A test dewar 
-design developed by Michigan State University, referred to as the Cryogenic Test System (\dword{cts}), allows for
-testing of the \dwords{femb} and \dwords{asic} at both room temperature and submerged in LN$_2$. Several
+For the \dword{ce} development, testing single prototypes at both room and 
+cryogenic temperature is the first step, as many problems can be identified 
+quickly without a full or partial \dword{tpc} wire readout. A test dewar 
+design developed by Michigan State University, referred to as the \dword{cts}, 
+allows for testing of the \dwords{femb} and \dwords{asic} at both room 
+temperature and submerged in \lntwo. Several
 \dword{cts} were deployed at BNL for the \dword{pdsp} production \dword{femb} QC and SBND \dword{asic} QC. Several
 others have already been deployed as Fermilab and other institutions to test further prototype \dword{femb}.
 The \dword{cts} cooling process avoids the condensation of water from air that can otherwise interfere with the 
@@ -236,7 +272,7 @@ tests or damage the test equipment; two \dword{cts} units in operation at BNL ar
 \begin{dunefigure}
 [The Cryogenic Test System (\dword{cts})]
 {fig:CTS}
-{Cryogenic Test System: an insulated box is mounted on top of a commercial LN$_2$ dewar.  Simple controls allow the box to be purged with nitrogen gas and LN$_2$ to be moved from the dewar to the box and back to the dewar.}
+{Cryogenic Test System: an insulated box is mounted on top of a commercial \lntwo dewar.  Simple controls allow the box to be purged with nitrogen gas and \lntwo to be moved from the dewar to the box and back to the dewar.}
 \includegraphics[width=0.4\linewidth]{sp-tpcelec-CTS2.jpeg}
 \end{dunefigure}
 
@@ -299,7 +335,7 @@ A preliminary list of reliability topics to be studied for the TPC electronics o
 \begin{itemize}
 	\item The custom \dwords{asic} proposed for use in DUNE (\dword{larasic} + joint LBNL-FNAL-BNL ADC + \dword{coldata} \dword{asic}, or the SLAC \dword{cryo} \dword{asic}) incorporate design rules aimed at minimizing the hot carrier effect\cite{Li:2013ieee}\cite{Hoff:2015hax}, which is recognized as the main failure mechanism for integrated circuits operating at LAr temperature.
 	\item For COTS components, accelerated lifetime testing, a standard test methodology used by the semiconductor industry, shall be devised to verify the expected lifetimes for operation in cryogenic temperature. A COTS ADC has undergone this procedure, to be qualified as a solution for the SBND experiment\cite{Chen:2018zic}.
-	\item Print circuit board assemblies designed and fabricated to survive repeated immersions in LN$_2$.
+	\item Print circuit board assemblies designed and fabricated to survive repeated immersions in \lntwo.
 	\item Capacitors operating voltage with sufficient margin, e.g. V$_{OP}<$ WVDC/2.
 	\item Connectors and cables, usually major sources of detector channel failures, impose a testing challenge.
 	\item A formal QA process for all TPC electronics components to be installed inside the cryostat.
