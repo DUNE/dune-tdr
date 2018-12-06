@@ -10,20 +10,21 @@ digraph top {
         node[style=filled,fillcolor="#f19f53"]
         subgraph cluster_daq {
                 rc[color="#f19f53",fillcolor="#ffd26c",label="Control\nConfiguration\nMonitoring"];
-                recv[label="Receiver\nsubsystem"];
-                buf[label="Buffer\nsubsystem"];
-                trig[label="Trigger\nsubsystem"];
-                eb[label="Egress\nsubsystem"];
-                label="DAQ System";
+                recv[label="Input"];
+                buf[label="Buffering"];
+                trig[label="Triggering"];
+                eb[label="Output"];
+                # crazy spacing to make subgraph frame encompase edge labels
+                label="                                 DAQ Conceptual Functionality and Relationships                                       ";
         }
 
 
         
 
         ce->recv[penwidth=8];
-        recv:n->buf:w[penwidth=8,xlabel="data\nall channels     \nfull-stream           "];
-        recv:s->trig:w[penwidth=3,xlabel="data\ncollection channels\nfull-stream"];
-        buf:e->eb:n[xlabel="  data\nall channels,\nselected time range"];
+        recv:n->buf:w[penwidth=8,xlabel="all channels     \nfull-stream           "];
+        recv:s->trig:w[penwidth=3,xlabel="collection channels\nfull-stream"];
+        buf:e->eb:n[xlabel="  selected channels,\n   selected time range"];
         trig:e->eb:s[style=dashed,xlabel=" trigger\n     commands"];
         eb->buf[style=dotted, constraint=false,taillabel="query"];
 
@@ -39,7 +40,7 @@ digraph top {
         rc->eb;
         edge[constraint=false, style=dotted];
         rc->trig
-        rc->buf;
+        rc->buf[label="IPC  "];
         edge[dir=forward];
         rc->ce;
         
