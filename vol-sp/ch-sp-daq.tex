@@ -1235,7 +1235,8 @@ The \dword{dune} \dword{fd} \dword{daq} design will be validated and developed u
 \item Use \dword{protodune} as a design demonstration platform. 
 \item Use Vertical Slice Teststands for further development and testing of
   individual \dword{daq} sub-systems and for key aspects of the
-  overall \dword{daq}. 
+  overall \dword{daq}
+\item Use horizontal slice tests to demonstrate scaling the design where the multiplicity of components in layers is important.
 \item Use \dword{fd} MonteCarlo simulations and studies to augment
   demonstrations using \dword{protodune} and the testing at Vertical Slice Teststands.
 \item Cross-check against developments and measurements from other ongoing
@@ -1345,7 +1346,24 @@ for region-of-interest (hit) finding in FPGA \cite{NNN18}.
 %\metainfo{Succinctly describe algorithm, include physics and computing
 %  performance numbers.}
 
-\subsubsection{Validation of Trigger Candidates in Software}
+\subsubsection{Validation of Hierarchical Trigger Layers}
+
+As described in Section~\ref{sec:sp-daq:design-selection-algs}, the \dfirst{daqdss} is structured as a layered hierarchy. 
+It must take in constant, high-rate data and output a minuscule rate that provides summary of activity in the data (trigger commands).
+To do this, it is structured in layers (primitive, candidate, command) and each layer requires certain multiplicity that spans multiple host computers communicating over the local high-speed but commodity network. 
+The algorithms, host computer multiplicity, the \dfirst{ipc} system and its network traffic must be demonstrated at scale.
+This will require development of the following elements:
+
+\begin{itemize}
+\item A model of trigger primitive rates and will be developed which is parameterized by signal, background and noise.  This model will be informed by \dword{protodune} and simulation studies.  The model will include the data density per unit of front-end computing as informed by the trigger primitive validation work described above.
+\item Likewise an initial model of trigger candidate rates will be developed and concurrently prototype trigger candidate algorithms will be developed and applied to trigger primitives produced by their validation work (again, described above).
+\item Trigger candidate message schema and IPC application-level protocol (described more below) for their transfer will be developed.
+\item Validation will involve implementing these models, prototype algorithms, schema, etc,  initially at a small-scale on a single high-core computer and using throttled localhost connectivity.
+\item The full scope system will require \bigo{100} host computers but contiguous branches of the hierarchy can and will be fully tested with \bigo{20} host computers. 
+  These hosts will support 10 Gbps networking (actual or throttled) to match the expected networking. 
+  In some cases higher bandwidth connectivity may be investigated if bottlenecks are discovered. 
+\end{itemize}
+
 
 
 \subsubsection{Validation of High Level Trigger in Software}
