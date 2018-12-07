@@ -1187,7 +1187,7 @@ Thus, the output storage buffer must have a capacity of approximately \SI{0.5}{\
 %\fixme{Is it indeed still single-phase specific?}
 %\metainfo{Hardware, consumers, links.}
 
-All components of the \dword{fd} use clocks derived from a single GPS disciplined source, and all module components are synchronized to a 62.5 MHz clock. 
+All components of the \dword{fd} use clocks derived from a single \dfirst{gps} disciplined source, and all module components are synchronized to a 62.5 MHz clock. 
 To make full use of the information from the \dword{pds}, the common clock must be aligned within a single detector unit with an accuracy of \bigo{\SI{1}{\nano\second}}. 
 For a common trigger for a \dword{snb} between detector modules, the timing must have an accuracy of \bigo{\SI{1}{\milli\second}}.
 However, a still tighter constraint is the need to calibrate the common clock to universal time derived from \dword{gps} so the data selection algorithm can be adjusted inside an accelerator spill, which again requires an absolute accuracy of \bigo{\SI{1}{\micro\second}}.
@@ -1206,9 +1206,10 @@ Central to the timing system are four types of signals:
 \item an \dfirst{irig} time code signal
   used to set the timing system 64-bit time stamp.
 \end{itemize}
-The timing system relates its time counter onto GPS \fixme{I read this as "The timing system correlates its time counter to GPS time by timestamping..."} time by
+The timing system relates its time counter to GPS time by
 timestamping the \dword{pps} onto its own clock and reading
 the corresponding time in software in \dword{ntp} time.
+\fixme{I think this is a crucial line but it's confusing to me (bv). Which of the four types of signals is the ``timing system's time counter''?  The part about ``reading time from NTP'' makes it sound like NTP provides some definitive source of time, which can't be true as NTP isn't very precise.}
 
 The timing system synchronization codes are distributed to the \dword{daq} readout components in the \dfirst{cuc} and the readout components on the cryostat via single mode fibers and passive splitters/combiners.
 All custom electronic components of the timing system are contained in two $\mu$TCA shelves; at any time, one is active while the other serves as a hot spare.
@@ -1223,6 +1224,7 @@ one with an antenna at the surface of the Ross shaft, and the other
 with an antenna at the surface of the Yates shaft. Signals from either
 GPS are fed through optical single mode fibers to the CUC, where
 either GPS signal can act as a hot spare while the other is active. 
+\fixme{Can we add some words about how we will measure and adjust for the possibly different transit time delays of these two GPS signal paths?}
 
 \subsection{Design Validation and Development Plan}
 \label{sec:sp-daq:design-validation}
