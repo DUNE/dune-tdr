@@ -348,7 +348,8 @@ More details are provided as technical notes as listed in Table~\ref{tab:sp-daq:
   Data orchestrator and event building for \dword{dune} \dword{fd} \dword{daq} & t.b.d. \\
   \dword{dune} Run Control, Configuration \& Monitoring (CCM) & t.b.d. \\
   \dword{dune} \dword{daq} Readout & t.b.d. \\
-  Bottlenecks & t.b.d \\
+  DUNE FD Timing and Synchronization System & \citedocdb{11233} \\
+  What are the DUNE FD DAQ Bottlenecks? & \citedocdb{11461} \\
 \end{dunetable}
 
 
@@ -1195,8 +1196,8 @@ However, a still tighter constraint is the need to calibrate the common clock to
 The \dword{dune} \dword{fd} uses a version of the \dword{protodune} timing
 system, where a design principle is to transmit synchronization messages over
 a serial data stream with the clock embedded in the data. The format
-is described in \cite{docid-1651}. The timing system design is
-described in detail in \cite{docid-11233}.
+is described in \citedocdb{1651}. The timing system design is
+described in detail in \citedocdb{11233}.
 
 Central to the timing system are four types of signals:
 \begin{itemize}
@@ -1206,10 +1207,9 @@ Central to the timing system are four types of signals:
 \item an \dfirst{irig} time code signal
   used to set the timing system 64-bit time stamp.
 \end{itemize}
-The timing system relates its time counter to GPS time by
-timestamping the \dword{pps} onto its own clock and reading
-the corresponding time in software in \dword{ntp} time.
-\fixme{I think this is a crucial line but it's confusing to me (bv). Which of the four types of signals is the ``timing system's time counter''?  The part about ``reading time from NTP'' makes it sound like NTP provides some definitive source of time, which can't be true as NTP isn't very precise.}
+The timing system associates the \dword{gps} time to its master clock by using the latter to stamp the arrival time of the \dword{pps} of the former.
+To provide an absolute time to the nearest second the information from \dword{ntp} is used.
+\fixme{This may no longer be correct.  Will NTP be used and the host computer clock consulted for the absolute time?  Will PTP used in its stead?  How does IRIG fit in?  Finally, this sentence, however it needs to be written, is redundant with the itemized list.}
 
 The timing system synchronization codes are distributed to the \dword{daq} readout components in the \dfirst{cuc} and the readout components on the cryostat via single mode fibers and passive splitters/combiners.
 All custom electronic components of the timing system are contained in two $\mu$TCA shelves; at any time, one is active while the other serves as a hot spare.
@@ -1224,7 +1224,7 @@ one with an antenna at the surface of the Ross shaft, and the other
 with an antenna at the surface of the Yates shaft. Signals from either
 GPS are fed through optical single mode fibers to the CUC, where
 either GPS signal can act as a hot spare while the other is active. 
-\fixme{Can we add some words about how we will measure and adjust for the possibly different transit time delays of these two GPS signal paths?}
+Differential delays between these two paths are resolved by a second pair of fibers, one running back from the timing system to each antenna.
 
 \subsection{Design Validation and Development Plan}
 \label{sec:sp-daq:design-validation}
