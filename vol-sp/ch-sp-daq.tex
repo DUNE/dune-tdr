@@ -105,10 +105,67 @@ by the \dword{dune} physics mission, and with high efficiency.
 \label{sec:fd-daq:specifications}
 %\fixme{single-phase module}
 
-Table~\ref{tab:fd-daq:specifications} lists
-key specifications of the \dword{daq} design.  Some of the
-specifications derive from the\dword{dune} \dword{fd} \dword{daq}
-top level requirements.
+To ensure the requirements in Tab.~\ref{tab:fd-daq:requirements} are
+met, several key specifications must be defined for the \dword{daq}
+design, associated with trigger functionality, readout considerations,
+and operations considerations. 
+
+With respect to trigger functionality, physics sensitivity is ensured
+by implementing a continuous storage element in the data flow
+architecture. This allows delayed data-driven trigger decisions and
+capturing of preceding, relevant to the trigger physics data to be
+accommodated, with minimal loss of physics information. The
+specification for this loopback buffer is set in consultation with
+physics groups. It is driven primarily by the need to record up to ten
+seconds of unbiased data preceding a supernova burst (with the
+neutronization time taken as the time of the burst), and it is
+specified to be greater than 4 seconds. This 4 second
+buffering provision works in tandem with a trigger latency
+specification of less than one second. This remains to be validated
+with simulation, to ensure that high coverage (greater than 99\%) of galactic supernova
+bursts is achieved by the supernova burst trigger.
+
+With respect to readout considerations, with the exception of
+supernova burst triggers, unbiased data spanning several ``drift
+windows'' for any other given trigger is
+to be recorded by the \dword{daq}. This time span is to be configurable at run start and
+should range between 20 microseconds and 30 milliseconds. In the case
+of a supernova burst trigger, unbiased data spanning up to 100 seconds
+is to be recorded. The \dword{daq} system should be capable of
+applying lossless compression to these records, as well as
+additionally filter them in order to remove unnecessary data regions
+in an intelligent way.
+
+A programmable trigger priority scheme will be provided, and
+implemented in a way that the readout for the main physics triggers
+are never or rarely inhibited, in order to enable the live-time of
+these triggers to be easily determined. At the same time, generation
+of overlappign triggers will be possible, but prioritization should eb
+used in the readout to prevent data readout duplication. 
+
+The data-driven trigger decision will be facilitated within the data
+selection subsystem, which will be an online, primarily software-based system, implemented accross multiple levels of
+data selection for both TPC and PDS readout. Information from the
+lower data selection levels is aggregated and correlated at the
+``Module Level'' to form a module-wide trigger command, intended to
+prompt module-wide readout\footnote{Only supernova burst trigger decisions are
+propagated to other detector modules.}.
+This multi-level scheme provides necessary flexibility for the
+implementation of and scalability of the \dword{daq} system. 
+ 
+With respect to operation considerations, the need to minimize
+supernova burst deadtime necessitates a partitionable \dword{daq} system,
+whereby a significant part of the detector remains physics-operational
+even in the event of a fault which interrupts data collection in
+another part of the detector. This partitionable operation mode also
+permits detector development and specialized runs (e.g.~calibrations)
+to run in parallele with normal physics data taking.
+
+Finally, to ensure minimal impact to overall detector live-time, the \dword{daq} system must be fully configurable,
+controllable, and operationable from remote locations, with
+authentication implemented to allow exclusive control. It should
+furthermore facilitate online monitoring of the detector and the \dword{daq}
+system in itself.
 
 %\item A \dword{daqrun} is identified with a \dword{daqrunnum}.
  % \item The components of the \dword{daq} shall be asynchronous and loosely coupled and in particular no global control of their state shall be centrally controlled.  Synchronization shall be performed dynamically and in a distributed fashion. 
@@ -116,7 +173,6 @@ top level requirements.
   %  Single points of failure should not exist and may only be allowed based on a cost/risk analysis.
   %\item Detector coverage and \dword{daq} data selection criteria shall be recorded.  Coincident with intentional changes and upon discovery of unintentional changes the \dword{daq} shall transition to a new \dword{daqrun}.
  % \item Unexpected failures in the operation of \dword{daq} components should be automatically detected, reported, and handled so as to minimize system and human reaction time and to minimize reliance on human intervention.
-
 
 
 %\metainfo{Include rows of top-level requirements table (``Schmitz''
@@ -129,15 +185,16 @@ top level requirements.
 %
 % \metainfo{Include message passing requirements and domains.}
 
-\fixme{Add Specifications}
+%\fixme{Add Specifications}
 
-\begin{dunetable}
-[Specifications for the \dword{dune} \dword{fd} \dword{daq} System.]
-{cllc}
-{tab:fd-daq:specifications}
-{The \dword{dune} \dword{fd} \dword{daq} specifications, derived from
-  the \dword{daq} top-level requirements.}  
-Specification & Name & Description & Value \\ \toprowrule
+%\begin{dunetable}
+%Specifications for the \dword{dune} \dword{fd} \dword{daq} System.]
+%{cllc}
+%{tab:fd-daq:specifications}
+%{The \dword{dune} \dword{fd} \dword{daq} specifications, derived from
+%  the \dword{daq} top-level requirements.}  
+%Specification & Name & Description & Value \\ \toprowrule
+
 % %THE FOLLOWING ARE selected from top level requirements, Nov. 5 version of xls sheet
 %  8 & High-level Trigger & The \dword{daq} architecture shall provide a
 %  parallel processing farm once events have been built to enhance data selection
