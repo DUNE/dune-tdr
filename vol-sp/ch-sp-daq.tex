@@ -49,6 +49,14 @@
 %   \textbf{Do} describe the lexicographical convention used to demark
 %   shared sections (this needs coordination with other chapters in the
 %   same boat).}
+The \dword{fd} \dword{daq} system basic functionality is to provide
+timing and synchronization for all \dwords{detmodule} and
+subdetectors; receive, synchronize, compress, and buffer streaming
+data from the subdetectors; extract information from the data at a
+local level to subsequently make local, module, and cross-module data
+selection decisions; build ``events'' from selected space-time volumes,
+and relay those to permanent storage, and carry out local data
+reduction and filtering of the data as needed.
 
 This chapter provides a description for the design of the \dword{dune}
 \dword{fd} \dword{daq} system. 
@@ -113,7 +121,8 @@ specifications provided in Section~\ref{sec:fd-daq:specifications}.
 The \dword{daq}-level requirements are imposed to ensure that the
 system is capable of recording all necessary information for offline 
 analysis of data that is associated with on- and off-beam physics events, as directed
-by the \dword{dune} physics mission, and with high efficiency. 
+by the \dword{dune} physics mission, and with minimal compromise to
+\dword{dune}'s physics sensitivity.
 
 %\fixme{The following are notes that need integration.}
 %  \item Front-end Buffer sub-system shall provide sufficient continuous storage of the full detector data flow to allow for the delay needed by the Data Selection subsystem to form a trigger decision, for the resulting trigger command to be executed by the \dword{daqbes} and for the selected data to be received by the back-end.
@@ -127,8 +136,7 @@ by the \dword{dune} physics mission, and with high efficiency.
 \label{sec:fd-daq:specifications}
 %\fixme{single-phase module}
 
-To ensure the requirements in Table %~\ref{tab:fd-daq:requirements} 
-are
+To ensure the requirements above are
 met, several key specifications must be defined for the \dword{daq}
 design, associated with trigger functionality, readout considerations,
 and operations considerations. 
@@ -305,19 +313,34 @@ system in itself.
 
 %\metainfo{Describe how the design addresses the requirements.}
 The \dword{dune} \dword{fd} \dword{daq} addresses the requirements above by following a
-design philosophy which emphasizes availability, adaptability, scalability, and robustness.
-The key strategies to follow this philosophy are:
+design philosophy which prioritizes robustness, availability,
+scalability, adaptability, ease of
+deployment and commissioning, ease of design and construction. In
+principle, we must:
+\begin{itemize}
+\item Provide a single scalable system design for all detector
+  modules, capable of recording and storing full detector data with
+  zero deadtime.
+\item Design very conservatively for the first module, e.g.~utilizing
+  all available infrastructure and keeping data selection decisions
+  simple early on, and make the system leaner and more efficient as it
+  scales to full size.
+\item Preserve the possibility to add DAQ capacity as required.
+\end{itemize}
 
+The key strategies to follow this philosophy are:
 \begin{itemize}
 \item Develop the DAQ functionality as a suite of loosely coupled and somewhat autonomous processes that are distributed and connected through high-speed but commodity networking.
-\item Provide inter-process communication mechanisms which support fail-over between redundant instances a process and which facilitate horizontal scaling in order to satisfy throughput constraints.
+\item Provide inter-process communication mechanisms which support
+  fail-over between redundant instances of a process and which
+  facilitate horizontal scaling in order to satisfy throughput
+  constraints and needs.
 \item Define an interface layer which isolates the majority of DAQ functionality such that it may be implemented independent of details specific to each detector module from a minority functionality that must be module-specific.
 \end{itemize}
 
 With this philosophy and strategy the DAQ may be expected to handle the variety of technical challenges posed. 
-These include simultaneously accepting constant high rate input from multiple sub-detector components (eg, TPC and PDS) of multiple detector modules while immediately processing a substantial portion of this data in order to identify data containing activity that should be selected and then recording that data to final output.
+These include simultaneously accepting constant high rate input from multiple sub-detector components (e.g., TPC and PDS) of multiple detector modules while immediately processing a substantial portion of this data in order to identify data containing activity that should be selected and then recording that data to final output.
 The design following this philosophy and strategy are presented in Section~\ref{sec:fd-daq:design}.
-
 
 \metainfo{Do \textbf{not} talk about actual design here, as tempting as it may be do to do so.  Previous design intro has been moved to the design overview.}
 
@@ -337,15 +360,28 @@ driving the \dword{daq} design.\fixme{This sentence simply repeats the table tit
 {tab:sp-daq:parameters}
 {Summary of important parameters driving the \dword{daq} design.}
 Parameter & Value \\ \toprowrule
-TPC Channel Count & \\ \colhline
-PDS Channel Count & \\ \colhline
-TPC Sampling Rate & \\ \colhline
-& \\
+TPC Channel Count per Module & 284,000\\ \colhline
+TPC Collection Channel Count per Subdetector & 960\\ \colhline
+TPC Induction Channel Count per Subdetector & 1,600\\ \colhline
+PDS Channel Count per Module & TBD\\ \colhline
+TPC ADC Sampling Rate & 2 MHz\\ \colhline
+TPC ADC Dynamic Rate& 12 bits\\ \colhline
+Readout Record Window & 5.4 ms\\  \colhline
+Supernova Burst Readout Record Window &  100 s\\  \colhline
+Full size of Readout Record & 6.22 GB\\  \colhline
 \end{dunetable}
 
 \section{Interfaces}
 \label{sec:sp-daq:interfaces}
-The \dword{dune} \dword{fd} \dword{daq} system interfaces with the TPC Cold Electronics, PDS
+
+The DAQ system scope begins at the optical fibers streaming raw digital data from the detector active components
+(TPC and PDS), and ends at a Wide Area Network interface that
+distributes the data from on site at SURF to offline centers off
+site. The DAQ also provides common computing and network services for
+other \dword{dune} systems, although slow control and safety functions
+fall outside DAQ scope. 
+
+Consequently, the \dword{dune} \dword{fd} \dword{daq} system interfaces with the TPC Cold Electronics, PDS
 Readout, Computing, CISC, and Calibration systems of the \dword{dune}
 \dword{fd}, as well as with Facilities and Underground Installation. The
 interfaces are specified as interface agreements
@@ -361,30 +397,65 @@ Facilities and Underground Installation are described in Section~\ref{sec:sp-daq
 {tab:sp-daq:interfaces}
 {Data Acquisition System Interface Links }
 Interfacing System & Linked Reference \\ \toprowrule
-TPC CE & \citedocdb{6742}\\ \colhline
-PDS & \citedocdb{6727} \\ \colhline
-Computing & \citedocdb{7123} \\ \colhline
-CISC & \citedocdb{6790} \\ \colhline
+TPC CE & \citedocdb{6742}{v6}\\ \colhline
+PDS & \citedocdb{6727}{v2} \\ \colhline
+Integration Facility & \citedocdb{7042}{v0} \\
+Facilities & \citedocdb{6988}{v1} \\ \colhline
+CISC & \citedocdb{6790}{v1} \\ \colhline
 Calibration & \citedocdb{7069} \\ \colhline
+Computing & \citedocdb{7123} \\ \colhline
 Timing & \citedocdb{11224} \\ \colhline
-Facilities & \citedocdb{} \\ \colhline
-Underground Installation & \citedocdb{} \\ 
 \end{dunetable}
 
 \subsection{TPC Cold Electronics}
-The \dword{daq} and TPC Cold Electronics interface is described in \citedocdb{6742}.
-\metainfo{Data reception physical and logical, configuration information delivery.}
+The \dword{daq} and TPC Cold Electronics interface is described in
+\citedocdb{6742}. The physical interface is at the Central Utility
+Cavern, where optical links from the Warm Interface Boards transfer
+the raw TPC data to the DAQ Front End Readout (Felix; see
+Section~\ref{xx}). Ten 10Gbps links are expected per APA, and have
+been specified as 300m OM4 multi-mode fibers from SFP+ at the WIB to
+miniPOD on Felix. The data format has been specified to use no
+compression and custom communication protocol.
+
 \subsection{PDS Readout}
-The \dword{daq} and PDS Readout interface is described in \citedocdb{6727}.
-\metainfo{Data reception physical and logical, configuration information delivery.}
+The \dword{daq} and PDS Readout interface is described in
+\citedocdb{6727}. This remains to be refined, but it is anticipated to
+be of the form of 150 10Gbps OM4 fibers from the full FD module. This
+is similar to the TPC Cold Electronics interface, except the overall
+data volume is lower by an order of magnitude.
+%\metainfo{Data reception physical and logical, configuration information delivery.}
 \subsection{Computing}
 The \dword{daq} and Computing interface is described in \citedocdb{7123}.
-\metainfo{Buffer disk.  Agreement on sysadmin support and computer procurement, ssh gateways, non data networks.  Address reference how the data model described above is acceptable.}
+\metainfo{Buffer disk.  Agreement on sysadmin support and computer
+  procurement, ssh gateways, non data networks.  Address reference how
+  the data model described above is acceptable.} The Online Computing
+Coordination is responsible for the WAN connection between SURF and
+Fermilab, while the DAQ Consortium is responsible for disk buffering
+to handle any temporary WAN disconnects and the infrastructure needed
+for real-time data quality monitoring, and the Offline Computing Consortium is
+responsible for the development and operation of the tools for data
+transfers to Fermilab. The primary
+constraint in defining the DAQ and Offline Computing interface is the
+requirement to produce less than 30 PB/year to be transferred to
+Fermilab. DAQ and Offlien COmputing are jointly responsible for data
+format definition and data access libraries, as well as real-time data
+quality monitoring software. The former is specified in the form of a
+Data Model documented in \citedocdb{}.
+
 \subsection{CISC}
 \label{sec:sp-daq:interfaces-cisc}
-The \dword{daq} and CISC interface is described in \citedocdb{6790}.
+The \dword{daq} and CISC interface is described in
+\citedocdb{6790}. The DAQ provides a network in the CUC for CISC; operation information and hardware
+monitoring information to CISC; power distribution and
+rack status units in DAQ racks. The information from CISC
+feeds back into the DAQ for run control operations.
 \subsection{Calibration}
-The \dword{daq} and Calibration interface is described in \citedocdb{7069}.
+The \dword{daq} and Calibration interface is described in
+\citedocdb{7069}. Two calibration systems are envisioned for the
+\dword{dune} \dword{fd}: a laser calibration system and a neutron
+generator. Calibration pulses can be issued either by the DAQ or by
+the calibration systems themselves, and those are to be distributed through the
+\dword{daq} timing system.
 \subsection{Timing System}
 Because the Timing System of the \dword{dune} \dword{fd} connects with
 almost all detector systems and has a uniform interface to each of
