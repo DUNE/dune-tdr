@@ -476,6 +476,10 @@ continuing to run as of the writing of this document, recording cosmic
 ray activity, and facilitating further DAQ development toward
 \dword{dune}.
 
+The \dword{protodune} DAQ system is depicted in
+Fig.~\ref{xx}. \fixme{describe here the main two hardware platforms,
+  neither of which is exactly the baseline for the TDR, but how the
+  baseline combines elements of the two}.
 There are two key differences between \dword{protodune} and
 \dword{dune} DAQ, namely that (1) the \dword{protodune} DAQ is externally
 triggered (and at a trigger rate which is more than an order of
@@ -485,8 +489,11 @@ processing from the TPC or PDS systems for self-triggering; and (2) the
 system sits at surface and therefore the data occupancy is much higher
 due to cosmic ray activity in the detector. Nevertheless, the
 successful operation of \dword{protodune} DAQ has provided several key
-demonstrations for \dword{dune} DAQ, as well as important lessons, as discussed below.
+demonstrations for \dword{dune} DAQ, in particular data flow
+architecture, run configuration and control, and back-end
+functionality. Below we discuss important lessons learned.
 
+\subsection{ProtoDUNE Outcomes}
 Possibly the most important outcome has been the delineation of
 interfaces (understanding the exact DAQ scope and interfaces to TPC
 and PDS and offline. The use of commercial off-the-shelf solutions
@@ -500,26 +507,53 @@ formalized in \citedocdb{}. Hardware integration tests prior to
 installation and commissioning were found insufficient, due to limited
 availability of hardware and experts; for \dword{dune} those are
 to be carefully planned out for the early stages of DAQ development and
-pre-production. 
+pre-production. In the case of the trigger, despite its simplicity
+relative to the \dword{dune}'s data-driven data selection scheme, it
+was found that the system required more commissioning time.
 
+For the RCE TPC readout implementation, it was found that a full
+working vertical slice of the system is essential, and that
+development and debugging should not be limited to simulation and
+remote system operations (as often time differences are an
+issue). Hardware failure recovery should be handled more efficiently
+than straight hardware reboots, and this should be augmented with additional
+hardware monitoring and debugging functionality that integrates with
+run control. The FELIX TPC readout implementation had similar findings with
+respect to debugging hardware issues from the upstream DAQ end. It was
+also found that more project-specific firmware expertise was needed
+than available.
 
-\begin{itemize}
-\item Motivation: must accommodate changes in the overall system and provide more flexibility and granularity.
-\item \dword{dune}: input to DFO is the trigger command, providing all space/time addressing required to identify the data to collect.  Information about the trigger decision itself is also included, but the DFO merely passes this through to output.  The addressing contains all information needed for the DFO to act.
-\item \dword{dune}: The EB updates DFO about the resources (buffers) it has available.
-\end{itemize}
+Back-end was found to be too monolithic, and hardware configuration
+and readout processes should be decoupled in future incarnations of
+this subsystem.
 
-\subsection{Detector Readout Hardware}
+Run Control. the eventual design must accommodate
+changes in the overall system and provide more flexibility and
+granularity.
 
-\metainfo{Compare and contrast design elements related to the detector readout hardware.}
+Online Monitoring
 
-\subsubsection{RCE}
+%In summary, \dword{protodune} has been a successful platform for DAQ
+%development and design for the \dword{dune} \dword{fd}. Most
+%critically, it demonstrated that the eventual design must 
 
-\subsubsection{FELIX}
+%\item accommodate changes in the overall system and provide more
+%flexibility and granularity.
+%\item \dword{dune}: input to DFO is the trigger command, providing all space/time addressing required to identify the data to collect.  Information about the trigger decision itself is also included, but the DFO merely passes this through to output.  The addressing contains all information needed for the DFO to act.
+%\item \dword{dune}: The EB updates DFO about the resources (buffers) it has available.
+%\end{itemize}
 
-\subsection{Backend Event Building}
+%\subsection{Detector Readout Hardware}
 
-\subsection{Other}
+%\metainfo{Compare and contrast design elements related to the detector readout hardware.}
+
+%\subsubsection{RCE}
+
+%\subsubsection{FELIX}
+
+%\subsection{Backend Event Building}
+
+%\subsection{Other}
 
 \section{DAQ Design}
 \label{sec:fd-daq:design}
