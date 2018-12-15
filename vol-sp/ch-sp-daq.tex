@@ -477,24 +477,30 @@ ray activity, and facilitating further DAQ development toward
 \dword{dune}.
 
 The \dword{protodune} DAQ system is depicted in
-Fig.~\ref{xx}. \fixme{describe here the main two hardware platforms,
+Fig.~\ref{xx}. \fixme{GK: describe here the main two hardware platforms,
   neither of which is exactly the baseline for the TDR, but how the
-  baseline combines elements of the two}.
+  baseline combines elements of the two. Then, differences.}.
 There are two key differences between \dword{protodune} and
 \dword{dune} DAQ, namely that (1) the \dword{protodune} DAQ is externally
 triggered (and at a trigger rate which is more than an order of
 magnitude higher than that anticipated for \dword{dune}),
 and therefore the current \dword{protodune} DAQ does not facilitate online data
 processing from the TPC or PDS systems for self-triggering; and (2) the
-system sits at surface and therefore the data occupancy is much higher
-due to cosmic ray activity in the detector. Nevertheless, the
+system sits at the surface and therefore the data occupancy is much higher
+due to cosmic ray activity in the detector. Key difference (1) must be
+overcome to demonstrate data selection capability for the DUNE DAQ
+design, and this is a main component of future DAQ development plans, described
+in Sec.~\ref{xx}.
+
+Despite being a variant design and with more limited scope, the already
 successful operation of \dword{protodune} DAQ has provided several key
 demonstrations for \dword{dune} DAQ, in particular data flow
 architecture, run configuration and control, and back-end
 functionality. Below we discuss important lessons learned.
 
 \subsection{ProtoDUNE Outcomes}
-Possibly the most important outcome has been the delineation of
+Besides demonstrating end-to-end data flow and front-end readout functionality
+explicitly for FELIX, possibly the most important outcome has been the delineation of
 interfaces (understanding the exact DAQ scope and interfaces to TPC
 and PDS and offline. The use of commercial off-the-shelf solutions
 where possible, and leverage of professional support (CERN IT)
@@ -523,13 +529,33 @@ respect to debugging hardware issues from the upstream DAQ end. It was
 also found that more project-specific firmware expertise was needed
 than available.
 
-Back-end was found to be too monolithic, and hardware configuration
-and readout processes should be decoupled in future incarnations of
-this subsystem.
+The back-end subsystem was found to be too monolithic, and hardware configuration
+and readout processes should be more loosely coupled in future incarnations of
+this subsystem, with flexibility to bring those processes up or down
+independently and without faulting the system. Better book-keeping of
+configurations used and book-keeping definitions should be developed as
+well, in advance of both commissioning and operations, and this should also
+extend to software package releases and data format versioning. The horizontal
+scaling capability of the design (from originally four to sixteen envisioned event
+builder machines) was crucial for achieving desired performance, and
+maintainign this same capability is part of the DUNE DAQ philosophy.
 
-Run Control. the eventual design must accommodate
-changes in the overall system and provide more flexibility and
-granularity.
+More specifically in the case of Run Control, the resource utilization
+prompts reconsideration of what might be the right rool for Run
+Control for the \dword{dune} \dword{fd}. This should happen early in
+the design stage, to allow sufficient developement and maturity of the
+design. At the same time, a development environment should be
+provided, distinct from production, to be used for necessary
+development and optimization of Run Control during commissinoning in a
+way that it doesn't inhibit other commisioning tasks. Better slow
+control integration and less rudimentary alarms, along with better
+metric monitoring (in part facilitated by a more appropriate Run
+Control tool) and user friendliness are also deemed desirable for DUNE. 
+
+A major finding regarding Run Control was the need for a partitioning
+and resource management scheme which should be designed a priori with careful
+consideration of possible run modes during commisisoning as well as
+during operations. This is currently in development \citedocdb{}.
 
 Online Monitoring
 
@@ -554,6 +580,9 @@ Online Monitoring
 %\subsection{Backend Event Building}
 
 %\subsection{Other}
+
+\subsection{Ongoing ProtoDUNE Efforts}
+
 
 \section{DAQ Design}
 \label{sec:fd-daq:design}
