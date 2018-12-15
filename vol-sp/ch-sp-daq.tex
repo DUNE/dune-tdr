@@ -1179,27 +1179,45 @@ Effort is currently underway to understand the costs and technology involved in 
 %\fixme{There are many studies which could go into this section. Some of this may very likely be moved into one or more tech notes and referenced.}
 
 The \dfirst{daqdss} is responsible for immediate and continuous processing of a substantial fraction of the entire input data stream. 
-This may include data from TPC and PDS sub-detectors.
-From that input the \dword{daqdss} must form a \dword{trigdecision} by producing a \dword{trigcommand}.
-This command summarizes the observed activity that led to the decision and provides addresses of the data in the \dword{fe} buffers which capture information about the activity.
-This command is consumed and executed by the \dword{daqbes} as described in Section~\ref{sec:fd-daq:design-backend}. 
-It is also provided to the \dword{etl} which may distribute it to other \dwords{daqpart} for consideration.
+This includes data from TPC and/or PDS sub-detectors.
+From that input, the \dword{daqdss} must form a \dword{trigdecision},
+which in turn produces a \dword{trigcommand}.
+This command summarizes the observed activity that led to the decision
+and provides addresses (in space and time) of the data in the \dword{fe} buffers which capture information about the activity.
+This command is sent to and then consumed and executed by the \dword{daqbes} as described in Section~\ref{sec:fd-daq:design-backend}. 
+It is also propagated to the \dword{etl} which may distribute it to other \dwords{detmodule} for consideration.
 
-The pipelines of processing required for data selection may execute in various stages and forms using different firmware and software implementations.
-In satisfying the philosophy and strategies of the DAQ design there is flexibility in defining whether each element of a pipeline executes on FPGA, CPU, GPU or in principle future hardware architecture.
+The pipelines of processing required for data selection may execute in
+various stages and forms using different firmware and software
+implementations. 
+Development is actively ongoing to demonstrate
+viability and performance of different implementations. In satisfying
+the philosophy and strategies of the DAQ design there is 
+flexibility in defining whether each element of a pipeline executes on
+FPGA, CPU, GPU or in principle some other future hardware
+architecture. 
 
-The \dword{daqdss} must select data associated with beam interactions, atmospheric neutrinos, rare baryon number violating events, and cosmic ray events depositing visible energy in excess of 100 MeV with high (targeted at $>$99\%) efficiency.
+The \dword{daqdss} must select data associated with beam interactions,
+calibration signals, atmospheric neutrinos, rare baryon number violating events, and cosmic ray events depositing visible energy in excess of 100 MeV with high (targeted at $>$99\%) efficiency.
 It must also select data associated with potential galactic \dfirst{snb}, indicating that the data selection sub-system must be able to self-trigger on galactic \dword{snb} with galactic coverage\footnote{Galactic coverage is defined as efficiency-weighted probability of galactic \dword{snb}.} of $>$95\% efficiency.
-To meet the requirement that the \dword{dune} \dword{fd} maintain a $<$\SI{30}{\peta\byte/\year} to permanent storage, the \dword{daqdsn} sub-system must output a stream of data which is almost four orders of magnitude reduced from its input.
+To meet the requirement that the \dword{dune} \dword{fd} maintain a
+$<$\SI{30}{\peta\byte/\year} to permanent storage, the \dword{daqdss}
+sub-system must make data selection decisions in a way that allows the DAQ
+system to reduce its input data by almost four orders of magnitude
+without jeopardizing the above efficiencies.
 
-
-
-The \dword{daqdsn} sub-system design follows a hierarchical structure, where low-level
+The \dword{daqdss} sub-system design follows a hierarchical structure, where low-level
 decisions are fed forward into higher-level ones until a  module-level trigger is activated. The hierarchy
 is illustrated in Figure~\ref{fig:daq:data-selection}. The structure
-has four levels of processing: Trigger Primitive Generation;
-Trigger Candidate Generation; Module Level Trigger; and High Level
-Trigger. Each is described in subsequent sections.
+has three levels of data selection: (1) Low Level Trigger, which may consist of
+Trigger Primitive Generation and subsequent
+Trigger Candidate Generation; (2) Module Level Trigger; and (3) High Level
+Trigger. Each is trigger level described in subsequent
+sections. An additional subsystem component is the External Trigger,
+which serves as a common interface for the
+Module Level Trigger of each of the FD \dwords{detmodule} and between
+the Module Level Trigger and other systems (e.g.~calibration, beam
+timing signals, etc.) within a single \dword{detmodule}.
 
 \begin{dunefigure}{fig:daq:data-selection}{Block diagram of \dword{dune} \dword{daq}
     Data Selection sub-system, illustrating hierarchical structure of
@@ -1207,7 +1225,7 @@ Trigger. Each is described in subsequent sections.
   \includegraphics[width=0.8\textwidth]{DUNE_TDR_SP_DAQ_DS_Figure.pdf}
 \end{dunefigure}
 
-The first stage of operations will have two general classes of trigger
+The first stage of DUNE FD operations will have two general classes of trigger
 decisions which are categorized in terms of the distribution of activity
 in time and space from which they are derived:
 \begin{description}
@@ -1242,34 +1260,39 @@ in time and space from which they are derived:
 To facilitate partitioning, the data selection sub-system must also be
 informed and aware of current detector configuration and conditions and
 apply certain masks and mapping on subdetectors or their fragments in
-its decision making. 
+its decision making. This information is delivered to the
+\dword{daqdss} from the CCM system.
+
 Ultimately, each trigger decision culminates in a command sent to \dword{daqbes}. 
 This command contains all the logical detector addresses and time ranges
 required such that an \dword{eb} may properly query the front-end
 buffers and finally collect and output the corresponding detector data
-and the corresponding trigger data.  The details for forming this
+and the corresponding trigger data. To avoid duplication of data
+records associated with trigger commands which overlap in readout
+record ``space'', the data selection system must also time-order and
+prioritize trigger decisions. The details for forming this
 command are described next and the operation of the \dword{daqbes} is
 described in Section~\ref{sec:fd-daq:design-backend}.
 
-\subsubsection{Trigger Primitive Generation}
+\subsubsection{Low Level Trigger: Trigger Primitive Generation}
 \label{sec:sp-daq:design-trigger-primitives}
 \fixme{single-phase module}
 
-A trigger primitive is defined nominally per-channel and, in the case of
-the SP TPC, identified as a collection-channel signal rising above some
+A trigger primitive is defined nominally on a per-channel basis and, in the case of
+the SP TPC, it is identified as a collection-channel signal rising above some
 noise-driven threshold for some minimum period of time (here called a
 ``hit'').
 A trigger primitive takes the form of an information packet which
 summarizes the above-threshold waveform information in terms of its
-threshold crossing times and statistical measures its samples. 
+threshold crossing times and statistical measures of its ADC samples. 
 In addition, these packets carry a flag indicating the occurrence of any
-failures or other exceptional behavior.
+failures or other exceptional behavior during trigger primitive processing.
 
 Trigger primitives derived from TPC data
 are produced in the front-end readout part of the \dword{daq} system,
-either in FPGA firmware or in CPU or GPU software as described in
+nominally in FPGA firmware or potentially in CPU or GPU software as described in
 Section~\ref{sec:daq:design-readout}.
-Any trigger primitives derived from PDS data are produced by this system
+Any trigger primitives derived from PDS data are produced by the PDS system
 for consumption by the \dword{daq} Data Selection sub-system.
 
 Algorithms for generating trigger primitives are still under development
@@ -1287,8 +1310,8 @@ The format and schema of trigger primitives require study and
 optimization and this may be tightly coupled with the formation of
 trigger candidates discussed next. 
 Initial estimates show that 20 bytes provides a generous data
-representation. 
-Their rate will be dominated by the rate of decay of naturally occurring
+representation of trigger primitive information. 
+The trigger primitive rate will be dominated by the rate of decay of naturally occurring
 $^{39}$Ar which is about \SI{10}{\mega\hertz} per module.
 This leads to a detector module aggregate rate of
 \SI{200}{\mega\byte/\second}.
@@ -1299,11 +1322,11 @@ rate providing trigger candidates as described next.
 %  The fact that this includes many more cosmics will not matter much as the rate is expected to be dominated by Ar39. 
 %  Phil has this already but the LAr purity is not yet high enough to see Ar39 across the whole drift distance.}
 
-\subsubsection{Trigger Candidate Generation}
+\subsubsection{Low Level Trigger: Trigger Candidate Generation}
 
 Trigger primitives from individual, contiguous fragments of the detector
-module are consumed in order that cross-channel clustering may be
-performed and possibly resulting in the output of trigger candidates.
+module are consumed in order that cross-channel and -time clustering may be
+performed and possibly result in the output of trigger candidates.
 Once activity is localized in time and channel (``space'') it is
 possible to apply a rough energy-based threshold based on combining the
 statistical metrics carried by the input trigger primitives.
@@ -1336,22 +1359,22 @@ by the module level trigger in order to form the final trigger decision.
 The channel and time extent as well as the energy measure of the
 candidates are used at this stage to categorize the activity. 
 The category drives the algorithm applied to form a decision.
-For example, isolated, low energy candidates may be used toward
+For example, isolated, low energy candidates arriving in coincidence
+over the period of a second across the full \dword{detmodule} may be used toward
 satisfying a condition that indicates a potential \dword{snb}. 
 Individual high energy candidates, or lower energy candidates
-distributed over a nearby region of detector space and time would be
+distributed over a localized region of detector space and time would be
 applied toward satisfying a high-energy condition. 
 
 When a particular condition in a category is satisfied, the trigger
 decision is made and a trigger command is formed. 
-This packet includes information of the candidates (and thus primitives)
+This packet includes information of the candidates (and primitives)
 that were used to form it. 
-The decision also provides direction as to what set of detector channels
-to be read out and over what time period.
+The decision also provides direction as to what set of detector components
+are to be read out and over what time period.
 As described at the start of this section, localized activity will lead
-to the readout of the entire detector module for a period equal to one
-or two drift times.  Extended activity triggers (\dword{snb}) will
-direct the readout of much longer period.
+to the readout of the entire detector module for a period equal to 5.4ms.  Extended activity triggers (\dword{snb}) will
+direct the readout of much longer period of 100s.
 
 The module level trigger will send its produced trigger commands to the
 \dfirst{daqbes} for the detector module.  The
@@ -1359,46 +1382,63 @@ The module level trigger will send its produced trigger commands to the
 execution as described in Section~\ref{sec:fd-daq:design-backend}.
 
 Trigger commands are also sent to the external trigger logic unit which
-forwards them to other detector modules. 
+forwards them to other detector modules. Likewise, the Module Level
+Trigger receives trigger commands from other modules, and considers
+this information in making its own trigger decision.
 This is particularly needed in order to allow for cross-module
-coincidences to be formed and thus produce a overall lower threshold for
+coincidences to be formed and thus produce an overall lower threshold for
 capturing potential \dword{snb} occurrences. 
 The external trigger logic unit will also forward \dword{snb} trigger
 commands, after suitable quality confirmation, to external recipients
 such as \dword{snews}.
 
 In addition to accepting cross-module triggers via the external trigger
-logic unit it may also takes inputs from out-of-band sources such as
-needed for calibration or random triggering. 
+logic unit it also takes inputs from out-of-band sources such as
+needed for beam, calibration or random triggering. 
 If meaningful sources of triggering information that is external to
 DUNE can be provided promptly enough so that the corresponding data
 still resides in the front-end buffers, they may also be considered.
 
-\fixme{Do we talk about the beam trigger?  It's not required for nominal
-  readout but it will be useful to, for example, veto any laser
-  calibration pulses.}
 
 \subsubsection{High Level Trigger}
+\label{sec:fd-daq:design-data-reduction}
 
 The last processing stage in the data selection sub-system is the
 \dfirst{hlt} which resides in the back-end part of the \dword{daq} and
-is further described in Section~\ref{sec:fd-daq:design-data-reduction}.
+is further referenced in Section~\ref{sec:fd-daq:design-data-reduction}.
 The high level trigger acts on triggered, read out and aggregated data,
 produced by an \dword{eb}. 
-The \dword{hlt} serves several purposes.
-It may further reduce the rate of data saved to final output storage by
+The \dword{hlt} therefore serves primarily to down-select and thus
+limit the total triggered data rate to offline. This allows to keep
+efficiency high in collecting information on activities of interest
+while minimizing selection and content bias and reducing output data
+rate. It may do so via 
+further filtering, lossy data reduction, and/or further event
+classification. As it benefits from a longer latency (time between
+$\sim$Hz-level built events), it can accommodate higher level of
+sophistication in algorithms for data selection decisions.
+
+More specifically, the \dword{hlt} may further reduce the rate of data saved to final output storage by
 applying refined selection criteria which may otherwise be prohibitive
-to apply to the pre-trigger data stream.  
-For example, instrumentally-generated signals (e.g.~correlated noise)
+to apply to the pre-trigger data stream.  For example, instrumentally-generated signals (e.g.~correlated noise)
 may produce trigger candidates that can not be rejected by the module
 level trigger and if left unmitigated may lead to an undesired high
 output data rate. 
 Post processing the triggered data may allow reducing this unwanted
 contamination.
 % I (bv) don't agree with this next statement.
-Second, it can also reduce the triggered data set by further identifying
-and localizing interesting activity.
+Furthermore, it can also reduce the triggered data set by further identifying
+and localizing interesting activity. A likely candidate hardware
+implementation of this level of data selection is a GPU-based system
+residing on surface at SURF.
 
+To fully understand how much and what type of data reduction may be
+beneficial, simulation studies are ongoing \citedocdb{} and will
+necessarily have to be
+validated with initial data analysis after
+first DUNE FD operation. Planned 
+development efforts will also be carried out to determine the scale of
+processing required by the DUNE FD.
 
 \subsection{Back-end System}
 \label{sec:fd-daq:design-backend}
@@ -1440,16 +1480,6 @@ As described above, each will request selected data from the appropriate \dfirst
 An \dword{eb} will aggregate the selected data and potentially apply processing and reduction (Section~\ref{sec:fd-daq:design-data-reduction}) as well as monitor its quality while in flight.
 Finally it will record the resulting data to the output storage system.
 The final output files shall use data schema and file formats as described in Section~\ref{sec:fd-daq:design-data-model}.
-
-
-\subsubsection{L2 Data Reduction}
-\label{sec:fd-daq:design-data-reduction}
-
-To keep efficiency high in collecting information on activities of interest while minimizing selection and content bias and reducing output data rate, a high level data reduction processing step may be employed. 
-Called second-level (L2) data reduction, it follows from the first-level provided by the data selection system described in Section~\ref{sec:sp-daq:design-selection-algs}.
-To fully understand how much and what type of data reduction may be beneficial, simulation studies will be performed during preparation for construction and initial data analysis after operation will be applied. 
-The \dfirst{daqbes} will thus allow for some form of L2 processing although its scale has not yet been determined. 
-To facilitate development and implementation of L2 data reduction, the \dword{daqbes} will support processing modules were originally developed in an offline context.
 
 
 
