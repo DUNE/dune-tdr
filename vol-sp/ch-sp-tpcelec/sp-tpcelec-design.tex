@@ -5,7 +5,7 @@
 \subsection{Grounding and Shielding}
 \label{sec:fdsp-tpcelec-design-grounding}
 
-\fixme{Consider revising grounding section, which is copied directly from IDR}
+\fixme{Needs input from ProtoDUNE studies; specifically, problems with external noises during ProtoDUNE commissioning, and remaining sources of noise that are being investigated}
 
 In order to minimize system noise, the \dword{ce} cables for each \dword{apa} enter 
 the cryostat through a single \dword{ce} flange, as shown in Figure~\ref{fig:connections}, creating, for grounding purposes, and integrated unit consisting of an \dword{apa} frame, \dword{femb} ground for all \num{20} \dword{ce} modules, TPC flange, and warm interface
@@ -16,12 +16,12 @@ All power-return leads and cable shields are connected to both the ground plane 
 The only location where this integrated unit makes electrical contact with the 
 cryostat, which defines \textit{detector ground}, is at a single point on the \dword{ce} \fdth board in the TPC signal flange where the 
 cables exit the cryostat. Mechanical suspension of the \dword{apa}s is accomplished using insulated supports. 
-To avoid structural ground loops, the \dword{apa} frames described in Chapter~\ref{ch:fdsp-apa} are 
+To avoid structural ground loops, the \dword{apa} frames described in Chapter~\ref{ch:sp-apa} are 
 insulated from each other.
 
 Filtering circuits for the \dword{apa} wire-bias voltages are locally referenced to the ground plane of the \dwords{femb} through low-impedance electrical connections. This approach ensures a ground-return path in close proximity to the bias-voltage and signal paths. The close proximity of the current paths minimizes the size of potential loops to further suppress noise pickup.
 
-Signals associated with the \dword{pds}, described in Chapter~\ref{ch:fdsp-pd}, are carried directly on shielded, 
+Signals associated with the \dword{pds}, described in Chapter~\ref{ch:sp-pd}, are carried directly on shielded, 
 twisted-pair cables to the signal \fdth. The cable shields are connected to the cryostat 
 at the \dword{pd} flange shown in Figure~\ref{fig:connections}, and to the PCB shield layer on the \dwords{pd}. There is no electrical connection between the cable shields and the \dword{apa} frame.
 
@@ -29,7 +29,7 @@ at the \dword{pd} flange shown in Figure~\ref{fig:connections}, and to the PCB s
 \subsection{Distribution of Bias Voltages}
 \label{sec:fdsp-tpcelec-design-bias}
 
-\fixme{Consider revising bias voltage section, which is copied directly from IDR (except for updated CR board figure)}
+\fixme{We are going to try to minimize the overlap of this section with the corresponding section in the APA chapter to avoid repetition.  Refer to APA section and strictly discuss parts necessary to explain coupling between wires and readout that is done to minimize cross-talk.}
 
 Each side of an \dword{apa} includes four wire layers as described in Section~\ref{sec:fdsp-apa-design}. 
 %The innermost X-plane layer of wires is nominally biased at +820~V, with each wire AC coupled 
@@ -54,6 +54,8 @@ signals to the \dword{ce} motherboards.  A schematic diagram of the \dword{pdsp}
 {\dword{pdsp} \dword{apa} wire bias schematic diagram, including the CR board.}
 \includegraphics[width=0.8\linewidth]{sp-tpcelec-cr-board.pdf}
 \end{dunefigure}
+
+\fixme{Move Figure~\ref{fig:CR-board} to APA chapter, and replace with simplified picture focusing on wire cross-talk?}
 
 %Separate CR boards include a single R-C filter for the G-plane wires and 12 pairs of bias resistors and
 %coupling capacitors.
@@ -96,6 +98,8 @@ The target value of \SI{47}{nF} was used in \dword{pdsp} for the filter capacito
 \subsection{Front-End Motherboard}
 \label{sec:fdsp-tpcelec-design-femb}
 
+\fixme{FEMB description needs to be dramatically expanded for the second draft of the TDR.  A lot of information is missing.}
+
 %%%%%%%%%%%%%%%%%%
 \subsubsection{Overview}
 \label{sec:fdsp-tpcelec-design-femb-overview}
@@ -111,7 +115,7 @@ The \dword{larasic} inputs are protected by diodes and a series inductor.
 \begin{dunefigure}
 [The baseline \dword{ce} architecture.]
 {fig:ce-scheme}
-{The baseline \dword{ce} architecture. The basic unit is the \num{128}-channel \dword{femb}. Note that only one \dword{ce} flange is shown to simplify the illustration. Note that \dword{ssp} stands for \textit{SiPM Signal Processor} (see Chapter~\ref{ch:fdsp-pd}).}
+{The baseline \dword{ce} architecture. The basic unit is the \num{128}-channel \dword{femb}. Note that only one \dword{ce} flange is shown to simplify the illustration. Note that \dword{ssp} stands for \textit{SiPM Signal Processor} (see Chapter~\ref{ch:sp-pd}).}
 \includegraphics[width=0.9\linewidth,angle=90]{sp-tpcelec-schematic-v3.pdf}
 \end{dunefigure}
 
@@ -254,14 +258,14 @@ The infrastructure requirements for a CYRO \dword{asic}-based system are similar
 \item{The warm interface is different. Only a single clock is needed (\SI{56}{MHz}) and the configuration protocol is the SLAC \dword{asic} Control Interface (SACI)~\cite{SACI} rather than I2C.}
 \end{itemize}
 
-The first iteration of the CRYO \dword{asic} design was submitted for fabrication to MOSIS in November 2018.  The first prototypes are expected to be received in January, 2019. Simulation-based studies have already been performed; at \SI{0.8}{\micro\second} peaking time and an input capacitance of \SI{200}{pF} (similar to that expected in the DUNE \dword{spmod}), the \dword{enc} is approximately \num{500}\,e$^-$.  This noise level is similar to that expected with the baseline \dword{fe} and \dword{adc} \dword{asic} design in \lar with the same input capacitance.  They will first be tested in an existing test stand at SLAC.  Subsequent tests are planned for a small test TPC at \fnal and on an \dword{apa} in the \dword{pdsp} cold box; these test facilities are described in Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
+The first iteration of the CRYO \dword{asic} design was submitted for fabrication to MOSIS in November 2018.  The first prototypes are expected to be received in January 2019. Simulation-based studies have already been performed; at \SI{0.8}{\micro\second} peaking time and an input capacitance of \SI{200}{pF} (similar to that expected in the DUNE \dword{spmod}), the \dword{enc} is approximately \num{500}\,e$^-$.  This noise level is similar to that expected with the baseline \dword{fe} and \dword{adc} \dword{asic} design in \lar with the same input capacitance.  They will first be tested in an existing test stand at SLAC.  Subsequent tests are planned for a small test TPC at \fnal and on an \dword{apa} in the \dword{pdsp} cold box; these test facilities are described in Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
 
-In January 2019, stand-alone tests of the CRYO \dword{asic} will begin. In addition to standard ``bringing-up'' tests, measurements of noise (Equivalent Noise Charge), linearity (Equivalent Number of Bits) and bit-error rate will be performed. Figure~\ref{fig:cryo-results} shows ``place-holder'' plots of the type that will be produced in the initial stand-alone tests.
+In February 2019, stand-alone tests of the CRYO \dword{asic} will begin. In addition to standard ``bringing-up'' tests, measurements of noise (\dword{enc}), linearity (effective Nnumber of bits, or \dword{enob} for short), and bit-error rate will be performed. Figure~\ref{fig:cryo-results} shows ``place-holder'' plots of the type that will be produced in the initial stand-alone tests.
 
 \begin{dunefigure}
 [Results of stand-alone tests of the CRYO \dword{asic}.]
 {fig:cryo-results}
-{Results of stand-alone tests of the CRYO \dword{asic}. Top row shows Equivalent Noise Charge measured in each channel at room temperature (left) and Liquid Nitrogen Temperature (right). Bottom row shows the Equivalent Number of Bits (ENOB). }
+{Results of stand-alone tests of the CRYO \dword{asic}.  The top row shows noise levels in \dword{enc} measured for each channel at room temperature (left) and liquid nitrogen temperature (right).  The bottom row shows the measured linearity for each channel in terms of \dword{enob}. }
 \includegraphics[width=0.8\textwidth]{sp-tpcelec-cryo-results.png}
 \end{dunefigure}
 
@@ -401,11 +405,11 @@ between the CE Boxes and APA frame in light gray. The CE cables are shown in blu
 
 All cold cables originating from inside the cryostat connect to the outside warm electronics through PCB board \fdth{}s
 installed in the signal flanges that are distributed along the cryostat roof.
-The TPC data rate per \dword{apa}, with an overall \num{32}:\num{321} MUX and eighty $\sim$1~Gbps data channels per \dword{apa},
+The TPC data rate per \dword{apa}, with an overall multiplexing factor of 32 and 80 $\sim$1~Gbps data channels per \dword{apa},
 is sufficiently low that the \dword{lvds} signals can be driven over copper twin-axial transmission lines.
 Additional transmission lines are available for the distribution of \dword{lvds} clock signals and I$^2$C control information,
 which are transmitted at a lower bit rate.
-Optical fiber is employed externally from the \dwords{wib} on the signal flange to the \dword{daq} and slow control systems described in Chapter~\ref{ch:fdsp-daq} and Chapter~\ref{ch:fdsp-slow-cryo}, respectively.
+Optical fiber is employed externally from the \dwords{wib} on the signal flange to the \dword{daq} and slow control systems described in Chapter~\ref{ch:sp-daq} and Chapter~\ref{ch:sp-cisc}, respectively.
 
 \begin{dunefigure}
 [TPC \dword{ce} \fdth.]
