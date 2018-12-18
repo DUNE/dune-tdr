@@ -273,7 +273,7 @@ def build(bld):
                 chmaintex = bld.path.find_or_declare("%s-%s.tex" % (volname, chname))
                 maintexs.append(chmaintex)
                 bld(source=[chaptex, chtex],
-                    target=chmaintex,
+                    target=chmaintex.name,
                     rule="${CHAPTERS} ${SRC} ${TGT} '%s' '%s' %d" % (volname, chname, volind+1))
                 
                 bld(features='tex',
