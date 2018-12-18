@@ -106,15 +106,19 @@ from waflib.TaskGen import feature, after_method, before_method
 @after_method('apply_tex') 
 def create_another_task(self): 
     tex_task = self.tasks[-1] 
-    at = self.create_task('manifest', tex_task.outputs) 
     doc = tex_task.outputs[0]
     man = os.path.splitext(str(doc))[0] + '.manifest'
     man_node = self.bld.path.find_or_declare(man)
-    at.outputs.append(man_node)
+    at = self.create_task('manifest', tex_task.outputs, man_node) 
+    #at.outputs.append(man_node)
+    # make tex task info available to manifest task
     at.tex_task = tex_task 
     # rebuild whenever the tex task is rebuilt 
     at.dep_nodes.extend(tex_task.outputs)
-
+    # There is an, apparently harmless, warning about the .manifest
+    # file being created more than once, and by the same task
+    # generator.  This suppresses the error message.
+    at.no_errcheck_out = True
 
 from waflib.Task import Task
 class manifest(Task):
@@ -271,16 +275,17 @@ def build(bld):
             for chtex in voldir.ant_glob("ch-*.tex"):
                 chname = os.path.basename(chtex.name).replace('.tex','')
                 chmaintex = bld.path.find_or_declare("%s-%s.tex" % (volname, chname))
+                chmainpdf = bld.path.find_or_declare("%s-%s.pdf" % (volname, chname))
                 maintexs.append(chmaintex)
                 bld(source=[chaptex, chtex],
                     target=chmaintex.name,
                     rule="${CHAPTERS} ${SRC} ${TGT} '%s' '%s' %d" % (volname, chname, volind+1))
-                
+
                 bld(features='tex',
                     prompt = prompt_level,
-                    source = os.path.basename(str(chmaintex)),
+                    source = chmaintex,
                     # name target as file name so can use --targets w/out full path
-                    target = os.path.basename(str(chmaintex.change_ext('pdf','tex'))))
+                    target = chmainpdf.name)
 
                 bld.install_files('${PREFIX}/%s'%volname,
                                   chmaintex.change_ext('.pdf', '.tex'))
