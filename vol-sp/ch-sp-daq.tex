@@ -33,6 +33,10 @@
   This guidance is not comprehensive so authors may provide additional
   information but retaining \textbf{conciseness} and \textbf{not
     repeating} info in other section is required.}
+ 
+\metainfo{Somewhere in this chapter it will be specified that the DAQ
+  consortium brings together resources and expertise from UK, CERN,
+  ..., US, including key expertise on LArTPC readout and DAQ.}
 
 \section{Introduction}
 \label{sec:fd-daq:introduction}
@@ -118,7 +122,45 @@ specifications provided in Section~\ref{sec:fd-daq:specifications}.
 %\fixme{Add requirements table.}
 \input{generated/req-longtable-SP-DAQ.tex}
 
-The \dword{daq}-level requirements are imposed to ensure that the
+DUNE has three main physics drivers: neutrino CP violation and related
+long baseline oscillation studies using the high intensity beam
+provided by Fermilab, off-beam measurements of atmospheric
+neutrinos and searches for rare processes such as baryon number
+violation, and detection of supernova neutrino bursts occurring within
+our galaxy.  The DUNE SP LArTPC implements two detection technologies
+to access this physics, each with very different readout times.
+Charge measurement of an ionizing event requires a nominal recording
+of data over a time window of multiple milliseconds, 
+to collect 
+information from the full detector volume as determined by the
+ionization electron drift speed in argon.  The photon detection system (PDS)
+measures argon scintillation light emission, which occurs and is
+detected over a timescale of a multiple nanoseconds for any given event and/or
+subsequent subevent process. 
+ 
+The long baseline physics program makes use of precise beam timing
+information from Fermilab that can be used by the DAQ.  Experience
+from earlier LArTPC experiments like ICARUS and MicroBooNE, ProtoDUNE,
+and other long baseline experiments like T2K, Nova, and MINOS, lends
+high confidence to a DAQ solution that enables this physics.  Nucleon
+decay in DUNE can occur at any time and lacks an external trigger
+input; however, the high energies of final state particles provide
+robust PDS and TPC signatures that likewise lead to relatively
+straightforward delayed, data-driven trigger decisions informed by
+only a few TPC readout time windows.  The main DAQ challenge which is
+unique for DUNE as opposed to past LArTPC experiments is to
+self-trigger on supernova bursts, which occur over a \SI{10}{s}
+timescale; such data-driven decision must prompt unbiased data from
+the charge and light colleciton systems,  created by the
+tens-to-hundreds of supernova  electron neutrino interactions in the
+few to tens of MeV range, over a \SI{100}{s} time interval.  An
+extensive R\&D program informed by several years of MicroBooNE data
+and DAQ developments,
+as well as ongoing development efforts on ProtoDUNE, has led to the
+adopted solution described later in this chapter. 
+
+Within the adopted solution, the \dword{daq}-level requirements are
+imposed to ensure that the 
 system is capable of recording all necessary information for offline 
 analysis of data that is associated with on- and off-beam physics events, as directed
 by the \dword{dune} physics mission, and with minimal compromise to
