@@ -34,10 +34,6 @@
   information but retaining \textbf{conciseness} and \textbf{not
     repeating} info in other section is required.}
  
-%\metainfo{Somewhere in this chapter it will be specified that the DAQ
- % consortium brings together resources and expertise from UK, CERN,
- % ..., US, including key expertise on LArTPC readout and DAQ.}
-
 \section{Introduction}
 \label{sec:fd-daq:introduction}
 % \fixme{module-generic}
@@ -62,14 +58,26 @@ selection decisions; build ``events'' from selected space-time volumes,
 and relay those to permanent storage, and carry out local data
 reduction and filtering of the data as needed.
 
+
 This chapter provides a description for the design of the \dword{dune}
-\dword{fd} \dword{daq} system. 
+\dword{fd} \dword{daq} system developed by the \dword{dune} \dword{fd}
+\dword{daq} consortium. 
+This consortium brings together resources and expertise from CERN,
+Columbia, France, Japan, Netherlands the UK, and the USA. 
+Its members bring considerable experience from ICARUS, MicroBooNE, and
+DUNE prototype LArTPCs, as well as from ATLAS at the LHC and other major
+HEP experiments across the world.
+
 The system is designed so that it services all \dword{fd}
 \dwords{detmodule}, and therefore most aspects of the design are
 identical across the different \dwords{detmodule}. 
-The descriptions for those parts of the system are reproduced verbatim in some sections of this chapter as found in the TDR volume for each \dword{detmodule}.
-A small part of the \dword{daq} design must be tailored to meet module-specific requirements. 
-Those portions of the design are documented in sections of this chapter which are unique to the \dword{detmodule} covered in this TDR volume. 
+The descriptions for those parts of the system are reproduced verbatim
+in some sections of this chapter as found in the TDR volume for each
+\dword{detmodule}.
+A small part of the \dword{daq} design must be tailored to meet
+module-specific requirements. 
+Those portions of the design are documented in sections of this chapter
+which are unique to the \dword{detmodule} covered in this TDR volume. 
 Those sections are identified by their use of module-specific terms.
 
 The chapter begins with requirements for and interfaces between \dword{daq} and other \dword{dune} systems. 
@@ -84,8 +92,6 @@ Finally, the chapter finishes with details on management of the
 production, and installation of the system, as well as cost, schedule and
 safety considerations.
 
-The DAQ  consortium brings together resources and expertise from the UK, CERN, USA, France, the Netherlands, Japan, and Colombia.  Its members bring considerable experience from ICARUS, MicroBooNE, and DUNE prototype LArTPCs, as well as from ATLAS at the LHC and other major HEP experiments across the world.
-
 \section{Requirements}
 \label{sec:fd-daq:requirements}
 \fixme{module-generic}
@@ -96,9 +102,10 @@ The \dword{dune} \dword{fd} \dword{daq} system must meet the
 \dword{dune} top-level as well as \dword{daq}-level
 requirements. The top-level requirements which explicitly pertain to
 the \dword{daq} are provided below. The \dword{daq}-level requirements are 
-listed in Table~\ref{tab:fd-daq:requirements}. The system is
+listed in Tables~\ref{tab:spec:min-drift-field}~--~\ref{tab:spec:dead-channels}. The system is
 designed to meet these requirements and does so by following key
-specifications provided in Section~\ref{sec:fd-daq:specifications}. 
+specifications provided in Table~\ref{tab:specs:SP-DAQ} and described in Section~\ref{sec:fd-daq:specifications}. 
+
 
 %\section{SP-FD Specifications for DAQ}
 \input{generated/req-SP-FD-min-drift-field.tex} % 1
@@ -125,41 +132,73 @@ specifications provided in Section~\ref{sec:fd-daq:specifications}.
 \input{generated/req-longtable-SP-DAQ.tex}
 
 DUNE has three main physics drivers: neutrino CP violation and related
-long baseline oscillation studies using the high intensity beam
-provided by Fermilab, off-beam measurements of atmospheric
-neutrinos and searches for rare processes such as baryon number
-violation, and detection of supernova neutrino bursts occurring within
-our galaxy.  The DUNE SP LArTPC implements two detection technologies
-to access this physics, each with very different readout times.
-Charge measurement of an ionizing event requires a nominal recording
-of data over a time window of multiple milliseconds, 
-to collect 
-information from the full detector volume as determined by the
-ionization electron drift speed in argon.  The photon detection system (PDS)
-measures argon scintillation light emission, which occurs and is
-detected over a timescale of a multiple nanoseconds for any given event and/or
-subsequent subevent process. 
+long baseline oscillation studies using the high intensity beam provided
+by \fnal, off-beam measurements of atmospheric neutrinos and searches
+for rare processes such decays allowed through baryon number violation,
+and detection of \dfirst{snb} occurring within our galaxy.
+The \dword{dune} \dword{fd} modules in the current design implement two
+detection technologies: \dfirst{tpc} and \dfirst{pds}.
+
+The two technologies access the physics each with very different readout
+time scales.
+Charge measurement by the \dword{tpc} of an ionizing event requires a
+nominal recording of data over a time window of 5-10 \si{\milli\second}
+in order to collect information from the full detector volume. 
+This time scale is determined by the ionization electron drift speed in
+liquid argon and the detector dimension along the drift direction.
+The \dword{pds} measures argon scintillation light emission, which
+occurs and is detected over a timescale of a multiple nanoseconds for
+any given event and/or subsequent subevent process. 
  
-The long baseline physics program makes use of precise beam timing
-information from Fermilab that can be used by the DAQ.  Experience
-from earlier LArTPC experiments like ICARUS and MicroBooNE, ProtoDUNE,
-and other long baseline experiments like T2K, Nova, and MINOS, lends
-high confidence to a DAQ solution that enables this physics.  Nucleon
-decay in DUNE can occur at any time and lacks an external trigger
-input; however, the high energies of final state particles provide
-robust PDS and TPC signatures that likewise lead to relatively
-straightforward delayed, data-driven trigger decisions informed by
-only a few TPC readout time windows.  The main DAQ challenge which is
-unique for DUNE as opposed to past LArTPC experiments is to
-self-trigger on supernova bursts, which occur over a \SI{10}{s}
-timescale; such data-driven decision must prompt unbiased data from
-the charge and light colleciton systems,  created by the
-tens-to-hundreds of supernova  electron neutrino interactions in the
-few to tens of MeV range, over a \SI{100}{s} time interval.  An
-extensive R\&D program informed by several years of MicroBooNE data
-and DAQ developments,
-as well as ongoing development efforts on ProtoDUNE, has led to the
-adopted solution described later in this chapter. 
+Much of the DAQ design incorporates experience from earlier
+\dword{lartpc} experiments like ICARUS and \microboone,
+\dword{protodune}, and other long baseline experiments like T2K, \nova,
+and MINOS. 
+Unlike these past neutrino experiments, which either observe a
+high-occupancy of neutrino events or which can trigger on neutrino beam
+spill timing while still producing data at a manageable rate, the
+\dword{dune} \dword{fd} \dword{daq} must largely rely on data-driven
+self-triggering in order to record all physics data. 
+Still, the DAQ expects to receive beam spill time information from
+Fermilab either promptly while the corresponding data still resides in
+buffers or through a predictive mechanism. 
+However, due to the rarity of a beam neutrino interacting in the
+\dword{fd} and the high frequency of beam spills, triggering solely on
+this information would lead to a prohibitive output data rate.
+Instead, the high-energy activity expected from interactions of beam neutrinos
+(as well as atmospheric neutrinos and from any nucleon decays) in the
+\dword{dune} \dword{fd} will provide robust \dword{pds} and \dword{tpc}
+signatures.
+A trigger decision which captures these signatures may be formed in a
+straightforward and data-driven manner soon after the corresponding data
+is acquired from the detector electronics and enters the DAQ buffers.
+
+An additional
+challenge and one which is also unique to DUNE among past \dword{lartpc}
+experiments is to self-trigger on \dword{snb} activity.
+This challenge is two-fold. 
+First, the activity of the individual \dword{snb} neutrino interactions
+is expected to be of relatively low energy ($<\SI{100}{MeV}$) and the
+ensemble of \bigo{100} events are expected to occur sparsely over the
+entire detector and over an extended period of \bigo{10}\si{s}. 
+Second, to assure high efficiency to collect \dword{snb} interactions
+which individually are below the nominal trigger threshold, data from
+all channels will be recorded over an extended and contiguous period of
+time \bigo{100}\si{s} around every \dword{snb} trigger.
+
+Whether it is to capture localized high-energy activity or the extended,
+sparse \dword{snb} activity or indeed unexpected activity of yet unknown
+origin, the data-driven trigger decisions must be performed by consuming
+a large portion of the full, unbiased data stream from the detector. 
+Based on that processing, the data over large periods of time must be
+positively categorized as being consistent with known, well understood
+and unwanted activity (ie, ``just noise''). 
+The decision to record all data that is not so categorized must be
+promptly executed while that data is still retained in buffers.
+An extensive R\&D program informed by several years of \microboone data
+and DAQ developments, as well as ongoing development efforts on
+\dword{protodune}, has led to the adopted solution described later in
+this chapter. 
 
 Within the adopted solution, the \dword{daq}-level requirements are
 imposed to ensure that the 
@@ -190,22 +229,22 @@ by implementing a continuous storage element in the data flow
 architecture. This allows delayed data-driven trigger decisions and
 capturing of preceding, relevant to the trigger physics data to be
 accommodated, with minimal loss of physics information. The
-specification for this loopback buffer is set in consultation with
+specification for this look-back buffer is set in consultation with
 physics groups. It is driven primarily by the need to record up to ten
-seconds of unbiased data preceding a supernova burst (with the
+seconds of unbiased data preceding a \dword{snb} (with the
 neutronization time taken as the time of the burst), and it is
 specified to be greater than 4 seconds. This 4 second
 buffering provision works in tandem with a trigger latency
 specification of less than one second. This remains to be validated
 with simulation, to ensure that high coverage (greater than 99\%) of galactic supernova
-bursts is achieved by the supernova burst trigger.
+bursts is achieved by the \dword{snb} trigger.
 
 With respect to readout considerations, with the exception of
-supernova burst triggers, unbiased data spanning several ``drift
-windows'' for any other given trigger is
+\dword{snb} triggers, unbiased data spanning a time on order of the maximum possible drift
+for any other given trigger is
 to be recorded by the \dword{daq}. This time span is to be configurable at run start and
 should range between 20 microseconds and 30 milliseconds. In the case
-of a supernova burst trigger, unbiased data spanning up to 100 seconds
+of a \dword{snb} trigger, unbiased data spanning up to 100 seconds
 is to be recorded. The \dword{daq} system should be capable of
 applying lossless compression to these records, as well as
 additionally filter them in order to remove unnecessary data regions
@@ -215,21 +254,21 @@ A programmable trigger priority scheme will be provided, and
 implemented in a way that the readout for the main physics triggers
 are never or rarely inhibited, in order to enable the live-time of
 these triggers to be easily determined. At the same time, generation
-of overlappign triggers will be possible, but prioritization should eb
-used in the readout to prevent data readout duplication. 
+of overlapping triggers will be possible, but ordering and prioritization will be
+used to prevent data readout duplication. 
 
 The data-driven trigger decision will be facilitated within the data
 selection subsystem, which will be an online, primarily software-based system, implemented accross multiple levels of
 data selection for both TPC and PDS readout. Information from the
 lower data selection levels is aggregated and correlated at the
 ``Module Level'' to form a module-wide trigger command, intended to
-prompt module-wide readout\footnote{Only supernova burst trigger decisions are
-propagated to other detector modules.}.
+prompt module-wide readout.
+Some trigger information will be indirectly propagated between detector modules in order to facilitate a higher-efficiency \dword{snb} triggering than would be possible at the Module Level alone.
 This multi-level scheme provides necessary flexibility for the
 implementation of and scalability of the \dword{daq} system. 
  
 With respect to operation considerations, the need to minimize
-supernova burst deadtime necessitates a partitionable \dword{daq} system,
+\dword{snb} deadtime necessitates a partitionable \dword{daq} system,
 whereby a significant part of the detector remains physics-operational
 even in the event of a fault which interrupts data collection in
 another part of the detector. This partitionable operation mode also
@@ -788,7 +827,7 @@ The \textit{lingua franca} IPC, will be chosen after identifying options and eva
 The selected IPC should also have an expectation of long term, and broad open source community support. 
 The current candidate for a basis of the \textit{lingua franca} IPC is ZeroMQ. 
 ZeroMQ provides a well established, high performance library. 
-It has been positively evaluated by CERN~\cite{cern-zeromq}. 
+It has been positively evaluated by CERN~\cite{Dworak:2012mf}. 
 It provides the basic building blocks for an IPC system in the form of high-level socket objects implementing a variety of socket patterns including publish/subscribe, exclusive pair, request/reply and others. 
 Messages may be transported across thread-safe queues, Unix domain and network sockets which greatly assists in developing elastic applications that can scale from multi-threaded, multi-process and multi-computer contexts merely by changing configuration. 
 The ZeroMQ ecosystem includes higher-level libraries providing for such important features as distributed discovery and presence (Zyre) as well as distributed configuration databases (Zgossip). 
@@ -1782,7 +1821,7 @@ Some of the reasons for selecting their technology include:
 \item A wide variety of language bindings exist, importantly C/C++ for high performance and Python for fast development are two of the best supported.
 \item ZeroMQ abstracts functionality in important ways such as concrete implementation of high level communication patterns (eg, pub/sub) and high-level independence from low-level transport mechanism (three are supported: inter-thread queues, inter-process Unix-domain sockets and inter-computer network sockets). 
 \item It supports a truly decentralized system design (this is the ``Zero'' in ``ZeroMQ'') critical to satisfying the requirements on robustness.  In particular the ZeroMQ project Zyre provides a distributed, low-latency \dword{daqdispre} system.
-\item Has been evaluated favorably CERN~\cite{cernzeromq} and has been used in various DAQ contexts in other experiments.
+\item Has been evaluated favorably CERN~\cite{Dworak:2012mf} and has been used in various DAQ contexts in other experiments.
 \end{itemize}
 
 Initial prototype tests have demonstrated that the raw data throughput of ZeroMQ inter-thread transport is sufficient for use in even the highest rate DAQ context (input to trigger primitive production).
