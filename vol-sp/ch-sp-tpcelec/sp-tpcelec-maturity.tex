@@ -1,0 +1,222 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Remaining design and prototyping tasks}
+\label{sec:fdsp-tpcelec-overview-remaining}
+
+The two \dword{protodune} detectors have been built with multiple
+goals, one of which was the demonstration that the specifications
+for DUNE could be met with a design that would only require a simple
+scale up of the detector size. The data collected with \dword{pdsp}
+in Fall 2018 has demonstrated that noise levels well below the target
+of one thousand electrons can be achieved in \lar, validating the
+detector system design approach planned for DUNE. Furthermore, the amount
+of coherent noise observed in \dword{pdsp} in untreated raw data
+after a few days of operation is at the level of what was observed
+in \dword{microboone} after a significant level of analysis and
+filtering. The residual coherent noise on the \dwords{femb} is in
+a frequency range where it can be more easily filtered out compared 
+to previous \lar detectors.
+
+Despite the success of \dword{pdsp} there are multiple areas where
+additional design and prototyping work is required before the
+beginning of the DUNE detector construction. These design changes
+can be ordered depending on the risk and the amount of engineering
+that is required. At one end of the spectrum is the change of the
+design of the cryostat penetration, that in \dword{pdsp} housed one
+\dword{ce} and one \dword{pds} flange in a tee-shape. For DUNE
+there will be two \dword{ce} flanges in addition to the \dword{pds}
+flange, arranged in the shape of a cross. The increase of the number
+of flanges may require some structural reinforcement and additional
+finite element analysis simulations to estimate the proper flow of
+Ar to avoid any back-diffusion of oxygen into the cryostat in case
+of leaks on the flanges and to ensure that the temperature gradient
+in the Argon is acceptable. In cases like this it can be easily
+argued that the amount of engineering required to finalize the
+detector design for DUNE is minimal compared to the work already
+done for past \lar detectors, starting with \microboone and
+other prototypes, and finishing with \dword{pdsp}. At the opposite
+side of the spectrum is the \dword{asic}s' design, with the
+development of \dword{coldata} and of a completely new \dword{adc}
+that is being designed to address the shortcomings of the BNL-designed
+P1-\dword{adc}, non-linearities and stuck bits. In Table~\ref{tab:SPCE:designstatus}
+we describe our estimate of the amount of work required to complete
+the design and prototyping of the \dword{ce} detector components for
+DUNE. Later in this Section we analyze the risk that the design
+and prototyping of these components could affect the DUNE detector
+construction schedule.
+
+\begin{dunetable}
+[Status of the design of the different CE detector components]
+{p{0.30\textwidth}p{0.15\textwidth}p{0.40\textwidth}}
+{tab:SPCE:disorientates}
+{Status of the design of the different CE detector components and expected
+amount of engineering and prototyping required prior to construction.}
+Component & Status & Expected work \\ \toprowrule
+\dword{larasic} & Advanced & Fix minor issues in the design, port differential output from \dword{coldadc} design \\ \colhline
+Commercial ADC & Complete & None \\ \colhline
+\dword{coldadc} & \multicolumn{2}{l}{See text for details} \\ \colhline
+\dword{coldata} & \multicolumn{2}{l}{See text for details} \\ \colhline
+\dword{cryo} & \multicolumn{2}{l}{See text for details} \\ \colhline
+\dword{femb} & Advanced & Experience with multiple prototypes, final design will follow the \dword{asic} selection \\ \colhline
+Cold cables & Very advanced & Minor modifications, additional vendor qualification \\ \colhline
+Cryostat penetrations & Advanced & Add \dword{ce} flange for bottom \dword{apa} \\ \colhline
+\dword{wiec} & Very advanced & Add HEPA filter and hardware interlock system \\ \colhline
+\dword{wib} & Advanced & Update design to use cheaper FPGA, modify \dword{femb} power \\ \colhline
+\dword{ptc} & Very advanced & Add interface to interlock system \\ \colhline
+Power supplies & Very advanced & Investigate possible additional vendors, rack arrangement \\ \colhline
+Warm cables & Very advanced & Finalize cable layout, identify vendors \\ \colhline
+Readout and control fiber plant & Very advanced & Finalize plant layout \\ \colhline
+\end{dunetable}
+
+The area that requires most work is that of the \dword{asic}s that are mounted
+on the \dwords{femb}. The FE \dword{asic} has already gone through eight design
+iterations, the last three directly targeted for DUNE, and has already been used, 
+in one of its versions, for \dword{microboone} and for \dword{pdsp} reaching the 
+noise levels specified for DUNE. At least one additional design iteration is
+required to address the issues observed during the \dword{pdsp} operations and
+to implement a single ended to differential converter to improve the interface
+with the newly developed \dword{coldadc}. To ensure the success of the next 
+design iteration we are investing in the development of appropriate transistor
+models for operation in \lar, such that the saturation effect observed in 
+\dword{pdsp} can be properly addressed first in simulation and then with improvements 
+in design. It should be noted that so far approximate models, originally developed for 
+the same \SI{180}{nm} technology, but with different design rules, have been used for 
+the \dword{larasic} development, and therefore it should not be a surprise
+that the FE \dword{asic} may have limitations in some corner of the phase space.
+The circuitry for the single ended to differential converter has already been 
+developed in the \SI{65}{nm} technology and needs to be ported to the \SI{180}{nm}
+technology used for \dword{larasic}. We consider that appropriate measures have been
+put in place to minimize the risk associated with the need of a further
+prototyping iteration. Nevertheless, in Section~\ref{sec:fdsp-tpcelec-risks-design}
+we consider a generic risk for a delay in the availability of \dword{asic}s and
+argue that this delay would not have an impact on the beginning of DUNE operations.
+
+The plan for DUNE foresees the usage of two additional custom design \dword{asic}s
+for the ADC and for the data serialization, and the possibility of using a single 
+\dword{asic} that combines these functionalities with that of the FE. It should
+be noticed that a solution based on the use of a commercial off-the-shelf ADC 
+and of an FPGA for the data serialization has been demonstrated to work by the 
+SBND Collaboration. This solution at this point is considered as a fall-back
+solution for DUNE. Further verification work would be required to certify that
+the transceivers in the FPGA will meet the requirements of DUNE for reliability
+in \lar. The custom solutions for the \dword{asic}s are being developed to
+simplify the \dword{femb} assembly and reduce the power dissipated by the
+electronics in the \lar, which has consequences for the cryogenics and for
+the cross section of the cold cables and for the feedthroughs.
+
+The preferred solution for the ADC and the data serialization is based on two new 
+\dword{asic}s, \dword{coldadc} and \dword{coldata}.
+The first iteration of the \dword{coldadc} has been submitted for fabrication
+at the end of October 2018, with the delivery of chips expected for January 2019.
+Test boards are being developed and results from the initial validation of the
+chip functionality are expected for Spring 2019. Even if this is the first version
+of the chip, we estimate that the design is already close to an advanced stage
+for the following reasons:
+\begin{itemize}
+\item{An ADC with the same architecture has already been implemented by the
+lead engineer of the BNL-FNAL-LBNL team that has designed the new \dword{coldadc}.
+The new design is required to ensure operation in \lar, and the appropriate
+models for the \SI{65}{nm} technology have been used, as discussed in
+Section~\ref{fdsp-tpcelec-design-femb-adc}.}
+\item{The interfaces between the core of the ADC and \dword{larasic} on 
+the input side and \dword{coldata} on the output side are entirely new.
+These parts of the design have gone through an extensive verification
+program, including SPICE (Spectre) simulations of analog blocks,
+mixed-mode (Verilog AMS) simulations of the core ADC, and
+UVM (SystemVerilog) verification of all digital logic. In addition, there are multiple 
+input options that would allow the validation of the design of the core 
+of the ADC, in the case that one of them does not function as designed.}
+\item{For some blocks of the ADC (input buffers, voltage references) the
+design includes multiple redundant options that can be selected during 
+operation.}
+\end{itemize}
+If the tests of the new \dword{coldadc} in Spring 2019 are successful, the
+estimate of the status of the design should be changed at least to the 
+``Advanced'' status. One additional design iteration is planned before
+the production, and as in the case of \dword{larasic}, plans can be made for a
+further iteration without impacting the beginning of DUNE operations.
+
+We are also considering an alternative solution for the readout, where
+the three \dword{asic}s are replaced with a single one, the \dword{cryo}
+chip that is going through a development that is proceeding with a 
+timeline similar to that of \dword{coldadc}. Also in this case the
+chips from the first submission at expected to be delivered in the
+second half of January 2019. They will then undergo standalone tests
+and later system tests on a timescale similar to that of \dword{coldadc}.
+The \dword{cryo} chip is more complicated than \dword{coldadc},
+since it implements the functionality of three \dword{asic}s into a
+single one, and therefore its current design maturity status is
+lower than that of \dword{coldadc}. Some of the design blocks of
+\dword{cryo} are at a more advanced level: for example the control
+and data transmission blocks have been reused from other \dword{asic}
+designs from the SLAC group, and the implementation of the FE amplifier
+is very similar to that of \dword{larasic}, except for the signal 
+shaping. Depending on the results of the tests the status of the
+\dword{cryo} design will evolve in a way similar to that of \dword{coldadc}.
+
+The first complete prototype of \dword{coldata} will be submitted in 
+February/March 2019, with the delivery of chips expected for June 2019.
+The design of this first complete prototype builds on the success of
+the first partial prototype (CDP1) that was fabricated and tested in 2018.
+This first prototype included the control registers inside the 
+\dword{asic}, the I2C interface required to program and read-out
+the status of these registers, the SPI interface required to
+configure \dword{larasic}, the phase-lock loop required to generate
+clocks internal to the chip, the data serializer, and a current-mode
+line driver. The transition to the first complete prototype that
+will be submitted in February/March 2019 and tested in Summer 2019
+requires the addition of two interfaces to the \dword{coldadc} (UART
+and I2C), an additional I2C interface to allow programming two
+\dword{coldata} \dword{asic}s on the same \dword{femb}, and the
+addition of a line-driver with pre-emphasis required for operation
+with long cables (up to \SI{25}{m}) in \lar. The same design and
+validation methodology used for the CDP1 prototype and the \dword{coldadc}
+is being used. This should guarantee that after the tests done in
+Summer 2019 \dword{coldata} will reach the ``Advanced'' design 
+status. 
+
+There have already been multiple iterations of \dwords{femb} that
+have been fabricated and tested and used for data taking in 
+\dword{microboone} and in \dword{pdsp}. SBND is starting the
+production of \dwords{femb} based on the commercial ADC and
+FPGA solution. The design of the \dword{femb} needs to be adapted
+for the different \dword{asic} solutions that are being considered
+for DUNE. This development is already ongoing, as system tests 
+where the \dwords{femb} are connected to an \dword{apa} are part
+of the qualification tests. The design status for the \dword{femb}
+is already at the ``Advanced'' level, and it will reach the 
+``Very advanced'' level at the time of the \dword{asic}
+selection. At that point only minor modifications may be
+required. 
+
+The only other \dword{ce} detector components that do not yet
+reach the ``Very advanced'' level are the cryostat penetrations, as
+discussed above, and the \dword{wib}, where small
+design changes will be done prior to production to use a more
+modern and cheaper FPGA. Additional changes will be required to
+the power distribution scheme, since the number of power lines
+and the corresponding voltages will be reduced compared to
+\dword{pdsp}. The transition to a more modern FPGA will allow 
+more extensive data monitoring inside the \dword{wib}, but may
+also require developing new software and porting the firmware
+from one family of FPGAs to another. 
+
+For all other detector components the estimate of the design
+maturity is considered ``Very advanced'' based on the experience
+gained with commissioning and operation of \dword{pdsp}. The 
+cold signal cables will be modified to reduce the number of
+connections and to address the issues observed with the connector
+on the \dword{femb}. The design of the \dword{wiec} needs to
+be modified to include HEPA filters to minimize the possible
+damage from dust during the lifetime of the experiment at SURF.
+The \dword{ptc} is going to be modified to add an interface to
+the hardware interlocks of the detector safety system. For
+cables and fibers on the top of the cryostat the only work that
+remains to be done is the design of the actual cable plant, 
+which will then fix the length of the cables. The arrangement
+of power supplies in the racks on top of the cryostat is the
+only other remaining design task. For many components the
+qualification of additional vendors could also be considered
+as part of value engineering, to reduce the risks of vendor
+lock-in and to minimize costs. 
+
+
