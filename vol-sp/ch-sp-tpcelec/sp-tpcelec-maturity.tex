@@ -9,9 +9,12 @@ scale up of the detector size. The data collected with \dword{pdsp}
 in Fall 2018 has demonstrated that noise levels well below the target
 of one thousand electrons can be achieved in \lar, validating the
 detector system design approach planned for DUNE. Furthermore, the amount
-of coherent noise observed in \dword{pdsp} has been significantly
-reduced and moved to a frequency range where it can be more easily
-filtered out compared to previous \lar detectors.
+of coherent noise observed in \dword{pdsp} in untreated raw data
+after a few days of operation is at the level of what was observed
+in \dword{microboone} after a significant level of analysis and
+filtering. The residual coherent noise on the \dwords{femb} is in
+a frequency range where it can be more easily filtered out compared 
+to previous \lar detectors.
 
 Despite the success of \dword{pdsp} there are multiple areas where
 additional design and prototyping work is required before the
@@ -44,7 +47,7 @@ construction schedule.
 \begin{dunetable}
 [Status of the design of the different CE detector components]
 {p{0.30\textwidth}p{0.15\textwidth}p{0.40\textwidth}}
-{tab:SPCE:designstatus}
+{tab:SPCE:disorientates}
 {Status of the design of the different CE detector components and expected
 amount of engineering and prototyping required prior to construction.}
 Component & Status & Expected work \\ \toprowrule
@@ -98,10 +101,10 @@ the transceivers in the FPGA will meet the requirements of DUNE for reliability
 in \lar. The custom solutions for the \dword{asic}s are being developed to
 simplify the \dword{femb} assembly and reduce the power dissipated by the
 electronics in the \lar, which has consequences for the cryogenics and for
-the cross section of the cold cables and for the feed-throughs.
+the cross section of the cold cables and for the feedthroughs.
 
 The preferred solution for the ADC and the data serialization is based on two new 
-\dword{asic}s the \dword{coldadc} and \dword{coldata}.
+\dword{asic}s, \dword{coldadc} and \dword{coldata}.
 The first iteration of the \dword{coldadc} has been submitted for fabrication
 at the end of October 2018, with the delivery of chips expected for January 2019.
 Test boards are being developed and results from the initial validation of the
@@ -117,7 +120,9 @@ Section~\ref{fdsp-tpcelec-design-femb-adc}.}
 \item{The interfaces between the core of the ADC and \dword{larasic} on 
 the input side and \dword{coldata} on the output side are entirely new.
 These parts of the design have gone through an extensive verification
-program, including Verilog simulations. In addition, there are multiple 
+program, including SPICE (Spectre) simulations of analog blocks,
+mixed-mode (Verilog AMS) simulations of the core ADC, and
+UVM (SystemVerilog) verification of all digital logic. In addition, there are multiple 
 input options that would allow the validation of the design of the core 
 of the ADC, in the case that one of them does not function as designed.}
 \item{For some blocks of the ADC (input buffers, voltage references) the
@@ -129,6 +134,24 @@ estimate of the status of the design should be changed at least to the
 ``Advanced'' status. One additional design iteration is planned before
 the production, and as in the case of \dword{larasic}, plans can be made for a
 further iteration without impacting the beginning of DUNE operations.
+
+We are also considering an alternative solution for the readout, where
+the three \dword{asic}s are replaced with a single one, the \dword{cryo}
+chip that is going through a development that is proceeding with a 
+timeline similar to that of \dword{coldadc}. Also in this case the
+chips from the first submission at expected to be delivered in the
+second half of January 2019. They will then undergo standalone tests
+and later system tests on a timescale similar to that of \dword{coldadc}.
+The \dword{cryo} chip is more complicated than \dword{coldadc},
+since it implements the functionality of three \dword{asic}s into a
+single one, and therefore its current design maturity status is
+lower than that of \dword{coldadc}. Some of the design blocks of
+\dword{cryo} are at a more advanced level: for example the control
+and data transmission blocks have been reused from other \dword{asic}
+designs from the SLAC group, and the implementation of the FE amplifier
+is very similar to that of \dword{larasic}, except for the signal 
+shaping. Depending on the results of the tests the status of the
+\dword{cryo} design will evolve in a way similar to that of \dword{coldadc}.
 
 The first complete prototype of \dword{coldata} will be submitted in 
 February/March 2019, with the delivery of chips expected for June 2019.
@@ -166,7 +189,7 @@ selection. At that point only minor modifications may be
 required. 
 
 The only other \dword{ce} detector components that do not yet
-reach the ``Advanced'' level are the cryostat penetrations, as
+reach the ``Very advanced'' level are the cryostat penetrations, as
 discussed above, and the \dword{wib}, where small
 design changes will be done prior to production to use a more
 modern and cheaper FPGA. Additional changes will be required to

@@ -67,7 +67,7 @@ The most recent measurements were performed in \dword{tallbo} at the end of 2017
 %Once we have selected the dataset, we perform the efficiency analysis.
 We define the efficiency as the ratio between the number measured photons and the estimated number of arriving photons for each ARAPUCA:
 %\begin{equation}
-$\mathcal{R}_{i}=\frac{PE_i}{PH_i}$
+$\mathcal{R}_{i}=\frac{PE_i}{PH_i}$.
 %\end{equation} 
 In addition to this metric, the ratio between the sum of the number of photoelectrons over all ARAPUCAs divided by the sum of the number of expected photons landing (PH) on them is also calculated. 
 %\begin{equation}
@@ -125,14 +125,14 @@ As shown in Figure~\ref{fig:fig-pds-gang-2}, the mean signal shows a rise time o
 \begin{dunefigure}[Photosensors signal ganging with 48 SiPMs.]
  {fig:fig-pds-gang-2}
  {Waveform signal from 48 MPPCs/ARAPUCA module, summed with OpAmp THS4131, and digitized with the SSP frontend board.}
-\includegraphics[height=4.5cm]{graphics/pds_gang_fig3.jpg}
+\includegraphics[height=4.5cm]{graphics/pds-gang-rise_time.jpg}
 \end{dunefigure}
 
 \begin{dunefigure}[Photoelectron peaks from 48 ganged MPPCs.]
  {fig:fig-pds-gang-3}
  {Photoelectron peaks from 48 ganged MPPCs, collected in liquid nitrogen at 45 Volt bias (left) and at 47 Volt bias (right).}
-\includegraphics[height=4.5cm]{graphics/pds_gang_fig4.jpg}
-\includegraphics[height=4.5cm]{graphics/pds_gang_fig5.jpg}
+\includegraphics[height=4.5cm]{graphics/pds-gang48-45v.jpg}
+\includegraphics[height=4.5cm]{graphics/pds-gang48-47v.jpg}
 \end{dunefigure}
 \fixme{Need larger text on the figures}
 
@@ -148,7 +148,7 @@ as expected, is not a linear function of the signal height. The error distributi
  {fig:fig-pds-gang-4}
  {Time walk from 48 ganged MPPCs measured at the constant discrimination threshold with SSP board.}
 %\includegraphics[angle=0,width=8.4cm,height=4cm]{graphics/pds_gang_fig6.jpg}
-\includegraphics[height=4.5cm]{graphics/pds_gang_fig7.jpg}
+\includegraphics[height=4.5cm]{graphics/pds-gang-time_walk.jpg}
 \includegraphics[height=4.5cm]{graphics/pds_gang_fig8.jpg}
 \end{dunefigure}
 
@@ -223,8 +223,12 @@ In the \dword{pdsp} version of S-ARAPUCA, the inner surface of the box opposite 
 The \dword{pdsp} holds two S-ARAPUCA arrays. The first is installed in the \dword{apa} \#3 in the fourth position from the top.  This is near the level the beam particles enter this drift volume in order to illuminate it and the surrounding modules with a significant amount of light from each beam particle interaction.
 The second  is installed in the \dword{apa} \#6 in the 6th position from the top.  This module does not see significant light from beam events, but it is also surrounded by light guide modules, signals from these will help to constrain the light that the module is detecting from each interaction.
  
-\fixme{ Could add figure with ARAPUCA raw beam detection for different energy configurations } 
- 
+\fixme{ Figure needs to be better, maybe different color histos on the same scale, could make it a smaller picture with the same information displayed, but with legible axes etc. } 
+\begin{dunefigure}[Raw pulse height detected in ARAPUCA for different energies.]{fig:arapuca_beamph}
+{Integrated raw pulse height in ADC count summed from all channels in an ARAPUCA module exposed to the beam at various beam energies. No selection on particle types has been performed.}
+	\includegraphics[angle=0,width=\columnwidth]{pds-ARAPUCA-beamPH.pdf}
+\end{dunefigure}
+
 Each \dword{pdsp} S-ARAPUCA module array is composed of sixteen cells where each cell is an S-ARAPUCA box with dimensions of \SI{8}{cm}$\times$\SI{10}{cm}; half of the cells have twelve \dwords{sipm} installed on the bottom side of the cell and  half have six \dwords{sipm}. The \dwords{sipm} have active dimensions \SI{0.6}{cm}$\times$\SI{0.6}{cm} and account for 5.6\% (\num{12} \dwords{sipm}) or \num{2.8}\% (\num{6} \dwords{sipm}) of the area of the window (\SI{7.8}{cm}$\times$\SI{9.8}{cm}).
 The \dwords{sipm}  are passively ganged together, so that only one readout channel is needed for each ARAPUCA grouping of \num{12} \dwords{sipm} (the boxes with six \dwords{sipm} are ganged together to form \num{12}-\dword{sipm} units) so a total of \num{12} channels is required per array. 
 %Studies are underway to investigate active ganging that would permit combining signals from multiple boxes, as required to reduce the number of electronics channels and cables under the working assumption that the \single \dword{pds} is restricted to four readout channels per \dword{pd} module. 
@@ -256,13 +260,14 @@ An S-ARAPUCA array during assembly is shown in Figure~\ref{fig:sarapuca_array_pr
 \label{sec:ssp-protodune-electronics}
 
 %\metainfo{Content: Djurcic}
-\fixme{Need a good reference/citation for SSP - is there one? Is it described ( well enough) in the ProtoDUNE TDR?}
+%\fixme{Need a good reference/citation for SSP - is there one? Is it described ( well enough) in the ProtoDUNE TDR?}
 
 
 %As already described above, the photon-detector development has matured to the point where three different photon-detector light-collector designs are prepared and deployed with \dword{pdsp} experiment at CERN. The experiment started operation in September 2018 and collected samples of test-beam data, cosmic muons events, and the data from the photon-detector calibration and monitoring system. The analysis is underway to provide validation of photon-detector readout and light-collection designs, and to inform design and selection of above concepts for DUNE Far Detector.
 
-The electronics readout of the \dword{pdsp} \dword{pds} was provided by a sophisticated custom-designed system that was also used extensively for most of the earlier prototyping studies and photosensor testing.
-A passive signal summing scheme with three SiPMs summed together was chosen for the light guides (4 SSP channels for each bar) and groups of twelve \dwords{sipm} are passively summed for the two ARAPUCA modules (12 \dwords{ssp} channels per module).
+
+The electronics readout of the \dword{pdsp} \dword{pds} was provided by a sophisticated custom-designed system, the \dword{sipm} Signal Processor (\dwords{ssp})~\citedocdb{3126} that was also used extensively for most of the earlier prototyping studies and photosensor testing.
+A passive signal summing scheme with three \dwords{sipm} summed together was chosen for the light guides (4 SSP channels for each bar) and groups of twelve \dwords{sipm} are passively summed for the two ARAPUCA modules (12 \dwords{ssp} channels per module).
 The unamplified analog signals from the \dwords{sipm} are transmitted directly to outside the cryostat for processing and digitization. A custom module, 
 called the \dwords{sipm} Signal Processor (SSP), receives the \dwords{sipm} signals outside the cryostat. An SSP consists of 12 readout channels packaged in 
 a self-contained 1U module. ProtoDUNE photon-detector system is read-out with the total of 288 \dwords{ssp} channels. 
@@ -284,6 +289,7 @@ Each channel contains a fully-differential voltage amplifier and a \num{14}-bit,
 %\includegraphics[angle=0,width=8.4cm,height=6cm]{pds-fig-e-3.png}
 %\includegraphics[angle=0,width=8.4cm,height=6cm]{protodune_readout.png}
 %\end{dunefigure}
+\fixme{The triggering here is not really correct for how it was done at protodune.  The module continually digitizes (always) and stores waveforms above threshold in a circular buffer.  On an external trigger, it will send a waveform and header for the time period of the trigger and any stored waveforms or subsequent waveforms above threshold for the configured readout window. For protoDUNE it always send header and waveform, and in all cases if it sends a waveform it will send a header. }
 
 In the standard mode of operation, the module performs waveform capture, using either an external or internal trigger. In the latter case the module self-triggers to capture only waveforms with an amplitude greater than a specified threshold. In \dword{pdsp} the photon readout is configured to read waveforms when triggered by a beam event, or to provide header information when self-triggered by cosmic muons.
 The header portion summarizes pulse amplitude, integrated charge, and time-stamp information of events. The \dword{ssp} for \dword{pdsp} uses \si{Gb} Ethernet 
@@ -302,11 +308,17 @@ communication implemented over an optical interface. The \SI{1}{Gb/s} Ethernet s
 \fixme {lmm ProtoDUNE analysis strategy outline.   These enumerated section below will get incorporated into the text as strategy becomes clearer as analysis progresses}
 \fixme{rjw 12/2/18 For now just I think it is better to have just a few words and some of the most relevant results, ideally with a reference to a separate document with all the details :-) (I kept your original text in the file)}
 
-\dword{pdsp} provides three distinct sets of data for understanding \dword{pds} performance, each of which has the TPC and/or CRT information to provide strong constraints on the particle trajectory that will allow us to determine the exposure of each module on an event by event basis.
+\dword{pdsp} provides several distinct sets of data for understanding \dword{pds} performance.  
+There are data sets with cosmic triggering, randomly, or in coincidence the CRT modules.
+There are beam data sets with triggers determined by the beam instrumentation.
+There are calibration module data sets, with triggers in coincidence or free running with a configured light pulse. The cosmic ray data and beam data include the TPC and/or CRT information to provide strong constraints on the particle trajectory that will allow us to determine the exposure of each module on an event by event basis.  The additional data sets are useful for calibration, and understanding background rates due to other processes.  Beam events also appear to be useful for calibration, as they provide very low level light signals to the modules in the beam-left segment of \dword{pdsp} where the beam particles were not seen directly.
 
 The analysis is ongoing but here we summarize some relevant initial results:
 \fixme{Summarize the key results from ProtoDUNE with emphasis on ARAPUCA and MPPC.  We should also summarize lightguide  Denver points out, for X-ARAPUCA simulation the results from the IU bars feed into the simulation of the filter/light-trapping from ARAPUCA.}
-\fixme{{\bf For this draft } it would be good to have at least some plots indicating that we see light in the ARAPUCAs and there are no obvious major problems.}
+%\fixme{{\bf For this draft } it would be good to have at least some plots indicating that we see light in the ARAPUCAs and there are no obvious major problems.}
+% included ARAPUCA above, will work on a figure as indicated below.
+
+\fixme{Include a figure with calibration module pulses seen in different modules, highlighting ARAPUCA and MPPC channel response.  MAybe just APA 5 and 6 with just a few SensL devices, but both an ARAPUCA and many MPPC bars}
 
 %\begin{itemize}
 %\item Random Cosmic events - broad distribution mostly vertical

@@ -47,6 +47,9 @@ APPNAME = 'dune-tdr'
 VERSION = '0.0'
 top='.'
 
+# "top-level" reqs/spec names
+TOP_LEVEL_SPECS = ('SP-FD',)
+
 def options(opt):
     opt.load('tex')
     opt.add_option('--debug', default=False, action='store_true',
@@ -191,16 +194,38 @@ def regenerate(bld):
 
         docid_tagfile = ssup(name,docid,docver)
 
-        # Generate the subsys per-requirement tables and their roll-up
-        one_tmpl = bld.path.find_resource("util/templates/spec-table-one.tex.j2")
-        all_tmpl = bld.path.find_resource("util/templates/spec-table-all.tex.j2")
-        one_file = "req-%s-{label}.tex"%name
-        all_targ = gen_dir.make_node("req-%s-all.tex"%name)
+        # Make individual per-spec row files and a roll-up table for
+        # just each "category".
+        one_tmpl = bld.path.find_resource("util/templates/spec-longtable-row.tex.j2")
+        all_tmpl = bld.path.find_resource("util/templates/spec-longtable-rows.tex.j2")
+        one_file = "req-%s-{ssid:02d}.tex"%name
+        all_targ = gen_dir.make_node("req-just-%s.tex"%name)
         reqsdeps.append(all_targ)
         bld(rule="${DUNEGEN} reqs-one-and-all %s ${SRC} %s ${TGT}"%(name, one_file),
             source=[docid_tagfile,
                     one_tmpl, all_tmpl],
             target=[all_targ])
+
+        # Make individual per-spec tables files and a pointless roll-up.
+        # just each "category".
+        one_tmpl = bld.path.find_resource("util/templates/spec-longtable-per.tex.j2")
+        all_tmpl = bld.path.find_resource("util/templates/spec-table-all.tex.j2")
+        one_file = "req-%s-{label}.tex"%name
+        all_targ = gen_dir.make_node("req-perall-%s.tex"%name)
+        reqsdeps.append(all_targ)
+        bld(rule="${DUNEGEN} reqs-one-and-all %s ${SRC} %s ${TGT}"%(name, one_file),
+            source=[docid_tagfile,
+                    one_tmpl, all_tmpl],
+            target=[all_targ])
+
+        # This one generates a longtable for each category/chapter
+        # that includes any "top level" specs.
+        # Fixme: this currently will break once DP-FD is a thing.
+        tmpl = bld.path.find_resource("util/templates/spec-longtable.tex.j2")
+        out = gen_dir.make_node("req-longtable-%s.tex"%name)
+        bld(rule="${DUNEGEN} reqs %s ${SRC} ${TGT}"%(name,),
+            source=[docid_tagfile, tmpl],
+            target=[out])
 
 
         # This one generates defs
@@ -212,12 +237,6 @@ def regenerate(bld):
             source=[docid_tagfile, tmpl],
             target=[out])
 
-        # This one generates longtable
-        tmpl = bld.path.find_resource("util/templates/spec-longtable.tex.j2")
-        out = gen_dir.make_node("req-longtable-%s.tex"%name)
-        bld(rule="${DUNEGEN} reqs %s ${SRC} ${TGT}"%(name,),
-            source=[docid_tagfile, tmpl],
-            target=[out])
 
     return reqsdeps
 

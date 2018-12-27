@@ -38,10 +38,12 @@ Notification is not sent in the case of successful commits.
 - [[shared/]] holds special case LaTeX content that must appear
   identically in more than one volume.  
 
-- [[util/]] holds some scripts that assist in building the document.
+- [[util/]] holds some scripts that assist in building the document in
+  particular for generating files.
 
-- [[generated/]] holds some files that are automatically generated and
-  should not be modified directly by human editing.
+- [[generated/]] holds some the automatically generated files.
+  Human-edited files *must not* be placed in this directory.
+  See section [[Generated files]] below for some details.
 
 * Building the documents
 
@@ -97,4 +99,30 @@ You can also prepare a tar file with just the files for each volume.
   $ ./waf --arxiv
 #+END_EXAMPLE
 
+
+
+* Generated files
+
+In volume/chapter text you may ~\input{}~ various files that live under
+the [[./generated/]] directory.  The files are named following certain
+patterns. 
+
+** Requirements/specification tables
+
+Requirements tables in various forms are made available.  They are
+organized by a table type and by a "code name" which is associated to
+a spreadsheet in DocDB via this file [[./util/dune-reqs-docids.txt]].
+The "top level" specs have a code name like ~SP-FD~.
+Some examples:
+
+- ~req-longtable-<code>.tex~ :: the "top 5" + "selected top level" +
+     "consortium level".  
+
+- ~req-just-<code>.tex~ :: just the "consortium level".
+
+- ~req-<code>-<label>.tex~ :: a table holding a single requirement
+     identified by its label and consoritum "code name".
+
+- ~req-<code>-<NN>.tex~ :: a single table row if one wants to construct
+     the table manually in the body of the volume/chapter text.
 
