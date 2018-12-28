@@ -1,33 +1,52 @@
 %\section{Photon Detection System (PDS) Overview}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction} % Anne
 \label{sec:fdsp-pd-ov}
 %\metainfo{\color{blue} Content: Segreto, Warner, Wilson}
 
 %\metainfo{(Length: \dword{tdr}=10 pages, TP=3 pages)}
-\fixme{Tim drafted some potential text to begin with (anne)}
-%\fixme{Check citations are correct after build on the git hub (bibtex not working correctly on remote machine.}
-\fixme{Include purpose, scope (see fixme below), principle of operation, illustration(s) of components - some of this is already here (Anne)}
+\fixme{Tim drafted some potential text to begin with: (anne)}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The DUNE \dword{fd} consists of detector systems for charge and light produced by an ionization event in the \lartpc.  The charge detection system permits both calorimetry and position determination, with two of the three spatial coordinates ($y$ and $z$)  established by the position of the \dword{apa} wires receiving the charge and the third ($x$) by the arrival time of the charge.  Locating the $x$ position requires an independent determination of the time of the ionization event, a clock start time.  Two systems provide this in DUNE:  the Fermilab accelerator system for neutrino beam related events and the \dword{pds}.  
 
-%\subsection{Introduction}
+Neutrino \dword{cpv} and other elements of the DUNE long-baseline neutrino program do not rely, to first order, on the \dword{pds}.  The neutrino beam timing allows full functionality of the \dword{apa}s, and the deep underground location reduces the possibility of in-time background events from cosmic rays and other sources to a negligible level.  By contrast, DUNE’s nucleon decay physics could not be executed without the \dword{pds}.  The inability to establish a clock start time would make it impossible to determine whether a candidate proton decay event were fully contained in the detector volume or associated with objects entering the detector from the outside.  DUNE can detect \dwords{snb} originating within the galaxy without a \dword{pds}.  In this case, the presence of tens to thousands of even \SI{5}{MeV}{ scale events occurring over tens of seconds would provide an unambiguous signal that the TPC could characterize on its own.
+ 
+While only absolutely required for proton decay searches, the \dword{pds} directly enhances physics capabilities for all  three DUNE physics drivers, opens up prospects for further physics explorations, and contributes to a more robust set of operating points of the detector that help all physics.   For beam neutrino physics, for example, the \dword{pds} improves the ability to pick up the relatively late time Michel electron produced from the decay of a stopped muon.  In addition to providing a useful calibration source for low energy electrons,  this aids an in situ statistical determination of the antineutrino content of the beam. While 75\% of $\mu^-$ are captured by the nucleus before they decay, all $\mu^+$ produce a Michel electron.  Michel electron tagging assists in background suppression for similar reasons in proton decay searches.  The $p\rightarrow K+\nu$ mode produces a distinct $K+\rightarrow\mu^+\rightarrow e+$ topology.  Picking up the Michel electron at the end of the sequence can help suppress topologically and calorimetrically similar signals from atmospheric neutrino induced $\mu^- p$ final states.  
+\fixme{Review Michel electron discussion}
 
-%\label{sec:fdsp-pd-intro}
+For \dword{snb} neutrino events, the \dword{pds} allows for proper location of the event vertex and the implementation of position-dependent corrections for charge loss due to electron capture and other transport effects in the TPC, leading to improved energy resolution and possibly greater sensitivity to underlying supernova dynamical models.  The \dword{pds} could open new areas of investigation.  The few-MeV scale solar neutrino interactions occur as isolated events in time and space.  Suppression of radiological and noise related backgrounds to pull out a signal for these events likely requires  redundant measurements with charge and light.  In the event that the DUNE TPC could not operate at its goal electric field of \SI{500}{V/cm}, the \dword{pds} can compensate for lessened charge detector performance.  Light production increases relative to that of free charge for lower \efield{}, and calorimetry using this light production offers a chance of maintaining the overall resolution of the detector.    For \dword{snb}physics, the \dword{pds} enables a triggering scheme that greatly assists the \dword{daq} system in maintaining minimal dead time.
+ 
+The remaining sections further develop the specification and design of a \dword{pds} that supports DUNE physics.
 
-The \dword{pds} is an essential detector subsystem of a DUNE \dword{spmod}. The detection of the prompt scintillation light signal, emitted in coincidence with an ionizing event inside the active volume, allows the determination of the time of occurrence of an event of interest with much higher precision than charge collected from ionization in the TPC. This capability is most critical for the primary DUNE science objectives that are uncorrelated with the timing signal from the neutrino source at \fnal, such as proton decay and neutrinos from a \dword{snb}, and for the ancillary science program including measurements of neutrino oscillation phenomena using atmospheric neutrinos. Although the configuration of \single and \dual \dwords{lartpc} led to significantly different solutions for the \dword{pds}, a number of scientific and technical issues impact them in a similar way, and the consortia for these two systems cooperate closely on these. See \voltitledp{}, Chapter~5.
+
+% Anne took this part out 12/27: The \dword{pds} is an essential detector subsystem of a DUNE \dword{spmod}. The detection of the prompt scintillation light signal, emitted in coincidence with an ionizing event inside the active volume, allows the determination of the time of occurrence of an event of interest with much higher precision than charge collected from ionization in the TPC. This capability is most critical for the primary DUNE science objectives that are uncorrelated with the timing signal from the neutrino source at \fnal, such as proton decay and neutrinos from a \dword{snb}, and for the ancillary science program including measurements of neutrino oscillation phenomena using atmospheric neutrinos. 
+
+
+
+% Anne took this part out 12/27: Timing information from the \dword{pd} and TPC systems allows determination of the drift time of the ionizing particles. Knowledge of the drift time provides localization of the event inside the active volume and %provides the ability to enables corrections to the measured charge for effects that depend on the drift path length, purity of \lar, or for specific locations in the detector %if there are due to non-uniformities.  This correction is important for %the reconstruction of the energy deposited by the ionizing event. In addition to allowing optimum track reconstruction, scintillation light measured by the system may also be used as a trigger and for improved calorimetric measurement in combination with charge measurement.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Scope}
+\fixme{Anne says: The chapter needs something on scope, e.g.,} 
+The scope of the \single \dword{pds}, provided by the DUNE \dword{pds} consortium, includes the selection and procurement of materials for, and the fabrication, testing, delivery and installation of light collectors (\dword{xarapu}), silicon photosensors (\dwords{sipm}), electronics, and a calibration and monitoring system for the system. The baseline components are listed in Table~\ref{tab:pds-config-scope}.
+
+\begin{dunetable}
+[\dword{pds} Baseline Configuration]
+{p{0.2\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+{tab:pds-config-scope}
+{\dword{pds} Baseline Configuration}
+Component  				& Description 						& Quantity		\\ \toprowrule
+Light collector 		& \dword{xarapu}							& 10 modules per \dword{apa}; \num{1500} total (\num{1000} single-sided; \num{500} double-sided)\\ \colhline
+Photosensor 			& Hamamatsu \dword{mppc} \SI{6}{mm}$\times$\SI{6}{mm}	& 192 \dword{sipm} per module; \num{228000} total	\\ \colhline
+dword{sipm} signal summing		& 6 passive $\times$ 8 active				& 4 circuits per module; \num{6000}  total	\\ \colhline
+Readout electronics		& Based on commercial ultrasound chip& 4 channels/module; \num{6000}  total	\\ \colhline
+Calibration and monitoring	& Pulsed UV via cathode-mounted diffusers & X per CPA; YY total			\\
+\end{dunetable}
+\fixme{add in missing numbers. anne}
+Although the configuration of \single and \dual \dwords{lartpc} led to significantly different solutions for the \dword{pds}, a number of scientific and technical issues impact them in a similar way, and the consortia for these two systems cooperate closely on these. See \voltitledp{}, Chapter~5.
 \fixme{Chapter 5 is hard-wired number for the DP-PDS chapter.}
 
-
-
-Timing information from the \dword{pd} and TPC systems allows determination of the drift time of the ionizing particles. Knowledge of the drift time provides localization of the event inside the active volume and %provides the ability to 
-enables corrections to the measured charge for effects that depend on the drift path length, purity of \lar, or for specific locations in the detector %if there are 
-due to non-uniformities.  This correction is important for %the 
-reconstruction of the energy deposited by the ionizing event. In addition to allowing optimum track reconstruction, scintillation light measured by the system may also be used as a trigger and for improved calorimetric measurement in combination with charge measurement.
-
-\subsection{Scope}
-\fixme{Anne says: The chapter needs something on scope, e.g., ``The scope of the \single \dword{pds}, provided by the DUNE \dword{pds} consortium, includes the selection and procurement of materials for, and the fabrication, testing, delivery and installation of systems to ... This includes light collectors, silicon photosensors, electronics, and a calibration and monitoring system'' AND it needs a  good illustration up front showing what the components are and how they fit together and fit in an APA frame.  } 
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Principle of Operation}
 \fixme{moved this up to intro for principle of operation (anne)}
 \lar is known to be an abundant scintillator and emits about \SI{40}{photons/keV} when excited  by minimum ionizing particles~\cite{Doke:1990rza} %,
@@ -53,20 +72,38 @@ it could be a powerful supplement to the charge measurement in some cases.
 \end{dunefigure}
 \fixme{end the part of "principle of operation" that moves to intro. This next part is design considerations. (anne)}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Design Considerations}
 \label{sec:fdsp-pd-des-consid}
 
 
 %\todo{\color{blue} Content: Segreto/Warner/Mualem}
 %rjw 11/23/18 Add an intro
-In this section, we first outline the physical design considerations for a \dword{pds} %photon detection system 
-to operate in a \lartpc followed by an overview of the four major components of the \dword{pds}, the light collectors, the silicon photosensors, the electronics, and the calibration and monitoring system.
+This section outlines the physical design considerations for a \dword{pds} %photon detection system 
+to operate in a \lartpc and introduces the four major components of the \dword{pds} listed in Table~\ref{tab:pds-config-scope}. %, the light collectors, the silicon photosensors, the electronics, and the calibration and monitoring system.
 
+%from sec n.2
+The principal task of the \dword{spmod} \dword{pds} is to measure the \dword{vuv} scintillation light produced by ionizing tracks in the TPC within the geometrical constraints of the \dword{apa} structure. The modular arrangement of the \dword{spmod} TPC calls for a configuration across the width of the cryostat starting with an \dword{apa} plane against one cryostat wall, and following with \dwords{apa} and \dwords{cpa} arranges as follows:  APA-CPA-APA-CPA-APA. This means that the central \dword{apa} will collect charge and see scintillation light from \lar volumes on both sides, whereas those by the wall collect from only one side. 
 
+\begin{dunefigure}[Schematic view of a DUNE \SI{10}{kt} \dword{spmod}]{fig:FarDet-interior-for-pds}
+{End-on schematic view of the active argon volume showing the four drift regions and anode-cathode plane ordering of the TPC inside the \dword{spmod}. The three rows of \dword{apa}s are two high and 25 deep.}
+\includegraphics[width=0.445\textwidth, trim=0mm 3.7mm 0mm 0mm, clip]{sp-apa-dune-sp-end-view.jpg}\hspace{0.01\textwidth}
+\end{dunefigure}
 
-In massive \lartpc{}s, photon collector systems that collect light from large areas and attempt to channel it %in an efficient way 
-efficiently towards much smaller photosensors that produce an electrical signal are cost-effective. 
-This paradigm for the detection of \lar scintillation light depends on the use of chemical wavelength shifters since most currently available commercial (cryogenic) large area photosensors are not directly sensitive to \dword{vuv} radiation. This is primarily due to the lack of transparency of fused silica and glass optical windows. 
+The \dword{pd} system must fit within the innermost wire planes of the \dwords{apa} and be  installable through slots in a (wound) \dword{apa} frame (see Chapter~\ref{ch:fdsp-apa}).  Individual \dword{pd} modules are restricted to a profile of dimensions \SI{2.3}{cm} $\times$ \SI{11.8}{cm} $\times$ \SI{209.7}{cm}.  Ten \dword{pd} modules per \dword{apa} comes to a total of \num{1500}.  Of these, \num{500} are mounted in central \dword{apa} frames and must collect light from both directions, and \num{1000} are mounted in frames  near the vessel walls and collect light from only one direction. Figure~\ref{fig:apa-frame-pds} illustrates the configuration for one \dword{apa}. 
+
+\fixme{(Anne added 12/27)}
+\begin{dunefigure}[Position in \dword{apa} frame of \dword{pds} modules]{fig:apa-frame-pds}
+{An \dword{apa} frame (on its side) showing the \num{13} separate stainless steel tube sections that bolt together to form a complete frame and the ten \dword{pd} modules (vertical in figure). Notice the five slots on the frame's side (top of figure) that they fit through. The other five slots are on the other side, not shown.}
+\includegraphics[width=1\textwidth]{sp-apa-frame-full-2.pdf}
+\end{dunefigure}
+
+%In massive \lartpc{}s, photon collector systems that collect light from large areas and attempt to channel it %in an efficient way 
+%efficiently towards much smaller photosensors that produce an electrical signal are cost-effective. 
+It is most cost-effective for the \dword{pds} in a massive \lartpc like the \dword{spmod} to collect scintillation light from large areas and channel it 
+efficiently towards much smaller photosensors that produce an electrical signal. 
+This paradigm %for the detection of \lar scintillation light 
+depends on the use of chemical wavelength shifters since most commercial cryogenic large area photosensors currently available are not directly sensitive to \dword{vuv} radiation. This is primarily due to the lack of transparency of fused silica and glass optical windows. 
 
 The most widely used wavelength shifter for \lar detectors is \dword{tpb}\footnote{1,1,4,4-Tetraphenyl-1,3-butadiene, supplier: Sigma-Aldrich\textregistered{}, \url{https://www.sigmaaldrich.com/}.}, which absorbs \dword{vuv} photons and re-emits them with a spectrum centered around \SI{420}{nm}, close to %where most commercial photosensors have their maximum quantum efficiency for photoconversion.
 the wavelength of maximum quantum efficiency for photoconversion in most commercial photosensors. 
@@ -81,20 +118,22 @@ the wavelength of maximum quantum efficiency for photoconversion in most commerc
 % Old paper VG with wrong results: Fluorescence Efficiency and Visible Re-emission Spectrum of Tetraphenyl Butadiene Films at Extreme Ultraviolet Wavelengths - Nucl.Instrum.Meth. A654 (2011) 116-121
 %Tetraphenyl Butadiene Emanation and Bulk Fluorescence from Wavelength Shifting Coatings in Liquid Argon - 	arXiv:1804.00011 [physics.ins-det] April 2018
 
-The \dword{pd} system must fit within the innermost wire planes of the \dwords{apa} and be  installable through slots in a (wound) \dword{apa} frame (see Chapter~\ref{ch:fdsp-apa}).  Individual \dword{pd} modules are restricted to a profile of dimensions \SI{2.3}{cm} $\times$ \SI{11.8}{cm} $\times$ \SI{209.7}{cm}.  Ten \dword{pd} modules per \dword{apa} comes to a total of \num{1500} modules.  Of these, \num{500} are mounted in central \dword{apa} frames and must collect light from both directions, and \num{1000} are mounted in frames  near the vessel walls and collect light from one direction.
 
-\fixme{reference illustration here! (Anne)}
 %The physical dimension of the \dword{pd} system is constrained by the need to fit within the innermost wire planes of the \dwords{apa} and to be installed through slots in the \dword{apa} mechanical frame after it is wound (see Chapter~\ref{ch:fdsp-apa}).  Individual \dword{pd} modules will be restricted to be within an envelope in the form of a long, thin box with dimensions \SI{2.3}{cm} $\times$ \SI{11.8}{cm} $\times$ \SI{209.7}{cm}.  There will be ten \dword{pd} modules per \dword{apa}, for a total of \num{1500} modules.  Of these, \num{500} will be mounted in central APA frames and will require the ability to collect light from both directions, and \num{1000} will be mounted in APA frames mounted near the vessel walls and will only require light collection from one direction.
 
 \fixme{Need a reference for the Ar39 abundance. (Anne asks: natural abundance of X with activity of Y? ``Natural abundance'' seems to need some quantifying... }
-A final but significant consideration for the \dword{pds} design is the presence in the \lartpc of the long-lived cosmogenic radioisotope \Ar39, which has a natural abundance with an activity of approximately \SI{1}{Bq/kg}~\cite{}. The isotope undergoes beta decay with a mean beta energy of \SI{220}{keV} with an endpoint of \SI{565}{keV}, and makes up $\sim$70\% of the radiological background signal.
+A final but significant consideration for the \dword{pds} design is the presence in the \lartpc of the long-lived cosmogenic radioisotope \Ar39, which has a natural abundance with an activity of approximately \SI{1}{Bq/kg}~\cite{}. The isotope undergoes beta decay %with 
+at a mean beta energy of \SI{220}{keV} with an endpoint of \SI{565}{keV}, and makes up $\sim$70\% of the radiological background signal.
 In the \SI{10}{kt} \dword{fd} modules this leads to a rate of more than \SI{10}{MHz} of very short ($\sim$\SI{1}{mm}) tracks uniformly distributed throughout the module, each of which produces several thousand \dword{vuv} scintillation photons. This continuous background impacts the \dword{daq}, trigger and spatial granularity required of the \dword{pds}.
 % rjw Wiki has ($1.01\pm0.08$) Bq/kg, but 1 is good enough for the purpose here.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Design Specifications}
 \label{sec:pds:des-specs}
 
-\fixme{put the spec-related info here (Anne)}
+\fixme{new spec table; content that follows needs revising. Anne}
+\input{generated/req-longtable-SP-FD}
+
 We distinguish two levels of %requirements 
 specifications for the \dword{pds} necessary to achieve the DUNE science objectives. The first %consists of the requirements on the 
 relates to measurement of physical parameters associated with events of scientific interest such as the event time and the energy of the observed particles. The second concerns %the specifications for 
@@ -150,69 +189,97 @@ Goal: The  \dword{fd} \dword{pds} shall detect sufficient light from events depo
 			& Enables energy measurement for \dword{snb} events with a precision similar to that from the TPC ionization measurement. \\ 
 \end{dunetable}
 
-% Replaced the \dword{pds} performance requirements table from the IDS with the auto generated specifications tables from docDB 6422 (the original template is docDB 11074)}
-%
-
-\input{generated/req-SP-FD-time-resolution-pds.tex} % 4
-\input{generated/req-SP-FD-light-yield.tex} % 3
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Design Overview} %new sec from anne
 \label{sec:pds:des-ov}
 
+\fixme{from top of old design chapter anne.}
+%The light collector design must optimize the costs of various components of the system while meeting the performance requirements.  It will use \dwords{sipm}, which provide a commercially available compact solution for photon measurement.  However, the response of these devices, which typically peaks in the visible range (>\SI{400}{nm}), is not well-matched to incident \SI{127}{nm} scintillation photons, so a wavelength shifter or some sort is required.  In addition, even though production cost and key performance parameters have improved significantly in recent years, covering the light detector surfaces with enough \dwords{sipm} to meet the physics requirements of the \dword{pds} would be cost-prohibitive. The light collector design must optimize the costs of various components of the system while meeting the performance requirements.  
+
+\fixme{fit this in:}
+The DUNE Single-Phase Photon Detector Design Report~\citedocdb{11644} provides many additional details on the design too specialized for the scope of this TDR.  
+ 
+While the ARAPUCA modules deployed in \dword{pdsp} collect light from only one direction, an advanced design called X-ARAPUCA can be deployed as either single-face or dual-face readout by using either an opaque reflector plate (single) or a second dichroic filter window (dual) on the second face. 
+Figure~\ref{fig:3dtpc-pd} shows how a light-collector module is incorporated into an \dword{apa}. An identical modular mounting scheme was used for each of the options investigated. One module spans the width of an \dword{apa}.
 %%% rjw 
-\subsubsection{Photon Collectors} 
+The  large-area light collectors are the core modular elements of the \dword{pds}.  They 
+convert incident \SI{127}{nm} scintillation photons into photons in the visible range (>\SI{400}{nm}) that the compact \dwords{sipm}, in turn,  convert to an electrical signal. The light collector design must optimize the costs of various components of the system while meeting the performance requirements.  %It will use \dwords{sipm}, which provide a commercially available compact solution for photon measurement.  However, the response of these devices, which typically peaks in the visible range (>\SI{400}{nm}), is not well-matched to incident \SI{127}{nm} scintillation photons, so a wavelength shifter or some sort is required.  In addition, e
+Even though production cost and key performance parameters of \dwords{sipm} have improved significantly in recent years, covering the light detector surfaces with enough of them to meet the physics requirements of the \dword{pds} would be cost-prohibitive. 
+%Since the size and cost of currently available \dwords{sipm} are not well matched to the performance requirements in the large-volume \dword{spmod}, t
+The light collector design aims to maximize the active \dword{vuv}-sensitive area of the \dword{pds} while minimizing the necessary photocathode (\dword{sipm}) coverage. This is detailed in Section~\ref{sec:fdsp-pd-design}. 
+%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Light Collectors} 
 \label{sssec:photoncollectors}
 
-%The core modular elements of the \dword{pds} are the large area photon collectors that 
-The  large area photon collectors are the core modular elements of the \dword{pds}.  They 
-convert incident \SI{127}{nm} scintillation photons into photons in the visible range (>\SI{400}{nm}), %which in turn are converted to an electrical signal by compact (\dwords{sipm}). 
-that the compact \dwords{sipm}, in turn,  convert to an electrical signal. 
-Since the size and cost of currently available \dwords{sipm} are not well-matched to the performance requirements in the large-volume \dword{spmod}, the photon collector design aims to maximize the active \dword{vuv}-sensitive area of the \dword{pd} module while minimizing the necessary photocathode (\dword{sipm}) coverage. This is detailed in Section~\ref{sec:fdsp-pd-design}. 
+
 %In the following we will distinguish between the terms photon \textit{collection} efficiency and photon \textit{detection} efficiency (PDE). Collection efficiency is the number of visible photons delivered to the \dwords{sipm} divided by the number of \dword{vuv} photons incident on the \dword{pd} module active area; this parameter is used to report results of calculations or simulations of predicted device performance independent of the \dword{sipm} used.  Detection efficiency is the number of detected \phel{}s from the \dword{sipm}(s) divided by the number of \dword{vuv} photons incident on the \dword{pd} module active area; this is generally the result of a direct measurement unless the detailed performance of the \dword{sipm} is known and divided out. 
 %The effective area of a \dword{pd} module is another useful figure-of-merit that is defined to be the photon detection efficiency multiplied by the photon collecting area of a \dword{pd} module. 
 
 %Numerous \dword{pd} photon collector module options were investigated prior to the formation of the \single \dword{pd} consortium, of which four were selected for further development. 
-\fixme{I would move the "DUNE investigated" text to the validation section and just describe the baseline design here (anne)}
-DUNE investigated numerous \dword{pd} photon collector module options prior to the formation of the \single \dword{pd} consortium, of which we selected four for further development. 
-Two of the designs, S-ARAPUCA\footnote{\textit{Arapuca} is the name of a simple trap for catching birds originally used by the Guarani people of Brazil.} (\textbf{S}tandard-) and X-ARAPUCA (e\textbf{X}tended-), use a relatively new concept that is scalable and may enable %has the potential for the  
-significantly better performance than the other approaches. Functionally, ARAPUCA is %functionally
- a light trap that captures wavelength-shifted photons inside boxes with highly reflective internal surfaces until they are eventually detected by \dwords{sipm}.  The two other designs are based on the use of wavelength-shifters and long plastic light guides coupled to \dwords{sipm} at the ends. Their performance meets the basic physics requirements but with only a small safety margin and they are not easily scalable within the geometric constraints of the \dword{spmod}. X-ARAPUCA is an evolution of the original ARAPUCA concept that combines the desirable characteristics of both a light guide and a photon trap. 
-Figure~\ref{fig:3dtpc-pd} shows a \threed model of the \single TPC %with a zoom in to 
-and a detail of the anode plane where the three photon collector technologies developed to full-scale prototypes for \dword{pdsp} are illustrated % visible; for illustration 
-the \dword{spmod} will %contain 
-use just X-ARAPUCA.
 
-\fixme{add arapuca to glossary? Anne}
+
+\fixme{I moved the "DUNE investigated" text to the validation section and moved the top of the light collector design text  1.2.1 here (anne)}
+
+The %\dword{pds} light collector uses the 
+ARAPUCA concept %described in Section~\ref{sssec:photoncollectors}, which 
+takes advantage of a new approach to \lar scintillation photon detection where the effective photon detection area is increased by trapping photons inside a box (cell) with highly reflective internal surfaces until reflections guide them to active photosensors of relatively small area. % \dword{sipm}~\cite{arapuca_jinst}. 
+
+Photon trapping is achieved through a novel use of wavelength-shifting and the technology of the dichroic shortpass optical filter. These commercially available filters are created by using multilayer thin films that %have the property of being 
+are highly transparent 
+to photons with a wavelength below a tunable cutoff, %while being 
+with transmission typically greater than 95\%, yet almost perfectly reflective to photons with a wavelength above the cutoff.  Such a filter coated with either one or two different wavelength-shifters, depending on the detailed implementation, forms the entrance window to a flat cell whose %other 
+internal surfaces are covered by highly reflective acrylic foils
+%(3M-Vikuiti ESR \footnote{3M Vikuiti\texttrademark\ ~foils. https://en.wikipedia.org/wiki/Vikuiti.}, for example), 
+except for a small fraction %of the surface that is 
+occupied by \dwords{sipm}.
+
+%To act as a photon trap, the wavelength-shifter deposited on the outer face of the dichroic filter must have its emission wavelength less than the cut-off wavelength of the filter, below which transmission is typically greater than 95\%. 
+For the collector to act as a photon trap, the emission wavelength of the wavelength-shifter deposited on the outer face of the dichroic filter must be less than the cutoff wavelength of the filter. 
+%, below which transmission is typically greater than 95\%. 
+The transmitted photons pass through the filter where they encounter a second wavelength shifter %either on the inner surface of the filter or coated on the reflecting inner surfaces of the box, 
+with an emission spectrum greater than the cutoff wavelength, thus trapping them. The location of the second wavelength shifter is different in the single- and dual-face cells. \fixme{In a single-face cell, the filter is coated also on the inside surface with a wavelength shifter; in a dual-face cell check and come back}
+
+Trapped photons reflect off the inner walls and the filter surface(s) (of reflectivity typically greater than \SI{98}{\%}) 
+and have a high probability %to be incident 
+of impinging on a \dword{sipm} before being lost to absorption. The concept is illustrated in Figure~\ref{fig:arapuca}. 
+ A proof-of-principle validation of the ARAPUCA concept is described in Section~\ref{sec:proof-principle}.
+%It is easy to show that, for small values of \dword{sipm} coverage of the internal surface, the amplification factor is equal to $A=1/(2(1-R))$, where R is the average value of the reflectivity of the internal surfaces; for an average reflectivity of 0.95 the amplification factor is equal to ten.
+
+\begin{dunefigure}[Schematic representation of the ARAPUCA operating principle.]{fig:arapuca}
+{Schematic representation of the ARAPUCA operating principle. This example assumes a filter cutoff of \SI{400}{nm}.}
+%  %\includegraphics[height=5cm]{pds-arpkscheme}   
+\includegraphics[height=5cm]{pds-arapuca-concept}   
+\end{dunefigure}
+
+
 \fixme{Can you add arrows to the three photon collectors in the detail image? It's not clear to me. And I changed ``visible for illustration'' to ``illustrated'' both in text and caption. Anne}
-%%%%%%%%%%
+
 \begin{dunefigure}[\threed model of \dwords{pd} in the \dword{apa}.]{fig:3dtpc-pd}
 {\threed model of \dwords{pd} in the \dword{apa}. The model on the left shows the full width of the TPC with the configuration APA-CPA-APA-CPA-APA. The figure on the right shows a %zoom in to 
 detail of the top far side of the TPC where three photon collector technologies deployed in \dword{pdsp} are %visible for illustration -- 
-illustrated; the final \dword{detmodule} will contain just X-ARAPUCA.}
+illustrated; the final \dword{detmodule} will contain just \dword{xarapu}.}
 \includegraphics[height=6cm]{pds-dune-sp-tpc-3d.jpg}
 \includegraphics[height=6cm]{pds-dune-sp-tpc-3d-zoom.jpg}
 \end{dunefigure}
-%%%%%%%%%%
+
 \fixme{keep illustration here, move the following to validation or full description in "design" chapter (anne)}
-Though the ARAPUCA concept is relatively recent -- it was first proposed in 2015 -- 
-%and accepted for installation in \dword{pdsp} in mid-2016 
-a series of prototypes on an evolving design has resulted in detection efficiency measurements ranging from  \num{0.4}\% to \num{1.8}\%, demonstrating the potential for substantially higher performance than the light guide designs that were also considered. \dword{mc} simulations show that %detection efficiencies at the level of several per cent could be reasonably reached with improvements to the basic design. 
-improvements to the basic design could lead to detection efficiencies at the level of several per cent. 
-The concept also naturally allows for finer spatial segmentation along the detector modules than is the case for the light guide designs. 
-\fixme{along a module? or within a module? (Anne)}
-The baseline design, the X-ARAPUCA detailed in Section~\ref{ssec:fdsp-pd-pc-arapuca}, is an evolution of the ARAPUCA concept that combines the light trapping capability of S-ARAPUCA with the collection and transport capabilities of light guides. 
 
+The baseline design, the \dword{xarapu} detailed in Section~\ref{ssec:fdsp-pd-pc-arapuca}, is an evolution of the ARAPUCA concept that combines the light trapping capability of \dword{sarapu} with the collection and transport capabilities of light guides. 
+In addition, the design has the flexibility to accommodate greater demands, such as might be desired for SBN physics, without major changes to the design and that  could be adopted quite late in the final design stages. 
+Two wavelength-shifter-coated light guide options were also  investigated in detail over several years. %the concept of 
 
+%%%%%%%%%%
 \subsubsection{Silicon Photosensors} 
-Because of the size constraints imposed by the \dword{apa}, in each photon collector concept considered for the \dword{spmod}, % the final stage of converting a visible wavelength photon into an electrical signal is performed by a compact silicon photosensor rather than a traditional photomultiplier 
-a compact silicon photosensor rather than a traditional photomultiplier performs the final stage of converting a visible wavelength photon into an electrical signal. %due to the physical constraints of the \dword{apa}. 
+
+Because of the size constraints imposed by the \dword{apa}, in each light collector concept considered for the \dword{spmod}, 
+a compact silicon photosensor rather than a traditional photomultiplier performs the final stage of converting a visible wavelength photon into an electrical signal. 
 Distinct from most previous HEP applications of these devices, they must operate reliably for many years at \lar temperatures. 
-Experience with a promising early candidate that failed in later batches due to an unadvertised change in the fabrication process emphasizes the importance of a multi-source approach with active engagement of potential vendors to develop a device expressly for cryogenic operation. 
+Experience with a promising early candidate that failed in later batches due to an unadvertised change in the fabrication process emphasizes the importance of a multi-source approach with active engagement of potential vendors to develop a device expressly for cryogenic operation.  Based on extensive testing and experience with the vendor, we have selected a \SI{6}{mm}$\times$\SI{6}{mm} \dwords{mppc} produced by Hamamatsu\footnote{Hamamatsu\texttrademark{} Photonics K.K., \url{http://www.hamamatsu.com/}.} (Japan) as the current baseline \dword{sipm} device. 
 
 %rjw 12/1/18 the following moved from the Design section
 The following summarizes the most salient guiding principles and requirements for this \dword{sipm}-based photodetection system.
-\fixme{this should be under design considerations (Anne)}
+\fixme{this seems like way too much information in an overview section (Anne)}
 
 \begin{itemize}
 \item  The physics goals and the photon collection implementation determine the full suite of \dword{sipm} %requirements 
@@ -243,7 +310,7 @@ Experience acquired from \dword{pdsp} construction and operation will inform QA/
 \fixme{Also: the above does not strike me as a principle or a requirement/spec. It is  to-do item. Anne}
 
 \item %The optimal \dword{sipm} may depend on the photon collector option selected.  All  
-The photon collector options currently under consideration involve shifting the \SI{127}{nm} \lar scintillation light to 
+The light collector options currently under consideration involve shifting the \SI{127}{nm} \lar scintillation light to 
 longer wavelengths, but each may present a different  spectral distribution to the \dword{sipm}. 
 %In this case, 
 We expect this to be at most a 15-20\% effect, and not a driving factor, 
@@ -255,7 +322,7 @@ however we may delay the final selection of the \dword{sipm} might to allow an o
 should allow for tileable arrays to be constructed 
 to facilitate high packing efficiency across the end of the bars and efficient space utilization inside the \dword{apa} frame. 
 
-\fixme{This prev item is not clear to me (Anne). This is where I need a good illustration. Packaging vs packing is confusing here, too.}
+\fixme{ Packaging vs packing is confusing here. Anne}
 
 %\item Current candidate \dwords{sipm} have an area of less than \SI{1}{cm$^2$}, providing a much finer granularity than needed. In addition, the cold feedthrough size and space in the \dword{apa}s for cable runs limits  the number of \dword{pd} signal and power cables. These constraints, and other considerations, imply that the signal output of \dwords{sipm} must be electrically ganged. 
 %The degree of ganging depends on the photon collectors technology and currently ranges from six \dwords{sipm} for the light guides to \num{48} or more for the ARAPUCA modules. 
@@ -316,11 +383,11 @@ it is possible that this option will allow removal of the \Ar39 background, whic
 
 Implementing 
 This option% would 
-requires good visible light sensitivity from the photon collectors; this is not the case for current implementation of the X-ARAPUCA. Either changing the external X-ARAPUCA wavelength-shifter or leaving some detectors uncoated could enable this capability. %The capability could be incorporated e. 
+requires good visible light sensitivity from the photon collectors; this is not the case for current implementation of the \dword{xarapu}. Either changing the external \dword{xarapu} wavelength-shifter or leaving some detectors uncoated could enable this capability. %The capability could be incorporated e. 
 The mechanical and operational impact of installation of a coated reflective foil on the cathode is under discussion with the \dword{hv} consortium.
 
 \subsubsection{Xenon Doping}
-This option, described in Section~\ref{sec:fdsp-pd-enh-xenon}, involves doping the \lar volume with trace amounts of xenon (\SIrange{2}{10}{ppm}), which would result in the conversion of the \lar \SI{127}{nm} light to \SI{174}{nm} light throughout the \dword{lar} volume and could also increase the total light yield. This option would  simplify the fabrication and lower the cost of X-ARAPUCA since the thin coating of wavelength shifter on the dichroic filter windows would no longer be required.
+This option, described in Section~\ref{sec:fdsp-pd-enh-xenon}, involves doping the \lar volume with trace amounts of xenon (\SIrange{2}{10}{ppm}), which would result in the conversion of the \lar \SI{127}{nm} light to \SI{174}{nm} light throughout the \dword{lar} volume and could also increase the total light yield. This option would  simplify the fabrication and lower the cost of \dword{xarapu} since the thin coating of wavelength shifter on the dichroic filter windows would no longer be required.
 
 %rjw not clear whether to keep this section
 \subsection{Detailed Design Specifications}
