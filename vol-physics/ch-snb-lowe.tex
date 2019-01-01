@@ -266,7 +266,7 @@ $\snowglobes$ to draw useful conclusions.
 
 \subsubsection{Smearing Matrices }
 
-\subsubsection{Photons}
+%\subsubsection{Photons}
 
 \subsubsection{Pointing}
 
@@ -795,6 +795,71 @@ core-collapse supernovae.
 We note that the better one can understand the astrophysical nature of core-collapse supernovae, the easier it will be to extract information about particle physics.  DUNE's capability to characterize the $\nu_e$ component of the signal is unique and critical.
 
 \subsubsection{Spectral Parameter Fits}
+
+% From Erin
+
+We have investigated how well it will be possible to fit to the supernova
+spectral parameters, to determine, for example, the $\epsilon$
+parameter related to the binding energy of the supernova.  We 
+use SNOwGLoBES to model signals described by the pinched-thermal form.
+
+We have developed a
+forward fitting algorithm requiring a SNOwGLoBES binned energy
+spectrum for a supernova at a given distance and a ``true" set of
+pinched-thermal parameters $(\alpha^0, \langle E_\nu \rangle^0,
+\varepsilon^0)$. As an example, we define the true parameter values as
+$(\alpha^0, \langle E_\nu \rangle^0, \varepsilon^0) = (2.5, 9.5,
+5\times 10^{52})$, with $\varepsilon$ in ergs/second, assumed
+integrated over a ten-second burst.
+We focus on the electron neutrino flux \cite{rosso}. The algorithm uses this spectrum as a ``test spectrum" to compare against a grid of energy spectra generated with many different combinations of $(\alpha, \langle E_\nu \rangle, \varepsilon)$. To quantify these comparisons, the algorithm employs $\chi^2$ minimization techniques and uses the following definition of the $\chi^2$ function \cite{ines}:
+
+\begin{equation}
+    \chi^2(x) = \sum_{i=1}^{N_b} \frac{\big[N_i(\alpha, \langle E_\nu \rangle, \varepsilon) - N_i(\alpha^0, \langle E_\nu \rangle^0, \varepsilon^0)\big]^2}{\sigma_i^2(x)}
+    \label{chi2function}
+\end{equation}
+
+Equation \ref{chi2function} contains the following variables:
+\begin{itemize}
+    \setlength\itemsep{0.1em}
+    \item $N_b$ is the number of bins for the energy spectra.
+    \item $N_{i}$ is the number of events in bin $i$.
+    \item $\sigma_i$ is the uncertainty of the contents in bin $i$. This technical note uses Poisson uncertainties.
+    \item $(\alpha, \langle E_\nu \rangle, \varepsilon)$ are the set of model parameters used to generate an energy spectrum in the grid.
+    \item $(\alpha^0, \langle E_\nu \rangle^0, \varepsilon^0)$ are the model parameters used to generate the test spectrum.
+\end{itemize}
+
+Fig. \ref{exampleFitting} shows an example of $\chi^2$ minimization of a test spectrum against an arbitrary grid element. The forward fitting algorithm implements Eq. \ref{chi2function} to compare the test spectrum to all elements in the grid, and the smallest $\chi^2$ corresponds to the grid element that best fits the test spectrum.
+
+\begin{dunefigure}[Test spectrum for SN parameter fitting]{exampleFitting}{Event rates calculated using SNOwGLoBES for a test spectrum and an example grid element.}
+	\includegraphics[scale = 0.25]{SuperimposedTestSpectrumGridElements3.png}
+\end{dunefigure}
+
+A test spectrum input into the forward fitting algorithm produces a set of $\chi^2$ values for every element in a grid. While the smallest $\chi^2$ value determines the best fit to the test spectrum, there exists other grid elements that reasonably fit the test spectrum according to their $\chi^2$ values. The collection of these grid elements help determine the parameter measurement uncertainty, and we represent this using ``sensitivity regions" in 2D spectral parameter space. We can use three sets of 2D parameter spaces: $(\langle E_\nu \rangle, \alpha)$, $(\langle E_\nu \rangle, \varepsilon)$, and $(\alpha, \varepsilon)$.
+
+One ``point" in 2D parameter space encompasses several grid elements, e.g., the $(\langle E_\nu \rangle, \alpha)$ space contains different $\varepsilon$ values for a given values of $\langle E_\nu \rangle$ and $\alpha$. To determine the $\chi^2$ value, we profile over $\varepsilon$ to select the grid element with the smallest $\chi^2$. We determine the sensitivity regions by placing a cut of $\chi^2 = 6.25$ corresponding to a 90\% coverage probability for three free parameters \cite{pdg}.
+
+\begin{dunefigure}[Example of distance effect]{exampleAsimovDistance}{Sensitivity regions generated using the Asimov study in $(\langle E_\nu \rangle, \alpha)$ space for three different supernova distances. SNOwGLoBES used a smearing matrix with 15\% Gaussian resolution, a cross section model from MARLEY \cite{marley}, and a step efficiency function with a 5 MeV detection threshold..}
+	\includegraphics[scale = 0.37]{alphaVsE0_15Gaus_PNXscn_StepEffic_distances_BetterLabels.png}
+  \end{dunefigure}
+
+
+
+
+Comparing sensitivity regions corresponding to different combinations of test spectrum and grid resolution aids in understanding how regions shift and grow in 2D parameter space. We can also discern features and patterns present in the 2D contour area plots. Fig. \ref{ResolutionStudy_SensitivityRegions} shows sensitivity regions for different combinations of test spectrum and grid resolution. The figure shows how the regions change as the assumptions change, and we also observe how the best-fit parameters shift in 2D parameter space. These shifts represent the biases on the best-fit parameters.
+
+\begin{dunefigure}[Resolution study]{ResolutionStudy_SensitivityRegions}{Sensitivity regions for a test spectrum produced with 30\% resolution as input into four different grids: a grid produced with resolution values of 0\% (black), 10\% (red), 20\% (green), and 30\% (blue). The best-fit parameters (stars) are also plotted. The contour areas increase as the grid resolution increases because more grid elements reasonably match the test spectrum as the assumed and true resolutions differ less.}
+	\includegraphics[scale = 1.1]{ResolutionStudy_SensitivityRegions.png}
+\end{dunefigure}
+
+
+
+We have used this method to study the effect of detector parameters,
+such as energy resolution, energy threshold, energy scale, and cross
+section.
+% Not sure if these should go in the TDR somewhere
+
+
+
 
 \section{Additional Astrophysical Neutrinos}
 \label{sec:physics-snblowe-other}
