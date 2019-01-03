@@ -64,7 +64,18 @@ Monte Carlo studies of the $p\to K^+ \bar{\nu}$ signal and corresponding atmosph
 In a proton decay via $p\rightarrow K^{+} \bar{\nu}$, the charged kaon may interact on its way out of the nucleus, and these final state interactions significantly modify the observable distributions in the detector. 
 
 The simulation of nucleon decay events is performed using the GENIE Neutrino Monte Carlo Generator (GENIE) \cite{genie} v.2.12.10 . A total of 68 single-nucleon exclusive decay channels listed in the 2016 update of the PDG book is available in GENIE. The list includes two-, three- and five-body decays. 
-%The numbering in the decay modes follows the PDG convention.  The primary decay is simulated using a phase-space-decay generator. For bound nucleons, the nuclear environment is simulated as in neutrino scattering. The nucleon is assigned a Fermi momentum and removal energy and it is off the mass shell.  The relativistic Fermi gas (RFG) nuclear model is used with a Bodek-Ritchie  tail to incorporate short range nucleon-nucleon correlations \cite{BRtail}.  For $^{40}$Ar the Fermi momentum has a default value of 242.0 MeV/c with binding energy = 27.0 MeV. Fig \ref{fig:pdcy_m} shows the momentum distribution for a bound proton in $^{40}$Ar. If a bound nucleon decays the remaining nucleus can be in an excited state and will typically de-excite by emitting nuclear fission fragments, nucleons, and photons. At present de-excitation photon emission is simulated only for oxygen (Cherenkov detectors) \cite{geniemanual}. 
+%The numbering in the decay modes follows the PDG convention.  
+The primary decay is simulated using a phase-space-decay generator. 
+%For bound nucleons, the nuclear environment is simulated as in neutrino scattering. 
+%The nucleon is assigned a Fermi momentum and removal energy and it is off the mass shell.  
+The relativistic Fermi gas (RFG) nuclear model is used with a Bodek-Ritchie  tail to incorporate short range nucleon-nucleon correlations (add citation).
+%\cite{BRtail}. 
+For $^{40}$Ar the Fermi momentum has a default value of 242.0 MeV/c with binding energy = 27.0 MeV. 
+%Fig \ref{fig:pdcy_m} shows the momentum distribution for a bound proton in $^{40}$Ar. 
+If a bound nucleon decays the remaining nucleus can be in an excited state and will typically de-excite by emitting nuclear fission fragments, nucleons, and photons. At present de-excitation photon emission is simulated only for oxygen.  However, measurements of argon de-excitation gamma in LArTPC detectors have been reported by the ArgoNeuT collaboration (cite new paper),
+%\cite{Argoneut}, 
+where energy depositions and positions of these depositions have been compared to those from simulations of neutrino-argon interactions using the FLUKA Monte Carlo generator. 
+%\cite{geniemanual}. 
 The propagation of the decay products is simulated using an intra-nuclear cascade Monte Carlo (MC). The probability $\lambda$ that a particle will undergo an interaction is governed by the free cross section $\sigma$ and the density of nucleons $\rho$,
 \begin{equation}
 \lambda(E,r)= \frac{1}{\sigma \rho(r)}.
@@ -87,7 +98,7 @@ is used when available. $hA2015$ only considers elastic scattering, and therefor
 \subsubsection{Event reconstruction}
 \label{sec:event-reconstruction}
 
-[Add some details about reconstruction?]
+\todo{Refer to reconstruction chapter}
 
 Track reconstruction efficiency for a charged particle $x^{\pm}$ is defined as 
 \begin{equation}
@@ -138,6 +149,7 @@ which is defined to be the median over all track points where the residual range
 Fig \ref{fig:PIDA} shows the $<$PIDA$>$ performance for kaons (from proton decay), muons (from kaon decay) and protons produced by atmospheric neutrino interactions. The tail with lower values in each distribution is due to cases where the decay/stopping point was missed by the track reconstruction. The tail with higher values is caused when a second particle overlaps at the decay/stopping point causing higher values of $dE/dx$ resulting in higher values of PIDA. In addition ionization fluctuations smear out this distributions.
 
 \subsubsection{Backgrounds}
+\label{sec:ndkbkgd}
 
 The main background for proton decay searches is interactions of  atmospheric neutrinos. In this analysis, the Bartol flux is used. \todo{Add citation.  Do we need details?}
 %\cite{Bartolref} at Soudan location is used, the Bartol flux is a MC calculation of the atmospheric neutrino fluxes, the calculations starts with simulations of the interactions of the primary cosmic rays with the atmosphere. The earth is assumed to be a sphere and primaries are generated with random positions and angles. The effect of the geomagnetic field on the interacting cosmic rays is included by applying the cutoff using the back-tracing technique \cite{Bartolref} . 
@@ -187,7 +199,7 @@ was used with AdaBoost as the boosted algorithm. A total of 14 variables are use
   \item CNN score: Image recognition score
   \end{itemize} 
 %Fig \ref{fig:BDT_var} shows the BDT variables for signal and background. The BDT consist of 2000 tree with maximum depth of eight nodes.
-\todo{Add paragraph on CNN.} Including the CNN score in the BDT analysis gives a 40\% background reduction.
+As an independent method of identifying proton decay events, image classification using convolutional neural networks (CNNs) can be performed using 2D images formatted from recob::wire objects of DUNE MC events. The image classification provides a single score value as a metric of whether any given event is consistent with a proton decay, and this score can be used as a powerful discriminant for event identification.  Including the CNN score in the BDT analysis gives a 40\% background reduction.
 The BDT response is shown in Fig. \ref{fig:BDT_response}. 
 
 \begin{dunefigure}
@@ -196,7 +208,7 @@ The BDT response is shown in Fig. \ref{fig:BDT_response}.
 \includegraphics[width=0.8\textwidth]{overtrain_BDT.pdf}
 \end{dunefigure} 
 
-Figure~\ref{BDT_eff} shows the efficiency of the BDT selection for preselected signal and background events. The total efficiency can be calculated by multiplying the preselection efficiency by the BDT efficiency.  (For example, for a BDT signal efficiency of 30\%, the background BDT efficiency is $\sim 10^{-5}\%$.  The overall efficiency is $15\% = 30\% \times 50\%$ for signal and $\sim10^{-6} \% = 17.5\% \times \sim 10^{-5}\%$ for background, equivalent to $\sim$1 background event per Mton-year.)
+Figure~\ref{fig:BDT_eff} shows the efficiency of the BDT selection for preselected signal and background events. The total efficiency can be calculated by multiplying the preselection efficiency by the BDT efficiency.  (For example, for a BDT signal efficiency of 30\%, the background BDT efficiency is $\sim 10^{-5}\%$.  The overall efficiency is $15\% = 30\% \times 50\%$ for signal and $\sim10^{-6} \% = 17.5\% \times \sim 10^{-5}\%$ for background, equivalent to $\sim$1 background event per Mton-year.)
 
 \begin{dunefigure}
 [BDT efficiency for signal and background]{fig:BDT_eff}
@@ -222,7 +234,7 @@ Figure~\ref{fig:event_signal} shows a signal event with high BDT response value 
 
 \subsubsection{Potential improvements}
 
-\todo{Add recent work}
+\todo{Waiting on input from p->Knu subgroup}
 
 %\begin{description}
 %\item[Impact of nuclear effects:] Plot showing MC truth multiplicity and kinetic energy distributions of particles exiting Ar nucleus for selected nucleon decay modes. Before/after final state interactions in Ar nucleus.
@@ -257,12 +269,9 @@ Some discussion here: Relation to current limit from SK. Emphasize discovery (co
 \subsection{Sensitivity to other key nucleon decay modes}
 \label{subsec:nonaccel-ndk-other}
 
-\todo{Aaron will provide n->Ke, what else?}
+Another potential mode for a baryon number violation search is the decay of the neutron into a charged lepton plus meson, i.e.~$n\rightarrow e^{-}K^{+}$. The reconstruction software for this analysis is the same as for the $p\rightarrow \bar{\nu} K^{+} $ analysis; the analysis again includes an MVA with a boosted decision tree that includes image classification (CNN) score as an input. To calculate the lifetime sensitivity for this decay mode the same systematic uncertainties and procedure is used. The final selection efficiency for this channel is 23.4\%, with a background efficiency of 5$\times 10^{-4}$ \%, which corresponds to $\sim$15 background events per Mton-year. The lifetime sensitivity for a 400~kton-year exposure is 5.4$\times 10^{33}$~years. As in the previous analysis, there are challenges that come from kaon FSI and shower reconstruction that need to be addressed; nevertheless, with the current reconstruction and analysis tools, the DUNE FD technology can improve the lifetime limit for this particular channel by two orders of magnitude.
 
-\begin{description}
-\item[Sensitivity:] Plot or table summarizing signal efficiency, background rate, and sensitivity at fixed exposure for other selected nucleon decay modes. Important other modes to highlight: proton to charged lepton plus neutral kaon, proton to charged lepton plus unflavored neutral meson.
-\end{description}
-
+The sensitivity to the $p \rightarrow e^{+} \pi^0$ mode has also been calculated. For this analysis, reconstruction is not applied, and true quantities are used as inputs to a boosted decision tree to isolate events that contain a positron and two photons from the $\pi^0$ decay.  Energy smearing is applied to simulate the effects of reconstruction.  Applying the same selection to the atmospheric neutrino background and calculating the limit yields a sensitivity for a 20-year exposure in the range of 1.2 to 1.5 $\times 10^{34}$~years depending on the level of energy smearing (in the range 5-30\%).  This analysis is preliminary, but it indicates that DUNE can achieve a sensitivity comparable to Super K's current limit of 1.6 $\times 10^{34}$~years.
 
 \subsection{Detector requirements for nucleon decay searches}
 \label{subsec:nonaccel-ndk-requirements}
@@ -283,36 +292,122 @@ We expect that \dword{protodune} data taken with charged particle beams at CERN 
 provide important sample of events to train and improve on reconstruction algorithms 
 and the resulting $dE/dx$ resolution.
 
-\begin{description}
-\item[Trigger efficiency:] Plot or table illustrating nucleon decay event trigger efficiency as a function of efficiency/coverage of photon detection system. [I don't think we will have this.]
-\end{description}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{N-Nbar oscillations}
 \label{sec:nonaccel-nnbar}
 
-Baryon number non-conservation can also be manifested by neutron-antineutron oscillations leading to subsequent antineutron annihilation with a neutron or a proton. This annihilation event will have a distinct signature of a vertex with several emitted light hadrons, with total energy of twice the nucleon mass and net momentum zero. The ability to re-construct these hadrons correctly and measure their energies is key to the identification of the signal event. The main background for these $n\bar n$ annihilation events is caused by atmospheric neutrinos. Most commonly mis-classified events are neutral current deep inelastic scattering events without a lepton in the final state. As above, nuclear effects and final state interactions make the picture more complicated and are probably the major component of the systematic uncertainty for the sensitivity studies carried out thus far.  Initial signal vs background discrimination studies have been performed using convolutional neural networks resulting in an equivalent sensitivity for the $n\rightarrow \bar n$ oscillation lifetime of $1.6 \times 10^9$~s at 90\% confidence level, a factor of 5 improvement on the current limit from Super-Kamiokande.
-More information about particle identification and energy measurements will be provided by the \dword{protodune} experiment with charged particle beams. 
-\todo{Will add more week 11/12 (waiting on tech note)}
 \subsection{Motivation for $\Delta$B=2 physics and possible experimental approaches}
 \label{subsec:nonaccel-nnbar-intro}
 
-\begin{description}
-\item[Annihilation modes:] Plot or table giving branching ratios for antineutron annihilation modes applicable to intranuclear searches.
-\end{description}
+Neutron-antineutron ($n - \bar{n}$) oscillation is a baryon number violating process that
+has never been observed but is predicted by a number of Beyond Standard Model
+theories (cite). In this context, baryon number conservation is considered an accidental
+symmetry rather than a fundamental one, which means baryon number violation
+does not stand against the fundamental gauge symmetries. Discovery of baryon
+number violation would have implications about the source of matter-antimatter
+symmetry in our universe, per Sakharov’s conditions for such asymmetry to arise (cite).
+The neutron-antineutron oscillation ($n − \bar{n}$ or n-nbar) process in particular violates
+baryon number by two units, and therefore could also have further implications on
+the smallness of neutrino masses (cite). The $n - \bar{n}$ process is one of many possible baryon number violating processes that DUNE can search for. Searches for this process with
+both free neutrons and nucleus-bound neutron states have been continued efforts
+since 1980s. The current best 90\% C.L. limits on the (free) neutron oscillation
+lifetime from free and nucleus-bound n-nbar searches are $8.6\times10^7$~s and $2.7\times 10^8$~s, respectively (cite).
 
+Neutron-antineutron oscillations can be detected via the subsequent antineutron annihilation with a neutron or a proton. Table~\ref{tab:nnbar-br} shows the branching ratios for the antineutron annihilation modes applicable to intranuclear searches.  This annihilation event will have a distinct signature of a vertex with several emitted light hadrons, with total energy of twice the nucleon mass and net momentum zero. The ability to reconstruct these hadrons correctly and measure their energies is key to the identification of the signal event. The main background for these $n - \bar{n}$ annihilation events is caused by atmospheric neutrinos. Most commonly mis-classified events are neutral current deep inelastic scattering events without a lepton in the final state. As above, nuclear effects and final state interactions make the picture more complicated.
+
+\begin{dunetable}
+[n-nbar annihiliation modes]
+{$^c^c|^c^c}
+{tab:nnbar-br}
+{Effective branching ratios for antineutron annihilation in $^{40}$Ar, as implemented
+in GENIE}
+\\
+ \multicolumn{2}{^c}{$\bar{n}+p$} & \multicolumn{2}{^c}{$\bar{n}+n$}\\
+ \rowtitlestyle
+         Channel & Branching ratio & Channel & Branching ratio \\ \toprowrule
+         $\pi^{+}\pi^{0}$ & 1.2\% & $\pi^{+}\pi^{-}$ & 2.0\% \\ \colhline
+         $\pi^{+}2\pi^{0}$ & 9.5\% & $2\pi^{0}$ & 1.5\% \\ \colhline
+         $\pi^{+}3\pi^{0}$ & 11.9\% & $\pi^{+}\pi^{-}\pi^{0}$ & 6.5\% \\ \colhline
+         $2\pi^{+}\pi^{-}\pi^{0}$ & 26.2\% & $\pi^{+}\pi^{-}2\pi^{0}$ & 11.0\% \\ \colhline
+         $2\pi^{+}\pi^{-}2\pi^{0}$ & 42.8\% & $\pi^{+}\pi^{-}3\pi^{0}$ & 28.0\% \\ \colhline
+         $2\pi^{+}\pi^{-}2\omega$ & 0.003\% & $2\pi^{+}2\pi^{-}$ & 7.1\% \\ \colhline
+         $3\pi^{+}2\pi^{-}\pi^{0}$ & 8.4\% & $2\pi^{+}2\pi^{-}\pi^{0}$ & 24.0\% \\ \colhline
+          &  & $\pi^{+}\pi^{-}\omega$ & 10.0\% \\ \colhline
+          &  & $2\pi^{+}2\pi^{-}2\pi^{0}$ & 10.0\% \\
+\end{dunetable}
 
 \subsection{Sensitivity to intranuclear neutron-antineutron oscillations in DUNE}
 \label{subsec:nonaccel-nnbar-dunesensitivity}
 
-\begin{description}
-\item[Impact of nuclear effects:] Plot showing MC truth of total event kinetic energy and/or momentum distributions. Before/after final state interactions in Ar nucleus.
-\item[Experimental signature:] Event display of reconstructed 3D hits in LAr for a selected n-nbar event and an atmospheric neutrino background event.
-\item[Selection:] Plot or table illustrating n-nbar event selection, and corresponding signal efficiency and background rates.
-\item[Sensitivity:] Plot of n-nbar oscillation lifetime sensitivity versus exposure, or versus years.
-\end{description}
+The simulation of this process has been developed and was implemented in GENIE as of version v.2.12 (cite Jeremy thesis). The implementation of this process in GENIE makes use of GENIE's existing modeling of Fermi momentum and binding energy for both the oscillating neutron and the nucleon with which the resulting antineutron annihilates.   Once a neutron has oscillated to an antineutron in a nucleus, the antineutron has a 18/39 chance of annihilating with a proton, and a 21/39 chance of annihilating with a neutron. The energies and momenta of the annihilation products are assigned randomly but consistently with four-momentum conservation. The products of the annihilation process follow the branching fractions (shown in Table~\ref{tab:nnbar-br}) measured in low-energy antiproton annihilation on hydrogen, biased as necessary by conservation of total available energy in the annihilation. Since the annihilation products are produced inside the nucleus, GENIE further models the re-interactions of those products as they propagate in the nucleus (until they escape the nucleus).  The final state interactions (FSI) are simulated using the $hA2015$ model in GENIE as described in Section~\ref{sec:final-state-interactions}.
 
+Figure \ref{fig:pi_FSI_m} shows the momentum distributions for charged and neutral pions at the vertex (before FSI) and as final state (after FSI). From these distributions, it can be seen that the FSI make both charged and neutral pions less energetic.  The effect of FSI on pion multiplicity is also rather significant; 0.9$\%$ of the events have zero charged pions before FSI, whereas after FSI 11.1$\%$ of the events have zero charged pions. For the neutral pion case, 11.0 $\%$ of the events have zero neutral pions before FSI, whereas after FSI 23.4$\%$ of the events have zero neutral pions. The decrease in pion multiplicity is primarily due to pion absorption in the nucleus. Another effect from FSI is nucleon knockout from pion elastic scattering. 94$\%$ of the events have at least one proton from FSI and 95$\%$ of the events have at least one neutron from FSI. Although the kinetic energy for these nucleons peak at a few tens of MeV, the kinetic energy can be as large as hundreds of MeV.  In summary, the effects of FSI in $n-\bar{n}$ become relevant since they modify the kinematics and topology of the event. For instance, even though the decay modes of Tab. \ref{tab:nnbar-br} do not include nucleons in their decay products, nucleons appear with a high chance after FSI.
+
+\begin{dunefigure}
+[FSI in n-nbar]{fig:pi_FSI_m}
+{Momentum of an individual charged pion after and before FSI (left), momentum of an individual neutral pion after and before FSI (right).}
+\includegraphics[width=0.49\textwidth]{pi_mom.pdf}
+\includegraphics[width=0.49\textwidth]{pizero_mom.pdf}
+\end{dunefigure} 
+
+As with the $p\rightarrow \bar{\nu} K^{+}$ analysis, two distinct methods of reconstruction and event selection have been applied for this search. One involves traditional reconstruction methods (3D track and vertex reconstruction by PMA); the other involves image classification on TPC 2D projections of TPC collection plane wires vs. drift distance (CNN). The two methods are combined in the form of a multivariate analysis which combines the image classification score with other physical observables extracted from traditional reconstruction.  A boosted decision tree (BDT) classifier is used. A total of 10 variables are used in the BDT event selection
+ \begin{itemize}
+  \item Number of tracks: total number of reconstructed tracks. Reconstruction by PMA.
+  \item Number of showers: total number of reconstructed showers. Reconstruction by emshower algorithm. 
+  \item Track-like visible energy: sum of track-like hits energy.
+  \item EM-like visible energy: sum of EM-like hits energy.
+  \item Visible energy: sum of the visible energy.
+  \item PID of the longest track: PID value of the longest track in the event.
+  \item Momentum of the longest track: reconstructed momentum (by range) of the longest track.
+  \item Electromagnetic-like visible energy fraction: EM-like visible energy/visible energy.
+  \item $dE/dx$ of the most energetic shower. 
+  \item CNN score: CNN image recognition score
+ \end{itemize}
+
+The main background process in search of bound $n-\bar{n}$ oscillation in DUNE is assumed to be the atmospheric neutrino interaction in the detector.  This is simulated in GENIE as described in Section~\ref{sec:ndkbkgd}.
+
+The BDT response for signal and background is shown in Figure~\ref{fig:bdt_nnbar}. Figure \ref{fig:BDT_nnbar_eff} shows the background and signal efficiency. 
+
+\begin{dunefigure}
+[n-nbar BDT response]{fig:bdt_nnbar}
+{BDT for n-nbar, response for training and testing sample, shown for signal (blue) and background (red).}
+\includegraphics[width=0.8\textwidth]{BDT_nnbar.pdf}
+\end{dunefigure} 
+
+\begin{dunefigure}
+[Efficiency of BDT selection]{fig:BDT_nnbar_eff}
+{BDT selection efficiency for n-nbar signal and background.}
+\includegraphics[width=0.8\textwidth]{BDT_nnbar_eff.pdf}
+\end{dunefigure} 
+
+Figure \ref{fig:nnbar_ev1} shows a $n-\bar{n}$ event with high BDT response value (0.592). Showers from neutral pions are shown in red, blue, yellow and green. The reconstructed charged pion tracks are shown as green and maroon lines. The topology of this event is consistent with multiple charged pion production and neutral pion production. 
+
+The left side plot in Fig. \ref{fig:nnbar_sig} shows a neutral current background event $\nu_{e}+n\rightarrow \nu_{e}+p+p$ with low BDT response value (0.388). The two protons from the NC interaction are reconstructed as tracks, and no shower activity is present. The right side plot in Fig. \ref{fig:nnbar_ev2} displays a charged current background event $\nu_{e}+n\rightarrow {e}^{-}+p+\pi +p$ with high BDT response value (0.598). This background events mimics the signal topology by having multi-particle production and also an electromagnetic shower. Further improvements in shower reconstruction, especially $dE/dx$, should help to classify these type of background events in the future, since the electron shower $dE/dx$  is different from a gamma $dE/dx$ (neutral pions).
+
+\begin{dunefigure}
+[Event display for well-classified n-nbar signal event]{fig:nnbar_sig}
+{Event display for a well-classified (BDT=0.592) n-nbar signal event.  The vertical axis is time ticks, and the horizontal axis is wire number.  The bottom view is induction plane 1, middle is induction plane 2, and the top is the collection plane.  The color represents the ADC values of each hit.}
+\includegraphics[width=0.8\textwidth]{nnbar_sig.png}
+\end{dunefigure} 
+
+\begin{dunefigure}
+[Event displays for n-nbar background events]{fig:nnbar_bkgd}
+{Event displays for n-nbar backgrounds.  The vertical axis is time ticks, and the horizontal axis is wire number.  The bottom view is induction plane 1, middle is induction plane 2, and the top is the collection plane.  The color represents the ADC values of each hit.  The left shows an atmospheric neutrino interaction with low BDT response value (0.388), unlikely to be classified as signal.  The right shows an atmospheric neutrino interaction with a high BDT response value (0.598), which can make it into the selected sample.}
+\includegraphics[width=0.49\textwidth]{nnbar_bkgd_ev1.png}
+\includegraphics[width=0.49\textwidth]{nnbar_bkgd_ev2.png}
+\end{dunefigure} 
+
+The sensitivity to the $n-\bar{n}$ oscillation lifetime can be calculated with a given exposure, the efficiency of selecting signal events, and the background rate along their uncertainties. The lifetime sensitivity is obtained to 90\% confidence level for the bound neutron. Then, the lifetime sensitivity for free neutron is acquired using the conversion from nucleus bounded neutron to free neutron $n-\bar{n}$ oscillation (cite).  The preliminary systematic uncertainties on exposure (3\%), signal and background efficiency (25\%) are taken from the $n-\bar{n}$ oscillation search from the Super-Kamiokande collaboration (cite).
+
+The free $n-\bar{n}$ oscillation lifetime $\tau_{n-\bar{n}}$ and bounded $n-\bar{n}$ oscillation lifetime are relatedto each other through the suppression factor $R$ as
+\begin{equation}
+    \tau^{2}_{n-\bar{n}} = \frac{T_{n-\bar{n}}}{R} ~.
+    \label{eq:tau}
+\end{equation}
+The suppression factor $R$ varies for different nuclei. The calculation of this suppression factor was done for $^{16}$O and $^{56}$Fe (cite). The $R$ for $^{56}$Fe, $0.666\times10^{23}$ $s^{-1}$, is used in this analysis for $^{40}$Ar nuclei.
+
+The best bound neutron lifetime limit is achieved using the signal efficiency of 8.0$\%$ at the background rejection rate of 99.98$\%$. The 90$\%$ C.L. limit of a bound neutron lifetime is 6.45$\times 10^{32}$ years. The corresponding  limit for the oscillation time of free neutrons is calculated to be 5.53$\times 10^{8}$ sec. for a 400 kton-year exposure. This is about a factor of two improvement from the current best limit\cite{intranuclear}.  Planned future improvements to this analysis include improved CNN performance and better estimates of systematic uncertainties.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Physics with atmospheric neutrinos}
@@ -337,7 +432,7 @@ Partially Contained events
 are those where a final state muon exits the detector.  The number of events expected 
 for each flavor and category is summarized in Table~\ref{tab:atmos_rates}.
 
-\todo{update?}
+\todo{To be updated.}
 \begin{dunetable}
 [[Atmospheric neutrino event rates]
 {lc}
@@ -488,8 +583,9 @@ is shown as a function of energy as a red dashed line,
 while the sum of the $\nu_\mu$ and $\overline\nu_\mu$ fluxes 
 is a blue dashed line. 
 Adding an isotropic nonminimal coefficient for Lorentz violation
-of magnitude % $\ccoeff 6_{e \mu} = 10^{-28}$ GeV$^{-2}$
-\fixme{the expression with ccoeff above is failing to build. Anne}
+of magnitude % $\ccoeff 6_{e \mu} 
+(something) $= 10^{-28}$ GeV$^{-2}$
+\fixme{anne commented out above because it doesn't compile. Please fix.}
 changes the fluxes from the dashed lines to the solid ones.
 This coefficient is many orders of magnitude smaller
 than the current experimental limit.
@@ -497,13 +593,13 @@ Nonetheless,
 the flux spectrum is predicted to change significantly 
 at energies above about 100 GeV. 
 
-\begin{dunefigure}[Sensitivity to Lorenz and CPT violation with atmospheric neutrinos]{fig:atm}{Sensitivity to Lorenz and CPT violation with atmospheric neutrinos in the nonminimal isotropic SME.}
-%\includegraphics[width=0.8\textwidth]{DUNE-atm.eps}
+\begin{dunefigure}[Sensitivity to Lorenz and CPT violation with atmospheric neutrinos]{fig:atm}{Estimated sensitivity to Lorenz and CPT violation with atmospheric neutrinos in the nonminimal isotropic SME.  The sensitivities are calculated based on the properties of the atmospheric neutrino flux (baseline and maximum detectable neutrino energy) and have not been analyzed using the DUNE simulation and reconstruction framework.}
+\includegraphics[width=0.8\textwidth]{DUNE-atm.pdf}
 \end{dunefigure}
 
 \begin{dunefigure}[Atmospheric fluxes of neutrinos and antineutrinos 
 as a function of energy in the nonminimal isotropic SME]{fig:atm2}{Atmospheric fluxes of neutrinos and antineutrinos as a function of energy for convention oscillations (dashed line) and in the nonminimal isotropic SME (solid line).}
-%\includegraphics[width=0.8\textwidth]{DUNE-atm2.eps}
+\includegraphics[width=0.8\textwidth]{DUNE-atm2.pdf}
 \end{dunefigure}
 
 %\begin{description}
