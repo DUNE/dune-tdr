@@ -42,7 +42,7 @@ are summarised in table \ref{tab:ressummary}.
 
 \begin{figure}[h]
     \centering
-        \includegraphics[width=0.55\textwidth]{graphics/EnergyResNue.eps}
+        \includegraphics[width=0.55\textwidth]{EnergyResNue.eps}
         \caption{Fractional residuals of reconstructed $\nu_{e}$ energy in $\nu_{e}$ CC events}
         \label{fig:enresnue}
 \end{figure}
@@ -64,169 +64,124 @@ are summarised in table \ref{tab:ressummary}.
 
 % Start DUNE CVN event selection subsection from Leigh and Saul
 
-\subsection{DUNE CVN event selection}
-The DUNE Convolutional Visual Network (CVN) classifies neutrino interactions in the DUNE FD through image recognition techniques. In general terms it is a convolutional neural network (CNN). Similar techniques have been demonstrated to outperform traditional event reconstruction-based methods to classify neutrino interactions~\cite{novacvn}.
+\subsection{Neutrino event selection using the CVN}
+The DUNE Convolutional Visual Network (CVN) classifies neutrino interactions in the DUNE FD through image recognition techniques. In general terms it is a convolutional neural network (CNN). Similar techniques have been demonstrated to outperform traditional methods in many aspects of high energy physics~\cite{radovicNature}.
+
+The primary goal of the CVN is to efficiently and accurately produce event selections of the following interactions: CC$\nu_\mu$ and CC$\nu_e$ in the FHC beam mode, and CC$\bar{\nu}_\mu$ and CC$\bar{\nu}_e$ in the RHC beam mode. Future goals will include studies of exclusive neutrino interaction final states since separating the event selections by interaction type can improve the sensitivity as interaction types have different energy resolutions and systematic uncertainties.
+
+Detailed descriptions of the CVN architecture can be found in Ref.~\cite{cvnPaper}.
 
 \subsubsection{Network architecture}
-The CVN is based on the SE-ResNet architecture, which consists of a standard ResNet (Residual neural network) architecture~\cite{He-et-al-2015-deep} along with Squeeze-and-Excitation blocks~\cite{Hu-et-al-2017-squeeze}. Residual neural networks allow the $n^{th}$ layer access to the output of both the $(n-1)^{th}$ layer and the $(n-k)^{th}$ layer via a residual connection, where $k$ is a positive integer $>=2$. This is an important feature for the DUNE CVN as it allows the fine-grained detail of a LArTPC encoded in the input images to be propagated further into the CVN than would be possible using a traditional CNN such as the GoogLeNet (also called Inception v1)~\cite{GoogLeNet} inspired network used by NOvA~\cite{novacvn}.
+The CVN design is based on the SE-ResNet architecture, which consists of a standard ResNet (Residual neural network) architecture~\cite{He-et-al-2015-deep} along with Squeeze-and-Excitation blocks~\cite{Hu-et-al-2017-squeeze}. Residual neural networks allow the $n^{th}$ layer access to the output of both the $(n-1)^{th}$ layer and the $(n-k)^{th}$ layer via a residual connection, where $k$ is a positive integer $>=2$. This is an important feature for the DUNE CVN as it allows the fine-grained detail of a LArTPC encoded in the input images to be propagated further into the CVN than would be possible using a traditional CNN such as the GoogLeNet (also called Inception v1)~\cite{GoogLeNet} inspired network used by NOvA~\cite{novacvn}.
 
-The DUNE CVN differs from the architectures of other residual networks discussed in the literature in the following ways:
+\subsubsection{Inputs to the CVN}
+\label{sec:inputs}
+Three images of the neutrino interactions are produced where each image shows the event in one of the three readout views. These images are produced using the reconstructed hits on the individual wire planes and are not dependent on any further downstream reconstruction algorithms. The images contain 500$\times$500 pixels each in the (wire, time) parameter space where the wire is the wire channel number and the time is the peak time of the reconstructed hit measured in TDCs. The value of each pixel represents the integrated charge of the reconstructed hit. An example 2.2\,GeV CC$\nu_e$ interaction is shown in all three views in Fig.~\ref{fig:views} demonstrating the fine-grained detail available from the LArTPC technology.
 
+\begin{figure}[htb] 
+	\begin{tabular}{ccc}
+		\includegraphics[scale=0.3]{cvn_nue_view0.pdf} &
+		\includegraphics[scale=0.3]{cvn_nue_view1.pdf} &
+		\includegraphics[scale=0.3]{cvn_nue_view2.pdf}
+    \end{tabular}
+	\caption{A 2.2\,GeV CC$\nu_e$ interaction shown in the three readout views of the DUNE LArTPCs. The horizontal axis shows the wire number of the readout plane and the vertical axis shows time. The colour scale shows the charge of the energy deposits on the wires.}
+	\label{fig:views}
+\end{figure}
+
+\subsubsection{Training the CVN}
+\label{sec:training}
+
+The CVN was trained using approximately 3 million neutrino interactions from the Monte Carlo simulation that are independent of the sample that is used to generate the physics measurement sensitivities. The sample was chosen to ensure similar numbers of training examples from the different neutrino flavours. The CVN was trained ensuring that similar classification performance was obtained for the training and test samples (i.e ensure that the CVN was not overtrained).
+
+\subsubsection{Outputs from the CVN}
+\label{sec:outputs}
+
+The CVN has six different outputs:
 \begin{itemize}
-    \item The input and the shallower layers of the CVN are forked into three branches - one for each view - to let the model learn parameters from each individual view (see Section~\ref{sec:cvn:inputs} for more details). We merge the outputs of the three branches by using a concatenation layer that works as input for the deeper layers of the model, as is shown in Figure~\ref{fig:cvnarchitecture}.
-    
-    \item The CVN returns probabilities for each event through seven individual outputs (see Section~\ref{sec:cvn:outputs} and Figure~\ref{fig:cvnarchitecture} for more details). Since the deeper layers of the network share the model parameters corresponding to those layers, some outputs might take advantage of the learning process of other outputs to improve their performance. Also, a multi-output network lets us weight the outputs in order to make the network pay more attention to some specific outputs (see Section~\ref{sec:cvn:training} for more details). The summed probability of each individual output set is one.
-    
-    \item Each of the three branches (blocks 1-2, the shallower layers of the architecture shown in Figure~\ref{fig:cvnarchitecture}) consists of 7 convolutional layers, while the deeper layers (blocks 3-N in Figure~\ref{fig:cvnarchitecture}) consist of 29 convolutional layers, making a total of 50 layers for the entire network.
-
+    \item Primary output - neutrino flavour: returns probabilities that each interaction is one of the following classes: CC$\nu_\mu$, CC$\nu_e$, CC$\nu_\tau$ and NC.
+    \item Four particle counting outputs for protons, charged pions, neutral pions and neutrons. Probabilities are returned for the presence of 0, 1, 2 and $>2$ particles of each aforementioned type.  
+    \item Neutrino / antineutrino discriminator: returns the probability for the interaction to be an antineutrino.
 \end{itemize}
+
+As stated, all of the outputs are probabilities that allow neutrino event selections to be easily defined.
+
+\subsubsection{Neutrino flavour identification}
+The primary goal of the CVN is to accurately identify CC$\nu_e$ interactions and CC$\nu_\mu$ interactions to allow for the selection of the samples required for the neutrino oscillation analysis. The CC$\nu_e$ probability distribution, $P(\textrm{CC}\nu_e)$, and the CC$\nu_\mu$ probability distribution, $P(\textrm{CC}\nu_\mu)$, are shown on the left and right of Fig.~\ref{fig:cvnprob}, respectively. Excellent separation between the signal and background interactions is seen in both cases.
+
+\begin{figure}
+    \centering
+    \begin{tabular}{cc}
+%		\includegraphics[width=0.45\linewidth]{cvn_nue_prob_log.pdf} &
+%		\includegraphics[width=0.45\linewidth]{cvn_numu_prob_log.pdf} 
+	\end{tabular}
+%	\caption{The neutrino flavour classification probabilities $P(\nu_e)$ (left) and $P(\nu_\mu)$ (right) for FHC-mode simulated CC$\nu_\mu$ (purple), CC$\nu_e$ (green), CC$\nu_\tau$ (cyan) and NC (orange) neutrino interactions.}
+	\caption{The CVN CC$\nu_e$ probability (left) and CC$\nu_\mu$ probability (right) for the FHC beam mode shown with a log scale.}
+    \label{fig:cvnprob}
+\end{figure}
+\fixme{Anne commented out figures because they're absent. 1/9}
+
+The CC$\nu_e$ event selection requires $P(\textrm{CC}\nu_e) > 0.85$ for an interaction to be considered a CC$\nu_e$ candidate event. Similarly, interactions are selected as CC$\nu_\mu$ candidates if $P(\textrm{CC}\nu_\mu) > 0.5$. Note that since all of the flavour classification probabilities must sum to one, the interactions selected in the two event selections are completely independent. The same selection criteria are used for both FHC and RHC beam modes. The values used in the selection criteria were optimised to produce the best $\delta_{CP}$ sensitivity.
+
+Figure~\ref{fig:nueeff} shows the efficiency as a function of reconstructed energy (under the electron neutrino hypothesis) for the $\nu_e$ event selection. The efficiency in both the FHC and RHC beam modes exceeds 90\% in the neutrino flux peak, with a clear improvement in the main region of interest over the efficiency presented in the DUNE CDR. Figure~\ref{fig:numueff} shows the corresponding excellent selection efficiency for the $\nu_\mu$ event selection.
 
 \begin{figure}
     \centering
 %    \begin{tabular}{cc}
-		\includegraphics[scale=0.6]{graphics/cvn_architecture.pdf}
+		\includegraphics[scale=0.4]{cpv_compare_effs_cvnvcdr_dec2018.png} %&
+		%\includegraphics[scale=0.22]{cvn_placeholder.pdf} 
 %	\end{tabular}
-	\caption{Simplified diagram of the DUNE CVN architecture showing the three input images, an overview of the convolutional layers and the seven output categories.}
-    \label{fig:cvnarchitecture}
-\end{figure}
-
-\subsubsection{Inputs to the CVN}
-\label{sec:cvn:inputs}
-Three images of the neutrino interactions are built with one image for each of the three wire planes. These images are produced using the reconstructed hits on the individual wire planes and are not dependent on any further downstream reconstruction algorithms. The images (500$\times$500 pixels each) are produced in the (wire, time) parameter space where the wire is the wire channel number and the time is the peak time of the reconstructed hit measured in TDCs. An example 2.2\,GeV CC$\nu_e$ interaction with a visible electron shower and proton track is shown in all three views in Fig.~\ref{fig:cvn_views} demonstrating the fine-grained detail available from the LArTPC technology.
-
-\begin{figure}[htb] 
-    \centering
-    \begin{tabular}{ccc}
-	\includegraphics[scale=0.23]{graphics/cvn_nue_view0.png} &
-	\includegraphics[scale=0.23]{graphics/cvn_nue_view1.png} &
-    \includegraphics[scale=0.23]{graphics/cvn_nue_view2.png}
-	\end{tabular}
-	\caption{A 2.2\,GeV CC$\nu_e$ interaction shown in the three readout views of the DUNE LArTPCs. The horizontal axis shows the wire number of the readout plane and the vertical axis shows time. The colour scale shows the charge of the energy deposits on the wires.}
-	\label{fig:cvn_views}
-\end{figure}
-
-\subsubsection{Training the CVN}
-\label{sec:cvn:training}
-\fixme{Potentially too much detail}
-The CVN was trained using Keras \cite{Chollet-et-al-2015-keras} 2.2.0 on top of Tensorflow \cite{Abadi-et-al-2016-tensorflow} 1.8.0, on 8 NVIDIA Tesla V100 GPUs. The optimizer used was Stochastic Gradient Descent (SGD), with a mini-batch size of 64 events (192 views), a learning rate of 0.1 (divided by 10 when the error plateaus, as suggested in \cite{He-et-al-2015-deep}), a weight decay of 0.0001 and a momentum of 0.9. The CVN was trained and validated using over three million interactions (corresponding to nine million individual images) from a single Monte Carlo sample, and tested on approximately three million events from an independent Monte Carlo sample.
-
-The individual loss functions for the different outputs that we used for training the model, as well as the overall loss function, are given below:
-
-\begin{itemize}
-    \item Neutrino/antineutrino loss function ($J_{1}$): binary cross-entropy.
-
-    \begin{equation}
-    J_{1} = - \frac{1} m \sum_{i=1}^{m} y^{(i)} \log (\hat{y}^{(i)}) + (1 - y^{(i)}) \log (1 -\hat{y}^{(i)})
-    \end{equation}
-
-    \item Flavour, interaction type, protons, pions, pizeros, neutrons loss functions ($J_{2}$, $J_{3}$, $J_{4}$, $J_{5}$, $J_{6}$, and $J_{7}$, respectively): categorical cross-entropy.
-
-    \begin{equation}
-    J_{2} = J_{3} = J_{4} = J_{5} = J_{6} = J_{7} = - \frac{1} m \sum_{i=1}^{m} \sum_{j=1}^{c} y_{j}^{(i)} \log \hat{y}_{j}^{(i)}
-    \end{equation}
-
-    \item Overall loss function:
-
-    \begin{equation}
-    J = w_{1} J_{1} + w_{2} J_{2} + w_{3} J_{3} + w_{4} J_{4} + w_{5} J_{5} + w_{6} J_{6} + w_{7} J_{7}
-    \end{equation}
-
-    \item Where:
-        \begin{itemize}
-        \item $y$: true output values.
-        \item $\hat{y}$: predicted output values.
-        \item $m$: number of training examples \{($x^{(1)}$, $y^{(1)}$), ($x^{(2)}$, $y^{(2)}$), ... , ($x^{(m)}$, $y^{(m)}$)\}.
-        \item $c$: number of classes \{$y_{1}$, $y_{2}$, ... , $y_{c}$\}.
-        \item $w$: output weights; 1-dimensional array of length seven.
-    \end{itemize}
-\end{itemize}
-
-\fixme{outside of overleaf the backslash curly brackets above did not compile; removed in github; we'll have to figure it out. Anne}
-
-The CVN was trained for 18 epochs and similar classification performance was obtained for the training and test samples.
-
-\subsubsection{Outputs from the CVN}
-\label{sec:cvn:outputs}
-\fixme{Potentially too much detail}
-The CVN has the following seven output categories:
-
-\begin{enumerate}
-    \item Name: `nubar', 1 neuron: returns the probability for each event to be an antineutrino. Thus, $P(nubar)=0$ means that the event is a neutrino and $P(nubar)=1$ that it is an antineutrino.
-    \item Name: `flavour', 4 neurons: returns probabilities for each event to be in the following flavours: CC $\nu_\mu$, CC $\nu_e$, CC $\nu_\tau$, NC.
-    \item Name: `interaction', 4 neurons: returns probabilities for each event to be in the following interaction types: CC QE, CC Res, CC DIS, CC Other. 
-    \item Name: `protons', 4 neurons: returns probabilities for each event to contain the following number of protons: 0, 1, 2, $>$2.
-    \item Name: `pions', 4 neurons: returns probabilities for each event to contain the following number of pions: 0, 1, 2, $>$2.
-    \item Name: `pizeros', 4 neurons): returns probabilities for each event to contain the following number of pizeros: 0, 1, 2, $>$2.
-    \item Name: `neutrons', 4 neurons: returns probabilities for each event to contain the following number of neutrons: 0, 1, 2, $>$2.
-\end{enumerate}
-
-\subsubsection{Neutrino flavor identification}
-The primary goal of the CVN is to accurately identify charged-current electron neutrino interactions and charged-current muon neutrino interactions to allow for the selection of the samples required for the neutrino oscillation analysis. The CC$\nu_e$ probability distribution, $P(\nu_e)$, and the CC$\nu_\mu$ probability distribution, $P(\nu_\mu)$, are shown on the left and right of Fig.~\ref{fig:cvnprob}, respectively. Excellent separation between the signal and background interactions is seen in both cases.
-
-\begin{figure}
-    \centering
-    \begin{tabular}{cc}
-		\includegraphics[width=0.45\linewidth]{graphics/cvn_nue_prob.eps} &
-		\includegraphics[width=0.45\linewidth]{graphics/cvn_numu_prob.eps} 
-	\end{tabular}
-	\caption{The neutrino flavour classification probabilities $P(\nu_e)$ (left) and $P(\nu_\mu)$ (right) for FHC-mode simulated CC$\nu_\mu$ (purple), CC$\nu_e$ (green), CC$\nu_\tau$ (cyan) and NC (orange) neutrino interactions.}
-    \label{fig:cvnprob}
-\end{figure}
-
-The CC$\nu_e$ event selection requires $P(\nu_e) > 0.7$ for an interaction to be considered a CC$\nu_e$ candidate event. Similarly, interactions are selected as CC$\nu_\mu$ candidates if $P(\nu_\mu) > 0.5$. Note that since all of the flavour classification probabilities must sum to one, these two samples are completely independent. The same selection criteria are used for both FHC and RHC event selections.
-
-Figure~\ref{fig:nueeff} shows the efficiency as a function of reconstructed energy (under the electron neutrino hypothesis) for the $\nu_e$ event selection. (some comments on the plot). Figure~\ref{fig:numueff} shows the corresponding selection efficiency for the $\nu_\mu$ event selection.
-
-\begin{figure}
-    \centering
-    \begin{tabular}{cc}
-		\includegraphics[scale=0.22]{graphics/cvn_placeholder.pdf} &
-		\includegraphics[scale=0.22]{graphics/cvn_placeholder.pdf} 
-	\end{tabular}
-	\caption{The CC$\nu_e$ selection efficiency for FHC-mode (left) and RHC-mode (right) simulation with the criterion $P(\nu_e) > 0.7$. (Describe the various colours).}
+	\caption{The CC$\nu_e$ selection efficiency for FHC-mode (top) and RHC-mode (bottom) simulation with the criterion $P(\textrm{CC}\nu_e) > 0.85$. The solid (dashed) lines show results from the CVN (CDR) for signal CC$\nu_e$ and CC$\bar{\nu}_e$ events in black and NC background interaction in red. The yellow region shows the oscillated flux to illustrate the most important regions of the energy distribution.}
     \label{fig:nueeff}
 \end{figure}
 
 \begin{figure}
     \centering
     \begin{tabular}{cc}
-		\includegraphics[scale=0.22]{graphics/cvn_placeholder.pdf} &
-		\includegraphics[scale=0.22]{graphics/cvn_placeholder.pdf} 
+		\includegraphics[width=0.45\linewidth]{numu_eff_fhc.eps} &
+		\includegraphics[width=0.45\linewidth]{numu_eff_rhc.eps} 
 	\end{tabular}
-	\caption{The CC$\nu_\mu$ selection efficiency for FHC-mode (left) and RHC-mode (right) simulation with the requirement $P(\nu_\mu) > 0.5$. (Describe the various colours).}
+	\caption{The CC$\nu_\mu$ selection efficiency for FHC-mode (left) and RHC-mode (right) simulation with the requirement $P(\textrm{CC}\nu_\mu) > 0.5$. (Describe the various colours).}
     \label{fig:numueff}
 \end{figure}
 
 \subsubsection{Exclusive final states}
 The CVN has four outputs that count the number of final-state particles for the following species: protons, charged pions, neutral pions and neutrons. Neutrino interactions with different final-state particles can have varying energy resolutions depending on the complexity and particle multiplicity of the interaction. The ability to accurately select exclusive final-states will allow for those interactions with very good energy resolution to be fully exploited in the oscillation fit to improve the sensitivity of the analysis.
 
-The individual output probabilities from the CVN can be multiplied together to give probabilities for exclusive selections. For example, Fig.~\ref{fig:exclusive} shows the $\nu_\mu$ CC1p probability on the left, and the NC$\pi^0$ probability on the right.
+The individual output probabilities from the CVN can be multiplied together to give probabilities for exclusive selections. For example, Fig.~\ref{fig:exclusive} shows the CC$\nu_\mu$ 1 proton probability on the left formed by the product 
+\begin{equation}
+P\left(\textrm{CC}\nu_\mu\,1\textrm{p}\right) = P\left(\textrm{CC}\nu_\mu \right) P\left( 1\,\textrm{p} \right) P\left( 0 \pi^\pm \right)P\left( 0 \pi^0 \right) P\left( 0\textrm{n} \right),
+\end{equation}
+and the NC$\pi^0$ probability on the right, defined similarly: 
+\begin{equation}
+P\left(\textrm{NC}\,1\pi^0\right) = P\left(\textrm{NC}\right) P\left(0\textrm{p} \right) P\left(0\pi^\pm \right) P\left(1\pi^0 \right) P\left( 0\textrm{n} \right).
+\end{equation}
+The background and signal distributions, closely peaked toward 0 and 1 respectively, demonstrate that the accurate selection of exclusive final states will be possible with the DUNE CVN technique. 
+
 \begin{figure}
     \centering
     \begin{tabular}{cc}
-		\includegraphics[width=0.475\linewidth]{graphics/cvn_numu1proton0pions0pizeros.eps} &
-		\includegraphics[width=0.475\linewidth]{graphics/cvn_nc1proton0pions1pizeros.eps} 
+		\includegraphics[width=0.475\linewidth]{ccNumu1ProtonProb.pdf} &
+		\includegraphics[width=0.475\linewidth]{nc1PizeroProb.pdf}
 	\end{tabular}
-	\caption{The $\nu_\mu$ CC1p (left) and NC$\pi^0$ (right) probability distributions from the CVN. In both cases the signal interactions are shown by the purple curve and all backgrounds are shown in green.}
+	\caption{The CC$\nu_\mu$ 1 proton (left) and NC 1$\pi^0$ (right) probability distributions from the CVN. In both cases the number of other particles is required to be zero.}
     \label{fig:exclusive}
 \end{figure}
 
 \subsubsection{Robustness}
-A common concern about the applications of Deep Learning in high energy physics is the difference in performance between data and simulation.
+A common concern about the applications of Deep Learning in high energy physics is the difference in performance between data and simulation. 
 
-The performance of the CVN has been tested using data from ProtoDUNE-SP~\cite{Abi:2017aow}. ProtoDUNE-SP was not exposed to a neutrino beam but collected cosmic ray muons and charged particles from a beam including electrons and positrons. Images were constructed from the hits of individual cosmic muon tracks reconstructed with a length over 1\,m, such that they can mimic a simple CC $\nu_\mu$ interaction. The images were then classified by the CVN, where the expected classification is CC $\nu_\mu$ with no other final-state particles. The probability for a CC $\nu_\mu$ interaction with no hadronic system is obtained by the product of a number of the CVN outputs as
-\begin{equation}
-P(CC\nu_\mu0) = P(CC\nu_\mu)P(0p)P(0\pi^\pm)P(0\pi^0)P(0n).    
-\end{equation} 
-The $P(CC\nu_\mu0)$ distribution is shown in Fig.~\ref{fig:protodunecvn} for ProtoDUNE-SP cosmic muon data and simulation.
+A large DUNE prototype, ProtoDUNE-SP~\cite{Abi:2017aow}, collected data in a charged particle test beam at CERN in autumn 2018. Whilst there were no neutrino interactions, the data from ProtoDUNE-SP still provides the first important opportunity to compare the performance of the CVN between data and simulation. Images can be created from individual reconstructed particles, including cosmic ray muons and test-beam electrons and positrons. For example, a cosmic ray muon image
+can mimic a simple CC$\nu_\mu$ interaction, which can then be classified by the CVN. The expected classification is CC$\nu_\mu$ with no other final-state particles, and the distribution of this probability is shown in Fig.~\ref{fig:protodunecvn} for data and simulation.
 
 \begin{figure}
     \centering
-    \includegraphics[scale=0.5]{graphics/cvn_protodata_mc.pdf}
-    \caption{The probability for classifying an event as a CC$\nu_\mu$ interaction with no hadronic final state for a sample of cosmic ray muons over 1\,m in length in ProtoDUNE data and simulation. (Update with higher stats and after calibrations etc)}
+%    \includegraphics[scale=0.5]{protodata_mc.pdf}
+    \caption{Comparison of the CVN response to cosmic ray muons in ProtoDUNE data and simulation. TODO: this plot will be updated with a better plot after the next round of ProtoDUNE data processing}
     \label{fig:protodunecvn}
 \end{figure}
+\fixme{Anne commented out figure because it's absent. 1/9}
 
+Experience in ensuring robustness of deep learning image recognition techniques already exists within the community. For example, the NOvA experiment uses a technique that takes clear CC$\nu_\mu$ interactions identified in data and simulation and removes all of the reconstructed hits associated with the reconstructed muon track. The reconstructed muon is replaced by a simulated electron with the same kinematic variables~\cite{NOvA_MRE}. This procedure was originally developed by MINOS~\cite{MINOS_MRE}, and allows a large sample of data-like electron neutrino interactions to be studied and excellent agreement was seen between the performance of the event selection for data and simulation. This approach will prove critical once DUNE begins data taking to ensure the performance of the CVN is the same for data and simulation.
 \subsection{FD Samples}
 
 Place holder for the final FD samples. Will have 4 Enu spectra plots for nue/numu in FHC/RHC mode.
