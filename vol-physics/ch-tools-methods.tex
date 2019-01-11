@@ -37,19 +37,120 @@ The photon detector is sandwiched between the two collection wire planes.}
 For the simulation chain, each sample is simulated in 3 steps: generation (gen), {\sc geant4} tracking (g4), TPC signal simulation, and digitization (detsim). The first step is unique for each sample while the second and the third steps are mostly identical for all samples. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Hadron production and Beam Line modeling}
-\label{sec:tools-mc-had-beam}
+\subsection{Neutrino flux modeling}
+\label{sec:tools-mc-flux}
+%{\it Assigned to:} {\bf Laura Fields} with contributions from Zarko Pavlovic and Luke Pickering.
 
-Currently described in the LBL chapter.
+Neutrino fluxes were generated using G4LBNF, a \textsc{Geant}4\xspace-based simulation of the LBNF neutrino beam.  The simulation was configured to use a detailed description of the LBNF optimized beam design~\cite{optimizedbeamcdr}.  That design starts with a 1.2 MW, 120 GeV primary proton beam that impinges on a 2.2 m long, 16 mm diameter cylindrical graphite target.  Hadrons produced in the target are focused by three magnetic horns operated with 300 kA currents.  The target chase is followed a 194 m helium-filled decay pipe and a hadron absorber.  The focusing horns can be operated in forward or reverse current configurations, creating neutrino and antineutrino beams, respectively.   
 
-%\subsubsection{Key Properties of the LBNF Neutrino Beam}
-%\label{ss:tools-beam-properties}
+\begin{dunefigure}[Visualization of the focusing system as simulated in g4lbnf]{fig:beam_vis}
+{Visualization of the focusing system as simulated in g4lbnf.}
+    \includegraphics[width=0.7\textwidth]{Beamline_optimized_sept2017.pdf}\end{dunefigure}
 
-%\subsubsection{Modeling of Hadron Production from the Target}
-%\label{ss:tools-hadron-production-modeling}
 
-%\subsubsection{Modeling of LBNF Beam Line}
-%\label{ss:tools-beam-line-modeling}
+The optimized LBNF neutrino beam design is the result of several years of effort by LBNF and DUNE to identify a focusing system optimized to DUNE's long-baseline physics goals.  This process began with a genetic algorithm that scanned simulations of many different horn and target geometries to identify those that produced the optimal sensitivity to CP violation.  The specific metric used was estimated sensitivity to 75\% of CP phase space after 300 kT MW years of exposure, taking into account the number and neutrino spectra of all neutrino flavors. The resulting beam effectively optimized flux at the first and second oscillation maxima, which also benefits measurements of other oscillation parameters.  The output of the genetic algorithm was a simple design including horn conductor and target shapes.  This design was transformed into a detailed conceptual design by LBNF engineers, and iterated with DUNE physicists to ensure that engineering changes had minimal impact on physics performance.  Relative to the previous NuMI-like design, the optimized design reduces the time to three-sigma coverage of 75\% of CP phase space by 42\%, which is equivalent to increasing the mass of the far detector by 70\%.  It also substantially increases sensitivity to the mass hierarchy and improves projected resolution to quantities such as $\sin^22\theta_{13}$ and $\sin^2\theta_{23}$~\cite{fields_doc_2901}.        
+
+\subsection{On-axis Neutrino Flux and Uncertainties}
+
+\begin{dunefigure}[Neutrino fluxes at the far detector]{fig:flux_flavor}
+{Neutrino fluxes at the far detector for neutrino mode (left) and
+antineutrino mode (right).  REFERENCE BEAM.  To Be replaced with similar plots for optimized beam. }
+    \includegraphics[width=0.45\textwidth]{Ref_beam_log_flux.png}
+     \includegraphics[width=0.45\textwidth]{Ref_beam_log_flux.png}
+\end{dunefigure}
+
+
+\todo{Add numbers for flavor composition of beam}
+Neutrino fluxes for neutrino and antineutrino mode configurations of LBNF are shown in Figure~\ref{fig:flux_flavor}.  In neutrino (antineutrino) mode, the beams are AA\%(BB\%) muon neutrinos (antineutrinos), with wrong-sign contamination making up CC\%(DD\%) and electron neutrino and antineutrino backgrounds EE\%(FF\%).  Although there is also expected to be a small non-zero intrinsic tau neutrino flux, this is not simulated by G4LBNF.  Neutrinos arising from hadron decay at rest are also not simulated.  
+
+\begin{dunefigure}[Flux uncertainties at the far detector as a function of neutrino energy]{fig:flux_uncertainties_flavor}
+{Flux uncertainties at the far detector as a function of neutrino energy in neutrino mode (left) and antineutrino mode (right) for, from top to bottom, muon neutrinos, muon antineutrinos, electron neutrinos and electron antineutrinos.   This is for the NDTF optimized flux; it will  be updated with latest beam design.   }
+    \includegraphics[width=0.4\textwidth]{error_overlay_numu_neutrino_FD_opt.png}
+    \includegraphics[width=0.4\textwidth]{error_overlay_numu_antineutrino_FD_opt.png}
+    \includegraphics[width=0.4\textwidth]{error_overlay_numubar_neutrino_FD_opt.png}
+    \includegraphics[width=0.4\textwidth]{error_overlay_numubar_antineutrino_FD_opt.png}
+        \includegraphics[width=0.4\textwidth]{error_overlay_nue_neutrino_FD_opt.png}
+    \includegraphics[width=0.4\textwidth]{error_overlay_nue_antineutrino_FD_opt.png}
+        \includegraphics[width=0.4\textwidth]{error_overlay_nuebar_neutrino_FD_opt.png}
+    \includegraphics[width=0.4\textwidth]{error_overlay_nuebar_antineutrino_FD_opt.png}
+    \end{dunefigure}
+
+
+
+
+\begin{dunefigure}[Focusing and hadron production uncertainties on the $\nu$ mode $\nu_{\mu}$ flux]{fig:flux_uncertainty_breakdown}
+{Focusing (left) and hadron production (right) uncertainties on the neutrino mode muon neutrino flux at the far detector.  This is for an older beam design and will be updated to the latest.  }
+\includegraphics[width=0.45\textwidth]{focusing_error_overlay_numu_neutrino_FD_opt.png}
+    \includegraphics[width=0.45\textwidth]{HP_error_overlay_numu_neutrino_FD_opt.png}\end{dunefigure}
+
+Uncertainties on the neutrino fluxes arise primarily from uncertainties in hadrons produced off the target and uncertainties in parameters of the beam such as horn currents and horn and target positioning (commonly called "focusing uncertainties").  Uncertainties on the neutrino fluxes arising from both of theses categories of sources are shown in Figure~\ref{fig:flux_uncertainties_flavor}.  Hadron production uncertainties are estimated using the PPFX framework developed by the MINERvA collaboration~\cite{Aliaga:2016oaz, AliagaSoplin:2016shs}, which assigns uncertainties for each hadronic interaction leading to a neutrino in the beam simulation, with uncertainties taken from thin target data (from e.g. the NA49~\cite{NA49} experiment) where available, and large uncertainties assigned to interactions not covered by data.  Focusing uncertainties are assessed by altering beamline parameters in the simulation within their tolerances and observing the resulting change in predicted flux.  An breakdown of the hadron production and focusing into various components are shown in Figure~\ref{fig:flux_uncertainty_breakdown} for the neutrino mode muon neutrino flux at the far detector.    
+
+At most energies, hadron production uncertainties are dominated by the "NucleonA" category, which includes proton and neutron interactions that are not covered by external data.  At low energies, uncertainties due to pion reinteractions (denoted "Meson Inc") dominate.   The largest source of focusing uncertainty is arises from a 1\% uncertainty in the horn current, followed by a 2\% flat uncertainty in the number of protons impinging on the target.   For all neutrino flavors and all neutrino energies, hadron production uncertainties are larger than focusing uncertainties.  However, Hadron production uncertainties are expected to decrease in the next decade, as more thin target data becomes available.  Hadron production measurements taken with a replica target are also being considered and would substantially reduce the uncertainties.  
+
+
+\begin{dunefigure}[Correlation of flux uncertainties]{fig:flux_uncertainty_correlation}
+{Correlation of flux uncertainties.  Each block of neutrino flavor corresponds to bins of energy with bin boundaries of [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 8.0, 10.0, 15.0, 20.0, 40.0, 100.0] for muon neutrinos and antineutrinos and of [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 20.0, 100.0] for electron neutrinos and antineutrinos. }
+    \includegraphics[width=0.9\textwidth]{correlation_ndtf_opt.png}\end{dunefigure}
+
+Correlations of the total flux uncertainties are shown in Figure~\ref{fig:flux_uncertainty_correlation}.  In general, the uncertainties are highly correlated across energy bins (although the flux in the very high energy tends to be uncorrelated with flux at the peak).  Flux uncertainties are also highly correlated between the near and far detectors and between neutrino mode and antineutrino mode running.  The focusing uncertainties do not affect wrong-sign backgrounds, which reduces correlations between e.g. muon neutrinos and muon antineutrinos in the same running configuration in the energy bins where focusing uncertainties are significant.    
+
+Although the fluxes at the near and far detector are similar, they are not identical.  The ratio of neutrino mode muon neutrino fluxes at the near and far detectors and the uncertainties on the ratio are shown in  Figure~\ref{fig:flux_nearfar}.  The uncertainties are around 1\% or smaller except at the falling edge of the focusing peak, where they rise to 2\% but are still much smaller than the uncertainty on the absolute fluxes.    And unlike the case for absolute fluxes, the uncertainty on the near/far flux ratio is dominated by focusing rather than hadron production uncertainties.  This ratio and its uncertainty are for the fluxes at the center of the detector, and does not take into account small variations in flux across the face of the near detector.     
+
+\begin{dunefigure}[Ratio of neutrino mode muon neutrino fluxes at the near and far detectors]{fig:flux_nearfar}
+{Ratio of neutrino mode muon neutrino fluxes at the near and far detectors (left) and uncertainties on the ratio (right) (right).  To be updated. }
+    \includegraphics[width=0.45\textwidth]{nearfar.png}
+     \includegraphics[width=0.45\textwidth]{nearfarunc.png}
+\end{dunefigure}
+
+
+\subsection{Off-axis Neutrino Flux and Uncertainties}
+
+The neutrino flux spreads beyond the beam directly aimed at the DUNE Far Detector and viable neutrino fluxes extend outward at the near detector hall. The relationship between the parent pion energy and neutrino energy is shown in Fig.~\ref{fig:OAAFluxFigs}; for an ``off-axis'' angle relative to the initial beam direction, the subsequent neutrino energy spectra is narrower and and peaked at a lower energy than the on-axis spectra. At $575\,\textrm{m}$, the location of the near detector hall, a lateral shift of $1\,\textrm{m}$ corresponds to approximately a $0.1^\circ$ change in off-axis angle.
+
+\begin{dunefigure}[optional caption for LoF]{fig:OAAFluxFigs}
+{(a) The neutrino energy as a function of parent pion energy for different angles away from the pion momentum vector. Figure from Ref.~\cite{Duffy:2016owt}. (b) The DUNE near detector flux predictions over a range of off-axis positions for a near detector at $575\,\textrm{m}$ downstream of the target station. }
+%is subfig package included? I don't think subfloat is working (ZP)
+%  \subfloat[C][Off-axis pion decay kinematics]{
+    \includegraphics[width=0.4\textwidth]{OATrick}
+%    \label{fig:OATrick}
+%  }
+%  \subfloat[][DUNE near detector flux predictions]{
+    \raisebox{0.5em}{\includegraphics[width=0.40\textwidth]{OffAxisFluxes_1D}}
+%    \label{fig:OffAxisFluxes_1D}
+%  }
+\end{dunefigure}
+
+The intrinsic neutrino flavor-content of the beam varies with off-axis angle. Fig~\ref{OffAxisFluxes_1D_AllSpec} shows the neutrino-mode and anti-neutrino-mode predictions for the four neutrino flavors at the on-axis position, and a moderately off-axis position. At the $30\,\textrm{m}$ position, a second, smaller energy peak at approximately 4 GeV is due to the charged kaon neutrino parents. 
+%As both the pion and kaon-parent peaks are significantly narrower in observed neutrino energy at greater off-axis angle, this which may allow for off-axis kaon-parent analyses.
+
+\fixme{Fig~\ref{fig:OffAxisFluxes_1D_AllSpec} is partly redundant with earlier figure, nice if it can be merged? }
+
+\begin{dunefigure}[optional caption for LoF]{fig:OffAxisFluxes_1D_AllSpec}
+{The predicted muon neutrino energy spectra at two near detector positions, on axis and $30\,\textrm{m}$ off axis. (a) The predicted neutrino flavor-content of the neutrino-mode (FHC) and anti-neutrino-mode (RHC) beam. (b) The neutrino-mode, muon-flavor predicted flux, separated by the particle that decayed to produce the neutrino. The off-axis spectrum displays a double peak structure due to charged kaon parent decay kinematics. The on-axis kaon-peak occurs at higher neutrino energy and will have a significantly broader energy spread. Top: Beam neutrino flavor content, middle: Beam neutrino flavor content; bottom: Beam neutrino decay-parent species}
+    \includegraphics[width=0.8\textwidth]{OffAxisFluxes_1D_AllSpec}
+    \includegraphics[width=0.8\textwidth]{OffAxisFluxes_1D_AllSpec}
+  \includegraphics[width=0.8\textwidth]{OffAxisFluxes_1D_Parents}    
+    \end{dunefigure}
+
+\fixme{one label per dunefigure; I didn't use label fig:OffAxisFluxes\_1D\_Parents or fig:OAAFluxFigsDetail - may need to fix refs}
+
+The same sources of systematic uncertainty which affect the on-axis spectra also modify the off-axis spectra.  Generally, the size of the off-axis uncertainties is comparable to the on-axis uncertainties and the uncertainties are highly correlated across off-axis and on-axis positions. Studies of extreme changes to horn positions and current indicate that the larger than expected shifts to the horn focusing elements (as has been historically seen in NuMI) would induce significant changes off-axis, and so off-axis flux measurements are useful to diagnose beamline physics.
+
+\fixme{DISCUSS FIGURE: Plot of extreme off-axis angle 1D uncertainty profiles? Can be relative off-axis to on-axis or just off-axis only. }
+
+
+\subsection{Alternate Beamline Configurations}
+
+Although the LBNF beamline is expected to run for many years in a CP-optimized configuration, it could potentially be modified in the future for other physics goals.  For example, it could be altered to produce a higher energy spectrum in order to measure tau neutrino appearance.  In the standard CP-optimized configuration, about 130 tau neutrino charged current interactions per year are expected at the far detector, before detector efficiency and assuming 1.2 MW beam power.  However, replacing the three CP-optimized horns with two NuMI-like parabolic horns can raise this number to approximately 1000 tau neutrinos per year.  The muon neutrino flux for one such configuration is shown in Figure~\ref{fig:tau-optimized}.  Although the flux in the 0-5 GeV region critical to $\delta_{CP}$ measurements is much smaller, the flux above 5 GeV, where tau neutrino interaction cross section becomes significant, is much larger.  Many other energy distributions are possible by modifying the position of the targets and horns.  Even altering parameters of the CP-optimized horns offers some variablity in energy spectrum, but the parabolic NuMI horns offer more configurability.  Because the LBNF horns are not expected to be remotely movable, such reconfigurations of the beamline would require lengthy downtimes to reconfigure target chase shielding and horn modules.   
+
+\begin{dunefigure}[Comparison of standard and tau-optimized neutrino fluxes]{fig:tau-optimized}
+{Comparison of standard and tau-optimized neutrino fluxes.  The tau optimized flux was simulated with a 120 GeV proton beam and two NuMI parabolic horn, with the second horn starting 17.5 downstream from the start of the first horn, and a 1.5 m long, 10 mm wide carbon fin target starting 2m from the upstream face of the first horn.  To be updated.  }
+\includegraphics[width=0.7\textwidth]{tau_optimized.png}
+\end{dunefigure}
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Neutrino interaction generators} 
@@ -420,35 +521,67 @@ Two recent additions to TrajCluster are matching trajectories in 3D and tagging 
 
 \subsection{Pandora}\label{sec:Pandora}
 
-The Pandora Software Development Kit~\cite{Marshall:2015rfa} was created to address the problem of identifying energy deposits from individual particles in fine-granularity detectors. It promotes the idea of a multi-algorithm approach for solving pattern-recognition problems. In this approach, the pattern recognition is broken down into a large number of decoupled algorithms, where each algorithm addresses a specific task or targets a particular topology. The overall event is then built up carefully using a chain of many tens of algorithms. The Pandora multi-algorithm approach has been applied to Liquid Argon TPC detectors, and has been successfully used in different analyses for the reconstruction of cosmic-ray muons and neutrino interactions in the MicroBooNE experiment~\cite{Acciarri:2017hat} as well as test beam interactions in the protoDUNE single phase detector~\ref{sec:performance:protodune}.
+The Pandora Software Development Kit~\cite{Marshall:2015rfa} was created to address the problem of identifying energy deposits from individual particles in fine-granularity detectors, using a multi-algorithm approach for solving pattern-recognition problems. Complex and varied topologies in particle interactions recorded in detectors, especially with the level of detail provided by Liquid Argon TPCs, are unlikely to be successfully solved by a single clustering algorithm. Instead, in Pandora's approach, the pattern recognition is broken down into a large number of decoupled algorithms, where each algorithm addresses a specific task or targets a particular topology. The overall event is then built up carefully using a chain of many tens of algorithms. The Pandora multi-algorithm approach has already been applied to Liquid Argon TPC detectors, and has been successfully used in different analyses for the automated reconstruction of cosmic-ray muons and neutrino interactions in the MicroBooNE experiment~\cite{Acciarri:2017hat} as well as test beam interactions in the protoDUNE single phase detector (see Section ~\ref{sec:Pandora:ProtoDUNE}).
 
 
 \subsubsection{Pandora Inputs and Outputs}
 
-The Pandora pattern recognition algorithms are integrated into the LArSoft framework via the {\it larpandora} repository. The input to the pattern recognition is a list of reconstructed and disambiguated 2D hits. A ``StandardPandora'' ART Producer module translates these hits into native Pandora 2D hits, which are separated into the $U$, $V$ and $Z$ views. The hits are further separated into ``drift volumes'', defined as the regions of the detector with a common drift readout. The Producer module initiates and applies the specified chain of pattern recognition algorithms, and then outputs the results of the pattern recognition into the ART/LArSoft framework.
+The sole input to the Pandora pattern recognition is a list of reconstructed and disambiguated 2D Hits, along with detector information (such as dimensions, unresponsive or dead material regions, etc.). Via the {\it larpandora} repository, which integrates Pandora pattern recognition algorithms into the LArSoft framework, these hits are translated into native Pandora 2D hits and separated into the different views and into ``drift volumes'', defined as the regions of the detector with a common drift readout. The specified chain of pattern recognition algorithms is then initialised and applied. 
 
-The output of the reconstruction is illustrated in Figure~\ref{larsoft_output}. The main output is a list of reconstructed 3D particles (termed ``PFParticles'') for each event. A PFParticle corresponds to a distinct track or shower in the event, and has associated collections of 2D hits for each view. Each PFParticle is outputted along with an associated set of reconstructed 3D positions (``Space Points''), a sequence of 3D positions and directions that describe its trajectory (``Seeds''), and a reconstructed vertex position that defines its interaction point or first energy deposit. The identity of the particle is currently not reconstructed, but PFParticles are instead characterized as track-like or shower-like according to the pattern of their hits. The topological associations between PFarticles are used to define parent/daughter relationships, which are collated into a hierarchy. A neutrino PFParticle is also created and forms the top-level parent particle in each reconstructed neutrino hierarchy.
+The results of the pattern recognition are output into the ART/LArSoft framework, again via {\it larpandora}. The output of the reconstruction is illustrated in Figure~\ref{larsoft_output}, being the main output a list of reconstructed 3D particles (termed ``PFParticles'', where ``PF'' stands for Particle Flow) for each event. A PFParticle corresponds to a distinct track or shower in the event, and has associated collections (Clusters) of 2D hits for each view, as well as an associated set of reconstructed 3D positions (SpacePoints) and a reconstructed Vertex position that defines its interaction point or first energy deposit. Navigation along PFParticle hierarchies is achieved using the PFParticle interface, which connects parent and daughter PFParticles, providing the Particle Flow describing the interaction. In the reconstruction of neutrino interactions, a neutrino PFParticle is also created and forms the top-level parent particle in each reconstructed neutrino hierarchy, with only a Vertex associated to it. Pandora also provides a second level of ART associations linking elements such as Clusters, Slices, SpacePoints, Tracks and Showers with their corresponding collection of Hits. 
+
+Pandora uses the concept of {\it slice} internally to represent and separate subsets of hits topological distinct, based on distance and pointing information, with the aim of avoiding merging together into one hierarchy particles produced by the interaction of a neutrino or test beam particle and those with cosmic ray origin. An ART/LArSoft product is now also available to identify PFParticles and Hits that belong to the same {\it slice}. For PFParticles, this information is also stored in the Metadata object, which contains as well information handled internally by Pandora that might be helpful for usage downstream, namely whether a particle was identified as a clear cosmic, or the scores of the multivariate analysis tools, such as Boosted Decision Trees (BDTs) or Support Vector Machines (SVMs) that were used to identify the test team particle or the neutrino interaction respectively. 
+
+The identity of each particle is currently not reconstructed by Pandora, but PFParticles are instead characterised as track-like or shower-like using the topological information available at this stage, according to the pattern of their hits. Then, for each PFParticle a higher level object will be created, either a Track or a Shower depending on its classification, containing extra information such as direction, opening angle, etc.  
 
 \begin{figure}[!h!tbp]
 \centering
-\includegraphics[width=0.8\textwidth]{FIG_LArPandoraOutputNew.png}
-\caption{Illustration of the Pandora output in ART/LArSoft. Navigation along PFParticle hierarchies is achieved using the PFParticle interface, and is represented by dashed lines. Navigation from PFParticles to their associated objects is represented by solid arrows. }
+\includegraphics[width=0.8\textwidth]{./FIG_LArPandoraOutputNew.png}
+\caption{Illustration of the Pandora output in ART/LArSoft. Navigation along PFParticle hierarchies is achieved using the PFParticle interface, represented by dashed lines. Navigation from PFParticles to their associated objects is represented by solid arrows, as well as the second level of ART associations from these objects to the underlying Hits input to Pandora.}
 \label{larsoft_output}
 \end{figure}
 
-\subsubsection{Overview of Pattern Recognition Algorithms}
+\subsubsection{Overview of the Pandora Pattern Recognition Algorithms}
 
-The main stages of the Pandora pattern recognition chain are outlined below. Note that both the individual pattern recognition algorithms and the overall reconstruction strategy are under continual development and will evolve over time. The current chain of pattern recognition algorithms has been tuned for lower energy accelerator neutrino interactions from the Booster Neutrino Beam and is in the process of being adapted for neutrino interactions in DUNE.
+The main stages of the Pandora pattern recognition chain are outlined below. Note that both the individual pattern recognition algorithms and the overall reconstruction strategy are under continual development and will evolve over time. The current chain of pattern recognition algorithms has been tuned for lower energy accelerator neutrino interactions from the Booster Neutrino Beam; however, the algorithms are designed to be generic and easily reusable, and they are in the process of being adapted for neutrino interactions in DUNE. A more detailed description of algorithms can be found in~\cite{Acciarri:2017hat}. 
 
 
 \begin{enumerate}
-\item{\bf 2D track-like clusters:}  The first phase of the Pandora pattern recognition is track-oriented 2D clustering. A series of topological association algorithms are used to create proto-clusters, representing continuous, unambiguous lines of 2D hits. This early clustering phase is careful to ensure that the clusters have high purity (i.e. represent energy deposits from exactly one true particle) even if this means the clusters are initially of low completeness (i.e. only contain a small fraction of the total hits within a single true particle).
-\item{\bf 3D vertex reconstruction:} The vertex plays an important role in the pattern recognition. Therefore, a candidate vertex is sought at an early stage. Pairs of 2D clusters are first used to produce lists of possible 3D vertex positions. These candidate vertices are examined and scored, and the best vertex is selected.
+\item{\bf 2D track-like clusters:}  The first phase of the Pandora pattern recognition is track-oriented 2D clustering. A series of topological association algorithms are used to create proto-clusters, representing continuous, unambiguous lines of 2D hits. This early clustering phase is careful to ensure that the clusters have high purity (i.e. represent energy deposits from exactly one true particle) even if this means the clusters are initially of low completeness (i.e. only contain a small fraction of the total hits within a single true particle). A series of cluster-merging and cluster-splitting algorithms then evaluate the list of 2D proto-clusters created and change them based on topological information, carefully aiming at safe merges, improving completeness without compromising purity.
+\item{\bf 3D vertex reconstruction:} The interaction vertex plays a key role in the reconstruction of neutrino interactions, as it allows 2D clusters to be split at projected vertex positions, and to protect primary particles emerging from it, ensuring a good performance in interactions with up to many final state particles. Therefore, a candidate vertex is sought at an early stage. Pairs of 2D clusters are first used to produce lists of possible 3D vertex positions. These candidate vertices are examined and scored, and the best vertex is selected. Pandora has developed different algorithms for the selection of the neutrino vertex, being the most sophisticated one a SVM-based algorithm used for MicroBooNE, which can be adapted in the future for interactions in DUNE FD, currently using a simpler score version instead.  
 \item{\bf 3D track reconstruction:} The aim of the 3D track reconstruction is to identify consistent track-like 2D clusters and build them into 3D track-like particles. At the same time, 3D information is used to improve the quality of the 2D reconstruction. A preliminary analysis first considers all possible combinations of 2D clusters, one from each view, and builds a rank-three tensor describing their 3D consistency between views. This tensor is then used to generate 3D particles, beginning with unambiguous combination of clusters. If there are ambiguities or inconsistencies, a series of targeted algorithms are used to identify common features in the three readout planes and iteratively correct the 2D clustering in order for unambiguous particles to emerge.
-\item{\bf 2D and 3D shower reconstruction:} A series of topological metrics are first used to characterise each 2D cluster as track-like or shower-like (some use of calorimetric information would be desirable in future). An analysis of this information is then used to identify shower spines, which form the seeds for 2D and 3D shower reconstruction. A recursive algorithm is used to add shower branches onto each top-level shower spine, then branches onto branches etc. The 2D showers are then matched between views to form 3D showers.
-\item{\bf 3D short track reconstruction:} Following the 3D track and shower reconstruction, a series of particle recovery algorithms are used in a number of different configurations to try and identify any remaining particles.  Many of the ideas from the earlier 3D track and shower reconstruction are re-used, but the thresholds for matching clusters between views are reduced. These algorithms take account that the particles may be missing a cluster in one view, and place particular focus on the region around the vertex.
-\item{\bf 3D event-building:} This final stage of the pattern recognition begins by creating a set of 3D hits for each reconstructed particle. This 3D information is then used to organise the particles into a hierarchy of parent/daughter relationships. Each reconstructed particle is assigned a particle identification label (PDG code), depending on whether the particle was created using the 3D track reconstruction algorithms (given PDG code 13 for muons) or the 3D shower reconstruction algorithms (given PDG code 11 for electrons). An empty neutrino particle is created at the top level of the hierarchy, and assigned either PDG code 14 for numu or 12 for nue depending on whether the final-state particle with the largest number of hits is track-like or shower-like. A 3D vertex position is calculated for each of the reconstructed particles in the hierarchy, based on the point of closest approach between parent and daughter particles.
+\item{\bf 2D and 3D shower reconstruction:} A series of topological metrics (additional use of some calorimetric information would be desirable in the future) are first used to characterise each 2D cluster as track-like or shower-like. This information is analysed to identify shower spines, which form the seeds for 2D and 3D shower reconstruction. A recursive algorithm is used to add shower branches onto each top-level shower spine, then branches onto branches, etc. The 2D showers are then matched between views to form 3D showers.
+\item{\bf 2D and 3D particle refinement:} Following the 3D track and shower reconstruction, a series of algorithms are used in a number of different configurations to try and identify any remaining particles. Some algorithms are also used at this stage to deal with remnants to improve particle completeness, especially of sparse showers. For example, sliding linear fits are used to define 2D envelopes and 3D cones for picking up small clusters/fragments. This is also an illustration of how the Pandora Rotational Coordinate Transformation System represents a powerful took, allowing handling 2D and 3D information at the same time, by creating 3D candidate positions from 2D ones, and 2D projections from 3D positions. 
+\item{\bf 3D event-building:} This final stage of the pattern recognition begins by creating a set of 3D hits for each reconstructed particle. This 3D information is then used to organise the particles into a hierarchy of parent/daughter relationships, walking backwards from the interaction vertex. Each reconstructed particle is assigned a particle identification label (stored in its PDG code), depending on whether the particle was created using the 3D track reconstruction algorithms (therefore track-like) or the 3D shower reconstruction algorithms (shower-like). An empty neutrino particle is created at the top level of the hierarchy, and assigned either PDG code 14 for numu or 12 for nue depending on whether the final-state particle with the largest number of hits is track-like or shower-like. A 3D vertex position is calculated for each of the reconstructed particles in the hierarchy, based on the point of closest approach between parent and daughter particles.
 \end{enumerate}
+
+The different algorithms forming the stages described above can be used in different ways, to aim for different outcomes, thanks to the multi-algorithm approach. Currently, two Pandora reconstruction paths have been created, using chains of tens of algorithms each. Many algorithms are shared between the  {\it PandoraCosmic} and {\it PandoraNu} reconstruction paths, but the overall algorithm selection results in the different key features:
+\begin{enumerate}
+\item {\it PandoraCosmic}: Strongly track-oriented, optimised for the reconstruction of cosmic-ray muons and their daughter (shower-like) delta rays. 
+\item {\it PandoraNu}: Optimised, with a more careful treatment of tracks vs showers in its reconstruction, for the reconstruction of neutrino or test beam particle interactions, thus carefully building the event using the reconstructed interaction vertex, protecting particles emerging from it. 
+\end{enumerate}
+
+These two chains of algorithms are harnessed together to provide a consolidated output in the case of surface detectors exposed to cosmic-rays, such as MicroBooNE and ProtoDUNE single phase (note that, not expecting a significant cosmic-ray background, only the {\it PandoraNu} algorithm chain is necessary for DUNE FD). The overall reconstruction strategy in such detectors is illustrated in the diagram in Figure~\ref{consolidated_reco}. It starts by running the {\it PandoraCosmic} reconstruction on the entire collection of input hits, to then use a geometrical approach for tagging through-going cosmic-rays. Those unambiguous cosmic rays are directly output under this reconstruction hypothesis, and only the remaining hits are considered in the next stages. The {\it slicing} process is then applied to the remaining collection of hits, dividing up the event into smaller regions, {\it slices}, based on the position and pointing information of the subsets of hits. After the {\it slicing}  step, each {\it slice} is reconstructed using both the {\it PandoraNu} and {\it PandoraCosmic} reconstruction chains and the results are compared to determine whether the slice corresponds to a cosmic-ray or a neutrino (in the case of MicroBooNE) or test beam (in the case of ProtoDUNE-SP) interaction. The consolidated event output is formed of three classes of reconstructed particles: cosmic rays passing through the detector (through-going, unambiguous cosmic-rays), cosmic-rays that stop in the detector (remaining cosmic-rays) and candidate neutrino interactions or test beam particles.
+
+\begin{figure}[!h!tbp]
+\centering
+\includegraphics[width=0.65\textwidth]{./FIG_PandoraConsolidatedOutput.png}
+\caption{Schema of the Pandora consolidated output and overall reconstruction strategy for surface LArTPCs such as MicroBooNE and ProtoDUNE-SP. See text for more details.}
+\label{consolidated_reco}
+\end{figure}
+
+Of particular importance in this overall reconstruction strategy is the neutrino (MicroBooNE) or test beam particle (ProtoDUNE-SP) identification tool. Once the hits have been {\it sliced} into distinct collections, {\it slices}, each of which contains LArTPC hits originating from a single primary particle, these {\it slices} are then reconstructed using the two different algorithm chains ({\it PandoraCosmic} and {\it PandoraNu}) and the output of both is compared to determine whether each {\it slice} contains a cosmic-ray or a neutrino interaction/test beam particle. To make this decision, an algorithm is used to perform a multivariate approach, based on trained Support Vector Machines (SVM) in the case of MicroBooNE to select the most likely neutrino interaction {\it slice}, or on adaptive Boosted Decision Tree (BDT) to distinguish cosmic-ray and test beam particles. The variables used in the ProtoDUNE-SP beam particle BDT, which has proved to be highly efficient across the momentum range of ProtoDUNE-SP data as it will be shown in Section ~\ref{sec:Pandora:ProtoDUNE}, are the following: 
+
+\begin{itemize}
+\item The eigenvalues of the covariance matrix of the spatial position of the 3D LArTPC hits.
+\item The distance of the closest 3D hit to the beam spot.
+\item The vertical distance of the reconstructed 3D hit closest to the top of the detector.  
+\item The number of reconstructed particles.
+\item The angle and direction of a spatial fit to the reconstructed 3D hits with respect to the beam line.
+\end{itemize}
+
+The performance obtained with the current algorithms will be shown in Section~\ref{sec:performance}, both for DUNE FD and ProtoDUNE-SP.  As already mentioned, both the individual pattern recognition algorithms and the overall reconstruction strategy are under continual development, also algorithms will be tuned for the DUNE energy ranges, as well as new ones are likely to be created based on its necessities in the near future, so the performance presented in this document is expected to improve with future dedicated work. 
+
 
 \subsection{Projection Matching Algorithm}\label{sec:PMA}
 Projection Matching Algorithm (PMA) was primarily developed as a technique of 3D reconstruction of individual particle trajectories (trajectory fit) Ref~\cite{Antonello:2012hu}. PMA was designed to address a challenging issue of transformation from a set of independently reconstructed 2D projections of objects into a 3D representation. Reconstructed 3D objects are providing also a basic physics quantities like particle directions and dE/dx evolution along the trajectories. PMA uses as its input the output from 2D pattern recognition: clusters of hits. For the purposes of DUNE reconstruction chain the Line Cluster algorithm (\ref{sec:LineCluster}) is used as input to PMA, however the use of hit clusters prepared with other algorithms may be configured as well. As a result of 2D pattern recognition, particles may be broken in 2D projections into several clusters, fractions of particles may be missing in individual projections and clusters obtained from complementary projections are not guaranteed to cover corresponding sections of trajectories. Such behavior is expected since ambiguous configurations of trajectories can be resolved only if the information from multiple 2D projections is used. Searching for the best matching combinations of clusters from all 2D projections was introduced to PMA implementation in the LArSoft framework. The algorithm attempts also to correct hit to cluster assignments using properties of 3D reconstructed objects. In this sense PMA is also a pattern recognition algorithm.
@@ -680,6 +813,7 @@ contained in the flash.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Reconstruction Performance}
+\label{sec:performance}
 
 An automated reconstruction of the neutrino interaction events in DUNE, often complex topologies with multiple final state particles, is a significant challenge. The current chain of Pandora pattern recognition algorithms used has been tuned for neutrino interactions from the Booster Neutrino Beam, and it is in the process of being adapted for the wide range of energies of the DUNE FD. Despite this fact, and thanks to the reusability of Pandora algorithms for different single phase LAr TPC detectors, a good performance is already achieved with this first-pass pattern recognition. Significant improvements are expected though in the upcoming years with a more dedicated tune of the current algorithms, and the development of new ones, according to the necessities of DUNE. 
 
@@ -736,9 +870,9 @@ Figure~\ref{pandora_vertex_resolution} shows distributions of the displacements 
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=0.35\textwidth]{Pandora-NCDIS.png}
-\includegraphics[width=0.35\textwidth]{Pandora-CCDIS.png}
-\includegraphics[width=0.35\textwidth]{Pandora-CCDISLeptonMatches.png}
+\includegraphics[width=0.315\textwidth]{Pandora-NCDIS.png}
+\includegraphics[width=0.315\textwidth]{Pandora-CCDIS.png}
+\includegraphics[width=0.315\textwidth]{Pandora-CCDISLeptonMatches.png}
 \caption{Distributions of number of reconstructed particles as a function of number of true final-state particles in deep inelastic events for neutral-current (left) and charged-current (middle) interactions. In addition, the number of reconstructed particles matching the leading lepton in charged-current deep inelastic interactions is also presented (right).}
 \label{pandora_dis}
 \end{figure}
