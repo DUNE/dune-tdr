@@ -138,7 +138,7 @@ class manifest(Task):
 def spreadsheet_updater(bld):
     secret = bld.options.docdb_password
     if not secret and bld.options.docdb_password_file:
-        secret = bld.path.find_resource().read(bld.options.docdb_password_file).strip()
+        secret = bld.path.find_resource(bld.options.docdb_password_file).read().strip()
     if not secret:
         print ('Note: no --docdb-password[-file] given, spreadsheets will not be updated.')
         return None
