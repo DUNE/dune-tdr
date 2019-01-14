@@ -1,5 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % rjw 11/25/18 Make subsection of the Validation section 
+% 1/9/19 Move back to just after the Introduction.
 %
 \subsection{Simulation}
 \label{sec:fdsp-pd-simphys}
@@ -11,8 +12,8 @@
 %Content update by AH nov 2018
 %edits by rjw nov 2018
 
-The detector requirements for the \dword{pds} are determined by a series of physics deliverables addressing the major physics goals of DUNE: nucleon decay searches, supernova burst neutrinos, and beam neutrinos. The system requirements then flow from the physics needs, determined using a full simulation, reconstruction, and analysis chain developed for the \larsoft framework. 
-\fixme{I'm confused: the goals determine the needed sim/reco/analysis work which determines the requirements, which in turn determine the deliverables? Or the goals determine the deliverables, which determine the sim/reco/analysis work, which determines the requirements? Anne}
+The broad performance specifications for the \dword{pds} are determined by a series of physics deliverables addressing the major physics goals of DUNE: nucleon decay searches, supernova burst neutrinos, and beam neutrinos. Detailed subdetector specifications, such as light yield of the light collectors, are determined using a full simulation, reconstruction, and analysis chain developed for the \larsoft framework. 
+%\fixme{I'm confused: the goals determine the needed sim/reco/analysis work which determines the requirements, which in turn determine the deliverables? Or the goals determine the deliverables, which determine the sim/reco/analysis work, which determines the requirements? Anne}
 %The major physics goals of DUNE -- nucleon decay searches, \dword{snb} neutrinos, and beam neutrinos -- determine a series of physics deliverables.  The \dword{pds} requirements flow from the physics needs, determined using a full simulation, reconstruction, and analysis chain developed for the \larsoft framework. 
 
 %The goal is to evaluate the performance in physics deliverables for each of the photon collector designs under consideration. The metrics evaluated will include efficiency for determining the time of the event ($t_0$), timing resolution, and calorimetric energy resolution for three physics samples: \dword{snb} neutrinos, nucleon decay events, %\footnote{The most relevant sample is actually the \emph{background} to nucleon decay events. However, efficiently simulating background that can mimic nucleon decays is challenging since they can be quite rare topologies, so it is easier to simulate the nucleon decay signal which should be representative of the background.}, 
@@ -22,8 +23,8 @@ The detector requirements for the \dword{pds} are determined by a series of phys
 
 \subsubsection{Simulation and Reconstruction Steps} 
 
-The first step in the simulation specific to the \dword{pds} is the simulation of the production of light and its transport within the volume to the \dwords{pd}. Argon is a strong scintillator, producing \SI{24000}{$\gamma$s/MeV} at our nominal drift field. Even accounting for the efficiency of the \dwords{pd}, it is prohibitive to simulate every optical photon with \dword{geant4} in every event. So, prior to the full event simulation, the detector volume is voxelized and many photons are produced in each voxel. The fraction of photons from each voxel reaching each photosensor is called the visibility, and these visibilities are recorded in a 4-dimensional library (akin to the photon maps used in the \dword{dpmod} simulation described in \voltitledp~Chapter 5.
-\fixme{This reference to DP chapter 5 is hardwired - check this is the correct chapter number.}
+The first step in the simulation specific to the \dword{pds} is the simulation of the production of light and its transport within the volume to the \dwords{pd}. Argon is a strong scintillator, producing \SI{24000}{$\gamma$s/MeV} at our nominal drift field. Even accounting for the efficiency of the \dwords{pd}, it is prohibitive to simulate every optical photon with \dword{geant4} in every event. So, prior to the full event simulation, the detector volume is voxelized and many photons are produced in each voxel. The fraction of photons from each voxel reaching each photosensor is called the visibility, and these visibilities are recorded in a 4-dimensional library (akin to the photon maps used in the \dword{dpmod} simulation described in \voltitledp~Chapter~5.
+%\fixme{This reference to DP chapter 5 is hardwired - check this is the correct chapter number.}
 This library includes Rayleigh scattering length ($\lambda=$ \SI{60}{cm}\cite{Grace:2015yta}), absorption length ($\lambda=$ \SI{20}{m}), and the measured collection efficiency versus position of the double-shift light-guide bars. When a particle is simulated, at each step it produces charge and light. The light produced is distributed onto the various \dwords{pd} using the photon library as a look-up table and the 30\% early (\SI{6}{ns}) plus 70\% late (\SI{1.6}{$\mu$s}) scintillation time constants are applied. Transport time of the light through the \lar is not currently simulated, but is under development.
 
 The second step is the simulation of the sensor and electronics response. For the studies shown here, the SensL \dword{sipm} and \dword{sipm} signal processor (\dword{ssp}) readout electronics used for \dword{pd} development and in \dword{pdsp} is assumed (see Section~\ref{sec:fdsp-pd-pde}). However, a range of \dword{s/n} and dark rates are considered in order to set requirements on the needed performance of the electronics.
@@ -51,7 +52,7 @@ The physics deliverable: the \dwords{pd} must be able to determine T0 with appro
 This %time 
 resolution is required for comparable spatial resolution to the TPC along the drift direction.
 
-\begin{dunetable}[\dword{pd} efficiency for nucleon decay events]
+\begin{dunetable}[\Dword{pd} efficiency for nucleon decay events.]
 {ccc}
 {tab:pds-ndk}
 {Efficiency for tagging nucleon decay events at the \dword{cpa} (\SI{3.6}{m} from the \dwords{pd} ) with the \dword{pds}  for a range of ``effective area'' (efficiency times active area) per module and the equivalent light yield per MeV at the \dword{cpa}.}
@@ -78,7 +79,7 @@ Supernova bursts are also rare events, though here the event is made up of many 
 
 The physics deliverable: the \dword{pds} must be able to trigger on \dwords{snb} in our galaxy and the Large Magellanic Cloud with efficiency similar to the TPC, with a false positive rate of less than one per month. This deliverable is most important for distant supernovae where the most important requirement is that we trigger and record the data. The \dword{pds}-based trigger should have similar performance to the TPC trigger so they can provide redundancy against one another or be combined to increase efficiency or lower the background rate. The once-per-month false positive rate is determined by limits from the \dword{daq} and data handling.
 
-\fixme{Results of the SNB triggering studies will go here when available}
+\fixme{AH Results of the SNB triggering studies will go here when available}
 
 
 \textit{T0 for TPC Energy Measurement and Time Resolution}
@@ -100,7 +101,7 @@ The 60\% T0 tagging requirement comes from two studies of a typical \dword{snb} 
 Physics deliverable: the \dword{pds} should be able to provide a calorimetric energy measurement for low-energy events, like \dwords{snb}, complementary to the TPC energy measurement. 
 Improving the energy resolution, up to the fundamental limits imposed by invisible particles in the interaction, will enable us to extract the maximum physics from a \dword{snb}, and with the goal to achieve energy resolution comparable to the TPC, we can take full advantage of the anti-correlation between the emission of light and charge signals imposed by the conservation of energy.
 
-\fixme{Results of SNB calorimetry studies will go here}
+\fixme{AH Results of SNB calorimetry studies will go here}
 
 
 \subsubsection{Beam Neutrinos}
@@ -113,7 +114,7 @@ The \dword{pds} is not needed for fiducializing beam neutrino events since the p
 Physics deliverable: the \dword{pds} should be able to provide a calorimetric energy measurement for high-energy events, like neutrinos from the LBNF beam, complementary to the TPC energy measurement.
 Neutrino energy is an observable critical to the success of the oscillation physics program, and a second independent measurement can provide a cross-check that reduces systematic uncertainties or directly improves resolution for some types of events. In order to provide a meaningful cross-check, the resolution and uncertainty of the \dword{pds} measurement must be comparable to the calorimetric resolution of the TPC. The limit on this measurement will likely come from how well the efficiency of the detector and the optical properties of the argon can be determined (both must be known to approximately 5\% to have a comparable measurement of electron shower energy), which define a program of measurements between now and the operation of the detector rather than requirements on the system itself. The requirement that does flow down from this is that the dynamic range of the system be sufficient to allow for accurate measurement of the amount of light reaching the \dword{pds}. 
 
-\fixme{Results of beam dynamic range studies will go here. TPC requirement is < 10\% of events saturate.}
+\fixme{AH Results of beam dynamic range studies will go here. TPC requirement is < 10\% of events saturate.}
 
 
 \textit{\it Michel Electron Tagging}
