@@ -281,29 +281,44 @@ and is being used in studies.
 
 Most supernova neutrino studies done for DUNE so far, including of the
 plots included in the CDR~\cite{Acciarri:2015uup}, have employed
-SNOwGLoBES\cite{sglobes}, a fast event-rate computation tool.  This
+SNOwGLoBES\cite{snowglobes}, a fast event-rate computation tool.  This
 uses $\globes$ front-end software~\cite{Huber:2004ka,globes} to
 convolve fluxes with cross-sections and detector parameters.  The
 output is in the form of interaction rates for each channel as a
 function of neutrino energy, and ``smeared'' rates as a function of
-detected energy for each channel (\textit{i.e.} the spectrum that
+detected energy for each channel (i.e., the spectrum that
 actually be observed in a detector).  
 The smearing (transfer) matrices incorporate both
 interaction product spectra for a given neutrino energy, and detector
-response. 
+response.   Figure~\ref{marleysmearing} shows such a transfer matrix
+created
+using MARLEY, by determining the distribution of observed charge,
+as simulated in LArSoft, as a
+function of neutrino energy in 0.5-MeV neutrino energy steps.
 Time dependence in SNOwGLoBES can be straightforwardly
 handled by providing multiple files with fluxes divided into different
 time bins. \footnote{Note that SNOwGLoBES is \textit{not} a Monte-Carlo
 code--- it calculates mean event rates using a transfer matrix to
 convert neutrino spectra to observed spectra.}
 
-For default SNOwGLoBES, a
-detection threshold of 5 MeV in LAr is assumed as well as energy resolution
-from Ref.~\cite{Amoruso:2003sw}.    Furthermore, the current default detector
-response smearing for LAr in SNOwGLoBES  assumes that all energy from
-de-excitation products is captured, which is likely a poor assumption. 
-User-created transfer matrices have also been used
-for some studies~\cite{gleb, glebdocdb}.
+% For default SNOwGLoBES, a
+% detection threshold of 5 MeV in LAr is assumed as well as energy resolution
+% from Ref.~\cite{Amoruso:2003sw}.    Furthermore, the current default detector
+% response smearing for LAr in SNOwGLoBES  assumes that all energy from
+% de-excitation products is captured, which is likely a poor assumption. 
+% User-created transfer matrices have also been used
+% for some studies~\cite{gleb, glebdocdb}.
+
+
+\begin{dunefigure}[MARLEY event]{fig:marleydist}{Smearing matrix for
+    SNOwGLoBES created with monochromatic MARLEY samples run though
+    LArSoft, describing detected charge distribution as a function of
+    neutrino energy.  The effects of interaction product distributions
+  and detector smearing are both incorporated in this matrix.  This
+  incorporates an assumed photon drift correction.}
+\includegraphics[width=0.6\textwidth]{marley-smearing.png}
+\end{dunefigure}
+
 
 While SNOwGLoBES is, and will continue to be, a fast, useful tool,
 it has limitations with respect to a full simulation.  One loses correlated
@@ -315,29 +330,38 @@ one can update transfer matrices using improved simulation and still use
 SNOwGLoBES to draw useful conclusions.
 
 
-
-
-
 \subsubsection{Backgrounds}
 
 Understanding of backgrounds is also critical for understanding of how
 well we can reconstruct low energy events, and for setting detector requirements.  Small single-hit blips
-from $^{39}$Ar or other impurities may fake de-excitation gammas and also affect
-triggering.  Backgrounds may be especially important for photon
-detectors (which in turn may be important for energy resolution by
-correcting for attenuation of charge during drift)--- see Section~\ref{sec:snb_photons}.  Work on
-backgrounds is done in collaboration with the DUNE Radiopurity group.
+from $^{39}$Ar or other impurities may fake de-excitation gammas.
+Preliminary studies suggest that backgrounds will have a minor effect
+on reconstruction of triggered supernova burst events.  However, the
+effect on a DAQ and triggering system that satisfies supernova burst
+triggering requirements is significant.  Furthermore backgrounds
+matter for selection of low-rate events such as solar neutrinos.
+Sections~\ref{bg, DAQ} discuss these issues further.
 
-\section{Expected Supernova Signal Properties}\label{sec:sn-signals}
+% Backgrounds may be especially important for photon
+% detectors (which in turn may be important for energy resolution by
+% correcting for attenuation of charge during drift)--- see
+% Section~\ref{sec:snb_photons}.
+% Work on
+% backgrounds is done in collaboration with the DUNE Radiopurity group.
+
+\section{Expected Supernova Burst Signal Properties}\label{sec:sn-signals}
 
 
 Table~\ref{tab:argon_events} shows rates calculated  for the dominant interactions in argon for
 the ``Livermore'' model~\cite{Totani:1997vj} (out of date, but included for comparison with literature), and the ``GKVM''
 model~\cite{Gava:2009pj}; for the former, no oscillations are assumed; the latter assumes collective effects.  In general, there is a rather wide variation--- up to an order of magnitude --- in event rate for different models, due to different numerical treatment (e.g., neutrino transport, dimensionality), physics input (nuclear equation of state, nuclear correlation and impact on neutrino opacities, neutrino-nucleus interactions) and oscillation effects. In addition, there is intrinsic variation in the nature of the progenitor and collapse mechanism.  Neutrino emission from the supernova may furthermore be have an emitted lepton-flavor asymmetry~\cite{Tamborra:2014aua}, so that observed rates may be dependent on the supernova direction.
-\begin{dunetable}[Event rates for different models in \SI{40}{\kt} of LAr for
-    a core-collapse at 10~kpc]{lcc}{argon_events}{Event rates for different
+\begin{dunetable}[Event mumbers for different models in \SI{40}{\kt} of LAr for
+    a core-collapse at 10~kpc]{lcc}{argon_events}{Event counts for different
     supernova models in \SI{40}{\kt} of liquid argon for a core collapse at 10~kpc, for $\nu_e$ and $\bar{\nu}_e$ charged-current channels and elastic scattering (ES) on electrons.
-    Event rates will simply scale by active detector mass and inverse square of supernova distance.   No oscillations are assumed; we note that oscillations (both standard and ``collective'') will potentially have a large, model-dependent effect.}
+    Event rates will simply scale by active detector mass and inverse
+    square of supernova distance.   No oscillations are assumed; we
+    note that oscillations (both standard and ``collective'') will
+    potentially have a large, model-dependent effect, discussed in Sec.~\ref{sec:mh}.}
 Channel & Events & Events \\
 \rowtitlestyle
 & ``Livermore'' model & ``GKVM'' model  \\ 
@@ -354,46 +378,49 @@ Total &  3300 & 3770 \\
 
 
 
-Figure~\ref{fig:garching} gives another example of an expected burst
-signal, for which a calculation with detailed time dependence of the
-spectra is available~\cite{Huedepohl:2009wh} out to 9~seconds
-post-bounce.  This model has relatively low luminosity but the standard robust
-neutronization burst.  Note that the relative fraction of
-neutronization-burst events is quite high.
-Figure~\ref{fig:eventrates} shows the event channel breakdown for the same model.  Clearly, the $\nu_e$
+% Figure~\ref{fig:garching} gives another example of an expected burst
+% signal, for which a calculation with detailed time dependence of the
+% spectra is available~\cite{Huedepohl:2009wh} out to 9~seconds
+% post-bounce.  This model has relatively low luminosity but the standard robust
+% neutronization burst.  Note that the relative fraction of
+% neutronization-burst events is quite high.
+% Figure~\ref{fig:eventrates} shows the event channel breakdown for the
+% same model.
+
+Clearly, the $\nu_e$
 flavor dominates.  Although water and scintillator detectors will record $\nu_e$ events~\cite{Laha:2013hva,Laha:2014yua}, liquid argon is the only future prospect for a large, clean supernova $\nu_e$ sample~\cite{Scholberg:2012id}.
 
 
-\begin{dunefigure}[Garching flux signal with neutronization burst]{garching}{Expected
-  time-dependent signal for a specific flux model for an
-  electron-capture supernova~\cite{Huedepohl:2009wh} at 10~kpc.  No oscillations are assumed. The
-  top plot shows the luminosity as a function of time, the second plot
-  shows average neutrino energy, and the third plot shows the $\alpha$
-  (pinching) parameter.  The fourth (bottom) plot shows the total number of
-  events (mostly $\nu_e$) expected in 40 kt of liquid argon, calculated using
-  SNOwGLoBES.  Note the logarithmic binning in time; the plot shows
-  the number of events expected in the given bin and the error bars
-  are statistical. The vertical dashed line at 0.02 seconds indicates
-  the time of core bounce, and the vertical lines indicate different
-  eras in the supernova evolution.  The leftmost time interval
-  indicates the infall period.  The next interval, from core bounce to
-  50~ms, is the neutronization burst era, in which the flux is
-  composed primarily of $\nu_e$.  The next period, from 50 to 200~ms,
-  is the accretion period. The final era, from 0.2 to 9~seconds, is
-  the proto-neutron-star cooling period.}
-\includegraphics[width=0.9\textwidth]{garching.pdf}
-\end{dunefigure}
+% \begin{dunefigure}[Garching flux signal with neutronization burst]{garching}{Expected
+%   time-dependent signal for a specific flux model for an
+%   electron-capture supernova~\cite{Huedepohl:2009wh} at 10~kpc.  No oscillations are assumed. The
+%   top plot shows the luminosity as a function of time, the second plot
+%   shows average neutrino energy, and the third plot shows the $\alpha$
+%   (pinching) parameter.  The fourth (bottom) plot shows the total number of
+%   events (mostly $\nu_e$) expected in 40 kt of liquid argon, calculated using
+%   SNOwGLoBES.  Note the logarithmic binning in time; the plot shows
+%   the number of events expected in the given bin and the error bars
+%   are statistical. The vertical dashed line at 0.02 seconds indicates
+%   the time of core bounce, and the vertical lines indicate different
+%   eras in the supernova evolution.  The leftmost time interval
+%   indicates the infall period.  The next interval, from core bounce to
+%   50~ms, is the neutronization burst era, in which the flux is
+%   composed primarily of $\nu_e$.  The next period, from 50 to 200~ms,
+%   is the accretion period. The final era, from 0.2 to 9~seconds, is
+%   the proto-neutron-star cooling period.}
+% \includegraphics[width=0.9\textwidth]{garching.pdf}
+% \end{dunefigure}
 
 
-\begin{dunefigure}[Supernova $\nu$ event rates in \SI{40}{kt} of LAr for Garching flux]{eventrates}{Left: Expected
-  time-dependent signal in 40 kt of liquid argon for the electron-capture supernova~\cite{Huedepohl:2009wh} at 10~kpc, calculated using SNoWGLoBES~\cite{snowglobes}, showing breakdown of event channels.  Right: expected measured event spectrum for the same model, integrated over time.}
-%\includegraphics[width=2.5in]{garching_time_plot.pdf}
-%\includegraphics[width=2.5in]{garching_energy_plot.pdf}
-\end{dunefigure}
+% \begin{dunefigure}[Supernova $\nu$ event rates in \SI{40}{kt} of LAr for Garching flux]{eventrates}{Left: Expected
+%   time-dependent signal in 40 kt of liquid argon for the electron-capture supernova~\cite{Huedepohl:2009wh} at 10~kpc, calculated using SNoWGLoBES~\cite{snowglobes}, showing breakdown of event channels.  Right: expected measured event spectrum for the same model, integrated over time.}
+% %\includegraphics[width=2.5in]{garching_time_plot.pdf}
+% %\includegraphics[width=2.5in]{garching_energy_plot.pdf}
+% \end{dunefigure}
 
-The number of signal events scales with mass and inverse square of distance as shown in Fig.~\ref{fig:ratesvsdist}.  For a collapse in the Andromeda galaxy, a 40-kton detector would observe a few events.
+The number of signal events scales with mass and inverse square of distance as shown in Fig.~\ref{ratesvsdist}.  For a collapse in the Andromeda galaxy, a 40-kton detector would observe a few events.
 
-\begin{dunefigure}[Supernova neutrino rates vs distance]{ratesvsdist}{Estimated numbers of supernova neutrino interactions in DUNE as a function of distance to the supernova, for different detector masses ($\nu_e$ events dominate). The red dashed lines represent expected events for a 40-kton detector and the green dotted lines represent expected events for a 10-kton detector. The lines limit a fairly wide range of possibilities for ``Garching-parameterized'' supernova flux spectra (Equation~\ref{eq:pinched}) with luminosity $0.5\times 10^{52}$ ergs over ten seconds. The optimistic upper line of a pair gives the number of events for average $\nu_e$ energy of $\langle E_{\nu_e}\rangle =12$~MeV, and ``pinching'' parameter $\alpha=2$; the pessimistic lower line of a pair gives the number of events for $\langle E_{\nu_e}\rangle=8$~MeV and $\alpha=6$. (Note that the luminosity, average energy and pinching parameters will vary over the time frame of the burst, and these estimates assume a constant spectrum in time. Oscillations will also affect the spectra and event rates.) The solid lines represent the integrated number of events for the specific time-dependent neutrino flux model in~\cite{Huedepohl:2009wh} (see Figs.~\ref{fig:garching} and \ref{fig:eventrates}; this model has relatively cool spectra and low event rates). Core collapses are expected to occur a few times per century, at a most-likely distance of around 10 to 15 kpc.}
+\begin{dunefigure}[Supernova neutrino rates vs distance]{ratesvsdist}{Estimated numbers of supernova neutrino interactions in DUNE as a function of distance to the supernova, for different detector masses ($\nu_e$ events dominate). The red dashed lines represent expected events for a 40-kton detector and the green dotted lines represent expected events for a 10-kton detector. The lines limit a fairly wide range of possibilities for ``Garching-parameterized'' supernova flux spectra (Equation~\ref{eq:pinched}) with luminosity $0.5\times 10^{52}$ ergs over ten seconds. The optimistic upper line of a pair gives the number of events for average $\nu_e$ energy of $\langle E_{\nu_e}\rangle =12$~MeV, and ``pinching'' parameter $\alpha=2$; the pessimistic lower line of a pair gives the number of events for $\langle E_{\nu_e}\rangle=8$~MeV and $\alpha=6$. (Note that the luminosity, average energy and pinching parameters will vary over the time frame of the burst, and these estimates assume a constant spectrum in time. Oscillations will also affect the spectra and event rates.) The solid lines represent the integrated number of events for the specific time-dependent neutrino flux model in~\cite{Huedepohl:2009wh} (see Figs.~\ref{params} and \ref{3timescales}; this model has relatively cool spectra and low event rates). Core collapses are expected to occur a few times per century, at a most-likely distance of around 10 to 15 kpc.}
 \includegraphics[width=5in]{argon_sn.pdf}
 \end{dunefigure}
 
@@ -403,7 +430,7 @@ The number of signal events scales with mass and inverse square of distance as s
 % Material from AJ Roeth
 
 
-It will be valuable to use DUNE's tracking ability to reconstruct the direction of the incoming neutrinos to the extent possible.  Reconstruction of direction to a supernova (or other astrophysical event) will be of obvious use to astronomers for prompt detection of the early turn-on of the light.  Furthermore, some core collapse events may not yield bright electromagnetic fireworks, in which case directional information may help in location of a dim even or even a ``disappeared'' progenitor~\cite{Kochanek}.
+It will be valuable to use DUNE's tracking ability to reconstruct the direction of the incoming neutrinos to the extent possible.  Reconstruction of direction to a supernova (or other astrophysical event) will be of obvious use to astronomers for prompt detection of the early turn-on of the light.  Furthermore, some core collapse events may not yield bright electromagnetic fireworks, in which case directional information may help in location of a dim even or even a ``disappeared'' progenitor~\cite{Kochanek:2008mp}.
 Directional information can be used for correlation with gravitational wave observations, which also have some directionality.  Pointing resolution for low-energy events will also be helpful for selecting signal from background for solar neutrinos or other sources with known angular distribution.
 
 The pointing resolution incorporates intrinsic angular spread of the interaction products of the neutrino interaction, as well as resolution for detector reconstruction.  A large fraction of the events expected from the supernova will not point well; in particular, the expected angular distribution of the $\nu_e$ CC absorption events which will make up the bulk of the signal events are expected to have relatively weak anisotropy.  In contrast, the elastic scattering component of the signal should point reasonably well.
@@ -421,52 +448,52 @@ channels, as well as backgrounds.
  \includegraphics[width=0.4\textwidth]{evd1e1025MeV.png}
 \end{dunefigure}
 
-% % Need to remove the title of the plot
-\begin{dunefigure}[costheta for electrons]{fig:1ecostheta}{Cosine of
-    angular difference for 1000 20.25~MeV single electron events,
-    after fitting improvements.}
-\includegraphics[width=0.6\textwidth]{costheta_2025MeV_dflip.pdf}
-\end{dunefigure}
-% \fixme{costheta....pdf not found. Anne}
+% % % Need to remove the title of the plot
+% \begin{dunefigure}[costheta for electrons]{fig:1ecostheta}{Cosine of
+%     angular difference for 1000 20.25~MeV single electron events,
+%     after fitting improvements.}
+% \includegraphics[width=0.6\textwidth]{costheta_2025MeV_dflip.pdf}
+% \end{dunefigure}
+% % \fixme{costheta....pdf not found. Anne}
 
-% \Begin{figure}
-% \centering
-% \includegraphics[width=0.8\textwidth]{chvsdist_2025MeV_dQdxfix.pdf}
-% \caption{\label{fig:dQdx}dQ/dx versus fraction of distance along track for 1000 20.25~MeV single electron events.}
-% \end{figure}
+% % \Begin{figure}
+% % \centering
+% % \includegraphics[width=0.8\textwidth]{chvsdist_2025MeV_dQdxfix.pdf}
+% % \caption{\label{fig:dQdx}dQ/dx versus fraction of distance along track for 1000 20.25~MeV single electron events.}
+% % \end{figure}
 
-% \begin{figure}
-% \centering
-% \includegraphics[width=0.8\textwidth]{abscostheta_2025MeV_PMdQdx.pdf}
-% \caption{\label{fig:1eabscostheta}Absolute value of cosine of angular difference for 1000 20.25~MeV single electron events.}
-% \end{figure}
+% % \begin{figure}
+% % \centering
+% % \includegraphics[width=0.8\textwidth]{abscostheta_2025MeV_PMdQdx.pdf}
+% % \caption{\label{fig:1eabscostheta}Absolute value of cosine of angular difference for 1000 20.25~MeV single electron events.}
+% % \end{figure}
 
- \begin{dunefigure}[Pointing resolution for electrons]{fig:1epointres}{Pointing resolution for single electron events versus electron energy.}
- \includegraphics[width=0.6\textwidth]{pointres_vs_energy_1e_abs_PMdQdx.pdf}
- \end{dunefigure}
+%  \begin{dunefigure}[Pointing resolution for electrons]{fig:1epointres}{Pointing resolution for single electron events versus electron energy.}
+%  \includegraphics[width=0.6\textwidth]{pointres_vs_energy_1e_abs_PMdQdx.pdf}
+%  \end{dunefigure}
 
 
-Isotropic single electrons were simulated in LArSoft version 06\_80\_00 and reconstructed uniformly in 1x2x6 far detector geometry. A sample of events from 10.25 to 50.25~MeV in steps of 5~MeV, with 1000 events each, was created. The Projection Matching Algorithm was used to reconstruct tracks. No noise was simulated at this point. An example event display of a 10.25~MeV electron is shown in Figure~\ref{fig:1eevd}. 
+% Isotropic single electrons were simulated in LArSoft version 06\_80\_00 and reconstructed uniformly in 1x2x6 far detector geometry. A sample of events from 10.25 to 50.25~MeV in steps of 5~MeV, with 1000 events each, was created. The Projection Matching Algorithm was used to reconstruct tracks. No noise was simulated at this point. An example event display of a 10.25~MeV electron is shown in Figure~\ref{fig:1eevd}. 
 %The deposited charge is shown as colored rectangles, the reconstructed hits are shown as rectangle outlines, and the reconstructed tracks are shown as lines. Some events had multiple tracks, so the longest track was assumed to be the electron track. This was correct approximately 90\% of the time. Track selection is one area that can be improved in the future.
 
 %The ``reconstructed direction'' of the electron was defined as the direction vector of the first point of the reconstructed track. For each single electron event, the reconstructed direction was compared to the true direction of the electron, and the angle between them, which will be referred to as the ``angular difference'', was calculated. 
-The distribution of cosines of the angular differences was plotted for
-each electron energy, shown for 20.25~MeV in
-Figure~\ref{fig:1ecostheta}. This plot shows two peaks, at -1 and 1,
-for all energies. This is because the tracks have directional
-ambiguity: since the time of hits is used to determine their $x$
-coordinates in DUNE's time projection chambers (TPCs), it is not known
-which end of a track was created first. The values near -1 correspond
-to events with tracks reconstructed backwards relative to the true
-direction.  The reconstruction used here already incorporates an
-improvement which uses daughter particles (such as bremsstrahlung
-gammas, which are preferentially forward along the track) to determine
-the directionality; we are seeking to improve this.
+% The distribution of cosines of the angular differences was plotted for
+% each electron energy, shown for 20.25~MeV in
+% Figure~\ref{fig:1ecostheta}. This plot shows two peaks, at -1 and 1,
+% for all energies. This is because the tracks have directional
+% ambiguity: since the time of hits is used to determine their $x$
+% coordinates in DUNE's time projection chambers (TPCs), it is not known
+% which end of a track was created first. The values near -1 correspond
+% to events with tracks reconstructed backwards relative to the true
+% direction.  The reconstruction used here already incorporates an
+% improvement which uses daughter particles (such as bremsstrahlung
+% gammas, which are preferentially forward along the track) to determine
+% the directionality; we are seeking to improve this.
 
 %In order to attempt to resolve this ambiguity, dQ/dx as a function of distance along the track was studied. The dQ/dx of an electron is expected to peak at the end of the track, however, this only happens when the electron has an energy of 1~keV~\cite{electron_energy_loss}. Thus, it would not be detectable in DUNE. However, dQ/dx of the reconstructed electron tracks was studied to search for any other effects that cause a direction-dependent dQ/dx pattern. dQ/dx was plotted against the fraction of the distance along the track. An example for 1000 20.25~MeV single electron events is shown in Figure~\ref{fig:dQdx}. For all energies, dQ/dx was slightly higher at the last quarter of the track on average.
 
 %There are other possibilities for resolving this ambiguity, such as using other tracks or bending in the track, if these correlate with direction. For now, in order to approximate what the pointing resolution would be if this ambiguity was resolved, the absolute values of cosines of the angular differences were plotted, as shown for 1000 20.25 MeV electrons in Figure~\ref{fig:1eabscostheta}. 
-The pointing resolution is defined in this study as the angle at which 68\% of angular differences are closer to truth. The pointing resolutions for single electrons were calculated from the absolute value distributions of cosines of angular differences, such as in Fig.~\ref{fig:1eabscostheta}, and plotted as a function of energy, as shown in Fig.~\ref{fig:1epointres}.
+% The pointing resolution is defined in this study as the angle at which 68\% of angular differences are closer to truth. The pointing resolutions for single electrons were calculated from the absolute value distributions of cosines of angular differences, such as in Fig.~\ref{fig:1eabscostheta}, and plotted as a function of energy, as shown in Fig.~\ref{fig:1epointres}.
 
 %Pointing resolution for single electrons could be improved by a more accurate primary track selection, more accurate directional disambiguation, and a better method of determining the direction of a reconstructed track, possibly by fitting a greater number of points at the start of the track. These pointing resolution studies must be repeated with noise simulated for a more realistic estimation of DUNE's pointing resolution.
 
@@ -488,7 +515,12 @@ The pointing resolution is defined in this study as the angle at which 68\% of a
 
 %An elastic scattering event generator was written, and a sample of elastic scattering events was simulated in LArSoft version 06\_82\_00 and reconstructed uniformly in 1x2x6 far detector geometry, with neutrinos from 5 to 50~MeV, in steps of 5~MeV, of all flavors, with 500 events each.
 
-The pointing resolution of the reconstructed electron direction with respect to the true neutrino direction is plotted in Figure~\ref{fig:ESpointres}. The absolute values of cosines of the angular differences are used. This pointing resolution is a result of both the neutrino-electron angle spread and the error in reconstruction.
+The pointing resolution of the reconstructed electron direction with
+respect to the true neutrino direction, defined as the angle at which
+68\% of angular differences are closer to truth, is plotted in
+Figure~\ref{fig:ESpointres}. The absolute values of cosines of the
+angular differences are used, which does not capture the head-tail
+directional ambiguity. This pointing resolution is a result of both the neutrino-electron angle spread and the error in reconstruction.
 % Although the pointing resolution has a lower limit caused by the difference in neutrino and electron directions, it could still be lowered if electron track reconstruction was improved through means discussed in the previous section.
 
 
@@ -509,9 +541,10 @@ The pointing resolution of the reconstructed electron direction with respect to 
 \begin{dunefigure}[Reco SN direction]{fig:recodir}{Left: Reconstructed
     electron directions, with reconstructed supernova direction, true
     supernova direction, and 180 degrees from the true supernova
-    direction marked. Right: Same, after ``flipping''. NEED TO FIX.}
+    direction marked. Right: Same, after ``flipping''. NEED TO
+    FIX FIGURE.}
 \includegraphics[width=0.4\textwidth]{RecoDir_SNES_260evts_PMdQdx_6_legend.pdf}
-%\includegraphics[width=0.4\textwidth]{RecoDir_SNES_260evts_PMdQdx_SNflipped_6_legend.pdf}
+\includegraphics[width=0.4\textwidth]{RecoDir_SNES_260evts_PMdQdx_SNflipped_6_legend.pdf}
 \end{dunefigure}
 
 
@@ -578,10 +611,13 @@ time, then the tracks that were reconstructed backwards can be
 corrected (``flipped''). For each track, the directions starting from
 each end of the track are compared to the reconstructed supernova
 direction, and whichever is closer is assumed to be the correct
-electron direction. Figure~\ref{fig:recodirSNflip} is the same
-simulated supernova shown in Figure~\ref{fig:recodir} after flipping
-based on the supernova direction was done.  Overall, the directional
-ambiguity can be reduced.
+electron direction.  Figure~\ref{fig:recodir} shows the result before
+and after flipping.
+%Figure~\ref{fig:recodirSNflip} is the same
+%simulated supernova shown in Figure~\ref{fig:recodir} after flipping
+%based on the supernova direction was done.
+Overall, the directional
+ambiguity can be reduced using a statistical sample.
 %There are very few counts near 180$^{\circ}$ from the true supernova
 %direction, and more counts closer to the true supernova direction.
 The cosines of angular differences are plotted in
@@ -634,7 +670,7 @@ There are many other examples of astrophysical observables.
 \item Turbulence effects~\cite{Friedland:2006ta,Lund:2013uta} would
   also cause flavor-dependent spectral modification as a function of
   time.
-  \item Strange star formation
+%  \item Strange star formation
 \end{itemize}
 
 Observation of a supernova neutrino burst in coincidence with gravitational waves (which would also be prompt, and could indeed provide a time reference for a a time-of-flight analysis) would be especially interesting~\cite{Arnaud:2003zr,Ott:2012jq, Mueller:2012sv, Nishizawa:2014zna}.
@@ -657,7 +693,7 @@ core-collapse supernovae.
 
 We note that the better one can understand the astrophysical nature of core-collapse supernovae, the easier it will be to extract information about particle physics.  DUNE's capability to characterize the $\nu_e$ component of the signal is unique and critical.
 
-\subsection{Spectral Parameter Fits}
+\subsection{Supernova Spectral Parameter Fits}
 
 % From Erin
 
@@ -674,38 +710,51 @@ pinched-thermal parameters $(\alpha^0, \langle E_\nu \rangle^0,
 $(\alpha^0, \langle E_\nu \rangle^0, \varepsilon^0) = (2.5, 9.5,
 5\times 10^{52})$, with $\varepsilon$ in ergs/second, assumed
 integrated over a ten-second burst.
-We focus on the electron neutrino flux \cite{rosso}. The algorithm uses this spectrum as a ``test spectrum" to compare against a grid of energy spectra generated with many different combinations of $(\alpha, \langle E_\nu \rangle, \varepsilon)$. To quantify these comparisons, the algorithm employs $\chi^2$ minimization techniques and uses the following definition of the $\chi^2$ function \cite{ines}:
+We focus on the electron neutrino flux. The algorithm uses this
+spectrum as a ``test spectrum" to compare against a grid of energy
+spectra generated with many different combinations of $(\alpha,
+\langle E_\nu \rangle, \varepsilon)$. To quantify these comparisons,
+the algorithm employs $\chi^2$ minimization technique to find the
+best-fit spectrum.
 
-\begin{equation}
-    \chi^2(x) = \sum_{i=1}^{N_b} \frac{\big[N_i(\alpha, \langle E_\nu \rangle, \varepsilon) - N_i(\alpha^0, \langle E_\nu \rangle^0, \varepsilon^0)\big]^2}{\sigma_i^2(x)}
-    \label{chi2function}
-\end{equation}
+% s and uses the following definition of the $\chi^2$ function:
 
-Equation \ref{chi2function} contains the following variables:
-\begin{itemize}
-    \setlength\itemsep{0.1em}
-    \item $N_b$ is the number of bins for the energy spectra.
-    \item $N_{i}$ is the number of events in bin $i$.
-    \item $\sigma_i$ is the uncertainty of the contents in bin $i$. This technical note uses Poisson uncertainties.
-    \item $(\alpha, \langle E_\nu \rangle, \varepsilon)$ are the set of model parameters used to generate an energy spectrum in the grid.
-    \item $(\alpha^0, \langle E_\nu \rangle^0, \varepsilon^0)$ are the model parameters used to generate the test spectrum.
-\end{itemize}
+% \begin{equation}
+%     \chi^2(x) = \sum_{i=1}^{N_b} \frac{\big[N_i(\alpha, \langle E_\nu \rangle, \varepsilon) - N_i(\alpha^0, \langle E_\nu \rangle^0, \varepsilon^0)\big]^2}{\sigma_i^2(x)}
+%     \label{chi2function}
+% \end{equation}
 
-Fig. \ref{exampleFitting} shows an example of $\chi^2$ minimization of a test spectrum against an arbitrary grid element. The forward fitting algorithm implements Eq. \ref{chi2function} to compare the test spectrum to all elements in the grid, and the smallest $\chi^2$ corresponds to the grid element that best fits the test spectrum.
+% Equation \ref{chi2function} contains the following variables:
+% \begin{itemize}
+%     \setlength\itemsep{0.1em}
+%     \item $N_b$ is the number of bins for the energy spectra.
+%     \item $N_{i}$ is the number of events in bin $i$.
+%     \item $\sigma_i$ is the uncertainty of the contents in bin $i$. This technical note uses Poisson uncertainties.
+%     \item $(\alpha, \langle E_\nu \rangle, \varepsilon)$ are the set of model parameters used to generate an energy spectrum in the grid.
+%     \item $(\alpha^0, \langle E_\nu \rangle^0, \varepsilon^0)$ are the model parameters used to generate the test spectrum.
+% \end{itemize}
 
-\begin{dunefigure}[Test spectrum for SN parameter fitting]{exampleFitting}{Event rates calculated using SNOwGLoBES for a test spectrum and an example grid element.}
-	\includegraphics[scale = 0.25]{SuperimposedTestSpectrumGridElements3.png}
-\end{dunefigure}
+% Fig. \ref{exampleFitting} shows an example of $\chi^2$ minimization of a test spectrum against an arbitrary grid element. The forward fitting algorithm implements Eq. \ref{chi2function} to compare the test spectrum to all elements in the grid, and the smallest $\chi^2$ corresponds to the grid element that best fits the test spectrum.
+
+% \begin{dunefigure}[Test spectrum for SN parameter fitting]{exampleFitting}{Event rates calculated using SNOwGLoBES for a test spectrum and an example grid element.}
+% 	\includegraphics[scale = 0.25]{SuperimposedTestSpectrumGridElements3.png}
+% \end{dunefigure}
 
 A test spectrum input into the forward fitting algorithm produces a set of $\chi^2$ values for every element in a grid. While the smallest $\chi^2$ value determines the best fit to the test spectrum, there exists other grid elements that reasonably fit the test spectrum according to their $\chi^2$ values. The collection of these grid elements help determine the parameter measurement uncertainty, and we represent this using ``sensitivity regions" in 2D spectral parameter space. We can use three sets of 2D parameter spaces: $(\langle E_\nu \rangle, \alpha)$, $(\langle E_\nu \rangle, \varepsilon)$, and $(\alpha, \varepsilon)$.
 
-One ``point" in 2D parameter space encompasses several grid elements, e.g., the $(\langle E_\nu \rangle, \alpha)$ space contains different $\varepsilon$ values for a given values of $\langle E_\nu \rangle$ and $\alpha$. To determine the $\chi^2$ value, we profile over $\varepsilon$ to select the grid element with the smallest $\chi^2$. We determine the sensitivity regions by placing a cut of $\chi^2 = 6.25$ corresponding to a 90\% coverage probability for three free parameters \cite{PDG}.
+One ``point" in 2D parameter space encompasses several grid elements,
+e.g., the $(\langle E_\nu \rangle, \alpha)$ space contains different
+$\varepsilon$ values for a given values of $\langle E_\nu \rangle$ and
+$\alpha$. To determine the $\chi^2$ value, we profile over
+$\varepsilon$ to select the grid element with the smallest
+$\chi^2$. We determine the sensitivity regions by placing a cut of
+$\chi^2 = 6.25$ corresponding to a 90\% coverage probability for three
+free parameters.
+%\cite{pdg}
 
 \begin{dunefigure}[Example of distance effect]{exampleAsimovDistance}{Sensitivity regions generated using the Asimov study in $(\langle E_\nu \rangle, \alpha)$ space for three different supernova distances. SNOwGLoBES used a smearing matrix with 15\% Gaussian resolution, a cross section model from MARLEY \cite{marley}, and a step efficiency function with a 5 MeV detection threshold..}
 	\includegraphics[scale = 0.37]{alphaVsE0_15Gaus_PNXscn_StepEffic_distances_BetterLabels.png}
   \end{dunefigure}
-
-
 
 
 Comparing sensitivity regions corresponding to different combinations of test spectrum and grid resolution aids in understanding how regions shift and grow in 2D parameter space. We can also discern features and patterns present in the 2D contour area plots. Fig. \ref{ResolutionStudy_SensitivityRegions} shows sensitivity regions for different combinations of test spectrum and grid resolution. The figure shows how the regions change as the assumptions change, and we also observe how the best-fit parameters shift in 2D parameter space. These shifts represent the biases on the best-fit parameters.
@@ -775,7 +824,7 @@ One may wonder whether all this complexity will impede the extraction of useful 
 In the following, we examine quantitatively two examples of particle
 physics that can be accessed 
 
-\subsection{Neutrino Mass Hierarchy}
+\subsection{Neutrino Mass Hierarchy}\label{sec:mh}
 
 
 As described above, flavor ``oscillations''\footnote{Smirnov comment}
