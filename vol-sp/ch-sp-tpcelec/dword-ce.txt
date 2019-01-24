@@ -1,0 +1,1033 @@
+sp-tpcelec-design.tex:To minimize system noise, the \dword{ce} cables for each \dword{apa} enter 
+sp-tpcelec-design.tex:the cryostat through a single \dword{ce} flange, as shown in Figure~\ref{fig:connections}. This creates, for grounding purposes, an integrated unit consisting of an \dword{apa} frame, \dword{femb} ground for all \num{20} \dword{ce} modules, \dword{tpc} flange, and warm interface
+sp-tpcelec-design.tex:the input amplifiers on the \dword{fe} \dwords{asic} have their ground terminals connected to the \dword{apa} frame. 
+sp-tpcelec-design.tex:All power-return leads and cable shields are connected to both the ground plane of the \dword{femb} and to the \dword{tpc} signal flange.
+sp-tpcelec-design.tex:cryostat, which defines \textit{detector ground}, is at a single point on the \dword{ce} \fdth board in the \dword{tpc} signal flange where the 
+sp-tpcelec-design.tex:cables exit the cryostat. Mechanical suspension of the \dword{apa}s is accomplished using insulated supports. 
+sp-tpcelec-design.tex:To avoid structural ground loops, the \dword{apa} frames described in Chapter~\ref{ch:fdsp-apa} are 
+sp-tpcelec-design.tex:Filtering circuits for the \dword{apa} wire-bias voltages are locally referenced to the ground plane of the \dwords{femb} through low-impedance electrical connections. This approach ensures a ground-return path in close proximity to the bias-voltage and signal paths. The close proximity of the current paths minimizes the size of potential loops to further suppress noise pickup.
+sp-tpcelec-design.tex:Signals associated with the \dword{pds}, described in Chapter~\ref{ch:fdsp-pd}, are carried directly on shielded, 
+sp-tpcelec-design.tex:at the \dword{pd} flange shown in Figure~\ref{fig:connections}, and to the PCB \fixme{I could not find this abbreviation in the glossary.} shield layer on the \dwords{pd}. The cable shields have no electrical connection to the \dword{apa} frame.
+sp-tpcelec-design.tex:Each side of an \dword{apa} includes four wire layers, as described in Section~\ref{sec:fdsp-apa-design}. 
+sp-tpcelec-design.tex:%to one of the 128 charge amplifier circuits on the \dword{femb}. The V-plane wire layer is effectively biased at zero volts, 
+sp-tpcelec-design.tex:onto the charge amplifier circuits is done on capacitance-resistance (CR) \fixme{This abbreviation is not in the glossary.} boards that plug in between the \dword{apa} wire-board stacks and \dwords{femb}.
+sp-tpcelec-design.tex:Each CR board includes single \dword{rc} filters for the $X$- and $U$-plane wire bias voltages. In addition, each board has \num{48} 
+sp-tpcelec-design.tex:signals to the \dword{ce} motherboards.  A schematic diagram of the \dword{pdsp} \dword{apa} wire bias subsystem is in Figure~\ref{fig:CR-board}.
+sp-tpcelec-design.tex:[\dword{pdsp} \dword{apa} wire bias schematic diagram, including the CR board.]
+sp-tpcelec-design.tex:{\dword{pdsp} \dword{apa} wire bias schematic diagram including the CR board.}
+sp-tpcelec-design.tex:%bias resistors and filter capacitors. These CR boards do not connect to the charge amplifier circuits on the \dword{femb}.
+sp-tpcelec-design.tex:%The sense wires are expected to have $\sim200$~pF of capacitance to the \dword{apa} frame.
+sp-tpcelec-design.tex:If the bias resistors are much greater than \SI{50}{\mega\ohm}, leakage currents may affect the bias voltages applied to the wires. The target value of \SI{50}{\mega\ohm} was used in \dword{pdsp}.
+sp-tpcelec-design.tex:The bias-voltage filters are \dword{rc} low-pass networks.
+sp-tpcelec-design.tex:and limit the voltage drop if any of the wires becomes shorted to the \dword{apa} frame.
+sp-tpcelec-design.tex:The value of \SI{2.2}{\mega\ohm} was used in \dword{pdsp}.
+sp-tpcelec-design.tex:the \dword{spmod} although a larger filter capacitor would be required to maintain a given level of noise reduction.
+sp-tpcelec-design.tex:The target value of \SI{47}{nF} was used in \dword{pdsp} for the filter capacitors.
+sp-tpcelec-design.tex:Each \dword{apa} is instrumented with \num{20} \dwords{femb}.
+sp-tpcelec-design.tex:The \dwords{femb} plug into the \dword{apa} CR boards, making the connections from the wires to the charge amplifier circuits as short as possible.
+sp-tpcelec-design.tex:Each \dword{femb} receives signals from \num{40} $U$ wires, \num{40} $V$ wires, and \num{48} $X$ wires.
+sp-tpcelec-design.tex:The baseline \dword{femb} design contains eight \num{16}-channel \dword{fe} (\dword{larasic}) \dwords{asic}, eight \num{16}-channel Cold \dword{adc} \dwords{asic}, and two \dword{coldata} control and communication \dwords{asic} (see Figure~\ref{fig:ce-scheme}).
+sp-tpcelec-design.tex:The \dword{femb} also contains regulators that produce the voltages required by the \dwords{asic} and 
+sp-tpcelec-design.tex:The \dword{larasic} inputs are protected by diodes and a series inductor.
+sp-tpcelec-design.tex:[The baseline \dword{ce} architecture.]
+sp-tpcelec-design.tex:{The baseline \dword{ce} architecture. The basic unit is the \num{128}-channel \dword{femb}. Note that only one \dword{ce} flange is shown to simplify the illustration. Note that \dword{ssp} stands for \textit{SiPM Signal Processor} (see Chapter~\ref{ch:fdsp-pd}).}
+sp-tpcelec-design.tex:The \dword{pdsp} version of the \dword{femb} (which uses a single \dword{fpga} on a mezzanine card instead of two \dword{coldata} \dwords{asic}) is shown in Figure~\ref{fig:femb}.
+sp-tpcelec-design.tex:[The complete \dword{femb} assembly as used in \dword{pdsp}.]
+sp-tpcelec-design.tex:{The complete \dword{femb} assembly as used in the \dword{pdsp} detector. The cable shown is the high-speed data, clock, and control cable.}
+sp-tpcelec-design.tex:The analog \dword{fe} \dword{asic}~\cite{DeGeronimo:2011zz} receives current signals from the \dword{tpc} sense wires and provides a way to amplify and shape the signals for downstream signal digitization.  The \dword{fe} \dword{asic} has 16 channels and is implemented using the TSMC 180nm CMOS process. It integrates a band-gap reference (BGR) \fixme{This abbreviation is not in the glossary.} to generate all the internal bias voltages and currents. This guarantees high stability of the operating point over a wide range of temperatures, including cryogenic temperatures. The channel schematic of the \dword{fe} \dword{asic} is shown in Figure~\ref{fig:feasic1}. 
+sp-tpcelec-design.tex:Each \dword{fe} \dword{asic} channel has a dual-stage charge amplifier and a 5$^{th}$ order semi-Gaussian shaper as an anti-aliasing filter for the \dword{tpc} signals. It has a programmable gain selectable from one of 4.7, 7.8, 14, or 25mV/fC (corresponding to full-scale charge of 300, 180, 100, and 55 fC), a programmable peaking time selectable from one of 0.5, 1, 2, and 3 $\mu$s, and a programmable baseline for operation with either the collection ($\sim$200mV) or the induction ($\sim$900mV) wires. Each channel has an option to enable the output monitor to probe the analog signal, and an option to enable a high-performance output driver that can be used to drive a long cable. 
+sp-tpcelec-design.tex:Each \dword{fe} \dword{asic} channel has a built-in charge calibration capacitor that can be enabled or disabled through a dedicated register. The injection capacitance has been measured using a calibrated external capacitor. The measurements show that the calibration capacitance is extremely stable, changing from 184 fF at room temperature to 183 fF at 77 K. This result and the measured stability of the peaking time demonstrate the high stability of the passive components as a function of temperature. Channel-to-channel and chip-to-chip variation in the calibration capacitor are typically less than 1\%.
+sp-tpcelec-design.tex:Shared among the 16 channels in the \dword{fe} \dword{asic} are the digital interface, programming registers, a temperature monitor, and a band-gap reference monitor. We also can enable AC coupling as mitigation of microphonics, a programmable bias current selectable from one of 0.1, 0.5, 1, or 5nA, as well as a programmable pulser generator with 6-bit \dword{dac} for calibration. 
+sp-tpcelec-design.tex:The power dissipation of \dword{fe} \dword{asic} is about 5.5mW per channel at 1.8V supply voltage with output buffer disabled. The \dword{asic} is packaged in a commercial, fully encapsulated plastic QFP 80 package. Figure~\ref{fig:feasic2} shows the response of \dword{fe} \dword{asic} for all gains and peaking times and both baselines. Note that the gain is independent of the peaking time; the same amount of charge produces the same peak voltage signal regardless of the peaking time.
+sp-tpcelec-design.tex:Prototype version P2 \dword{fe} \dwords{asic} have been evaluated and characterized at room temperature and LN$_2$ (77 K) temperature. 960 P2 \dword{fe} \dwords{asic}, totaling 15,360 channels, have been used to instrument six \dword{protodunesp} \dword{apa}s successfully. Excessive stress of package of \dword{fe} \dword{asic} in cryogenic temperature means \dword{fe} channels have a non-uniform baseline in collection mode, while the baseline DC voltage in induction mode is uniform. A new prototype, version P3, was fabricated in March 2018 to address this issue by making DC circuits for collection mode similar to the induction mode. At the same time, the default gain setting changed to 14mV/fC. The layout of P3 \dword{fe} \dword{asic} is shown in Figure \ref{fig:feasic2}, with modifications highlighted in yellow boxes. The P3 \dword{fe} \dwords{asic} were received and evaluated in September 2018, and both baseline in collection mode and default gain setting are working properly.
+sp-tpcelec-design.tex:P3 \dword{fe} \dword{asic} will be further evaluated on \dwords{femb} in various integration test stands for performance studies, including 40\% \dword{apa} at BNL, \dword{iceberg} \dword{tpc} at \dword{fermilab} and \dword{apa}7 at CERN. Test results of P3 \dword{fe} \dword{asic} will guide the development of the next version P4 \dword{fe} \dword{asic}, which will be implemented single ended to differential (SE-DIFF) converter for interface to recently developed \dword{adc} \dword{asic}. During \dword{protodunesp} operation, it was observed that the \dword{fe} \dwords{asic} may enter into a saturation mode when large amounts of charge ($>$ 50fC) collect in 10-50$\mu$s. This is being studied in the laboratory test stand, with the plan to address it in the P4 \dword{fe} \dword{asic} revision as well.
+sp-tpcelec-design.tex:\dword{coldadc} is a low-noise 12-bit \dword{adc} \dword{asic} designed to digitize 16 input channels at a rate of \SI{{\sim}2}{MHz}.  \dword{coldadc} accepts either single-ended or differential inputs and outputs digitized data to \dword{coldata}.  \dword{coldadc} is implemented in TSMC 65 nm \dword{cmos} technology and was designed by a team of engineers from \dword{lbl}, BNL, and \dword{fermilab}.  The \dword{asic} uses a conservative, industry standard design including digital calibration.  Each \dword{coldadc} receives 16 voltage outputs from a single \dword{larasic} chip.  The voltages are buffered, multiplexed by 8, and input to two 15-stage pipelined \dwords{adc} operating at 16 MS/s.  The \dword{adc} uses the well-known pipelined architecture with redundancy~\cite{PipelinedADC, CalibrationCorrection}.  Digital logic is used to correct non-linearity introduced by non-ideal amplifier gain and comparator thresholds in each pipeline stage, and an automatic calibration procedure is implemented to determine the constants used in this logic.  To maximize the probability that the first prototype \dword{coldadc} will perform well, the chip is highly programmable, and many circuit blocks can be bypassed.  A block diagram of the chip is shown in Figure~\ref{fig:coldadc-blockdiagram}.  Each of the major blocks is described below.  \dword{coldadc} uses two bias voltages; 2.25V for I/O and 1.1V for the balance of the \dword{asic}.
+sp-tpcelec-design.tex:All required reference voltages and currents are generated on-chip by programmable circuit blocks.  The most accurate reference voltage circuit is a band-gap reference based on a PNP (bipolar) transistor.  However, the TSMC 65 nm \dword{cmos} process does not allow fabrication of high performance bipolar transistors, and bipolar transistors perform less well at liquid argon temperature than at room temperature.  Thus, a \dword{cmos}-based voltage reference has also been included in \dword{coldadc}.  If both on-chip reference generation circuits fail, an external voltage reference can be used.
+sp-tpcelec-design.tex:Many of the functional blocks in \dword{coldadc} are biased using current sources.  The bias points can be adjusted under digital control to trade power for performance and to allow different bias settings for different temperatures.  The input buffers, sample-and-hold amplifiers, \dword{adc}, and \dword{adc} reference buffers can be independently adjusted.  In addition, the band-gap reference circuit includes a bias current adjustment for an internal amplifier.
+sp-tpcelec-design.tex:\dword{coldadc} has four possible ways to interface with \dword{larasic}.  It can accept either single-ended inputs (provided by existing \dword{larasic} chips) or differential inputs (foreseen for a future \dword{larasis} upgrade).  In either case, to mitigate the risk that the input buffer circuits do not perform well, it is also possible to bypass the input buffers and apply the inputs directly to the sample-and-hold amplifiers.  The sample-and-hold amplifiers are separated into two groups of 8.  They sample the waveform at the rising edge of the (\SI{{\sim}2}{MHz}) sampling clock.  An internally generated \SI{16}{MHz} clock is then used to clock an 8-to-1 multiplexer that presents 8 samples in turn to one of the two \dword{adc} pipelines.
+sp-tpcelec-design.tex:A block diagram of the \dword{coldadc} pipeline stages is shown in Figure~\ref{fig:coldadc-pipeline}.  Each of the 15 stages contains a low-resolution 1.5-bit analog-to-digital sub-converter (ADSC) \fixme{This abbreviation is not in the glossary.} containing two comparators, a 1.5-bit digital-to-analog sub-converter (DASC) \fixme{Nor is this abbreviation in the glossary.} that produces an voltage based on the two comparator outputs, an analog subtractor, a sample-and-hold amplifier (SHA) \fixme{Nor is this one.}, and a gain stage (with a gain of slightly less than two).  Each pipeline stage makes a three-level coarse decision based on the analog input voltage and then sends a voltage proportional to the quantization error resulting from the coarse decision to the next stage for further processing.  To limit power consumption, the stages of the \dword{adc} are scaled in area (and thus power) taking advantage of the fact that the accuracy requirements of the stages decline at each stage of the pipeline.
+sp-tpcelec-design.tex:The ten differential output drivers source and sink a current whose value can be digitally controlled.  The minimum current is 165 $\mu$A, which corresponds to approximately 3 mV peak-to-peak with 100$\Omega$ termination.  Seven additional levels spaced by 275 $\mu$A can be selected.  The maximum current is 2.07 mA, about 2/3 of the \dword{lvds} standard of 3.5 mA.
+sp-tpcelec-design.tex:The \dword{coldata} \dword{asic} was designed by engineers from \dword{fermilab} and Southern Methodist University.  It is responsible for all communications between the \dwords{}femb and the electronics outside the cryostat.  Each \dword{femb} contains two \dword{coldata} chips.  \dword{coldata} receives command and control information from a \dword{wib}.  Each \dword{coldata} provides clocks to four \dwords{coldadc} and relays commands to four \dword{larasic} front-end \dwords{asic} and four \dwords{coldadc} to set operating modes and initiate calibration procedures.  Each \dword{coldata} receives data from four \dwords{coldadc}, merges the data streams, provides 8b/10b encoding, serializes the data, and transmits the data to the warm electronics over two 1.28 Gbps links.  These links are driven by line drivers with programmable pre-emphasis.  A block diagram of \dword{coldata} is shown in Figure xx.yy. \fixme{Don't forget to replace this.}
+sp-tpcelec-design.tex:Most commands are sent from a \dword{wib} to an \dword{femb} using an I2C-like\cite{I2C} protocol.  However, while standard I2C uses single ended \dword{cmos} signals and a bidirectional data line, because of the long cables required between the warm interface electronics and the \dwords{femb}, \dword{coldata} uses low voltage differential pairs for both the I2C clock and data.  Point-to-point links are used with a separate link used for data sent from warm to cold and for data sent from cold to warm.  To reduce the number of cables required, only one of the two \dword{coldata} chips on an \dword{femb} has its main I2C interface directly connected to a \dword{wib}.  That \dword{coldata} chip relays I2C commands and data to the secondary \dword{coldata} chip and relays I2C responses from the secondary \dword{coldata} to the \dword{wib}.  Each \dword{coldata} also relays I2C commands and data sent from the \dword{wib} to a \dword{coldadc} chip, as well as data sent back to the \dword{wib}  from a \dword{coldadc}.  This link (on the \dword{femb}) uses single ended \dword{cmos} signals, but data sent to the \dwords{coldadc} is still separate from data sent from the \dwords{coldadc} to the \dword{coldata}.
+sp-tpcelec-design.tex:\dword{coldata} interprets commands intended for a \dword{larasic} front-end chip and transmits them to the \dwords{larasic} using an SPI\cite{SPI} interface \fixme{Should SPI be in the glossary?}.  The configuration registers in \dword{larasic} are configured to be loaded as a single shift register.  As data is shifted into \dword{larasic} on the MOSI \fixme{Should this be in the glossary?} line, bits from the other end of the shift register are shifted out on the MISO \fixme{Also not in the glossary.} line.  It is thus only possible to read \dword{larasic} configuration registers while writing new configuration data.
+sp-tpcelec-design.tex:\dword{coldata} receives a master clock and a fast command signal from the \dword{wib} on a differential pair.  The master clock is nominally \SI{64}{MHz} but may be \SI{62.5}{MHz} if that is preferred for reasons related to system synchronization.  It creates a \SI{2}{MHz} ADC sampling clock by dividing the \SI{64}{MHz} clock by 32.  Each \dword{coldata} passes the \SI{64}{MHz} clock and the \SI{2}{MHz} clock to its four \dword{coldadc} chips.  If a \SI{62.5}{MHz} master clock is used, then \dword{coldadc} will convert input data every 512 ns rather than every 500 ns.  The fast command line is used for signals that must be executed at a known time.
+sp-tpcelec-design.tex:Both \dword{coldata} and \dword{coldadc} are implemented in the TSMC 65nm \dword{cmos} process.\cite{TSMC65} The designs were done using cold transistor models produced by Logix Consulting.\cite{Logix} Logix made measurements of \dword{fermilab}-supplied TSMC 65 nm transistors at LN2 temperature and extracted and provided to \dword{fermilab} SPICE~\cite{spice} models valid at LN2 temperature.  These models were used in analog simulations of \dword{coldata} and \dword{coldadc} subcircuits.  To eliminate the risk of accelerated aging due to the hot carrier effect,\cite{Hot-electron} no transistor with a channel length less than 90 nm was used in either \dword{asic} design.  A special library of standard cells using 90 nm channel length transistors was developed by members of the University of Pennsylvania and \dword{fermilab} groups.  Timing parameters were developed for this standard cell library using the Cadence Liberate tool\cite{Liberate} and the Logix SPICE models.  With the exception of the \dword{coldata} PLL \fixme{Should this be in the glossary?}, serializer, and output driver, the digital sections of \dword{coldata} and \dword{coldadc} were synthesized from Verilog code using this standard cell library and the Cadence Innovus tool~\cite{Innovus}. Innovus was also used for the layout of the synthesized logic.
+sp-tpcelec-design.tex:The SLAC \fixme{SLAC is not in the glossary.} \dword{cryo} \dword{asic} differs from the baseline three-chip design by combining the functions of an analog preamplifier, \dword{adc}, and data serialization and transmission for \num{64}~wire channels into a single chip.
+sp-tpcelec-design.tex:It is based on a design developed for the nEXO experiment\footnote{Enriched Xenon Observatory, \url{https://www-project.slac.stanford.edu/exo/about.html}.} and differs from it only in the design of the preamplifier, which is modified for the higher capacitance of the \dword{dune} \dword{spmod} wires compared to the small pads of nEXO.
+sp-tpcelec-design.tex:The \dwords{femb} constructed using this chip would use only two \dwords{asic}, compared to the \num{18} (eight~\dword{fe}, eight~\dword{adc} and two~\dword{coldata}) needed in the baseline design.
+sp-tpcelec-design.tex:This drastic reduction in part count may significantly improve \dword{femb} reliability, reduce power, and reduce costs related to production and testing. 
+sp-tpcelec-design.tex:Figure~\ref{fig:cryo-architecture} shows the overall architecture of the \dword{cryo} \dword{asic}, which will be implemented in \SI{130}{nm} \dword{cmos}.
+sp-tpcelec-design.tex:[Overall architecture of the CRYO \dword{asic}.]
+sp-tpcelec-design.tex:{Overall architecture of the CRYO \dword{asic}.}
+sp-tpcelec-design.tex:The \dword{adc} uses \SI{8}{MHz} \dword{sar}, so four input channels are multiplexed onto a single \dword{adc}. The data serialization and transmission block uses a custom 12b/14b encoder, so \num{32} channels of \num{12}-bit, \SI{{\sim}2}{MHz} data can be transmitted with a digital bandwidth of only \SI{896}{Mbps}, which is significantly less than the required bandwidth of the baseline, which is \SI{1.28}{Gbps}.
+sp-tpcelec-design.tex:%[Depiction of the substrate isolation technique that allows combining analog and digital circuitry on the same CRYO \dword{asic}.]
+sp-tpcelec-design.tex:%{Depiction of the substrate isolation technique that allows combining analog and digital circuitry on the same CRYO \dword{asic}.}
+sp-tpcelec-design.tex:The infrastructure requirements for a \dword{cyro} \dword{asic}-based system are similar to those of the baseline option. However, in most cases, somewhat fewer resources are needed.
+sp-tpcelec-design.tex:\item{The output digital bandwidth on each of the four lines in an \dword{femb} is \SI{896}{Mbps}. This is lower than the baseline option because of the custom 12b/14b encoder of the \dword{cyro} chip. }
+sp-tpcelec-design.tex:\item{The warm interface is different. Only a single clock is needed (\SI{56}{MHz}), and the configuration protocol is the SLAC \dword{asic} control interface (SACI)~\cite{SACI} rather than I2C.} \fixme{SACI is not in the glossary.}
+sp-tpcelec-design.tex:The first iteration of the \dword{cryo} \dword{asic} design was submitted to MOSIS \fixme{MOSIS is not in the glossary.} for fabrication in November 2018.  The first prototypes should arrive in January 2019. Simulation-based studies have already been performed; at \SI{0.8}{\micro\second} peaking time and an input capacitance of \SI{200}{pF} (similar to that expected in the \dword{dune} \dword{spmod}), the \dword{enc} is approximately \num{500}\,e$^-$.  This noise level is similar to that expected with the baseline \dword{fe} and \dword{adc} \dword{asic} design in \dword{lar} with the same input capacitance.  They will first be tested in an existing test stand at SLAC.  Subsequent tests are planned for a small test \dword{tpc} at \dword{fermilab} and on an \dword{apa} in the \dword{pdsp} cold box; these test facilities are described in Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
+sp-tpcelec-design.tex:In February 2019, stand-alone tests of the \dword{cryo} \dword{asic} will begin. In addition to standard bringing up tests, measurements of noise (\dword{enc}), linearity (effective Nnumber of bits, or \dword{enob} for short), and bit-error rate will be performed. Figure~\ref{fig:cryo-results} shows placeholder plots of the type that will be produced in the initial stand-alone tests.
+sp-tpcelec-design.tex:[Results of stand-alone tests of the CRYO \dword{asic}.]
+sp-tpcelec-design.tex:{Results of stand-alone tests of the CRYO \dword{asic}.  The top row shows noise levels in \dword{enc} measured for each channel at room temperature (left) and liquid nitrogen temperature (right).  The bottom row shows the measured linearity for each channel in terms of \dword{enob}. }
+sp-tpcelec-design.tex:The \dword{sbnd} collaboration has been exploring the \dword{cots} \dword{adc} option for the \dword{tpc} readout electronics development since Spring 2017~\cite{Chen:2018zic}. After a market survey, few candidate \dwords{adc} in \dword{sar} architecture were identified with 100\% cold yield. Since July 2017, a lifetime study plan was developed to evaluate \dword{cots} \dword{adc} in two different phases: exploratory and validation. The lifetime study focused on the \dword{adi} AD7274 implemented in TSMC 350nm \dword{cmos} technology given the optimum performance in cryogenic operation compared to other candidates.
+sp-tpcelec-design.tex:During the exploratory phase, fresh samples of \dword{cots} \dword{adc} AD7274 were stressed with higher than nominal operation voltage, such as 5 V, while power consumption (current drawn) was monitored continuously. Periodically, the sample would be operated at nominal voltage (V$_{DD}$ = 2.5V and V$_{REF}$ = 1.8V) for a performance characterization test, where both DNL (Differential Non-Linearity) and INL (Integral Non-Linearity) \fixme{DNL and INL should probably go into the glossary.} were monitored and analyzed in addition to the current monitoring. Stress test results were used to extrapolate the lifetime of the \dword{cots} \dword{adc}. We determined that the current drop of 1\% on the V$_{DD}$ be used as the degradation criterion for the lifetime study. In the validation phase, more devices were tested following the develped criteria to collect more data to validate what was learned in the exploratory phase.
+sp-tpcelec-design.tex:The lifetime projection of \dword{cots} \dword{adc} AD7274 from the stress test with V$_{DD} >$ 5V is shown in Figure~\ref{fig:cotsadc-lifetime}. With ADC7274 operated at 2.5V, which is lower than the nominal 3.6V for 350nm \dword{cmos} technology, the projected lifetime is more than than 10$^6$ years.
+sp-tpcelec-design.tex:Based on the lifetime study of AD7274, an \dword{femb} with \dword{cots} \dword{adc} was developed and characterized for an \dword{sbnd} experiment. The integration test was carried out with 40\% \dword{apa} at BNL and showed satisfactory noise performance in Figure~\ref{fig:cotsadc-fembenc}. The \dword{cots} \dword{adc} AD7274 serves as a backup solution for the \dword{dune} far detector \dword{tpc} readout electronics system. The current plan is to evaluate AD7274 \fixme{Check this please.} in the small \dword{tpc} \dword{iceberg} at \dword{fermilab}. Ten \dwords{femb} with \dword{cots} \dword{adc} are being produced and will be used to instrument \dword{iceberg} \dword{tpc} for system integration tests in early 2019. 
+sp-tpcelec-design.tex:We are currently pursuing two different \dword{asic} designs
+sp-tpcelec-design.tex:and planning on qualifying the \dword{cots} \dword{adc} solution that will be used for the \dword{sbnd} experiment.
+sp-tpcelec-design.tex:both the three \dword{asic} solution and  the \dword{cryo} \dword{asic}
+sp-tpcelec-design.tex:for at least a second iteration before deciding which \dword{asic} solution to use to construct
+sp-tpcelec-design.tex:the \dword{dune} \dword{sp} detector. This assumes that the \dwords{femb}
+sp-tpcelec-design.tex:boards used for the \dword{pdsp} detector. We plan, in Fall 2019, to review the results of the system tests
+sp-tpcelec-design.tex:available, we should be in position to decide which \dword{asic}
+sp-tpcelec-design.tex:solution to adopt for constructing the \dword{dune} \dword{sp} detector.
+sp-tpcelec-design.tex:\dword{asic} selection. Performance in system tests will obviously
+sp-tpcelec-design.tex:be one criterion, but we will need to consider reliability issues (which could favor the single \dword{asic}
+sp-tpcelec-design.tex:power density (which could be less favorable to the \dword{cryo} solution),
+sp-tpcelec-design.tex:\dword{asic} and review the recommendations in Fall
+sp-tpcelec-design.tex:preferred option for the \dword{asic} solution for 
+sp-tpcelec-design.tex:constructing the \dword{dune} \dword{sp} detector. The recommendation of
+sp-tpcelec-design.tex:the committee will then be passed to the \dword{dune} Executive Board,
+sp-tpcelec-design.tex:which is tasked with the final \dword{asic} decision.
+sp-tpcelec-design.tex:Each \dword{femb} is enclosed in a mechanical \dword{ce} box to provide support, cable strain
+sp-tpcelec-design.tex:relief, and control of gas argon bubbles in the \dword{lar} from the \dword{femb} attached to the lower \dword{apa}
+sp-tpcelec-design.tex:(which could in principle lead to discharge of the \dword{hv} system).
+sp-tpcelec-design.tex:The \dword{ce} box, illustrated in Figure~\ref{fig:ce-box}, is designed to make the electrical connection 
+sp-tpcelec-design.tex:between the \dword{femb} and the \dword{apa} frame, as defined in Section~\ref{sec:fdsp-tpcelec-design-grounding}.
+sp-tpcelec-design.tex:Mounting hardware inside the \dword{ce} box connects the ground plane of the \dword{femb} to the box casing.
+sp-tpcelec-design.tex:[Prototype \dword{ce} box used in \dword{pdsp}.]
+sp-tpcelec-design.tex:{Prototype \dword{ce} box used in \dword{pdsp}.}
+sp-tpcelec-design.tex:The \dword{ce} box casing is electrically connected to the \dword{apa} frame via the metal mounting hardware,
+sp-tpcelec-design.tex:ground at the \dword{apa} frame, as shown in Figure~\ref{fig:CR-board}.
+sp-tpcelec-design.tex:As a backup, the casing is also connected to the \dword{apa} frame via a twisted conducting wire.
+sp-tpcelec-design.tex:In addition to the \dword{ce} box and mounting hardware, cable trays for support and routing the cold cables will be installed in the 
+sp-tpcelec-design.tex:cryostat. One set of cable trays, shown in Figure~\ref{fig:trays} (left column), will be attached to the upper \dword{apa} itself 
+sp-tpcelec-design.tex:to hold the \dword{ce} and \dword{pd} cables. A different cable tray design, also shown in Figure~\ref{fig:trays} (right column), will support the \dword{ce} and \dword{pd} cables underneath the lower hanging \dword{apa}. A final set of cable trays will be installed inside the 
+sp-tpcelec-design.tex:cryostat after the \dword{apa}s are fixed in their final location to support the cables as they are 
+sp-tpcelec-design.tex:routed to the \dword{ce} and \dword{pd} feedthroughs.
+sp-tpcelec-design.tex:[Side and end views of mechanical supports for the \dword{ce} Boxes on the upper (left column) and lower (right column) \dword{apa}s. Shown are the APA cable trays in green and pink, the CE Boxes in dark gray, and the Omega brackets and mounting hardware between the CE Boxes and APA frame in light gray.  The CE cables are shown in blue; the PD cables are not shown.]
+sp-tpcelec-design.tex:{Side and end views of mechanical supports for the \dword{ce} Boxes on the upper (left column) and lower (right column) \dword{apa}s. Shown are the APA cable trays in green and pink, the CE boxes in dark gray, and the Omega brackets and mounting hardware between the CE boxes and APA frame in light gray.  The CE cables are shown in blue; the PD cables are not shown.}
+sp-tpcelec-design.tex:The \dword{tpc} data rate per \dword{apa}, with an overall multiplexing factor of 32 and 80 $\sim$1~Gbps data channels per \dword{apa},
+sp-tpcelec-design.tex:is sufficiently low that the \dword{lvds} signals can be driven over copper twin-axial transmission lines.
+sp-tpcelec-design.tex:Additional transmission lines are available to distribute \dword{lvds} clock signals and I$^2$C control information,
+sp-tpcelec-design.tex:Optical fiber is used externally from the \dwords{wib} on the signal flange to the \dword{daq} (see Chapter~\ref{ch:sp-daq}) and slow control systems (see Chapter~\ref{ch:sp-cisc}).
+sp-tpcelec-design.tex:[TPC \dword{ce} \fdth.]
+sp-tpcelec-design.tex:{TPC \dword{ce} \fdth. The \dwords{wib} are seen edge-on in the left panel and in an oblique side-view in the right panel, which also shows the warm crate for an \dword{spmod} %DUNE module 
+sp-tpcelec-design.tex:The design of the signal flange includes a four-way cross spool piece, separate PCB \fdth{}s for the \dword{ce} and \dword{pds} cables, and
+sp-tpcelec-design.tex:an attached crate for the \dword{tpc} warm electronics, as shown in Figure~\ref{fig:tpcelec-signal-ft}.
+sp-tpcelec-design.tex:The wire bias voltage cables connect to standard \dword{shv} connectors machined directly into the \dword{ce} \fdth,
+sp-tpcelec-design.tex:Each \dword{ce} \fdth serves the bias, power, and digital I/O needs of one \dword{apa}.  
+sp-tpcelec-design.tex:signal flange to the \dword{femb} and stream the $\sim$\SI{1}{Gbps} high-speed data from the \dword{femb} to the signal flange.  Each \dword{femb} 
+sp-tpcelec-design.tex:connects to a signal flange via one data cable bundle, leading to 20 bundles between one \dword{apa} and one flange.  Each data bundle contains 12 low-skew twin-axial cables with a drain wire 
+sp-tpcelec-design.tex:    \item four \SI{1.28}{Gbps} data (two from each \dword{coldata});
+sp-tpcelec-design.tex:    \item two \SI{64}{MHz} clocks (one input to each \dword{coldata});
+sp-tpcelec-design.tex:    \item two fast command lines (one input to each \dword{coldata});
+sp-tpcelec-design.tex:    \item one multipurpose \dword{larasic} output (temperature, reference voltage, or analog test output).
+sp-tpcelec-design.tex:The \dword{lv} power is passed from the signal flange to the \dword{femb} by bundles of
+sp-tpcelec-design.tex:For a single \dword{femb}, the resistance is measured to be  <\SI{30}{\milli\ohm} at room temperature or $<10$~m$\Omega$ at 
+sp-tpcelec-design.tex:\dword{lar} temperature. Each \dword{apa} has a copper cross section of approximately %$80~\mathrm{mm}^2$ 
+sp-tpcelec-design.tex:resistance <\SI{1.5}{\milli\ohm} at room temperature or $<0.5$~m$\Omega$ at \dword{lar} temperature.
+sp-tpcelec-design.tex:The bias voltages are applied to the $X$-, $U$-, and $G$-plane wire layers, three \dword{fc} terminations, 
+sp-tpcelec-design.tex:through eight \dword{shv} connectors mounted on the signal flange. RG-316 coaxial cables carry the voltages 
+sp-tpcelec-design.tex:end of the \dword{apa}. 
+sp-tpcelec-design.tex:various points on the \dword{apa} frame, including the CR boards, a small PCB mounted on or near 
+sp-tpcelec-design.tex:The warm interface electronics provide an interface between the \dword{ce}, \dword{daq}, timing, and slow control systems, including local power control at the flange and a real-time diagnostic readout. They are housed in the \dwords{wiec} attached directly to the \dword{ce} flange.  The \dword{wiec} shown in Figure~\ref{fig:tpcelec-flange} contains one power and timing card (\dword{ptc}), five warm interface boards (\dwords{wib}) and a passive power and timing backplane (PTB), which fans out signals and \dword{lv} power from the \dword{ptc} to the \dwords{wib}. The \dword{wiec} must provide Faraday-shielded housing, robust ground connections from the \dwords{wib} to the detector ground described in Section~\ref{sec:fdsp-tpcelec-design-grounding}, and only optical fiber links to the \dword{daq} and slow control to mitigate noise introduced at the \dword{ce} \fdth.
+sp-tpcelec-design.tex:[Exploded view of the \dword{ce} signal flange for \dword{pdsp}.]
+sp-tpcelec-design.tex:{Exploded view of the \dword{ce} signal flange for \dword{pdsp}.  The design will be very similar for the \dword{spmod} \dword{ce} signal flange (with two \dword{ce} signal flanges per \fdth).}
+sp-tpcelec-design.tex:The \dword{wib} is the interface between the \dword{daq} system and four
+sp-tpcelec-design.tex:\dwords{femb}. The \dword{wib} also receives high-speed data signals from the four 
+sp-tpcelec-design.tex:\dwords{femb} and transmits them to the \dword{daq} system over optical
+sp-tpcelec-design.tex:fibers. The data signals are recovered onboard the \dword{wib} with commercial equalizers.
+sp-tpcelec-design.tex:The \dwords{wib} are attached directly to the \dword{tpc}
+sp-tpcelec-design.tex:\dword{ce} \fdth on the signal flange. The \fdth
+sp-tpcelec-design.tex:board is a PCB with connectors to the cold signal and \dword{lv} power cables fitted
+sp-tpcelec-design.tex:the \dword{wib} on the warm side. Cable strain relief for the cold cables is 
+sp-tpcelec-design.tex:The \dword{pdsp} \dword{ptc} provides a bidirectional fiber interface to the
+sp-tpcelec-design.tex:Figure~\ref{fig:tpcelec-wib-timing}. The \dword{ptc} fans the clocks out to the \dword{wib} over the
+sp-tpcelec-design.tex:PTB, which is a passive backplane attached directly to the \dword{ptc} and
+sp-tpcelec-design.tex:\dwords{wib}.  The received clock on the \dword{wib} is separated into clock and
+sp-tpcelec-design.tex:the clock is integrated into the \dword{wib} \dword{fpga} (the Altera Arria V\footnote{Altera Arria\texttrademark{}, V FPGA family, \url{https://www.altera.com/products/fpga/arria-series/arria-v/overview.html}.} was used for \dword{pdsp}).
+sp-tpcelec-design.tex:The \dword{spmod} timing system, described in Section~\ref{sec:sp-daq:design-timing}, is a development of the \dword{pdsp} system and expected to require nearly identical functionality at the \dword{wib} endpoint.
+sp-tpcelec-design.tex:[\dword{pdsp} PTC and timing distribution to the WIB and FEMBs]
+sp-tpcelec-design.tex:{Power and timing card (\dword{ptc}) and timing distribution to the \dword{wib} and \dwords{femb} used in \dword{pdsp}.}
+sp-tpcelec-design.tex:The \dword{ptc} also receives \SI{48}{V} \dword{lv} power for all cold
+sp-tpcelec-design.tex:electronics connected through the \dword{tpc} signal flange: one \dword{ptc}, five \dwords{wib}, and \num{20}~\dwords{femb}. The \dword{lv} power is then stepped down
+sp-tpcelec-design.tex:to \SI{12}{V} via a DC-DC converter onboard the \dword{ptc}. The output of the \dword{ptc} converters is filtered with a common-mode choke and fanned out
+sp-tpcelec-design.tex:on the PTB to each \dword{wib}, which provides the necessary \SI{12}{V} DC-DC conversions and fans
+sp-tpcelec-design.tex:the \dword{lv} power out to each of the cold \dwords{femb} supplied by that \dword{wib} 
+sp-tpcelec-design.tex:as shown in Figure~\ref{fig:tpcelec-wib-power}. The output of the \dword{wib} converters is further filtered by a common-mode choke. Most of the power drawn by a full flange is dissipated in the \dword{lar} by the cold \dword{femb}.
+sp-tpcelec-design.tex:[\dword{pdsp} \dword{lv} power distribution to the \dword{wib} and \dwords{femb}]
+sp-tpcelec-design.tex:{\dword{lv} power distribution to the \dword{wib} and \dwords{femb} implemented for \dword{pdsp}. This will be modified for the \dword{spmod} to provide the required voltage or voltages depending on which \dwords{asic} are used on the \dwords{femb}. In particular, the voltages to the \dword{femb} \numrange{0}{3} will change as the \dword{pdsp} \dword{fpga} is replaced by \dword{coldata}. }
+sp-tpcelec-design.tex:Because the \dwords{wib} can provide local power to the \dword{femb} and real-time diagnostic readout of all channels,
+sp-tpcelec-design.tex:each \dword{ce} system for each \dword{apa} is a complete, stand-alone readout unit. The \dwords{femb} and cold cables are shielded
+sp-tpcelec-design.tex:inside the cryostat, and the \dwords{wib} and \dword{ptc} are shielded inside the Faraday cage of the warm interface
+sp-tpcelec-design.tex:As shown in Figure~\ref{fig:tpcelec-dune-wib}, the \dword{wib} can receive \dword{lv} power in the front panel and distribute it directly to the \dword{femb}, bypassing all DC/DC converters.
+sp-tpcelec-design.tex:the on-board \dword{fpga} or clock synthesizer chip to provide the clock required by the \dword{ce}.
+sp-tpcelec-design.tex:The baseline \dword{asic} design currently uses 8b/10b encoding; if the SLAC \dword{cryo} \dword{asic} is selected for
+sp-tpcelec-design.tex:the \dword{dune} \dword{spmod}, 12b/14b encoding will be used instead of 8b/10b.
+sp-tpcelec-design.tex:[Warm interface board (\dword{wib})]
+sp-tpcelec-design.tex:{Warm interface board (\dword{wib}). Note that front panel inputs include a LEMO connector and alternate inputs for \dword{lv} power and timing.}
+sp-tpcelec-design.tex:The \dword{fpga} on the \dword{wib} will have
+sp-tpcelec-design.tex:transceivers that can drive the high-speed data to the \dword{daq} system up to
+sp-tpcelec-design.tex:The \dword{fpga} will have an additional Gbps ethernet transceiver I/O based on the \SI{125}{MHz} clock, which 
+sp-tpcelec-design.tex:As implemented for \dword{pdsp}, a fully loaded \dword{wib} (one \dword{wib} plus four \dwords{femb}) requires
+sp-tpcelec-design.tex:\SI{12}{V} and draws up to approximately \SI{4}{A}. The full electronics for one \dword{apa} (one \dword{ptc}, five \dwords{wib}, and \num{20} \dwords{femb}) 
+sp-tpcelec-design.tex:described in Section~\ref{sec:fdsp-tpcelec-design-warm}. The \dword{spmod} implementation should require much 
+sp-tpcelec-design.tex:less power because the \dword{fpga} will be replaced by the \dword{coldata} chips.
+sp-tpcelec-design.tex:The \dword{lv} power is delivered at \SI{48}{V} to the \dword{ptc}, so each \dword{lv} power mainframe is chosen to bracket that value; each has  
+sp-tpcelec-design.tex:roughly \numrange{30}{60}{V}, \SI{13.5}{A}, \SI{650}{W} maximum capacity per \dword{apa}. Using 10AWG cable, a \SI{0.8}{V} drop should occur along the cable with a required power of \SI{306}{W} out of \SI{650}{W} available.  
+sp-tpcelec-design.tex:the warm interface crates than the \SI{20}{\meter} in \dword{pdsp}.
+sp-tpcelec-design.tex:The primary protection is the over-current protection circuit in the \dword{lv} supply modules, 
+sp-tpcelec-design.tex:which is set higher than the \SI{20}{A} current draw of the \dword{wiec}.  Secondary sense line fusing is 
+sp-tpcelec-design.tex:provided on the \dword{ptc}.  The \dword{lv} power cable uses FCi micro TCA\footnote{MicroTCA\texttrademark{} (\dword{utca}) vertical card-edge connectors, Amphenol ICC,  \url{https://www.amphenol-icc.com/product-series/micro-tca-card-edge.html}.} connectors as shown in
+sp-tpcelec-design.tex:[FCi microTCA power connector at the \dword{ptc} end of the cable.]
+sp-tpcelec-design.tex:{FCi microTCA power connector at the \dword{ptc} end of the cable.}
+sp-tpcelec-design.tex:power to the 4 heating elements on each \dword{pd} and \dword{ce} flange.
+sp-tpcelec-design.tex:Bias voltages for the \dword{apa} wire planes, the electron diverters, and the last \dword{fc} electrodes are generated 
+sp-tpcelec-design.tex:by supplies that are the responsibility of the \dword{tpc} electronics consortium.  The current from each of these supplies 
+sp-tpcelec-design.tex:mini-crate to the standard \dword{shv} connectors machined directly into the \dword{ce} \fdth, so the \dword{lv} power and data connectors do not have electrical connections to wire bias voltages.
+sp-tpcelec-design.tex:Faraday-shielded boxes, and the \dword{daq} and slow control systems.  The \dword{wib} reports
+sp-tpcelec-design.tex:its onboard temperature and the current draw from each \dword{femb} to the slow control system, while the
+sp-tpcelec-design.tex:current draw for each \dword{apa} is monitored at the mainframe itself.
+sp-tpcelec-design.tex:cable trays will be installed. Racks for all the necessary \dword{lv} supplies will be installed on a mezzanine
+sp-tpcelec-design.tex:cables going to the \dword{ptc} and \dwords{wib} from the long cable run to the \dword{daq}.
+sp-tpcelec-design.tex:[Services on top of the cryostat. The racks for the \dword{lv} power supplies are shown in blue.]
+sp-tpcelec-design.tex:{Services on top of the cryostat. The racks for the \dword{lv} power supplies are shown in blue.}
+sp-tpcelec-integration.tex:Here, we briefly discuss the responsibilities of the \dword{ce}
+sp-tpcelec-integration.tex:\dword{itf} and at \dword{surf}. \fixme{The first two sentences of this paragraph could serve as the introduction to the section if they were moved to 1.5, Integration, Installation, and Commissioning.} The current plan for the \dword{ce}
+sp-tpcelec-integration.tex:consortium is to receive all detector components at the \dword{itf},
+sp-tpcelec-integration.tex:transporting the components to \dword{surf}. In some cases, this will entail simply
+sp-tpcelec-integration.tex:dividing a shipment received at the \dword{itf} into the number of
+sp-tpcelec-integration.tex:units required for a specific installation job at \dword{surf},
+sp-tpcelec-integration.tex:at \dword{surf} or in the cryostat. One specific case is that of The \dword{ce}
+sp-tpcelec-integration.tex:in a mesh and ready for installation on the \dword{apa}s. 
+sp-tpcelec-integration.tex:The \dword{ce} consortium plans to quickly test all
+sp-tpcelec-integration.tex:the \dwords{femb} upon receipt at the \dword{itf} to ensure 
+sp-tpcelec-integration.tex:from the \dword{femb} \dword{qc} sites. The main activity at the \dword{itf} for the \dword{ce} consortium is installing the \dwords{femb} on the \dword{apa}s, followed by 
+sp-tpcelec-integration.tex:\dword{apa} wires. 
+sp-tpcelec-integration.tex:All other integration takes place at \dword{surf} in the clean room
+sp-tpcelec-integration.tex:in front of the detector cryostat. After a pair of \dword{apa}s are 
+sp-tpcelec-integration.tex:connected and moved inside the clean room, the \dword{ce} cables
+sp-tpcelec-integration.tex:for the bottom \dword{apa} are routed through the \dword{apa} frames.
+sp-tpcelec-integration.tex:of cables are placed in the trays on the top of the \dword{apa} pair.
+sp-tpcelec-integration.tex:At this point, the pair of \dword{apa}s is moved into one of the cold
+sp-tpcelec-integration.tex:The \dword{ce} electronics is then tested at both room temperature
+sp-tpcelec-integration.tex:what was done for the \dword{apa}s installed in the \dword{pdsp} detector.
+sp-tpcelec-integration.tex:Later, the pair of \dword{apa}s is moved to its final position 
+sp-tpcelec-integration.tex:inside the cryostat. The \dword{ce}
+sp-tpcelec-integration.tex:and \dword{pds} cables are routed through the cryostat penetration and
+sp-tpcelec-integration.tex:on the cryostat penetration. At this point, the \dword{wiec} is attached
+sp-tpcelec-integration.tex:power and control signals to the \dword{ce} and for data
+sp-tpcelec-integration.tex:\dword{daq} readout chain and the final power and controls distribution
+sp-tpcelec-integration.tex:system. Once initial tests are completed successfully, more \dword{apa}s
+sp-tpcelec-integration.tex:can be installed, and the \dword{apa}s can remain accessible until the \dword{fc} are
+sp-tpcelec-integration.tex:This installation sequence assumes that all the \dword{ce} detector 
+sp-tpcelec-integration.tex:components required for readout of a pair of \dword{apa}s  on top of the cryostat 
+sp-tpcelec-integration.tex: are installed before \dword{apa}s are inserted into the cryostat. This includes the \dwords{wiec} with their boards, the power supplies in 
+sp-tpcelec-integration.tex:the \dword{apa}s are inserted into the cryostat to allow time for some checks. 
+sp-tpcelec-integration.tex:for both the \dword{ce} and the \dword{pds}. The cryostat
+sp-tpcelec-integration.tex:entering the cryostat. During the routing of the \dword{ce} and
+sp-tpcelec-integration.tex:\dword{pds} cables through the cryostat penetrations, dust entering the cryostat will be minimized by having a small
+sp-tpcelec-integration.tex:all the test systems at the \dword{itf}, and the current planning
+sp-tpcelec-integration.tex:assumes that eighteen months are required to integrate the \dword{ce}
+sp-tpcelec-integration.tex:and the \dword{pds} with two work stations. This translates to
+sp-tpcelec-integration.tex:a rate of one pair of \dword{apa}s per week. Given that \dword{apa}
+sp-tpcelec-integration.tex:be performed with \dword{femb} prototypes, and the overall schedule
+sp-tpcelec-integration.tex:for integration will be driven by the availability of the \dword{ce}
+sp-tpcelec-integration.tex:components. The work performed by the \dword{ce}
+sp-tpcelec-integration.tex:consortium at the \dword{itf} requires 2 FTEs/week for installing and testing
+sp-tpcelec-integration.tex:the \dwords{femb} on the \dword{apa}s as well as  
+sp-tpcelec-integration.tex:\dword{femb} reception tests. We expect these shifts to be covered 
+sp-tpcelec-integration.tex:by scientific personnel from the \dword{ce} consortium. In addition, 
+sp-tpcelec-integration.tex:\dword{itf} as support for the consortium, including 
+sp-tpcelec-integration.tex:preparing components for shipment to \dword{surf}.
+sp-tpcelec-integration.tex:% The integration of the \dwords{femb} on the \dword{apa}s for a
+sp-tpcelec-integration.tex:% of the \dword{apa}s that take longer to build compared to the
+sp-tpcelec-integration.tex:% \dword{ce} components. The personnel requirements will be
+sp-tpcelec-integration.tex:The schedule of activities at \dword{surf} is designed so all 
+sp-tpcelec-integration.tex:\dword{apa}s can be installed in the cryostat on a timescale of seven
+sp-tpcelec-integration.tex:months, proceeding at a rate of one row of \dword{apa}s per week and allowing
+sp-tpcelec-integration.tex:requires that personnel from the \dword{ce} consortium be available
+sp-tpcelec-integration.tex:for two shifts per day at \dword{surf} at all times, including weekends. A
+sp-tpcelec-integration.tex:total of 15 FTEs/week will be needed to install and test the \dword{apa}s. An additional 3 FTEs/week are
+sp-tpcelec-integration.tex:\dword{apa}s. 
+sp-tpcelec-integration.tex:the \dword{ce} consortium, and as with the \dword{itf}, we plan
+sp-tpcelec-integration.tex:to have one engineer and one technician available at\dword{surf} to support
+sp-tpcelec-integration.tex:Many of the activities of the \dword{ce}
+sp-tpcelec-integration.tex:consortium at the \dword{itf} and at \dword{surf} have the goal of 
+sp-tpcelec-integration.tex:is filled with \dword{lar}. All the detector components provided
+sp-tpcelec-integration.tex:by the \dword{ce} consortium that arrive at the \dword{itf}
+sp-tpcelec-integration.tex:and at \dword{surf} have gone through a qualification process to ensure
+sp-tpcelec-integration.tex:that they are fully functional and that they meet the \dword{dune} 
+sp-tpcelec-integration.tex:\dword{itf} and at \dword{surf} to ensure that the components have not
+sp-tpcelec-integration.tex:installation on the \dword{apa}s at the \dword{itf}. Further 
+sp-tpcelec-integration.tex:tests are performed at \dword{surf} before and after the 
+sp-tpcelec-integration.tex:\dword{apa}s are installed in the cryostat, using the final cables to connect the \dwords{femb} and the detector flanges. 
+sp-tpcelec-integration.tex:the \dwords{itf} and \dword{surf} are compared with the results of the
+sp-tpcelec-integration.tex:Both the reception test at the \dword{itf} and the test after 
+sp-tpcelec-integration.tex:installation on the \dword{apa}s are performed at room temperature 
+sp-tpcelec-integration.tex:by connecting up to four \dwords{femb} to a \dword{wib} that is 
+sp-tpcelec-integration.tex:pulse internal to the \dword{fe} \dword{asic}. Overall, the reception 
+sp-tpcelec-integration.tex:\dword{apa}s each require approximately half an hour per motherboard, 
+sp-tpcelec-integration.tex:The \dword{ce} consortium plans to have a \dword{cts} available
+sp-tpcelec-integration.tex:at the \dword{itf} to perform checks at \lntwo temperature
+sp-tpcelec-integration.tex:of \dwords{femb} that fail the quality control procedures at \dword{surf},
+sp-tpcelec-integration.tex:at \dword{itf}. Having a cold box at the \dword{itf}
+sp-tpcelec-integration.tex:will allow a fraction of the \dword{apa}s to be tested at
+sp-tpcelec-integration.tex:\lntwo temperature after they are integrated with the \dword{pds}
+sp-tpcelec-integration.tex:\dword{surf}. This additional cold test on the surface can
+sp-tpcelec-integration.tex:detect possible problems with the integration of \dword{apa}s, \dwords{femb},
+sp-tpcelec-integration.tex:and \dword{pds} components before cold
+sp-tpcelec-integration.tex:box tests in the \dword{surf} cavern.
+sp-tpcelec-integration.tex:At \dword{surf}, an initial test of the readout is performed at room temperature to
+sp-tpcelec-integration.tex:performed at the \dword{itf} except that the power, control, and readout
+sp-tpcelec-integration.tex:that the response of the \dword{adc} has not changed since earlier
+sp-tpcelec-integration.tex:for indications of coherent noise. All \dword{fe} gain and shaping time
+sp-tpcelec-integration.tex:integrated pulser circuit in the \dword{fe} \dword{asic}. 
+sp-tpcelec-integration.tex:channels, are repeated later after the \dword{apa}s pair cools down
+sp-tpcelec-integration.tex:on the \dword{apa} wires and the status of the \dword{pds}.
+sp-tpcelec-integration.tex:in earlier \dword{qc} tests.  If problems are found, it will be possible 
+sp-tpcelec-integration.tex:on the \dword{femb} side and that this connection will withstand temperature 
+sp-tpcelec-integration.tex:installation, and commissioning of the \dword{protodune}\dword{sp} 
+sp-tpcelec-integration.tex:detector. While the connection between the cables and the \dword{femb}
+sp-tpcelec-integration.tex:has been redesigned to minimize problems seen in \dword{protodune},
+sp-tpcelec-integration.tex:result in the loss of one entire \dword{femb}. In addition, the tests 
+sp-tpcelec-integration.tex:performed in the cold box at \dword{surf} demonstrate that the power, control, and
+sp-tpcelec-integration.tex:readout cables for the bottom \dword{apa}s are not damaged when they are routed 
+sp-tpcelec-integration.tex:through the \dword{apa} frames. Additional measurements of the noise
+sp-tpcelec-integration.tex:the \dword{tco} temporarily with an RF shield electrically connected 
+sp-tpcelec-integration.tex:All readout tests are repeated after the \dword{apa}s are put
+sp-tpcelec-integration.tex:final \dword{daq} back-end used during normal operations, are exercised. The
+sp-tpcelec-integration.tex:installation plan for the detector components inside the cryostat (\dword{apa}s,
+sp-tpcelec-integration.tex:the \dword{apa}s from the cryostat. The testing of all detector components
+sp-tpcelec-integration.tex:will continue throughout the installation of all the elements of the \dword{tpc}, 
+sp-tpcelec-integration.tex:until the cryostat is ready to be filled with \dword{lar}.  When the 
+sp-tpcelec-integration.tex:\dword{apa}s are in their final position, replacing \dwords{femb} 
+sp-tpcelec-integration.tex:or cold cables will be more difficult and may require extracting the \dword{apa}s 
+sp-tpcelec-integration.tex:In addition to measurements that show the \dword{apa}
+sp-tpcelec-integration.tex:readout is working as planned, the \dword{ce} consortium will also
+sp-tpcelec-integration.tex:test the bias voltage system together with the \dword{apa}
+sp-tpcelec-integration.tex:and \dword{cpa} consortia. These tests should show that
+sp-tpcelec-integration.tex:the cables that provide the bias voltage to the \dword{apa} wires, the
+sp-tpcelec-integration.tex:\dword{fc} termination electrodes, and the electron diverters are connected
+sp-tpcelec-integration.tex:to the inside of the cryostat (or to the area close to the \dword{apa} being
+sp-tpcelec-integration.tex:tested) is limited. These tests will be performed as soon as an \dword{apa}
+sp-tpcelec-integration.tex:\dword{shv} boards on the \dword{apa}, using a resistive load for the 
+sp-tpcelec-integration.tex:\dword{fc} termination electrodes and the electron diverters. This ensures
+sp-tpcelec-integration.tex:supplies to the \dword{apa}s. The test must be repeated for the \dword{fc}
+sp-tpcelec-integration.tex:the \dword{fc} are deployed.
+sp-tpcelec-integration.tex:provided by the \dword{ce} consortium before they are inserted into the
+sp-tpcelec-integration.tex:\dword{apa}s. After the cryostat penetrations are put in place, leak checks
+sp-tpcelec-integration.tex:and readout by the \dword{daq} back-end. Tests will be performed on the
+sp-tpcelec-integration.tex:corresponding \dword{apa}s are installed, after their installation, after
+sp-tpcelec-integration.tex:the \dword{tco} is closed and the cryostat is filled. Negative results in any
+sp-tpcelec-integration.tex:take place before the closure of the \dword{tco} is authorized, the \dword{lar} filling operation begins, and the detector is
+sp-tpcelec-interfaces.tex:between the \dword{ce} consortium and other consortia or groups,
+sp-tpcelec-interfaces.tex:the interface involves both the \dword{apa} and the \dword{hv} consortia).
+sp-tpcelec-interfaces.tex:[\dword{hv} system interfaces]
+sp-tpcelec-interfaces.tex:\dword{apa} & Mechanical (cable trays, cable routing, connections of CE boxes and 
+sp-tpcelec-interfaces.tex:frames) and electrical (bias voltage, \dword{femb}--CR boards connection, grounding 
+sp-tpcelec-interfaces.tex:\dword{daq} & Data output from the \dword{wib} to the \dword{daq} back-end, clock distribution,
+sp-tpcelec-interfaces.tex:\dword{hv} & Grounding, bias voltage distribution, installation and testing & \cite{bib:docdb-6739}
+sp-tpcelec-interfaces.tex:\dword{pds} & Electrical (cable routing and installation), cold flange & \cite{bib:docdb-6718}
+sp-tpcelec-interfaces.tex:equipment required for  \dword{ce} consortium activities & \cite{bib:docdb-7000}
+sp-tpcelec-interfaces.tex:\dword{itf} & Material handling and testing activities of  the \dword{ce} 
+sp-tpcelec-interfaces.tex:consortium at the \dword{itf}, cold box for \dword{apa} tests& \cite{bib:docdb-7027}
+sp-tpcelec-interfaces.tex:The most important interface is between the \dword{ce}
+sp-tpcelec-interfaces.tex:and the \dword{apa} consortia. The design of the \dwords{femb}
+sp-tpcelec-interfaces.tex:and of the \dword{apa}s are strictly intertwined, both from the
+sp-tpcelec-interfaces.tex:mechanical and electrical points of view. The \dword{ce}
+sp-tpcelec-interfaces.tex:boxes, which house the \dwords{femb}, are supported by the \dword{apa}
+sp-tpcelec-interfaces.tex:and, at the same time, attached to the CR boards of the \dword{apa}
+sp-tpcelec-interfaces.tex:the \dword{fe} amplifiers. The cable trays that house both the
+sp-tpcelec-interfaces.tex:\dword{ce} and the \dword{pds} cold cables are initially
+sp-tpcelec-interfaces.tex:attached to the yoke of the \dword{apa}. The \dword{ce}
+sp-tpcelec-interfaces.tex:cables for the bottom \dword{apa} must be routed through the 
+sp-tpcelec-interfaces.tex:frames of both the bottom and top \dword{apa}s. The \dword{ce}
+sp-tpcelec-interfaces.tex:consortium provides the bias voltage for the \dword{apa}
+sp-tpcelec-interfaces.tex:wires as well as for the electron diverters and the \dword{fc} termination electrodes (the latter are a responsibility of
+sp-tpcelec-interfaces.tex:the \dword{hv} consortium) using the \dword{shv} boards mounted
+sp-tpcelec-interfaces.tex:on the \dword{apa}s. The grounding requirements discussed in
+sp-tpcelec-interfaces.tex:the \dword{ce} components and \dword{apa}s as well as the
+sp-tpcelec-interfaces.tex:design of the connections between the top and bottom \dword{apa}s
+sp-tpcelec-interfaces.tex:and between the top \dword{apa} and the \dword{dss}. All 
+sp-tpcelec-interfaces.tex:the \dword{itf} and \dword{surf} must be carefully coordinated by
+sp-tpcelec-interfaces.tex:the two consortia and, where appropriate, also with the \dword{pds}
+sp-tpcelec-interfaces.tex:The \dword{daq} is responsible for receiving the data produced by the
+sp-tpcelec-interfaces.tex:\dword{ce} detector components and the further processing to
+sp-tpcelec-interfaces.tex:\dword{daq} is also responsible for delivering the clock and control
+sp-tpcelec-interfaces.tex:the \dwords{wiec}. One fiber per \dword{wiec} delivers the
+sp-tpcelec-interfaces.tex:clock and the control signals to the \dword{ptc}, which then
+sp-tpcelec-interfaces.tex:crate. Each \dword{wib} reads out the data from four \dwords{femb}
+sp-tpcelec-interfaces.tex:and transmits the data through two 10~Gbps links to the \dword{daq} back-end.
+sp-tpcelec-interfaces.tex:\dword{pdsp} components. The data format used for 
+sp-tpcelec-interfaces.tex:\dword{dune} will be an evolution of the one adopted for
+sp-tpcelec-interfaces.tex:\dword{pdsp}, taking into account the need for an 
+sp-tpcelec-interfaces.tex:\dwords{femb} in the detector. The \dword{daq} consortium
+sp-tpcelec-interfaces.tex:The \dword{hv} consortium interface 
+sp-tpcelec-interfaces.tex:is driven by the fact that the \dword{ce} flange provides the return path for
+sp-tpcelec-interfaces.tex:supply through the cathode panels, the \dword{fc}, and then
+sp-tpcelec-interfaces.tex:the \dword{shv} boards mounted on the \dword{apa}s, which
+sp-tpcelec-interfaces.tex:are  the responsibility of the \dword{apa} consortium. The
+sp-tpcelec-interfaces.tex:\dword{shv} boards also distribute the bias voltage to the \dword{fc} termination electrodes. The \dword{ce} consortium
+sp-tpcelec-interfaces.tex:is responsible for bringing the bias voltage for the \dword{fc} termination electrodes to the \dword{shv} boards. Appropriate
+sp-tpcelec-interfaces.tex:and the \dword{dune} Technical Coordination, as well as the interfaces with
+sp-tpcelec-interfaces.tex:installation team. The \dword{ce} consortium has several
+sp-tpcelec-interfaces.tex:cryostat, the cryostat penetrations used by the \dword{ce}
+sp-tpcelec-interfaces.tex:and \dword{pds} consortia, and the racks and trays on top
+sp-tpcelec-interfaces.tex:of the cryostat. The \dword{ce} consortium is responsible
+sp-tpcelec-interfaces.tex:inside the cryostat and the cryostat penetrations. The \dword{dune}
+sp-tpcelec-interfaces.tex:for the \dword{ce} detector components will be installed; Technical Coordination is also responsible for the trays
+sp-tpcelec-interfaces.tex:connecting these racks to the corresponding \dword{wiec} and for the network switches that
+sp-tpcelec-interfaces.tex:connect the controls for the \dword{ce} to the
+sp-tpcelec-interfaces.tex:\dword{daq} and \dword{cisc} back-ends. Finally, Technical Coordination will
+sp-tpcelec-interfaces.tex:the \dword{ce} detector components. The \dword{ce}
+sp-tpcelec-interfaces.tex:The \dword{ce} consortium will work with the teams responsible
+sp-tpcelec-interfaces.tex:to plan all activities that take place at the \dword{itf} and at
+sp-tpcelec-interfaces.tex:\dword{surf}. This will include developing plans to outline the responsibilities
+sp-tpcelec-interfaces.tex:of the consortium and those of the \dword{itf} personnel or of 
+sp-tpcelec-interfaces.tex:Technical Coordination for the activities at \dword{surf}, including all 
+sp-tpcelec-interfaces.tex:the \dword{apa}s after integration with the \dwords{femb} will be 
+sp-tpcelec-interfaces.tex:provided by the \dword{itf} and by Technical Coordination at \dword{surf}.
+sp-tpcelec-interfaces.tex:All other testing equipment will be provided either by the \dword{ce}
+sp-tpcelec-interfaces.tex:minimize risk of \dword{esd} damage to the detector components
+sp-tpcelec-interfaces.tex:will  be provided by the \dword{ce} consortium. 
+sp-tpcelec-interfaces.tex:The interface with the \dword{pds} consortium is relatively simple.
+sp-tpcelec-interfaces.tex:The \dword{pds} detector component should be isolated from the \dword{ce}
+sp-tpcelec-interfaces.tex:\dword{pds} and \dword{ce} cables will be housed together in
+sp-tpcelec-interfaces.tex:cable trays that are the responsibility of the \dword{ce}
+sp-tpcelec-interfaces.tex:consortium. The \dword{ce} consortium will also take over
+sp-tpcelec-interfaces.tex:the responsibility for routing the \dword{pds} cables through the
+sp-tpcelec-interfaces.tex:cryostat penetration and for connecting them to the \dword{pds}
+sp-tpcelec-interfaces.tex:flange. The flange itself will be designed and built by the \dword{pds}
+sp-tpcelec-interfaces.tex:of the cryostat penetration will be a responsibility of the \dword{ce}
+sp-tpcelec-interfaces.tex:consortium. The \dword{ce} consortium may also
+sp-tpcelec-interfaces.tex:\dword{pds} cables between the flange and the mini-racks housing
+sp-tpcelec-interfaces.tex:the \dword{pds} warm electronics on the top of the cryostat as
+sp-tpcelec-interfaces.tex:The \dword{cisc} consortium provides the software infrastructure for the slow
+sp-tpcelec-interfaces.tex:control and monitoring the status of the \dword{ce} components.
+sp-tpcelec-interfaces.tex:The \dword{cisc} and \dword{ce} consortia may also have hardware
+sp-tpcelec-interfaces.tex:two consortia is the requirement from the \dword{ce} consortium
+sp-tpcelec-interfaces.tex:detector components for the \dword{itf} and at the beginning
+sp-tpcelec-interfaces.tex:of the installation for \dword{surf}. 
+sp-tpcelec-management.tex:At the moment, the \dword{ce} consortium consists entirely of
+sp-tpcelec-management.tex:from \dword{fermilab}), with personnel from BNL helping with system design. A working group structure has been recently 
+sp-tpcelec-management.tex:responsible for integration at the \dword{itf} and
+sp-tpcelec-management.tex:\dword{surf} will be formed (for now, the technical lead oversees 
+sp-tpcelec-management.tex:Technical Coordination and the consortia (mainly the \dword{apa}
+sp-tpcelec-management.tex:contact people for the overall \dword{lbnf}/\dword{dune} management for
+sp-tpcelec-management.tex:\dword{esh} and for \dword{qa}/\dword{qc}. For the moment, the technical lead oversees these activities although oversight
+sp-tpcelec-management.tex:{Institutes participating in the \dword{ce} consortium.}
+sp-tpcelec-management.tex:{Current leadership positions in the \dword{ce} consortium.}\
+sp-tpcelec-management.tex:\dword{esh} contact & \href{mailto:mverzocc@fnal.gov}{Marco Verzocchi} (Fermilab) \\ \colhline
+sp-tpcelec-management.tex:\dword{qa}/\dword{qc} contact & \href{mailto:ikfuric@ufl.edu}{Ivan Furic} (Florida) and 
+sp-tpcelec-management.tex:charged with studying reliability issues in the \dword{ce} 
+sp-tpcelec-management.tex:(FERMI/GLAST); and lessons learned from constructing and commissioning \dword{pdsp}. We will also seek input from other fields. Later 
+sp-tpcelec-management.tex:this \fixme{If task force and working group have different definitions, they should be defined and then used in different ways. I note that they are used interchangeably in this paragraph. Is that the case?} task force will help in developing the \dword{qc} 
+sp-tpcelec-management.tex:program for the \dword{ce} detector components, in collaboration
+sp-tpcelec-management.tex:with the testing group leadership, starting from the \dword{pdsp} 
+sp-tpcelec-management.tex:from outside the \dword{dune} collaboration, may form to establish the
+sp-tpcelec-management.tex:the \dword{dune} executive board for the final approval, as discussed
+sp-tpcelec-management.tex:of the \dword{ce} detector components for the first \dword{sp} \dword{tpc} far detector. This schedule, and the costs associated
+sp-tpcelec-management.tex:with detector construction, are based on experience with constructing and commissioning the \dword{pdsp}
+sp-tpcelec-management.tex:appropriate tested, \fixme{I see nothing about testing in the table. Can the phrase be deleted or should testing be included in the table?} required for the first \dword{sp}
+sp-tpcelec-management.tex:\dword{tpc} far detector. To develop a schedule for detector construction, 
+sp-tpcelec-management.tex:be built using the \dword{sp} technology, so construction
+sp-tpcelec-management.tex:of the \dword{ce} components for the second detector would
+sp-tpcelec-management.tex:\begin{dunetable}[Number of \dword{ce} components required 
+sp-tpcelec-management.tex:for the Single Phase \dword{tpc} Far Detector]
+sp-tpcelec-management.tex:{Number of \dword{ce} components required for the single 
+sp-tpcelec-management.tex:phase \dword{tpc} Far Detector (accounting for spares and yield).}
+sp-tpcelec-management.tex:\dword{fe} ASIC & 30,000 chips (at least 77 wafers) \\ \colhline
+sp-tpcelec-management.tex:\dword{coldadc} and \dword{coldata} & 30,000 and 7,500 chips (at least 33 wafers) \\ \colhline
+sp-tpcelec-management.tex:\dword{cryo} & 7,500 chips (at least 35 wafers) \\ \colhline
+sp-tpcelec-management.tex:\dword{femb} & 3,200 \\ \colhline
+sp-tpcelec-management.tex:Cold signal cables & 1,650 and 1,575 (bottom and top \dword{apa}) \\ \colhline
+sp-tpcelec-management.tex:Cold power cables & 1,650 and 1,575 (bottom and top \dword{apa}) \\ \colhline
+sp-tpcelec-management.tex:Cold bias voltage cables & 660 and 630 (bottom and top \dword{apa}) \\ \colhline
+sp-tpcelec-management.tex:\dword{ce} flanges & 160 \\ \colhline
+sp-tpcelec-management.tex:\dword{wiec} & 155 \\ \colhline
+sp-tpcelec-management.tex:\dword{wib} & 775 \\ \colhline
+sp-tpcelec-management.tex:\dword{ptc} & 155 \\ \colhline
+sp-tpcelec-management.tex:Construction of the first \dword{sp}
+sp-tpcelec-management.tex:\dword{tpc} far detector is driven by the availability of \dwords{femb},
+sp-tpcelec-management.tex:of the \dword{apa}s could start as early as Spring 2019, while the
+sp-tpcelec-management.tex:depends on the \dword{ce} consortium, which is
+sp-tpcelec-management.tex:sequence of system tests (with the 40\% \dword{apa} prototype at BNL,
+sp-tpcelec-management.tex:the seventh \dword{pdsp} \dword{apa} in the cold box at CERN
+sp-tpcelec-management.tex:and the \dword{tpc} in the \dword{iceberg} cryostat at \dword{fermilab})
+sp-tpcelec-management.tex:\dword{asic} decision. Consequently, the initial
+sp-tpcelec-management.tex:tests of the \dword{dune} prototype \dword{apa}s must be performed
+sp-tpcelec-management.tex:required for a final iteration of the \dword{femb} design
+sp-tpcelec-management.tex:for constructing the first \dword{sp} \dword{tpc} far detector
+sp-tpcelec-management.tex:production \dword{femb} would then be available for installation on
+sp-tpcelec-management.tex:the \dword{apa}s in Winter 2023, and production would be
+sp-tpcelec-management.tex:\dword{apa}s, integration tests will be performed using preliminary
+sp-tpcelec-management.tex:with the \dword{apa}s would be completed a couple of months after
+sp-tpcelec-management.tex:the final set of \dwords{femb} is delivered to \dword{itf}.
+sp-tpcelec-management.tex:If a second \dword{sp} \dword{tpc} far detector is built, the critical
+sp-tpcelec-management.tex:to the \dword{apa}s, assuming that construction
+sp-tpcelec-management.tex:of both \dword{apa}s and \dwords{femb} will continue 
+sp-tpcelec-management.tex:without interruption after construction of the first detector. This is because constructing one \dword{apa} requires 
+sp-tpcelec-management.tex:\dword{itf} waiting for the delivery of the \dwords{apa} before
+sp-tpcelec-management.tex:\dword{ce} consortium can be produced relatively quickly
+sp-tpcelec-management.tex:components, unlike those used in the \dword{pdsp} detector,
+sp-tpcelec-management.tex:before the \dword{asic} choice.
+sp-tpcelec-management.tex:and for the \dword{tco} used to exhaust the air flow
+sp-tpcelec-management.tex:\dword{ce} components, which are installed on top of the 
+sp-tpcelec-management.tex:the corresponding rows of \dword{apa}s and properly connecting the \dword{apa}s to power, control, and read-out. The \dword{apa}s should be tested as
+sp-tpcelec-management.tex:Design and prototyping for the \dword{sp} \dword{dune} detector have 
+sp-tpcelec-management.tex:\dwords{asic}. The design of the \dword{fe} \dword{asic} was
+sp-tpcelec-management.tex:done at Brookhaven, \dword{cryo} chip at SLAC, and the new \dword{coldadc} was a joint effort of Brookhaven,
+sp-tpcelec-management.tex:\dword{fermilab}, and LBL. The \dword{coldata} \dword{asic} was designed at \dword{fermilab}, with
+sp-tpcelec-management.tex:The \dword{cts} was designed at Michigan State University.
+sp-tpcelec-management.tex:design and construction work for the \dword{pdsp} detector was done at Brookhaven, with other
+sp-tpcelec-management.tex:\dword{sp} detector, which began in the middle of 2018. Almost all
+sp-tpcelec-management.tex:the \dword{itf} and to the installation at \dword{surf}, which is very
+sp-tpcelec-management.tex:Integrating \dwords{femb} on the \dword{apa}s would then
+sp-tpcelec-management.tex:this moment, the installing and testing of \dword{apa}s in 
+sp-tpcelec-management.tex:the cryostat and corresponding activities of the \dword{ce} consortium, including installing all 
+sp-tpcelec-management.tex:[\dword{ce} consortium milestones]
+sp-tpcelec-management.tex:{Milestones of the \dword{ce} consortium.}
+sp-tpcelec-management.tex:Nov 2020 & Decision on the \dword{asic}(s) to be used for construction \\ \colhline
+sp-tpcelec-management.tex:Oct 2021 & Complete installation of \dwords{femb} on \dword{pdsp} \dwords{apa} \\ \colhline
+sp-tpcelec-management.tex:May 2022 & Set-up of \dword{ce} test equipment at the \dword{itf} complete \\ \colhline
+sp-tpcelec-management.tex:Feb 2023 & Begin installation of \dwords{femb} on \dwords{apa} at the \dword{itf} \\ \colhline
+sp-tpcelec-management.tex:Sep 2024 & Integration of \dword{ce} components with \dwords{apa} complete \\ \colhline
+sp-tpcelec-management.tex:Mar 20XX & Begin installation and testing of \dword{ce} components at \surf \\ \colhline
+sp-tpcelec-management.tex:Jan 20YY & Installation of \dword{ce} components complete \\ \colhline
+sp-tpcelec-management.tex:A detailed estimate of the \dword{ce} project costs was done in Summer/Fall 2018, using as a starting point
+sp-tpcelec-management.tex:the actual expenses for constructing the \dword{pdsp}
+sp-tpcelec-management.tex:need only minor changes from the \dword{pdsp} design. While the
+sp-tpcelec-management.tex:be estimated reliably using the \dword{pdsp} estimates,
+sp-tpcelec-management.tex:once the cost of the \dword{fpga} is subtracted from the total
+sp-tpcelec-management.tex:from \dword{pdsp}.
+sp-tpcelec-management.tex:the \dword{fpga}, and the assembly. The \dwords{asic} set will
+sp-tpcelec-management.tex:changes significantly for \dword{dune} is the cryostat penetration,
+sp-tpcelec-management.tex:relative to the overall cost of all the \dword{ce}
+sp-tpcelec-management.tex:An estimate of the construction costs for the first \dword{sp}
+sp-tpcelec-management.tex:\dword{tpc} far detector, including all costs for prototyping and
+sp-tpcelec-management.tex:\dword{ce} consortium that needs to be discussed with
+sp-tpcelec-management.tex:[Construction costs for the \dword{ce} detector components]
+sp-tpcelec-management.tex:{Construction costs for the \dword{ce} detector components during the various phases of the project.}
+sp-tpcelec-management.tex:experience from \dword{pdsp} construction. We assume that by testing multiple \dwords{asic}
+sp-tpcelec-management.tex:Integration activities at the \dword{itf} and \dword{surf}
+sp-tpcelec-management.tex:will be more complex than for \dword{pdsp} and
+sp-tpcelec-management.tex:the various consortia (\dword{apa}, \dword{hv}, \dword{pds},
+sp-tpcelec-management.tex:\dword{daq}, and \dword{cisc}) and of the underground
+sp-tpcelec-management.tex:at \dword{surf}. Personnel needs for the project are listed in
+sp-tpcelec-management.tex:[Personnel needs for the \dword{ce} construction as a function of time]
+sp-tpcelec-management.tex:{Personnel needs for the construction of the \dword{ce} detector components 
+sp-tpcelec-management.tex:[Personnel needs for the \dword{ce} consortium]
+sp-tpcelec-management.tex:{Personnel needs (in FTE--years) for the construction of the \dword{ce} detector 
+sp-tpcelec-maturity.tex:The two \dword{protodune} detectors have been built with multiple
+sp-tpcelec-maturity.tex:scale up of the detector size. The data collected with \dword{pdsp}
+sp-tpcelec-maturity.tex:of coherent noise observed in \dword{pdsp} in untreated raw data
+sp-tpcelec-maturity.tex:in \dword{microboone} after a significant level of analysis and
+sp-tpcelec-maturity.tex:Despite the success of \dword{pdsp} there are multiple areas where
+sp-tpcelec-maturity.tex:design of the cryostat penetration, that in \dword{pdsp} housed one
+sp-tpcelec-maturity.tex:\dword{ce} and one \dword{pds} flange in a tee-shape. For DUNE
+sp-tpcelec-maturity.tex:there will be two \dword{ce} flanges in addition to the \dword{pds}
+sp-tpcelec-maturity.tex:other prototypes, and finishing with \dword{pdsp}. At the opposite
+sp-tpcelec-maturity.tex:side of the spectrum is the \dword{asic}s' design, with the
+sp-tpcelec-maturity.tex:development of \dword{coldata} and of a completely new \dword{adc}
+sp-tpcelec-maturity.tex:P1-\dword{adc}, non-linearities and stuck bits. In Table~\ref{tab:SPCE:designstatus}
+sp-tpcelec-maturity.tex:the design and prototyping of the \dword{ce} detector components for
+sp-tpcelec-maturity.tex:\dword{larasic} & Advanced & Fix minor issues in the design, port differential output from \dword{coldadc} design \\ \colhline
+sp-tpcelec-maturity.tex:\dword{coldadc} & \multicolumn{2}{l}{See text for details} \\ \colhline
+sp-tpcelec-maturity.tex:\dword{coldata} & \multicolumn{2}{l}{See text for details} \\ \colhline
+sp-tpcelec-maturity.tex:\dword{cryo} & \multicolumn{2}{l}{See text for details} \\ \colhline
+sp-tpcelec-maturity.tex:\dword{femb} & Advanced & Experience with multiple prototypes, final design will follow the \dword{asic} selection \\ \colhline
+sp-tpcelec-maturity.tex:Cryostat penetrations & Advanced & Add \dword{ce} flange for bottom \dword{apa} \\ \colhline
+sp-tpcelec-maturity.tex:\dword{wiec} & Very advanced & Add HEPA filter and hardware interlock system \\ \colhline
+sp-tpcelec-maturity.tex:\dword{wib} & Advanced & Update design to use cheaper FPGA, modify \dword{femb} power \\ \colhline
+sp-tpcelec-maturity.tex:\dword{ptc} & Very advanced & Add interface to interlock system \\ \colhline
+sp-tpcelec-maturity.tex:The area that requires most work is that of the \dword{asic}s that are mounted
+sp-tpcelec-maturity.tex:on the \dwords{femb}. The FE \dword{asic} has already gone through eight design
+sp-tpcelec-maturity.tex:in one of its versions, for \dword{microboone} and for \dword{pdsp} reaching the 
+sp-tpcelec-maturity.tex:required to address the issues observed during the \dword{pdsp} operations and
+sp-tpcelec-maturity.tex:with the newly developed \dword{coldadc}. To ensure the success of the next 
+sp-tpcelec-maturity.tex:\dword{pdsp} can be properly addressed first in simulation and then with improvements 
+sp-tpcelec-maturity.tex:the \dword{larasic} development, and therefore it should not be a surprise
+sp-tpcelec-maturity.tex:that the FE \dword{asic} may have limitations in some corner of the phase space.
+sp-tpcelec-maturity.tex:technology used for \dword{larasic}. We consider that appropriate measures have been
+sp-tpcelec-maturity.tex:we consider a generic risk for a delay in the availability of \dword{asic}s and
+sp-tpcelec-maturity.tex:The plan for DUNE foresees the usage of two additional custom design \dword{asic}s
+sp-tpcelec-maturity.tex:\dword{asic} that combines these functionalities with that of the FE. It should
+sp-tpcelec-maturity.tex:in \lar. The custom solutions for the \dword{asic}s are being developed to
+sp-tpcelec-maturity.tex:simplify the \dword{femb} assembly and reduce the power dissipated by the
+sp-tpcelec-maturity.tex:\dword{asic}s, \dword{coldadc} and \dword{coldata}.
+sp-tpcelec-maturity.tex:The first iteration of the \dword{coldadc} has been submitted for fabrication
+sp-tpcelec-maturity.tex:lead engineer of the BNL-FNAL-LBNL team that has designed the new \dword{coldadc}.
+sp-tpcelec-maturity.tex:\item{The interfaces between the core of the ADC and \dword{larasic} on 
+sp-tpcelec-maturity.tex:the input side and \dword{coldata} on the output side are entirely new.
+sp-tpcelec-maturity.tex:If the tests of the new \dword{coldadc} in Spring 2019 are successful, the
+sp-tpcelec-maturity.tex:the production, and as in the case of \dword{larasic}, plans can be made for a
+sp-tpcelec-maturity.tex:the three \dword{asic}s are replaced with a single one, the \dword{cryo}
+sp-tpcelec-maturity.tex:timeline similar to that of \dword{coldadc}. Also in this case the
+sp-tpcelec-maturity.tex:and later system tests on a timescale similar to that of \dword{coldadc}.
+sp-tpcelec-maturity.tex:The \dword{cryo} chip is more complicated than \dword{coldadc},
+sp-tpcelec-maturity.tex:since it implements the functionality of three \dword{asic}s into a
+sp-tpcelec-maturity.tex:lower than that of \dword{coldadc}. Some of the design blocks of
+sp-tpcelec-maturity.tex:\dword{cryo} are at a more advanced level: for example the control
+sp-tpcelec-maturity.tex:and data transmission blocks have been reused from other \dword{asic}
+sp-tpcelec-maturity.tex:is very similar to that of \dword{larasic}, except for the signal 
+sp-tpcelec-maturity.tex:\dword{cryo} design will evolve in a way similar to that of \dword{coldadc}.
+sp-tpcelec-maturity.tex:The first complete prototype of \dword{coldata} will be submitted in 
+sp-tpcelec-maturity.tex:\dword{asic}, the I2C interface required to program and read-out
+sp-tpcelec-maturity.tex:configure \dword{larasic}, the phase-lock loop required to generate
+sp-tpcelec-maturity.tex:requires the addition of two interfaces to the \dword{coldadc} (UART
+sp-tpcelec-maturity.tex:\dword{coldata} \dword{asic}s on the same \dword{femb}, and the
+sp-tpcelec-maturity.tex:validation methodology used for the CDP1 prototype and the \dword{coldadc}
+sp-tpcelec-maturity.tex:Summer 2019 \dword{coldata} will reach the ``Advanced'' design 
+sp-tpcelec-maturity.tex:\dword{microboone} and in \dword{pdsp}. SBND is starting the
+sp-tpcelec-maturity.tex:FPGA solution. The design of the \dword{femb} needs to be adapted
+sp-tpcelec-maturity.tex:for the different \dword{asic} solutions that are being considered
+sp-tpcelec-maturity.tex:where the \dwords{femb} are connected to an \dword{apa} are part
+sp-tpcelec-maturity.tex:of the qualification tests. The design status for the \dword{femb}
+sp-tpcelec-maturity.tex:``Very advanced'' level at the time of the \dword{asic}
+sp-tpcelec-maturity.tex:The only other \dword{ce} detector components that do not yet
+sp-tpcelec-maturity.tex:discussed above, and the \dword{wib}, where small
+sp-tpcelec-maturity.tex:\dword{pdsp}. The transition to a more modern FPGA will allow 
+sp-tpcelec-maturity.tex:more extensive data monitoring inside the \dword{wib}, but may
+sp-tpcelec-maturity.tex:gained with commissioning and operation of \dword{pdsp}. The 
+sp-tpcelec-maturity.tex:on the \dword{femb}. The design of the \dword{wiec} needs to
+sp-tpcelec-maturity.tex:The \dword{ptc} is going to be modified to add an interface to
+sp-tpcelec-overview.tex:\dword{dune} single-phase \dword{tpc} electronics hardware signal processing takes place inside the \dword{lar}, in boards that are directly mounted on the \dword{apa}; accordingly, the \dword{tpc} readout electronics are referred to as the \dword{ce}.  The electronics are mounted inside the \dword{lar} to exploit the fact that charge carrier mobility in silicon is higher and that thermal fluctuations are lower at \dword{lar} temperature than at room temperature.  For \dword{cmos} (complementary metal-oxide-semiconductor) electronics, this results in substantially higher gain and lower noise at \dword{lar} temperature than at room temperature~\cite{larCMOS}.  Mounting the front-end electronics on the \dword{apa} frames also minimizes the input capacitance.  Furthermore, placing the digitizing and multiplexing (MUX) \fixme{This abbreviation is not in the glossary.}electronics inside the cryostat reduces the total number of penetrations into the cryostat and minimizes the number of cables coming out of the cryostat.  As the full \dword{tpc} electronics chain for the \dword{spmod} includes many components on the warm side of the cryostat as well, the \dword{dune} consortium designated to organize development of this system is called the \dword{dune} \textit{Single-Phase \dword{tpc} Electronics} consortium. It is sometimes referred to as the \dword{ce} consortium for short.
+sp-tpcelec-overview.tex:The overall noise requirement drives the choice of the \dword{tpc} electronics architecture. This requirement is difficult to establish precisely, but clearly, the less electronic noise, the better the physics reach of the \dword{dune} experiment will be.  An equivalent noise charge (\dword{enc}) of less than approximately 1000$e^-$ is required for satisfactory reconstruction of accelerator neutrino interactions, but a lower noise level will yield significantly better two-track separation and primary vertex resolution, and thus higher efficiency and/or lower background for identifying electron neutrino interactions.  Setting the noise level requirement for the \dword{dune} \dword{spmod} more precisely is an ongoing effort.
+sp-tpcelec-overview.tex:The noise level enabled by having the front-end electronics in the cold (roughly half as much noise at \dword{lar} temperature than at room temperature) greatly extends the reach of the \dword{dune} physics program.  Decreasing the noise level allows measurement of smaller charge deposits , a source of risk mitigation in case the desired drift field cannot be reached or the electron lifetime in the detector is less than desired (due to the electronegative impurities in the detector). Decreasing the noise level also increases the reach of low-energy physics measurements like those associated with stellar core-collapse supernova burst neutrinos.  Finally, a low noise level allows the experiment to use low-energy $\mathrm{{}^{39}Ar}$ beta decays to calibrate the \dword{dune} \dword{spmod}.  The noise level requirement of \dword{enc}\,$<\num{1000}\,e^-$ will allow the use of $\mathrm{{}^{39}Ar}$ beta decays in calibrations at the DUNE \dword{spmod}.
+sp-tpcelec-overview.tex:To retain maximum flexibility in optimizing reconstruction algorithms after the \dword{dune} data is collected, the \dword{spmod} electronics are designed to produce a digital record representing the waveform of the current produced by charge collection/induction on the anode wires.  Each anode wire signal is input to a charge sensitive amplifier, followed by a pulse shaping circuit and an \dword{adc}.  To minimize the number of cables and cryostat penetrations, the \dwords{adc} as well as the amplifier/shapers are located in the \dword{lar}, and digitized data from many wires merge onto a much smaller set of high speed serial links.  %[Figure xx illustrates the front-end electronics architecture.  128-channel “Front-End Mother Boards” produce digitized waveforms and transmit those waveforms on four serial links through a \fdth in the top of the cryostat to “Warm Interface Boards” located in crates mounted directly on spool pieces on the outside of the cryostat. The Warm Interface Boards provide clean power and timing signals to the \dword{ce}.  All connections to the DAQ and slow control systems are made using optical fibers.] – might better cover later.
+sp-tpcelec-overview.tex:%INCLUDE AN OVERVIEW FIGURE HERE WITH THIS CAPTION:  ``Each Anode Plane Assembly (\dword{apa}) has 2560 instrumented wires.  These are read out by 20 Front-End MotherBoards (\dwords{femb}).  All cables between \dwords{femb} on a given \dword{apa} are routed through a single cryostat \fdth.  A printed circuit board connects those cables to the backplane of a Warm Electronics Interface Crate.  Warm Interface Boards mounted in this crate receive data from the \dwords{femb} and transmit it to the data acquisition system.''
+sp-tpcelec-overview.tex:The \dword{ce} signal processing is implemented in application-specific integrated circuits (\dwords{asic})
+sp-tpcelec-overview.tex:using \dword{cmos} technology.  The \dword{ce} is continuously read out, resulting in a digitized \dword{adc}
+sp-tpcelec-overview.tex:sample from each \dword{apa} channel (wire) up to every \SI{500}{ns} (\SI{{\sim}2}{MHz} sampling rate).
+sp-tpcelec-overview.tex:Each individual \dword{apa} has \num{2560} channels read out by \num{20} \dfirsts{femb}, with
+sp-tpcelec-overview.tex:the outside of the cryostat via a \dword{ce} signal cable flange located at the \dword{ce} \fdth at the
+sp-tpcelec-overview.tex:top of the cryostat, where a single flange services each \dword{apa}, as shown in Figure~\ref{fig:connections}.  Two \dword{ce} signal flanges are on each \fdth and together account for all electronics channels associated with a pair of \dword{apa}s (upper and lower, vertically arranged).
+sp-tpcelec-overview.tex:Each cable bundle contains wires for low-voltage (\dword{lv}) power, high-speed data readout, and
+sp-tpcelec-overview.tex:clock or digital-control signal distribution.  Eight separate cables carry the \dword{tpc} wire bias voltages
+sp-tpcelec-overview.tex:from the signal flange to the \dword{apa} wire bias boards, in addition to the bias voltages for the field
+sp-tpcelec-overview.tex:cage termination electrodes and for the electron diverters.  An additional flange on the top of each \fdth services the \dword{pds} cables associated with the \dword{apa} pair.
+sp-tpcelec-overview.tex:[Connections between the signal flanges and \dword{apa}]
+sp-tpcelec-overview.tex:{Connections between the signal flanges and \dword{apa}. The lower \dword{apa} shares the photon detector flange with the upper \dword{apa} but has a separate TPC readout flange. A \textit{\dword{ce} module} consists of all \dword{ce} associated with \num{128} channels of digitized readout.}
+sp-tpcelec-overview.tex:The components of the \dword{ce} system are the following:
+sp-tpcelec-overview.tex:\item{\dwords{femb}, on which the \dwords{asic} are mounted, and which are installed on the \dword{apa}s;}
+sp-tpcelec-overview.tex:\item{cables for the data, clock, and control signals; \dword{lv} power; and wire bias voltages between the \dword{apa} and the signal flanges (cold cables);}
+sp-tpcelec-overview.tex:\item{signal flanges with a \dword{ce} \fdth to pass the data, clock, and control signals; \dword{lv} power; and \dword{apa} wire-bias voltages between the inside and outside of the cryostat; and the corresponding cryostat penetrations and spool pieces;}
+sp-tpcelec-overview.tex:\item{cables for \dword{lv} power and wire bias voltages between the signal flange and external power
+sp-tpcelec-overview.tex:\item{\dword{lv} power supplies for the \dword{ce} and bias-voltage power supplies for the \dword{apa}s.}
+sp-tpcelec-overview.tex:[TPC electronics components and quantities for a single \dword{apa} of a %the DUNE \single 
+sp-tpcelec-overview.tex:\dword{spmod}.]
+sp-tpcelec-overview.tex:{TPC electronics components and quantities for a single \dword{apa} of the DUNE \dword{spmod}.}
+sp-tpcelec-overview.tex:Front-end mother board (\dword{femb}) & \num{20} per \dword{apa} & \num{128} \\ \colhline
+sp-tpcelec-overview.tex:FE \dword{asic} chip & \num{8} per \dword{femb} & \num{16} \\ \colhline
+sp-tpcelec-overview.tex:\dword{adc} \dword{asic} chip & \num{8} per \dword{femb} & \num{16} \\ \colhline
+sp-tpcelec-overview.tex:\dword{coldata} \dword{asic} chip & \num{2} per \dword{femb} & \num{64} \\ \colhline
+sp-tpcelec-overview.tex:Cold cable bundle & \num{1} per \dword{femb} & \num{128} \\ \colhline
+sp-tpcelec-overview.tex:Signal flange & \num{1} per \dword{apa} & \num{2560} \\ \colhline
+sp-tpcelec-overview.tex:\dword{ce} \fdth & \num{1} per \dword{apa} pair & \num{2560} \\ \colhline
+sp-tpcelec-overview.tex:Warm interface board (\dword{wib}) & \num{5} per \dword{apa} & \num{512} \\ \colhline
+sp-tpcelec-overview.tex:Warm interface electronics crate (\dword{wiec}) & \num{1} per \dword{apa} & \num{2560} \\ \colhline
+sp-tpcelec-overview.tex:Power and timing card (\dword{ptc}) & \num{1} per \dword{apa} & \num{2560} \\ \colhline
+sp-tpcelec-overview.tex:Power and timing backplane (PTB) & \num{1} per \dword{apa} & \num{2560} \\
+sp-tpcelec-overview.tex:%\dword{lv} power mainframe & ? & ? \\ \colhline
+sp-tpcelec-overview.tex:%\dword{lv} supply module & ? & ? \\ \colhline
+sp-tpcelec-overview.tex:The baseline design for the \dword{spmod} TPC electronics calls for three types of \dwords{asic} inside  the \dword{lar}:
+sp-tpcelec-overview.tex:\item{a \num{16}-channel \dword{fe} \dword{asic} for amplification and pulse shaping (referred to as \dword{larasic});}
+sp-tpcelec-overview.tex:\item{a \num{16}-channel \num{12}-bit \dword{adc} \dword{asic} operating at \SI{{\sim}2}{MHz}; and}
+sp-tpcelec-overview.tex:\item{a \num{64}-channel control and communications \dword{asic} (referred to as \dword{coldata}).}
+sp-tpcelec-overview.tex:The \dword{fe} \dword{asic} has been prototyped and is close to meeting requirements (discussed in Section~\ref{sec:fdsp-tpcelec-overview-scope}). Another prototype to address issues in the version deployed in \dword{pdsp} should be finished in early 2019. Key portions of the control and communications \dword{asic} (also called the \dword{coldata} \dword{asic}) have been prototyped and meet requirements.  However, we have determined that the BNL-designed P1-\dword{adc} \dword{asic} now being used in \dword{pdsp} does not meet requirements, and accordingly, its development has been terminated.  A new \dword{adc} \dword{asic} (also called the cold \dword{adc} \dword{asic}) is being developed by an LBNL-\fnal-BNL collaboration; first prototypes should be ready in February 2019.  The first full prototype of the controls and communication \dword{asic} should also be available for testing in June 2019.
+sp-tpcelec-overview.tex:To maximize the probability of quickly developing a complete design for cold TPC \dword{fe} electronics, an alternative solution is also being investigated: a single \num{64}-channel \dword{asic} that will consolidate all three functions listed above.  This design is being done at SLAC, and the first prototypes will be tested in February 2019.  An \dword{adc} solution in the form of a commercial, off-the-shelf (COTS) option serves as an additional backup option and has already been tested; this option will be explored further if the other two \dword{adc} solutions being considered do not meet the requirements for \dword{dune}.
+sp-tpcelec-overview.tex:While the higher charge carrier mobility at \dword{lar} temperature than at room temperature is central to improving the performance of \dword{ce}, it also leads to the \textit{hot carrier effect}.  In n-type MOS \fixme{This abbreviation is not in the glossary.} transistors, the carriers (electrons) can acquire enough kinetic energy to ionize silicon in the active channel.  This charge can become trapped and lead to effects (including threshold shifts) similar to those caused by radiation damage.  This effect can cause MOS circuits to age much more quickly at \dword{lar} temperature than at room temperature, reducing performance and potentially causing failure.  To mitigate this effect, the maximum \efield in transistor channels must be lower than the field that can be reliably used at room temperature.  This is accomplished by using transistors fabricated longer than is typical and operated at reduced bias voltage.  Any commercial circuits used in the \dword{lar} must be carefully tested to ensure they will perform well for the expected \num{20}-year lifetime of \dword{dune}; reliability studies for front-end electronics designs in consideration are discussed in Section~\ref{sec:fdsp-tpcelec-qa-reliability}.
+sp-tpcelec-overview.tex:A series of tests are planned to demonstrate that the \dword{ce} system design will meet \dword{dune} requirements. These include two system tests: one using the \dword{pdsp} \textit{cold box} at CERN and one using a new small \dword{lartpc} at \fnal. The latter will also accommodate one half-length \dword{dune} \dword{pd} and will provide a low-noise environment that will allow detailed comparisons of the performance of the new \dwords{asic}. It will also enable the study of interactions between the \dword{tpc} readout and other systems, including the \dword{pd} readout and the \dword{hv} distribution. These test facilities are discussed in more detail in Section~\ref{sec:fdsp-tpcelec-qa-facilities}. A second period of data taking is also planned for the \dword{pdsp} detector, with final \dword{apa}s including the final \dwords{asic} and \dwords{femb} replacing the current prototypes. This second run of \dword{pdsp} is planned for 2021-2022.
+sp-tpcelec-overview.tex:In addition to the noise requirement (less than \num{1000}\,$e^{-}$), several additional requirements determine most of the other important \dword{tpc} electronics specifications:  
+sp-tpcelec-overview.tex:\item{The \dword{fe} peaking time must  %should 
+sp-tpcelec-overview.tex:\item{The \dword{fe} must %should 
+sp-tpcelec-overview.tex:\item{The \dword{adc} sampling frequency must %should 
+sp-tpcelec-overview.tex:be \SI{{\sim}2}{MHz}.  This value is chosen to match a \dword{fe} shaping time of \SI{1}{\micro\second} (approximate Nyquist condition) while minimizing the data rate.}
+sp-tpcelec-overview.tex:\item{The \dword{adc} must not contribute significantly to overall \dword{fe} noise. This requirement depends on the gain of the \dword{fe} but for each gain setting, translates into requirements on \dword{adc} parameters, including non-linearity and noise.}
+sp-tpcelec-overview.tex:\item{The \dword{adc} must digitize the charge deposited on the wires with 12~bits of precision.  The lower end of the \dword{adc} dynamic range is driven by the requirement that the ADC digitization does not contribute to total electronics noise. The upper end of the \dword{adc} dynamic range is defined by the previous requirement for the signal saturation level. Combining these two requirements with the specification for the total electronics noise results in the need for 12~bits digitization.}
+sp-tpcelec-overview.tex:\item{The power dissipated by the electronics located in the \dword{lar} must 
+sp-tpcelec-overview.tex:be less than \SI{50}{mW/channel}.  Lower power dissipation is desirable because the mass of the power cables scales with  power.  Ongoing studies focus on whether the amount of power dissipated by the electronics should be minimized further because of potential complications from argon boiling; in principle, this should not be a problem because the \dword{ce} boxes housing the \dwords{femb} are designed to channel bubbles to the \dword{apa} frames.}
+sp-tpcelec-overview.tex:Finally, all electronics in the \dword{lar} must 
+sp-tpcelec-overview.tex:be highly reliable because accessing the \dword{ce} for repair is not possible once the cryostat is filled with \dword{lar}. Ongoing studies are quantifying the effect of failures in the \dword{tpc} and electronics, including single wire failures and failures of groups of \num{16}, \num{64}, or \num{128} channels.
+sp-tpcelec-overview.tex:The Single Phase \dword{protodune}-\dword{sp} detector, described in Chapter~\ref{ch:sp-execsum}, is a 700~ton fiducial volume \dword{lartpc} with 15,360 sense wires that are read out by the \dword{ce} system described in Section~\ref{sec:fdsp-tpcelec-qa-facilities-pdune}. The system was deployed in a beam line of the CERN Neutrino Platform in 2018 and continues to take cosmic event data into 2019. The goal of the \dword{protodune}-\dword{sp} \dword{tpc} readout was to validate the concept and the design of the integrated \dword{apa}+\dword{ce} readout and measure the performance of the \dword{ce} system with components as close as possible to the final \dword{dune} \dword{tpc} readout.
+sp-tpcelec-overview.tex:Each of the six \dword{protodune}-\dword{sp} \dword{apa}+\dword{ce} readout units consists of 2,560 sense wires, of which 960 are 6.0~meter long collection wires and 1,600 are 7.4~meter \fixme{Do these measurements of the wires need to be in LATEX code?} long induction wires. Each one was tested in a full scale cold box in cold gaseous Nitrogen (GN2) with a complete \dword{ce} readout system identical to the one on the detector before installation in the cryostat. Figure~\ref{fig:apa2-cycle} shows the \dword{enc}, which is the charge in electrons that would have to arrive at the sense wires to generate a signal with the RMS \fixme{RMS is not in the glossary.} measured by the front end electronics as a function of cold cycle time. At a stable temperature of 160 Kelvin, \fixme{Should Kelvin be abbreviated?} the \dword{enc} for all three wire planes is less than 500~e$^-$.
+sp-tpcelec-overview.tex:[\dword{pdsp} APA2 noise levels measured in GN2 at CERN Cold Box]
+sp-tpcelec-overview.tex:After the cryostat was filled with \dword{lar} and the drift and wire bias HV were set to nominal (defined in Chapter~\ref{ch:sp-execsum}), 99.7\% of the \dword{tpc} readout channels were alive. The following channels were expected to be unresponsive to charge deposited on the wires:
+sp-tpcelec-overview.tex:\item $\sim$35 channels measured with  consistent with no capacitive load on the \dword{fe} electronics, suggesting an open connection somewhere in front of the \dword{ce} system, scattered randomly throughout the detector and on all wire planes.
+sp-tpcelec-overview.tex:With the detector in nominal operating conditions, the \dword{enc} was approximately 550~e$^-$ on the collection wires and approximately 750~e$^-$ averaged over all operational channels. Figure~\ref{fig:apa3-noise} shows the \dword{enc} in electrons for all channels of one of the \dword{apa}+\dword{ce} readout units. The collection channels with \dword{enc}$>$1500~e$^-$ are caused by an artifact in the generation of cold \dword{adc} \dword{asic} used in \dword{protodune}-\dword{sp}. The channels in all three planes with \dword{enc}$<$300~e$^-$ have an open connection somewhere in front of the \dword{ce} system.
+sp-tpcelec-overview.tex:[TPC noise levels measured at \dword{pdsp} after \lar fill]
+sp-tpcelec-overview.tex:The overall performance of the \dword{ce} system in \dword{protodune}-\dword{sp} satisfies the \dword{dune} single phase Far Detector \dword{ce} system requirements listed in Section~\ref{sec:fdsp-tpcelec-overview-scope}. The overall system architecture, described in Section~\ref{sec:fdsp-tpcelec-overview-design}, will remain the same for the \dword{dune} \dword{ce}. However, several improvements and updates to the \dword{ce} system design were motivated by the results of the testing and commissioning of, and the data-taking with, the \dword{protodune}-\dword{sp} electronics. They will be discussed in this chapter.
+sp-tpcelec-production.tex:The \dword{apa} consortium plans on building 152 \dword{apa}s
+sp-tpcelec-production.tex:for the first \dword{sp} detector. This means that at least
+sp-tpcelec-production.tex:integration on the top \dword{apa}s, while the other half will
+sp-tpcelec-production.tex:be compatible with the bottom \dword{apa}s). To have spare \dwords{femb}, the \dword{ce} consortium plans to
+sp-tpcelec-production.tex:build at least 3,200 \dword{femb}, 5\% more than necessary. If more spares are needed during the
+sp-tpcelec-production.tex:\dword{qc} process or during integration, additional 
+sp-tpcelec-production.tex:plans will be put in place once the final design of the \dword{femb}
+sp-tpcelec-production.tex:size of the \dword{femb} production is such that the total number
+sp-tpcelec-production.tex:of chips per wafer is 390 for \dword{larasic}, 928 for \dword{coldadc}, and 232 for \dword{coldata}; these chips will be fabricated together on the same wafer,
+sp-tpcelec-production.tex:220 in the case of \dword{cryo}. The differences between these
+sp-tpcelec-production.tex:used for installation on the \dwords{femb}, we assume that 10\% of the chips will fail during the \dword{qc}
+sp-tpcelec-production.tex:that chips would be required for the 3,200 \dwords{femb}, the approximately 30,000 \dword{larasic} and
+sp-tpcelec-production.tex:\dword{coldadc}, and the 7,500 \dword{coldata}, or 7,500
+sp-tpcelec-production.tex:\dword{cryo} chips. This corresponds to at least 77 \dword{larasic} wafers,
+sp-tpcelec-production.tex:33 \dword{coldadc} wafers, \dword{coldata} wafers, and 35 \dword{cryo} wafers for one
+sp-tpcelec-production.tex:\dword{sp} detector. Wafers must be ordered
+sp-tpcelec-production.tex:reduced if wafers are purchased for two \dword{sp} detectors at a time. \fixme{Check the numbers here. It was confusing because of the way the lists were written, so the revision should be checked.}
+sp-tpcelec-production.tex:10\% additional components for spares for the construction of the first \dword{sp}
+sp-tpcelec-production.tex:plan for 10\% extra for spares for the cables on the bottom \dword{apa} because
+sp-tpcelec-production.tex:they must be routed through the \dword{apa} frames, but
+sp-tpcelec-production.tex:for the top \dword{apa}, we foresee needing only 5\% extra for spares.
+sp-tpcelec-production.tex:Assuming we will have unused spares from the first detector, we will reduce the number of spares for the second \dword{sp}
+sp-tpcelec-production.tex:voltage supplies, cables, \dwords{wiec} with their \dword{wib}
+sp-tpcelec-production.tex:and \dword{ptc} boards) can be replaced while the
+sp-tpcelec-production.tex:during the \dunelifetime operation period of the \dword{dune} detector.
+sp-tpcelec-production.tex:\dword{sp} detector and use them for a second detector as well
+sp-tpcelec-production.tex:years of operation, which could prevent the \dword{ce} consortium from
+sp-tpcelec-production.tex:Constructing the detector components for \dword{dune,} a
+sp-tpcelec-production.tex:responsibility of the \dword{ce} consortium, requires many
+sp-tpcelec-production.tex:includes tests of the entire cold chain (from the \dword{femb}
+sp-tpcelec-production.tex:to the receiver on the \dword{wib}). Another 
+sp-tpcelec-production.tex:The \dword{ce} consortium plans to minimize
+sp-tpcelec-production.tex:the \dwords{femb} from \dword{esd} damage. During the engineering
+sp-tpcelec-production.tex:provided by other consortia members takes place at the \dword{itf} and
+sp-tpcelec-production.tex:at \dword{surf}. This is discussed in Section~\ref{sec:fdsp-tpcelec-integration}.
+sp-tpcelec-production.tex:Once the \dword{apa}s are installed inside the cryostat, only
+sp-tpcelec-production.tex:limited access to the detector components will be provided by the \dword{ce}
+sp-tpcelec-production.tex:consortium. After the \dword{tco} is closed, no access to detector components will be available because they should
+sp-tpcelec-production.tex:the \dword{qa} program discussed in Section~\ref{sec:fdsp-tpcelec-qa}. The
+sp-tpcelec-production.tex:next step is to carefully apply stringent \dword{qc} procedures for  
+sp-tpcelec-production.tex:details of the \dword{qc} plan have not been put in place
+sp-tpcelec-production.tex:version of the \dword{qc} program will be developed before the engineering design review. The program will then be used for
+sp-tpcelec-production.tex:Some of the requirements for the \dword{qc} plans can
+sp-tpcelec-production.tex:from constructing and commissioning the \dword{pdsp}
+sp-tpcelec-production.tex:detector. Experience with \dword{pdsp} shows that a small fraction
+sp-tpcelec-production.tex:($\approx4$\%) of the \dword{fe} \dwords{asic} that pass the
+sp-tpcelec-production.tex:to rework the \dwords{femb}. This is more important where the three \dword{asic} solution is chosen for the
+sp-tpcelec-production.tex:\dword{femb}. Given that in this solution, 18 \dwords{asic} are on the
+sp-tpcelec-production.tex:\dword{femb}, only 2\% of the \dwords{femb} should
+sp-tpcelec-production.tex:If the \dword{cryo} solution is chosen for the \dwords{asic}
+sp-tpcelec-production.tex:\dwords{asic} required for one \dword{dune} \dword{sp} detector
+sp-tpcelec-production.tex:(6,000 or 54,000 chips depending on the \dword{asic} solution
+sp-tpcelec-production.tex:constructing  \dword{pdsp}, would lead to unacceptable rejection
+sp-tpcelec-production.tex:a robotic arm picks up the \dword{asic} from a tray, places
+sp-tpcelec-production.tex:\dword{pdsp} is placing the chips in
+sp-tpcelec-production.tex:have been addressed with the development of the \dword{cts}.)
+sp-tpcelec-production.tex:upgraded versions of the current \dword{cts} that can
+sp-tpcelec-production.tex:the \dword{pdsp} \dwords{asic}, as well as from other experiments,
+sp-tpcelec-production.tex:constructing one \dword{sp} detector, we plan on having two to six test sites, each equipped with a
+sp-tpcelec-production.tex:robotic system and an upgraded \dword{cts}. All tests
+sp-tpcelec-production.tex:installation and before the functionality test, which for \dword{dune} will be performed in \lntwo. The
+sp-tpcelec-production.tex:each \dword{femb} will be tested in \lntwo using
+sp-tpcelec-production.tex:the current \dword{cts}. (Nine have already been
+sp-tpcelec-production.tex:very similar to the ones adopted for \dword{pdsp}, with the main
+sp-tpcelec-production.tex:are performed using the \dword{cts}, which allows a turnaround
+sp-tpcelec-production.tex:time of about one hour per \dword{femb}. In the
+sp-tpcelec-production.tex:test, the \dword{femb} is connected to a capacitive load that
+sp-tpcelec-production.tex:simulates the presence of \dword{apa} wires. This allows
+sp-tpcelec-production.tex:to determine the calibration constants of the \dword{adc}. 
+sp-tpcelec-production.tex:The test set up requires one \dword{wib} and
+sp-tpcelec-production.tex:of the \dword{wib} uses a direct Gb ethernet connection to
+sp-tpcelec-production.tex:a PC. The set up used for \dword{asic} testing is similar.
+sp-tpcelec-production.tex:before and after their installation on the \dword{apa}s as
+sp-tpcelec-production.tex:The final component provided by the \dword{ce} consortium
+sp-tpcelec-production.tex:cables: the cables carrying the bias voltage for the \dword{apa}
+sp-tpcelec-production.tex:when the \dword{apa}s are tested in the cold boxes at the \dword{itf}
+sp-tpcelec-production.tex:and at \dword{surf}. The checks performed at room temperature include
+sp-tpcelec-production.tex:\dword{femb} \fixme{The last part of the previous sentence is unclear, as if a word is missing. It is "...transmitting data at the same time as data from the FEMB"?}. Connectors will be visually inspected 
+sp-tpcelec-production.tex:\dword{ce} and the \dword{pds} components inside the
+sp-tpcelec-production.tex:the \dword{ce} and one for the \dword{pds}. The crossing
+sp-tpcelec-production.tex:in consortia institutions responsible for the \dword{ce} and \dword{pds}; the
+sp-tpcelec-production.tex:on the cryostat and later after the \dword{ce} and \dword{pds}
+sp-tpcelec-production.tex:tests were performed during the \dword{pdsp} installation.
+sp-tpcelec-production.tex:the \dword{ce} consortium can be replaced, if necessary,
+sp-tpcelec-production.tex:will be tested before it is installed in \dword{surf} to ensure a
+sp-tpcelec-production.tex:assembled and tested with all the \dwords{wib} and \dword{ptc}
+sp-tpcelec-production.tex:installed. Testing requires a slice of the \dword{daq} back-end,
+sp-tpcelec-production.tex:power supplies, and at least one \dword{femb} to check all 
+sp-tpcelec-production.tex:in the detector will be either transported to \dword{surf} or duplicated
+sp-tpcelec-production.tex:at \dword{surf} to be used as diagnostic tools during operations.
+sp-tpcelec-production.tex:The \dword{qc} plan described in the previous section requires
+sp-tpcelec-production.tex:testing, a set up similar the one for \dword{cts} (see
+sp-tpcelec-production.tex:one for each kind of \dword{asic}, will have evolved from those
+sp-tpcelec-production.tex:used initially for characterizing the \dword{asic} and similar
+sp-tpcelec-production.tex:to the set ups used for qualifying the chips used in the \dword{pdsp}
+sp-tpcelec-production.tex:for \dword{pdsp}. Cold and warm power and bias voltage cables will
+sp-tpcelec-production.tex:power supplies and some cable testing equipment, most likely (at least for the power cables) \dword{cots} components.
+sp-tpcelec-production.tex:and \dwords{ptc} will require a minimal \dword{daq} back-end that the
+sp-tpcelec-production.tex:\dword{daq} consortium should provide.
+sp-tpcelec-production.tex:\dword{apa}s and production of the components that are a responsibility of
+sp-tpcelec-production.tex:the \dword{ce} consortium, as well as the availability of the
+sp-tpcelec-production.tex:integration set up at \dword{surf} in front of the cryostat, it is
+sp-tpcelec-production.tex:on some of the \dword{apa}s and perform tests in cold
+sp-tpcelec-production.tex:tests should be done at the \dword{itf}, which then would require a cold box,
+sp-tpcelec-qa.tex:The \dword{ce} consortium is developing a \dword{qa} plan consistent
+sp-tpcelec-qa.tex:\dword{tdr} (Volume 7 Chapter 9). %Commented out because it breaks the automatic build system %(\refch{tc}{vl:tc-QA}).
+sp-tpcelec-qa.tex:The goal of the \dword{qa} plan is to maximize the number of functioning
+sp-tpcelec-qa.tex:respect, the experience gained with the \dword{pdsp} prototype is extremely
+sp-tpcelec-qa.tex:components. The lessons learned during the construction of \dword{pdsp},
+sp-tpcelec-qa.tex:operation of \dword{pdsp} in 2019 will continue to inform the final design
+sp-tpcelec-qa.tex:between \dword{pdsp} and \dword{dune} is the projected lifetime of the detector. This
+sp-tpcelec-qa.tex:by the \dword{ce} consortium are installed inside the cryostat and cannot 
+sp-tpcelec-qa.tex:graded approach to \dword{qa} indicates that particular care must be used for installing the \dword{ce} components inside the cryostat.
+sp-tpcelec-qa.tex:A complete \dword{qa} plan starts with ensuring that the designs of all
+sp-tpcelec-qa.tex:The other aspects of the \dword{qa} plan involve documenting the 
+sp-tpcelec-qa.tex:collected during the \dword{qc} process, training and qualifying 
+sp-tpcelec-qa.tex:\dword{qc} procedures are applied uniformly across
+sp-tpcelec-qa.tex:and installation. The \dword{ce} consortium plan involves
+sp-tpcelec-qa.tex:having multiple sites using the same \dword{qc} procedures,
+sp-tpcelec-qa.tex:of the \dword{qa} plan. Reference parts will be tested at
+sp-tpcelec-qa.tex:the \dword{qc} process will be stored in a common database, and
+sp-tpcelec-qa.tex:gained with \dword{pdsp}. A first version of the testing procedures
+sp-tpcelec-qa.tex:tested. The \dword{qc} procedures will be then reviewed
+sp-tpcelec-qa.tex:will be analyzed, and a final and improved \dword{qc} process will be 
+sp-tpcelec-qa.tex:of the \dword{qc} process will be reviewed at regular intervals
+sp-tpcelec-qa.tex:are being developed for the \dword{dune} far detector single-phase \dword{tpc} readout 
+sp-tpcelec-qa.tex:(\dword{larasic}, \dword{coldadc}, \dword{coldata}, and \dword{cryo}). 
+sp-tpcelec-qa.tex:When a new prototype \dword{asic} is produced, the groups responsible for the \dword{asic} design will perform the first tests of 
+sp-tpcelec-qa.tex:\dword{asic} functionality and performance. These tests may use either 
+sp-tpcelec-qa.tex:the extent to which the \dword{asic} functions as intended, both at room 
+sp-tpcelec-qa.tex:of \dword{fe} \dwords{asic} include measurements of noise as a function 
+sp-tpcelec-qa.tex:differential as well as integral non-linearity. Tests of \dword{coldata} and \dword{cryo} 
+sp-tpcelec-qa.tex:cables at least as long at the longest cables needed in the \dword{dune} far detectors 
+sp-tpcelec-qa.tex:with real \dword{apa}s attached to the readout.In addition, possible system issues generated by interaction with different detector components will be investigated.
+sp-tpcelec-qa.tex:\dword{pdsp} is designed as a full slice of the \dword{spmod} as close as 
+sp-tpcelec-qa.tex:possible to the final \dword{dune}\dword{sp} components. It contains six full-size 
+sp-tpcelec-qa.tex:\dword{dune} \dword{apa}s instrumented with \num{20} \dwords{femb} each for a 
+sp-tpcelec-qa.tex:the wires on each \dword{apa} are read out via a full \dword{ce} readout 
+sp-tpcelec-qa.tex:system, including a \dword{ce} flange and \dword{wiec} with five \dwords{wib} 
+sp-tpcelec-qa.tex:and one \dword{ptc}. Each combined \dword{apa} and \dword{ce} readout follows 
+sp-tpcelec-qa.tex:\dword{pdsp} took beam data in the CERN neutrino platform in 2018 and will continue
+sp-tpcelec-qa.tex:(ENC$<$600e$^-$ and 800$^-$, respectively) satisfy the \dword{dune}\dword{sp} requirements described 
+sp-tpcelec-qa.tex:and testing of the \dword{ce} and the \dword{pdsp} beam data run will be incorporated into the 
+sp-tpcelec-qa.tex:next iteration of the system design for the \dword{spmod}.
+sp-tpcelec-qa.tex:Five of the six \dword{apa}s were tested in the \dword{pdsp} cold box, which is described in
+sp-tpcelec-qa.tex:These tests were critical in identifying issues with \dword{ce} components after installation 
+sp-tpcelec-qa.tex:on the \dword{apa}. Therefore, a very similar set of cold box tests are planned at \dword{surf} 
+sp-tpcelec-qa.tex:with the fully-instrumented \dword{dune} \dword{apa}s. A seventh \dword{apa} will be delivered
+sp-tpcelec-qa.tex:to CERN in January 2019 and equipped at first with \dword{pdsp} \dwords{femb}. This
+sp-tpcelec-qa.tex:\dword{apa} will be characterized in the cold box like the \dword{apa}s installed
+sp-tpcelec-qa.tex:in \dword{pdsp}, establishing a reference point for further tests that will be
+sp-tpcelec-qa.tex:performed after replacing half of the \dwords{femb} with new prototypes equipped with the new \dwords{asic} being developed for \dword{dune}. 
+sp-tpcelec-qa.tex:The \dword{dune} \dword{apa}s and the readout electronics will differ from the ones used 
+sp-tpcelec-qa.tex:in \dword{pdsp}. For this reason, we are planning to re-open the \dword{pdsp} cryostat 
+sp-tpcelec-qa.tex:and replace three of the six \dword{apa}s with final \dword{dune} prototypes that also include 
+sp-tpcelec-qa.tex:with this new configuration of \dword{pdsp} is planned for 2021-2022. This will also 
+sp-tpcelec-qa.tex:allow another opportunity to check for interference between the readout of the \dword{apa} 
+sp-tpcelec-qa.tex:wires and either the \dword{pds} or other cryogenic instrumentation.
+sp-tpcelec-qa.tex:The main drawbacks of the tests in the cold box at CERN are that the \dword{apa}
+sp-tpcelec-qa.tex:issues, \dword{fermilab} has built a new cryostat (\dword{iceberg}) that will be used for 
+sp-tpcelec-qa.tex:\dword{lar} detector R\&D and for system tests of the \dword{ce} prototypes. 
+sp-tpcelec-qa.tex:The \dword{iceberg} cryostat, shown in Figure~\ref{fig:ICEBERG-cryotee} is installed
+sp-tpcelec-qa.tex:at the Proton Assembly Building at \dword{fermilab}. It has an inner diameter of \SI{152}{cm}
+sp-tpcelec-qa.tex:and can hold about 35,000 liters of \dword{lar}, sufficient to house a
+sp-tpcelec-qa.tex:\dword{tpc} with dimensions \SI{125}{cm}~$\times$~\SI{125}{cm}~$\times$~\SI{60}{cm}. For \dword{dune} 
+sp-tpcelec-qa.tex:purposes, this cryostat will house a 1,280-channel \dword{tpc}, shown in
+sp-tpcelec-qa.tex:Figure~\ref{fig:ICEBERG-tpcdaq}, with an \dword{apa} and two \dwords{fc}, each 
+sp-tpcelec-qa.tex:enclosing a sensitive volume with a maximum drift distance of \SI{25}{cm}. The \dword{apa} 
+sp-tpcelec-qa.tex:has been built using the same wire boards and anchoring elements of  \dword{pdsp} 
+sp-tpcelec-qa.tex:1/10$^{th}$ of a \dword{dune} \dword{apa}. The \dword{apa} mechanics are designed to accommodate 
+sp-tpcelec-qa.tex:two half-length \dword{pdsp} bars with dimensions and connectors that already 
+sp-tpcelec-qa.tex:include the design modifications planned for \dword{dune}. Power, readout, and controls 
+sp-tpcelec-qa.tex:use equipment identical to those used for \dword{pdsp}. The interface between the 
+sp-tpcelec-qa.tex:\dwords{femb} and the \dword{apa} wires uses the same CR boards used 
+sp-tpcelec-qa.tex:for \dword{pdsp} and described in Section~\ref{sec:fdsp-apa-boards}. The \dword{tpc} is
+sp-tpcelec-qa.tex:readout via a \dword{daq} system (also shown in Figure~\ref{fig:ICEBERG-tpcdaq})
+sp-tpcelec-qa.tex:identical to that of \dword{pdsp}. The power and signal cables for the detector 
+sp-tpcelec-qa.tex:top of the cryostat that is also used to support the \dword{tpc}. The movable 
+sp-tpcelec-qa.tex:including \dword{hv} feedthrough, purity monitor, cryogenic controls, and visual inspection. 
+sp-tpcelec-qa.tex:A condenser and \dword{lar} fill and vacuum ports are on the side of the cryostat, 
+sp-tpcelec-qa.tex:	[\dword{iceberg} cryostat and top plate Tee]
+sp-tpcelec-qa.tex:	{\dword{iceberg} cryostat (left) and top plate Tee (right).}
+sp-tpcelec-qa.tex:	[\dword{iceberg} TPC and DAQ rack]
+sp-tpcelec-qa.tex:	{\dword{iceberg} TPC (left) and DAQ rack (right).}
+sp-tpcelec-qa.tex:The \dword{fc} for the \dword{tpc} is constructed using printed circuit boards and 
+sp-tpcelec-qa.tex:designed to provide 25 cm of drift space on both sides of the \dword{apa}. The cathode 
+sp-tpcelec-qa.tex:\SI{-15}{kV} DC power. A \SI{1}{G$\Omega$} resistance between the strips of the \dword{fc}
+sp-tpcelec-qa.tex:\dword{apa}. The sides of the \dwords{fc} are terminated on the \dword{apa}
+sp-tpcelec-qa.tex:The \dword{iceberg} power system that provides power to the detector, electronics, 
+sp-tpcelec-qa.tex:\dword{daq}, and cryogenics controls was designed with extreme care to 
+sp-tpcelec-qa.tex:for \dword{pdsp} and including a new 480~V transformer. The impedance between the detector
+sp-tpcelec-qa.tex:at detector ground, provides 208 and 120~V power for the \dword{ce} rack, 
+sp-tpcelec-qa.tex:providing both the low voltage power to the \dword{ce} components and the bias 
+sp-tpcelec-qa.tex:voltage to the \dword{apa} wire planes, through the \dword{wiec} and \dword{shv}
+sp-tpcelec-qa.tex:\SI{-665}{V}, \SI{-370}{V}, \SI{0}{V}, and \SI{820}{V} to the grid, U, V, and Y planes of the \dword{apa},
+sp-tpcelec-qa.tex:PL506 provides \SI{18}{V}, \SI{48}{V}, \SI{12}{V} and \SI{-12}{V} to the \dword{ptc} located in the Tee at the top of the cryostat. 
+sp-tpcelec-qa.tex:The \dword{daq} for \dword{iceberg} is a copy of the system used for the readout
+sp-tpcelec-qa.tex:of five of the \dword{pdsp} \dword{apa}s at CERN. The core of the \dword{daq} system 
+sp-tpcelec-qa.tex:housed on industry-standard \dword{atca} shelves on \dword{cob} motherboards.
+sp-tpcelec-qa.tex:using the \dword{artdaq} framework. A pair of scintillators at the top and bottom 
+sp-tpcelec-qa.tex:of the cryostat generates a cosmic trigger for the \dword{daq}  using a Trigger Logic Unit (TLU) \fixme{This abbreviation does not appear to be in the glossary.}.
+sp-tpcelec-qa.tex:The system is modular and could be upgraded to follow the overall \dword{dune} \dword{daq} 
+sp-tpcelec-qa.tex:\dword{pdsp} \dword{apa}, the baseline performance of the \dword{iceberg} \dword{tpc}
+sp-tpcelec-qa.tex:will be established using \dword{pdsp} \dwords{femb}. Later, new prototypes, equipped
+sp-tpcelec-qa.tex:\dword{ce} prototypes will be measured with actual tracks from cosmic rays 
+sp-tpcelec-qa.tex:reconstructed within the \dword{tpc}. In addition, system studies with new 
+sp-tpcelec-qa.tex:prototypes of the \dword{pds} will be performed because the \dword{apa} is
+sp-tpcelec-qa.tex:mechanically compatible with the new design of the \dword{pds}, which is not
+sp-tpcelec-qa.tex:the case for the seventh \dword{pdsp} \dword{apa}.
+sp-tpcelec-qa.tex:One additional facility where the \dword{femb} prototypes can be connected to
+sp-tpcelec-qa.tex:an \dword{apa} inside a shielded environment is the \num{40}\,\% \dword{apa} 
+sp-tpcelec-qa.tex:test stand at BNL. The \num{40}\,\% \dword{apa} at BNL is a \SI{2.8}{m}~$\times$~\SI{1.0}{m} 
+sp-tpcelec-qa.tex:three-plane \dword{apa} with two layers of \num{576} wrapped ($U$ and $V$) wires 
+sp-tpcelec-qa.tex:\dwords{femb} with the full \SI{7}{m} \dword{pdsp} length data and \dword{lv} power 
+sp-tpcelec-qa.tex:cables, four on the top and four on the bottom. The readout uses the full \dword{ce} 
+sp-tpcelec-qa.tex:system, with \dword{ce} flange and \dword{wiec}, as shown in Figure~\ref{fig:tpcelec_40apa}. 
+sp-tpcelec-qa.tex:Detailed integration tests of the \dword{pdsp} \dword{ce} readout performance while 
+sp-tpcelec-qa.tex:following the \dword{dune} grounding and shielding guidelines were done at the \num{40}\,\% 
+sp-tpcelec-qa.tex:\dword{apa}. This system was also used for initial studies of the \dword{cots} \dword{adc}
+sp-tpcelec-qa.tex:[One side of the \num{40}\,\% \dword{apa} with four \dwords{femb} and the full \dword{ce} \fdth and flange.]
+sp-tpcelec-qa.tex:{Left: one side of the \num{40}\,\% \dword{apa} with four \dwords{femb}.  Right: the full \dword{ce} \fdth and flange.}
+sp-tpcelec-qa.tex:and disadvantages. Only the \dword{iceberg} \dword{tpc} can be used to 
+sp-tpcelec-qa.tex:perform measurements with tracks, but the \dword{apa} is 
+sp-tpcelec-qa.tex:much smaller than the \dword{dune}\dword{apa} (which is also an advantage because it
+sp-tpcelec-qa.tex:the detector capacitance is reduced). The \dword{iceberg} \dword{tpc}
+sp-tpcelec-qa.tex:is for the moment the only set-up compatible with the new \dword{pds}
+sp-tpcelec-qa.tex:design. Tests performed in the cold box at CERN and with the \num{40}\,\% \dword{apa} 
+sp-tpcelec-qa.tex:performed at the \dword{lar} temperature in the CERN set up. The advantage of
+sp-tpcelec-qa.tex:both set ups, and in particular, of tests performed using the \dword{pdsp}
+sp-tpcelec-qa.tex:\dword{apa}, is that the detector size is the one used in \dword{dune} while the \dword{iceberg} detector is
+sp-tpcelec-qa.tex:In developing \dword{ce}, testing single prototypes at both room and
+sp-tpcelec-qa.tex:quickly without a full or partial \dword{tpc} wire readout. A test dewar
+sp-tpcelec-qa.tex:Cryogenic Test System (\dword{cts}), allows us to test the \dwords{femb} and
+sp-tpcelec-qa.tex:\dwords{asic} at both room temperature and submerged in \lntwo. Several \dword{cts} units
+sp-tpcelec-qa.tex:were deployed at BNL for \dword{pdsp} production, \dword{femb} QC, and \dword{sbnd} \dword{asic} QC.
+sp-tpcelec-qa.tex:and \dwords{femb}.  The \dword{cts} cooling process avoids condensation
+sp-tpcelec-qa.tex:test equipment. Two \dword{cts} units in operation at BNL are shown in Figure~\ref{fig:CTS}.
+sp-tpcelec-qa.tex:[The Cryogenic Test System (\dword{cts})]
+sp-tpcelec-qa.tex:The \dword{tpc} cold electronics system of the \dword{dune} single phase far detector must meet 
+sp-tpcelec-qa.tex:connectors, and their supports, all of which are housed inside the \dword{dune} far detector 
+sp-tpcelec-qa.tex:conditions similar to those in the \dword{dune} cryostats:
+sp-tpcelec-qa.tex:	\item The ATLAS \dword{lar} accordion EM Barrel (EMB) \fixme{Should this abbreviation be included in the glossary. This appears only here in this list as far as I can see, so it possibly should not be abbreviated at all. If that is the case, the EM should be spelled out as well, I think.} calorimeter has 
+sp-tpcelec-qa.tex:	\item The ATLAS \dword{lar} Hadronic Endcap Calorimeter (HEC) \fixme{This abbreviation probably should be eliminated as well. Spell it out.} has approximately 5,600 
+sp-tpcelec-qa.tex:flight project can inform the \dword{dune} project. Specifically inapplicable are the launch shake and bake tests, 
+sp-tpcelec-qa.tex:A preliminary list of reliability topics to be studied for the \dword{tpc} electronics operated 
+sp-tpcelec-qa.tex:in \dword{lar} environment are
+sp-tpcelec-qa.tex:	\item The custom \dwords{asic} proposed for use in \dword{dune} (\dword{larasic}, 
+sp-tpcelec-qa.tex:	\dword{coldadc}, \dword{coldata}, and \dword{cryo}) incorporate design rules 
+sp-tpcelec-qa.tex:	operating at \dword{lar} temperature.
+sp-tpcelec-qa.tex:	\item For \dword{cots} components, accelerated lifetime testing, a standard test 
+sp-tpcelec-qa.tex:	the expected lifetime of operation in cryogenic temperatures. A \dword{cots} \dword{adc} has 
+sp-tpcelec-qa.tex:	undergone this procedure to qualify as a solution for the \dword{snbd} 
+sp-tpcelec-qa.tex:        \item A formal \dword{qa} process must be in place for all \dword{tpc} electronics components to be installed inside the cryostat.
+sp-tpcelec-qa.tex:The \dword{ce} consortium has formed a working group tasked with studying the reliability  
+sp-tpcelec-qa.tex:segmentation of the cold electronics to understand which failures will most affect data taking; revisit recommendations for the \dword{asic} design, 
+sp-tpcelec-qa.tex:and cables; and recommend \dword{qc} procedures to be adopted during 
+sp-tpcelec-risks.tex:and construction of the \dword{dune} \dword{sp} detector. In the two following
+sp-tpcelec-risks.tex:\begin{dunetable}[Single Phase \dword{tpc} Cold Electronics Risks]
+sp-tpcelec-risks.tex:{Summary of single phase \dword{tpc} cold electronics risks.}
+sp-tpcelec-risks.tex:1 & Cold \dword{asic}(s) not meeting specifications \\ \colhline
+sp-tpcelec-risks.tex:3 & Damage to the \dwords{femb} / cold cables during or after integration with the \dword{apa}s \\ \colhline
+sp-tpcelec-risks.tex:4 & Cold cables cannot be routed through the \dword{apa}s' frames \\ \colhline
+sp-tpcelec-risks.tex:5 & Delay and or damage to the \dword{ce} components on the top of the cryostat \\ \colhline
+sp-tpcelec-risks.tex:6 & Interfaces between \dword{ce} and other consortia not adequately identified \\ \colhline
+sp-tpcelec-risks.tex:8 & Lifetime of components in the \dword{lar} \\ \colhline
+sp-tpcelec-risks.tex:Despite the successful operation of \dword{pdsp}, we cannot build and operate
+sp-tpcelec-risks.tex:the \dword{dune} \dword{sp} detector using the same \dwords{asic}, so we have
+sp-tpcelec-risks.tex:undertaken to improve the design of the \dword{fe} amplifier, redesign
+sp-tpcelec-risks.tex:the \dword{adc}, and replace the \dword{fpga} on the \dword{femb} with a dedicated data
+sp-tpcelec-risks.tex:serialization and transmission \dword{asic} (\dword{coldata}). The project schedule has
+sp-tpcelec-risks.tex:we may not have a set of \dwords{asic} that meets all the \dword{dune} requirements
+sp-tpcelec-risks.tex:To reduce this possibility, we are pursuing the development of the \dword{cryo} \dword{asic}, and we
+sp-tpcelec-risks.tex:will also perform system tests of the \dword{cots} solution for the \dword{adc} that is planned for use in the \dword{sbnd} experiment. Should this risk become reality, an
+sp-tpcelec-risks.tex:personnel at the \dword{itf} to partly mitigate the delay in the
+sp-tpcelec-risks.tex:installing the \dwords{femb} on the \dword{apa}s. Moreover, the delay would also require
+sp-tpcelec-risks.tex:that, during the first part of the \dword{apa} production, a sufficient number
+sp-tpcelec-risks.tex:on the \dword{apa}s. These boards would then have to be replaced later
+sp-tpcelec-risks.tex:on the \dword{apa}s. This risk has several triggers: a lower yield 
+sp-tpcelec-risks.tex:\dwords{femb}, we can continue integration with the \dword{apa}s;
+sp-tpcelec-risks.tex:measures that minimize any \dword{esd} damage. We will then monitor the use
+sp-tpcelec-risks.tex:delays in \dword{apa} integration. As for the previous risk, we
+sp-tpcelec-risks.tex:\dwords{femb} during or after integration with the \dword{apa}s. This could
+sp-tpcelec-risks.tex:the installation of \dword{pdsp}).) This damage could also happen when the \dword{apa}s are
+sp-tpcelec-risks.tex:handling or \dword{esd} damage. We are redesigning the connection between the \dwords{femb}
+sp-tpcelec-risks.tex:is further reduced by housing the \dwords{femb} inside the \dword{ce} boxes and by having 
+sp-tpcelec-risks.tex:\dword{esd} damage, we will follow all appropriate procedures, and in addition,
+sp-tpcelec-risks.tex:\dword{apa} frames and cryostat penetrations, to avoid injecting charge on
+sp-tpcelec-risks.tex:the \dwords{femb} that could cause \dword{esd} damage. Finally, we are planning for
+sp-tpcelec-risks.tex:extensive testing of the \dword{ce} several times during integration
+sp-tpcelec-risks.tex:chain after the \dword{apa}s are placed in their final position inside the cryostat,
+sp-tpcelec-risks.tex:be routed through the frames of the \dword{apa}s. In that case, the cables for the
+sp-tpcelec-risks.tex:\dwords{femb} attached to the bottom \dword{apa} would have to be routed along the
+sp-tpcelec-risks.tex:To minimize this risk, we have significantly redesigned the \dword{apa} frame, 
+sp-tpcelec-risks.tex:the cable plant size from \dword{pdsp}. We expect to retire this risk
+sp-tpcelec-risks.tex:a stacked pair of \dword{apa}s and once we finalize the design of the \dword{ce} cable plant. Should
+sp-tpcelec-risks.tex:achieve the expected reduction of the cable plant of each \dword{femb}, we will 
+sp-tpcelec-risks.tex:damage to the \dword{ce} components installed on top of the
+sp-tpcelec-risks.tex:we plan to have all \dword{ce} detector components on top of the cryostat, those 
+sp-tpcelec-risks.tex:required to power, control, and readout one pair of \dword{apa}s installed
+sp-tpcelec-risks.tex:and available before inserting the \dword{apa}s into the cryostat.
+sp-tpcelec-risks.tex:This allows extensive testing of \dword{apa}s to mitigate
+sp-tpcelec-risks.tex:delays in installing the \dword{ce} components on top of the cryostat,
+sp-tpcelec-risks.tex:we plan to have sufficient spares and to use appropriate \dword{esd} 
+sp-tpcelec-risks.tex:integrating and installing the \dword{apa}s to continue without delays, 
+sp-tpcelec-risks.tex:the \dword{itf}, or during installation. These incompatibilities could 
+sp-tpcelec-risks.tex:design and construction of the \dword{ce} detector components foresees many
+sp-tpcelec-risks.tex:by the\dword{apa}, \dword{pds}, and \dword{daq} consortia, as well as integration
+sp-tpcelec-risks.tex:caused by some detector component not respecting the \dword{dune} grounding
+sp-tpcelec-risks.tex:integration and commissioning of the \dword{pdsp} detector. During the 
+sp-tpcelec-risks.tex:integration of the first \dword{apa}, a source of noise was discovered 
+sp-tpcelec-risks.tex:discovered in the temperature monitors. The overall noise in the \dword{pdsp} 
+sp-tpcelec-risks.tex:was reduced compared to previous \dword{lar} experiments or prototypes, 
+sp-tpcelec-risks.tex:is still apparent in the \dword{pdsp} data, this should not preclude using the data collected for calibration and for 
+sp-tpcelec-risks.tex:physics analyses. Further studies are planned when \dword{pdsp}
+sp-tpcelec-risks.tex:The main problem in going from the \dword{pdsp} to \dword{dune} is one of scale.
+sp-tpcelec-risks.tex:noise in \dword{dune} would result in a delay in commissioning and  
+sp-tpcelec-risks.tex:\dword{pdsp} detector. We also plan to perform  integrated tests to discover 
+sp-tpcelec-risks.tex:possible problems as early as possible. This includes system tests at the \dword{iceberg} test stand at \dword{fermilab} for each generation 
+sp-tpcelec-risks.tex:measurements in the cold boxes at \dword{itf} and at \dword{surf}, and later 
+sp-tpcelec-risks.tex:during the insertion of the \dword{apa}s inside the cryostat before the 
+sp-tpcelec-risks.tex:\dword{tco} closure, and repeat the measurements before the \dword{lar} filling. 
+sp-tpcelec-risks.tex:The expectation for the \dword{dune} detector is that data taking will continue
+sp-tpcelec-risks.tex:These are related to the lifetime of the \dword{ce} components
+sp-tpcelec-safety.tex:and installation of the \dword{ce} components for the \dword{dune}
+sp-tpcelec-safety.tex:\dword{sp} far detector is crucial for the success
+sp-tpcelec-safety.tex:of the project. The members of \dword{ce} consortium will
+sp-tpcelec-safety.tex:performed, which may be one of the national laboratories, \dword{itf}, \dword{surf},
+sp-tpcelec-safety.tex:components provided by the \dword{ce} consortium has been
+sp-tpcelec-safety.tex:Coordination part of this \dword{tdr} (Volume 7 Chapter 10). %Commented out because it breaks the automatic build system %(\refch{tc}{vl:tc-ESH}).
+sp-tpcelec-safety.tex:of either \lntwo or \dword{lar} from test setups (risk HA-8);
+sp-tpcelec-safety.tex:\dword{ce} consortium will work with the \dword{lbnf}/\dword{dune}
+sp-tpcelec-safety.tex:\dword{esh} manager and other relevant responsible personnel at the
+sp-tpcelec-safety.tex:hard hats for integration work with the \dword{apa}. Oxygen
+sp-tpcelec-safety.tex:\dword{esh} plans for the activities to be performed in various
+sp-tpcelec-safety.tex:the \dword{itf} and \dword{surf}, will be part of the 
+sp-tpcelec-safety.tex:induced by \dword{esd} in the 
+sp-tpcelec-safety.tex:damage during operation to the \dword{ce} components 
+sp-tpcelec-safety.tex:schedule delays associated with procuring new parts. \dword{esd}
+sp-tpcelec-safety.tex:damage on the \dwords{femb} after the \dword{apa}s have been
+sp-tpcelec-safety.tex:some level of protection  against \dword{esd}, this kind of damage cannot be discounted, and appropriate 
+sp-tpcelec-safety.tex:components provided by the \dword{ce} consortium. These 
+sp-tpcelec-safety.tex:measures include using appropriate \dword{esd}-safe packing materials, 
+sp-tpcelec-safety.tex:charges away from the work area, and humidity control. All laboratories with detector components provided by the \dword{ce} consortium will implement these
+sp-tpcelec-safety.tex:including \dword{itf} and \dword{surf}. 
+sp-tpcelec-safety.tex:are being routed through the \dword{apa} frames or through the
+sp-tpcelec-safety.tex:\dwords{femb} are stored should have \dword{esd} mats
+sp-tpcelec-safety.tex:will require that all the personnel working on the \dword{ce} 
+sp-tpcelec-safety.tex:at \dword{fermilab} for handling the \fixme{Should these abbreviations go in the glossary?} CCDs of the DES experiment (the 
+sp-tpcelec-safety.tex:sites). The scientists in charge of the \dword{ce} activities at each site involved in the project will be responsible for monitoring the training of personnel at universities, 
+sp-tpcelec-safety.tex:\dword{itf}, and \dword{surf}.
+sp-tpcelec-safety.tex:\dword{esd} damage must be taken also for shipments. Appropriate 
+sp-tpcelec-safety.tex:the risk of damage to \dword{ce} detector components is
+sp-tpcelec-safety.tex:\dword{cts} discussed in Section~\ref{sec:fdsp-tpcelec-qa-facilities-additional}
+sp-tpcelec-safety.tex:includes modifying the size of the tubes used for the \dword{apa} frames,
+sp-tpcelec-safety.tex:the \dword{apa} frames. Similarly, tooling will be developed to 
+sp-tpcelec-safety.tex:To ensure that the \dword{dune} detector will be operational for a long
+sp-tpcelec-safety.tex:will discuss the first in the next section. Once the cryostat is filled with \dword{lar}, the environmental
+sp-tpcelec-safety.tex:\dword{lar} indicates that, apart from initial problems, little loss of read-out channels occurred over long periods. 
+sp-tpcelec-safety.tex:in the \dwords{wiec} and the \dword{ce} racks, break down 
+sp-tpcelec-safety.tex:\dword{ce} supplies. HEPA filters will be added to the
+sp-tpcelec-safety.tex:air supply used to cool the \dwords{wiec} and the \dword{ce} power and bias voltage supplies, thus minimizing
+sp-tpcelec-safety.tex:Coordination part of this \dword{tdr} (Volume 7 Chapter 6). %Commented out because it breaks the automatic build system %(\refch{tc}{vl:tc-facility})
+sp-tpcelec-safety.tex:to avoid unsafe conditions for the \dword{ce} detector 
+sp-tpcelec-safety.tex:in test setups, at both the \dword{itf} and \dword{surf}, to prevent operating or even powering up
+sp-tpcelec-safety.tex:and bias voltage supplies in \dword{ce} racks.
+sp-tpcelec-safety.tex:bias voltage on the \dword{fc} termination electrodes to the
+sp-tpcelec-safety.tex:high voltage applied on the \dword{tpc} cathode. Interlocks will turn 
+sp-tpcelec-safety.tex:the connection between the \dword{plc} used by the detector 
+sp-tpcelec-safety.tex:from the \dword{plc} to the \dwords{wiec} will require optical 
+sp-tpcelec-safety.tex:of the \dword{apa}s in the cold boxes at the \dword{itf} and 
+sp-tpcelec-safety.tex:at \dword{surf}. The \dword{cts} has its own interlock system to
+sp-tpcelec-safety.tex:interlock should be used at the \dword{itf} or \dword{surf}.
