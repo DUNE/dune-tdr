@@ -13,7 +13,7 @@
 %\item Dune fit - CW
 %\end{itemize}
 
-Sensitivities to the neutrino mass ordering, CP violation, and $\theta_{23}$ octant, as well as expected resolution for neutrino oscillation parameter measurements, are obtained by simultaneously fitting the \numutonumu, $\bar{\nu}_\mu \rightarrow \bar{\nu}_\mu$, \numutonue, and $\bar{\nu}_\mu \rightarrow \bar{\nu}_e$ far detector spectra along with selected samples from the near detector.  It is assumed that 50\% of the total exposure is in neutrino beam mode and 50\% in antineutrino beam mode.  A 50\%/50\% ratio of neutrino to antineutrino data has been shown to produce a nearly optimal sensitivity, and small deviations from this (e.g., 40\%/60\%, 60\%/40\%) produce negligible changes in the sensitivity. \todo{check this is still the case} 
+Sensitivities to the neutrino mass ordering, CP violation, and $\theta_{23}$ octant, as well as expected resolution for neutrino oscillation parameter measurements, are obtained by simultaneously fitting the \numutonumu, $\bar{\nu}_\mu \rightarrow \bar{\nu}_\mu$, \numutonue, and $\bar{\nu}_\mu \rightarrow \bar{\nu}_e$ far detector spectra along with selected samples from the near detector.  It is assumed that 50\% of the total exposure is in neutrino beam mode and 50\% in antineutrino beam mode.  A 50\%/50\% ratio of neutrino to antineutrino data has been shown to produce a nearly optimal sensitivity, and small deviations from this (e.g., 40\%/60\%, 60\%/40\%) produce negligible changes in the sensitivity. %\todo{check this is still the case} 
 
 Within all fits, neutrino oscillation parameters are all allowed to vary, constrained by a Gaussian prior with 1$\sigma$ width as given by the relative uncertainties shown in Table~\ref{tab:oscpar_nufit}. Systematic uncertainty constraints from the near detector are included either by explicit inclusion of near detector samples within the fit or by applying constraints expected from the near detector data to far-detector only fits.
 
@@ -41,18 +41,18 @@ DUNE sensitivity has been studied using several different fitting frameworks. GL
 %
 %The flux inputs to GLoBES are the result of a GEANT4 simulation and are identical to the flux input to the full Monte Carlo simulation described below. The cross-sections are produced by GENIE 2.4.8\cite{Andreopoulos:2009rq}. The detector response and efficiency are produced by analysis of simulation outputs. In the case of the sensitivity presented in the DUNE CDR, this was a parameterized "Fast MC" simulation. Presently, the results of full MC simulation and analysis are used to produce GLoBES inputs, such that only these details are changed relative to the CDR and the resulting sensitivity calculations may be compared directly to previous DUNE results. While these studies have aided development of the analysis algorithms presented in this document, GLoBES-based sensitivity analyses have been superceded by the CAFAna-based analysis described in the following section.
 
-\subsection{CAFAna}
+\subsection{The Analysis Framework}
 \label{sect:methods-cafana}
 
-The CAFAna framework was initially developed for the NOvA experiment and has been used for $\nu_\mu$-disappearance, $\nu_e$-appearance, and joint fits, plus sterile neutrino searches and cross-section analyses.
+To demonstrate the sensitivity reach of DUNE, we have adopted the analysis framework known as CAFAna. This framework was initially developed for the NOvA experiment and has been used for $\nu_\mu$-disappearance, $\nu_e$-appearance, and joint fits, plus sterile neutrino searches and cross-section analyses.
 
-Fundamentally, the compatibility of a particular oscillation hypothesis with the data is evaluated using the likelihood appropriate for poisson-distributed data \cite{PDG}:
+In the sensitivity studies, the compatibility of a particular oscillation hypothesis with the data is evaluated using the likelihood appropriate for poisson-distributed data \cite{PDG}:
 
 \begin{equation}
     \chi^2 = -2\log\mathcal{L} = 2\sum_i^{N_{\rm bins}}\left[ M_i-D_i+D_i\ln\left({D_i\over M_i}\right) \right]
 \end{equation}
 
-where $M_i$ is the Monte Carlo expectation in bin $i$ and $D_i$ is the observed count. Most often the bins here represent reconstruction neutrino energy, but other variables, such as a reconstructed kinematic variable or an event classification likelihood may also be used. Multiple samples with different selections can be fit simultaneously, as can multi-dimensional distributions of reconstructed variables.
+where $M_i$ is the Monte Carlo expectation in bin $i$ and $D_i$ is the observed count. Most often the bins here represent reconstructed neutrino energy, but other observables, such as reconstructed kinematic variables or event classification likelihoods may also be used. Multiple samples with different selections can be fit simultaneously, as can multi-dimensional distributions of reconstructed variables.
 
 Event records representing the reconstructed properties of neutrino interactions and, in the case of Monte Carlo, the true neutrino properties are processed to fill the required histograms. Oscillated Far Detector predictions are created by populating two-dimensional histograms, with the second axis being the true neutrino energy, for each oscillation channel ($\nu_\alpha\to\nu_\beta$). These are then reweighted as a function of the true energy axis according to an exact calculation of the oscillation weight at the bin center %\todo{did joao ever write up PMNSOpt?} 
 and summed to yield the total oscillated prediction:
@@ -62,7 +62,7 @@ and summed to yield the total oscillated prediction:
     \label{eqn:cafana_ll}
 \end{equation}
 
-where $P_{\alpha\beta}(E)$ is the probability for a neutrino created in flavour state $\alpha$ to be found in flavour state $\beta$ at the Far Detector. $M_{ij}^{\alpha\beta}$ represents the number of selected events in bin $i$ of the reconstructed variable with true energy $E_j$, taken from a simulation where neutrinos of flavour $\alpha$ from the beam have been replaced by equivalent neutrinos in flavour $\beta$. Oscillation parameters that are not displayed are profiled over using {\sc minuit}~\cite{James:1994vla}. That is, their values are set to those that produces the best match with the simulated data at each point in parameter space.
+where $P_{\alpha\beta}(E)$ is the probability for a neutrino created in flavor state $\alpha$ to be found in flavor state $\beta$ at the Far Detector. $M_{ij}^{\alpha\beta}$ represents the number of selected events in bin $i$ of the reconstructed variable with true energy $E_j$, taken from a simulation where neutrinos of flavor $\alpha$ from the beam have been replaced by equivalent neutrinos in flavor $\beta$. Oscillation parameters that are not displayed are profiled over using {\sc minuit}~\cite{James:1994vla}. That is, their values are set to those that produces the best match with the simulated data at each point in parameter space.
 
 The impact of systematic uncertainties is included by adding additional nuisance parameters into the fit. Each of these parameters can have arbitrary effects on the Monte Carlo prediction, and is profiled over in the production of the result. The range of these parameters is controlled by the use of gaussian penalty terms to reflect our prior knowledge of reasonable variations.
 
@@ -72,23 +72,22 @@ For many systematic variations, a weight can simply be applied to each event rec
 
 For some systematic uncertainties, such as uncertainties on the neutrino flux (Section \ref{sec:nu-osc-05}), the natural treatment leads to a large number of parameters that have strongly-correlated effects on the predicted spectrum. In this case, Principal Component Analysis is used to create a greatly reduced set of systematic parameters which cover the vast majority of the allowed variation, and also present fewer degeneracies to the fitter.
 
-Information from the Near Detector, which is used to constrain systematic uncertainties, is included via additional $\chi^2$ contributions (Equation \ref{eqn:cafana_ll}) without oscillations. \todo{add text to foreshadow DUNEPrism?}
+Information from the Near Detector, which is used to constrain systematic uncertainties, is included via additional $\chi^2$ contributions (Equation \ref{eqn:cafana_ll}) without oscillations. Specific near detector samples such as neutrino-electron elastic scattering and off-axis samples may be included separately. %\todo{is this enough to foreshadow DUNE Prism?}
 
 External constraints, for example from solar experiments, can be included as an arbitrary term in the $\chi^2$ depending on the oscillation parameters. In practice, a quadratic term, corresponding to a gaussian likelihood, will be used for results in this section.
 
-\subsection{DUNE Fits}
+\subsection{Sensitivity Studies}
 \label{sect:methods-dunefits}
 \fixme{Expand section as results are produced}
-DUNE fits are performed using the CAFAna framework described in the previous section. Fits for sensitivity to CP violation, neutrino mass ordering, and octant are performed, in addition to one- and two-dimensional fits for oscillation parameter resolution.
+DUNE sensitivity studies are performed using the CAFAna framework described in the previous section. Fits for sensitivity to CP violation, neutrino mass ordering, and octant are performed, in addition to one- and two-dimensional fits for oscillation parameter resolution.
 The experimental sensitivity is quantified using a test statistic, $\Delta\chi^2$, which is calculated by comparing the predicted spectra for alternate hypotheses. These quantities are defined, differently for neutrino mass ordering, $\theta_{23}$ octant, and CP-violation sensitivity to be:
 \begin{eqnarray}
-\Delta\chi^2_{MH} & = & \chi^2_{IH} - \chi^2_{NH}\textrm{ (true normal ordering),}\label{eq:dx2_MH}\\
-\Delta\chi^2_{MH} & = & \chi^2_{NH} - \chi^2_{IH}\textrm{ (true inverted ordering),}\\
-\Delta\chi^2_{Oct} & = & \chi^2_{\textrm{Opposite}} - \chi^2_{\textrm{True}} \\
-\Delta\chi^2_{CPV} & = & Min[\Delta\chi^2_{CP}(\mdeltacp^{test}=0),\Delta\chi^2_{CP}(\mdeltacp^{test}=\pi)],
+\Delta\chi^2_{\textrm{ordering}} & = & \chi^2_{\textrm{opposite}} - \chi^2_{\textrm{true}} \label{eq:dx2_MH}\\
+\Delta\chi^2_{\textrm{octant}} & = & \chi^2_{\textrm{opposite}} - \chi^2_{\textrm{true}} \\
+\Delta\chi^2_{\textrm{CPV}} & = & \textrm{Min}[\Delta\chi^2_{CP}(\mdeltacp^{\textrm{test}}=0),\Delta\chi^2_{CP}(\mdeltacp^{\textrm{test}}=\pi)],
 \end{eqnarray}
-where $\Delta\chi^2_{CP} = \chi^{2}_{\mdeltacp^{test}} - \chi^2_{\mdeltacp^{true}}$, and $\chi^2$ is defined in Equation~\ref{eqn:cafana_ll}. Since the true value of \deltacp is unknown, a scan is performed over all possible values of \deltacp$^{true}$. Both the neutrino mass ordering and the $\theta_{23}$ octant are also assumed to be unknown and are varied in the fits, with the lowest value of $\Delta\chi^2$ thus obtained used to estimate the sensitivities. 
+where $\Delta\chi^2_{CP} = \chi^{2}_{\mdeltacp^{test}} - \chi^2_{\mdeltacp^{true}}$, and $\chi^2$ is defined in Equation~\ref{eqn:cafana_ll}. Since the true value of \deltacp is unknown, a scan is performed over all possible values of $\mdeltacp^{true}$. Both the neutrino mass ordering and the $\theta_{23}$ octant are also assumed to be unknown and are varied in the fits, with the lowest value of $\Delta\chi^2$ thus obtained used to estimate the sensitivities. 
 
-Similarly, expected resolution for oscillation parameters is determined by scanning the value of the oscillation parameter of interest and comparing spectra produced by the varied "test" value with that of the "true" central value. The one sigma resolution is defined as the difference between the true and test value at which the test statistic, $\Delta\chi^2$, is greater than one, taking the average resolution to allow for cases in which the difference is not symmetric about the true value. In these fits, the oscillation parameter of interest is fixed while the others are free in the fit, with constraints from external measurements applied. Similarly, for the two-dimensional parameter sensitivity plots, the two oscillation parameters of interest are fixed in the fit and scanned over. The two-dimensional allowed region is chosen to be the area inside which the fit test statistic is less than the appropriate $\chi^2$ critical value for two degrees of freedom (eg: the 90\% C.L. curve is for a critical value of the test statistic of 4.61).
+Similarly, expected resolution for oscillation parameters is determined by scanning the value of the oscillation parameter of interest and comparing spectra produced by the varied test value with that of the "true" central value. The one sigma resolution is defined as the difference between the true and test value at which the test statistic, $\Delta\chi^2$, is greater than one, taking the average resolution to allow for cases in which the difference is not symmetric about the true value. In these fits, the oscillation parameter of interest is fixed while the others are free in the fit, with constraints from external measurements applied. Similarly, for the two-dimensional parameter sensitivity plots, the two oscillation parameters of interest are fixed in the fit and scanned over. The two-dimensional allowed region is chosen to be the area inside which the fit test statistic is less than the appropriate $\chi^2$ critical value for two degrees of freedom (e.g., the 90\% C.L. curve is for a critical value of the test statistic of 4.61).
 
-Details of these fits are still being finalized - this section will be updated to describe fit input samples and systematics.
+Details of these fits are still being finalized - this section will be updated to describe fit input samples and systematic uncertainties. Data samples included in the DUNE fits presented here are expected to include far detector \numutonumu and \numutonue samples as well as $\nu_\mu$ CC samples, both on- and off-axis, from the LArTPC near detector, neutrino-electron elastic scattering samples from the LArTPC near detector, and samples from the GArTPC near detector. Systematic uncertainties include oscillation parameter variations, flux uncertainties using the PCA analysis described in Section~\ref{sect:methods-cafana}, neutrino interaction model uncertainties based primarily but not exclusively on GENIE driven uncertainties, and assorted detector uncertainties. These sources of systematic uncertainty and the way they are implemented in the analysis are described in more detail in the following sections.
