@@ -1,0 +1,26 @@
+% This file is generated, any edits may be lost.
+
+% It defines macros which expand to corresponding
+% specification values for subsystem ~{{ code }}~
+
+~{ set mod,ss = code.lower().split('-') }~
+
+\begin{longtable}{p{0.25\textwidth}p{0.7\textwidth}}   
+\caption{Specification for ~{{ code }}~ \fixmehl{ref \texttt{tab:specs:~{{ code }}~}}} \\
+
+~{ for req in subsys -}~
+
+     \rowcolor{dunesky}
+\newtag{~{{ req.gid }}~}{ spec:~{{ req.label }}~ } & Name: ~{{ req.name }}~ \\ 
+    Description & ~{{ req.text }}~   \\  \colhline
+    ~{ if req.goal -}~
+    Specification (Goal) &  ~{{ req.vlatex }}~  ( ~{{ req.goal }}~ ) \\   \colhline
+    ~{ else }~
+    Specification &  ~{{ req.vlatex }}~ \\   \colhline
+    ~{ endif }~
+    Rationale &   ~{{ req.rationale }}~  \\ \colhline
+    Validation & ~{{req.validation}}~  \\
+   \colhline
+~{ endfor }~
+\label{tab:specs:~{{ code }}~}
+\end{longtable}
