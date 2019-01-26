@@ -1,7 +1,47 @@
 \section{System Overview}
 \label{sec:fdsp-tpcelec-overview}
 
-\fixme{A lot of overlap with the IDR; text needs to be significantly revised for second draft, including adding more system requirements.}
+The main difference between the \dword{dune} \dword{sp} detector and 
+previous experiments or prototypes using the \dword{lar} technology is
+that for the first time all the signal processing for the readout of the
+\dword{apa}s' wires takes place inside the the \dword{lar}, in boards that 
+are directly mounted on the \dword{apa}. Accordingly, the \dword{tpc} 
+readout electronics are referred to as the \dword{ce}. The electronics are 
+mounted inside the \dword{lar} to exploit the fact that charge carrier 
+mobility in silicon is higher and that thermal fluctuations are lower 
+at \dword{lar} temperature than at room temperature. For \dword{cmos} 
+electronics, this results in substantially higher gain and lower noise 
+at \dword{lar} temperature than at room temperature~\cite{larCMOS}.  
+Mounting the front-end electronics on the \dword{apa} frames also minimizes 
+the input capacitance, which also contributes to the noise reduction.  
+Furthermore, placing the digitizing and multiplexing electronics inside 
+the cryostat reduces the total number of penetrations into the cryostat 
+and minimizes the number of cables coming out of the cryostat.  
+As the full \dword{tpc} electronics chain for the \dword{spmod} includes 
+many components on the warm side of the cryostat as well, the \dword{dune} 
+consortium designated to organize development of this system is called 
+the \dword{dune} \textit{Single-Phase \dword{tpc} Electronics} consortium. 
+It is sometimes referred to as the \dword{ce} consortium for short.
+In section we start with a review of the considerations that
+have lead to the proposed deside for the \dword{dune} \dword{sp} detector,
+followed by a discussion of how the detector specifications are derived
+from the physics goals of the experiment. Later we demostrate the 
+validation of the design provided by the early data from the \dword{pdsp}
+prototype. We also discuss how the lessons learned from the construction,
+integration, installation, and commissioning of \dword{pdsp} have 
+informed the design changes that we are planning for the \dword{dune}
+\dword{sp} detector. In the rest of this chapter we provide a detailed
+description of all the \dword{ce} detector components in section
+\ref{sec:fdsp-tpcelec-design}, followed by discussions of the \dword{qa}
+program and of the plans for production and assembly, and for integration,
+installation and commissioning. Later, we discuss the interfaces with
+detector components provided by other consortia and with Technical
+Coordination and the Physics group. This chapter concludes with a description
+of the plans for addressing safety issues and risks during the
+construction, installation, and operation of the detector, and with
+a discussion of the organization of the \dword{ce} consortium,
+including a timeline for the detector construction and an estimate
+of the resources required.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Introduction}
@@ -9,7 +49,7 @@
 
 \fixme{I suggest that the first paragraph of this introductory section be placed under 1.1 System Overview to serve as the introduction to the section. This may require a little repharsing, but minimal changes elsewhere.}
 
-\dword{dune} single-phase \dword{tpc} electronics hardware signal processing takes place inside the \dword{lar}, in boards that are directly mounted on the \dword{apa}; accordingly, the \dword{tpc} readout electronics are referred to as the \dword{ce}.  The electronics are mounted inside the \dword{lar} to exploit the fact that charge carrier mobility in silicon is higher and that thermal fluctuations are lower at \dword{lar} temperature than at room temperature.  For \dword{cmos} (complementary metal-oxide-semiconductor) electronics, this results in substantially higher gain and lower noise at \dword{lar} temperature than at room temperature~\cite{larCMOS}.  Mounting the front-end electronics on the \dword{apa} frames also minimizes the input capacitance.  Furthermore, placing the digitizing and multiplexing (MUX) \fixme{This abbreviation is not in the glossary.}electronics inside the cryostat reduces the total number of penetrations into the cryostat and minimizes the number of cables coming out of the cryostat.  As the full \dword{tpc} electronics chain for the \dword{spmod} includes many components on the warm side of the cryostat as well, the \dword{dune} consortium designated to organize development of this system is called the \dword{dune} \textit{Single-Phase \dword{tpc} Electronics} consortium. It is sometimes referred to as the \dword{ce} consortium for short.
+\dword{dune} single-phase \dword{tpc} electronics hardware signal processing takes place inside the \dword{lar}, in boards that are directly mounted on the \dword{apa}; accordingly, the \dword{tpc} readout electronics are referred to as the \dword{ce}.  The electronics are mounted inside the \dword{lar} to exploit the fact that charge carrier mobility in silicon is higher and that thermal fluctuations are lower at \dword{lar} temperature than at room temperature.  For \dword{cmos} (complementary metal-oxide-semiconductor) electronics, this results in substantially higher gain and lower noise at \dword{lar} temperature than at room temperature~\cite{larCMOS}.  Mounting the front-end electronics on the \dword{apa} frames also minimizes the input capacitance.  Furthermore, placing the digitizing and multiplexing electronics inside the cryostat reduces the total number of penetrations into the cryostat and minimizes the number of cables coming out of the cryostat.  As the full \dword{tpc} electronics chain for the \dword{spmod} includes many components on the warm side of the cryostat as well, the \dword{dune} consortium designated to organize development of this system is called the \dword{dune} \textit{Single-Phase \dword{tpc} Electronics} consortium. It is sometimes referred to as the \dword{ce} consortium for short.
 
 The overall noise requirement drives the choice of the \dword{tpc} electronics architecture. This requirement is difficult to establish precisely, but clearly, the less electronic noise, the better the physics reach of the \dword{dune} experiment will be.  An equivalent noise charge (\dword{enc}) of less than approximately 1000$e^-$ is required for satisfactory reconstruction of accelerator neutrino interactions, but a lower noise level will yield significantly better two-track separation and primary vertex resolution, and thus higher efficiency and/or lower background for identifying electron neutrino interactions.  Setting the noise level requirement for the \dword{dune} \dword{spmod} more precisely is an ongoing effort.
 
@@ -99,7 +139,7 @@ The \dword{fe} \dword{asic} has been prototyped and is close to meeting requirem
 
 To maximize the probability of quickly developing a complete design for cold TPC \dword{fe} electronics, an alternative solution is also being investigated: a single \num{64}-channel \dword{asic} that will consolidate all three functions listed above.  This design is being done at SLAC, and the first prototypes will be tested in February 2019.  An \dword{adc} solution in the form of a commercial, off-the-shelf (COTS) option serves as an additional backup option and has already been tested; this option will be explored further if the other two \dword{adc} solutions being considered do not meet the requirements for \dword{dune}.
 
-While the higher charge carrier mobility at \dword{lar} temperature than at room temperature is central to improving the performance of \dword{ce}, it also leads to the \textit{hot carrier effect}.  In n-type MOS \fixme{This abbreviation is not in the glossary.} transistors, the carriers (electrons) can acquire enough kinetic energy to ionize silicon in the active channel.  This charge can become trapped and lead to effects (including threshold shifts) similar to those caused by radiation damage.  This effect can cause MOS circuits to age much more quickly at \dword{lar} temperature than at room temperature, reducing performance and potentially causing failure.  To mitigate this effect, the maximum \efield in transistor channels must be lower than the field that can be reliably used at room temperature.  This is accomplished by using transistors fabricated longer than is typical and operated at reduced bias voltage.  Any commercial circuits used in the \dword{lar} must be carefully tested to ensure they will perform well for the expected \num{20}-year lifetime of \dword{dune}; reliability studies for front-end electronics designs in consideration are discussed in Section~\ref{sec:fdsp-tpcelec-qa-reliability}.
+While the higher charge carrier mobility at \dword{lar} temperature than at room temperature is central to improving the performance of \dword{ce}, it also leads to the \textit{hot carrier effect}.  In n-type \dword{cmos} transistors, the carriers (electrons) can acquire enough kinetic energy to ionize silicon in the active channel.  This charge can become trapped and lead to effects (including threshold shifts) similar to those caused by radiation damage.  This effect can cause MOS circuits to age much more quickly at \dword{lar} temperature than at room temperature, reducing performance and potentially causing failure.  To mitigate this effect, the maximum \efield in transistor channels must be lower than the field that can be reliably used at room temperature.  This is accomplished by using transistors fabricated longer than is typical and operated at reduced bias voltage.  Any commercial circuits used in the \dword{lar} must be carefully tested to ensure they will perform well for the expected \num{20}-year lifetime of \dword{dune}; reliability studies for front-end electronics designs in consideration are discussed in Section~\ref{sec:fdsp-tpcelec-qa-reliability}.
 
 A series of tests are planned to demonstrate that the \dword{ce} system design will meet \dword{dune} requirements. These include two system tests: one using the \dword{pdsp} \textit{cold box} at CERN and one using a new small \dword{lartpc} at \fnal. The latter will also accommodate one half-length \dword{dune} \dword{pd} and will provide a low-noise environment that will allow detailed comparisons of the performance of the new \dwords{asic}. It will also enable the study of interactions between the \dword{tpc} readout and other systems, including the \dword{pd} readout and the \dword{hv} distribution. These test facilities are discussed in more detail in Section~\ref{sec:fdsp-tpcelec-qa-facilities}. A second period of data taking is also planned for the \dword{pdsp} detector, with final \dword{apa}s including the final \dwords{asic} and \dwords{femb} replacing the current prototypes. This second run of \dword{pdsp} is planned for 2021-2022.
 
@@ -138,7 +178,7 @@ be highly reliable because accessing the \dword{ce} for repair is not possible o
 
 The Single Phase \dword{protodune}-\dword{sp} detector, described in Chapter~\ref{ch:sp-execsum}, is a 700~ton fiducial volume \dword{lartpc} with 15,360 sense wires that are read out by the \dword{ce} system described in Section~\ref{sec:fdsp-tpcelec-qa-facilities-pdune}. The system was deployed in a beam line of the CERN Neutrino Platform in 2018 and continues to take cosmic event data into 2019. The goal of the \dword{protodune}-\dword{sp} \dword{tpc} readout was to validate the concept and the design of the integrated \dword{apa}+\dword{ce} readout and measure the performance of the \dword{ce} system with components as close as possible to the final \dword{dune} \dword{tpc} readout.
 
-Each of the six \dword{protodune}-\dword{sp} \dword{apa}+\dword{ce} readout units consists of 2,560 sense wires, of which 960 are 6.0~meter long collection wires and 1,600 are 7.4~meter \fixme{Do these measurements of the wires need to be in LATEX code?} long induction wires. Each one was tested in a full scale cold box in cold gaseous Nitrogen (GN2) with a complete \dword{ce} readout system identical to the one on the detector before installation in the cryostat. Figure~\ref{fig:apa2-cycle} shows the \dword{enc}, which is the charge in electrons that would have to arrive at the sense wires to generate a signal with the RMS \fixme{RMS is not in the glossary.} measured by the front end electronics as a function of cold cycle time. At a stable temperature of 160 Kelvin, \fixme{Should Kelvin be abbreviated?} the \dword{enc} for all three wire planes is less than 500~e$^-$.
+Each of the six \dword{protodune}-\dword{sp} \dword{apa}+\dword{ce} readout units consists of 2,560 sense wires, of which 960 are \SI{6}{m} long collection wires and 1,600 are \SI{7.4}{m} long induction wires. Each one was tested in a full scale cold box in cold gaseous Nitrogen (GN2) with a complete \dword{ce} readout system identical to the one on the detector before installation in the cryostat. Figure~\ref{fig:apa2-cycle} shows the \dword{enc}, which is the charge in electrons that would have to arrive at the sense wires to generate a signal with the \rms measured by the front end electronics as a function of cold cycle time. At a stable temperature of \SI{160}{K} the \dword{enc} for all three wire planes is less than 500~e$^-$.
 
 \begin{dunefigure}
 [\dword{pdsp} APA2 noise levels measured in GN2 at CERN Cold Box]
