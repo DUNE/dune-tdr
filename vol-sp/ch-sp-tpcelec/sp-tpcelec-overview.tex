@@ -1,4 +1,4 @@
-\section{System Overview}
+\ such that bot thebipolar signal from the induction wires and the mostly unipolar section{System Overview}
 \label{sec:fdsp-tpcelec-overview}
 
 The main difference between the \dword{dune} \dword{sp} detector and 
@@ -67,7 +67,7 @@ chambers where the eletrical field is strong enough to provide additional
 ionization and signal multiplication. The signal induced in the \dword{dune}
 \dword{spmod} wires is bipolar on the induction wires, positive when the
 electrons drift toward the wires, and negative when they drift away from
-the wires. On the collection wires signals have only the positive polarity.
+the wires. On the collection wires signals are mostly unipolar (positive).
 The signal duration is of the order of microseconds, and tends to be narrower
 for the collection plane due to the increase of the electrical field and
 therefore of the electron velocities.
@@ -104,7 +104,9 @@ of the energy transferred to final-state neutrons.
 Decreasing the noise level also increases the reach of low-energy 
 physics measurements like those associated with stellar core-collapse supernova 
 burst neutrinos. Finally, a low noise level opens up the possibility of using 
-$\mathrm{{}^{39}Ar}$ beta decays to calibrate the \dword{dune} \dword{spmod}. 
+$\mathrm{{}^{39}Ar}$ beta decays to calibrate the \dword{dune} \dword{spmod}.
+Finally the noise level has also consequences on the bandwidth requirements
+for the \dword{daq} system, that are discussed in Chapter~\ref{ch-spdaq}.
 
 To retain maximum flexibility in optimizing reconstruction algorithms after 
 the \dword{dune} data is collected, the \dword{spmod} electronics are designed 
@@ -115,7 +117,58 @@ an \dword{adc}.  To minimize the number of cables and cryostat penetrations,
 the \dwords{adc} as well as the amplifier/shapers are located in the \dword{lar}, 
 and digitized data from many wires merge onto a much smaller set of high speed 
 serial links.  
-%% [Figure xx illustrates the front-end electronics architecture.  128-channel 
+
+In addition to the noise requirement (less than \num{1000}\,$e^{-}$), several 
+additional requirements determine most of the other important \dword{dune} \dword{spmod}
+electronics specifications:
+
+\begin{itemize}
+\item{The \dword{fe} peaking time must be in the range \numrange{1}{3}\,\si{\micro\second},
+to match the time required for the drifting charges to travel from one plane of anode
+wires to the next. The planes of anode wires are separated by \SI{4.75}{mm}
+as discussed in Chapter~\ref{ch:fdsp-apa}, and the drift velocity for
+the electrical fields considered for \dword{dune} is in the range
+\SIrange{1.25}{1.5}{mm/$\mu$s}.}
+\item{The \dword{fe} must have an adjustable baseline such that both the
+bipolar signal from the induction wires and the mostly unipolar signal 
+from the collection wires can be processed with a single amplifier.}
+\item{The \dword{adc} sampling frequency must be \SI{{\sim}2}{MHz}. 
+This value is chosen to match a \dword{fe} shaping time of \SI{1}{\micro\second} 
+(approximate Nyquist condition) while minimizing the data rate.}
+\item{The system must have a linear response up to an impulse input of 
+at least \num{500000}\,$e^{-}$.  This roughly corresponds to the largest 
+ionization signals expected in events where multiple protons are produced 
+in the primary event vertex, in particular, when the trajectories of one 
+or more of those particles are parallel to the wire, causing the charge 
+over a long path length to be collected within a short time.}
+\item{The \dword{adc} must not contribute significantly to overall 
+\dword{fe} noise. This requirement depends on the gain of the \dword{fe} 
+but for each gain setting, translates into requirements on \dword{adc} 
+parameters, including non-linearity and noise.}
+\item{The \dword{adc} must digitize the charge deposited on the wires 
+with 12~bits of precision.  The lower end of the \dword{adc} dynamic 
+range is driven by the requirement that the ADC digitization does not 
+contribute to total electronics noise. The upper end of the \dword{adc} 
+dynamic range is defined by the previous requirement for the signal 
+saturation level. Combining these two requirements with the specification 
+for the total electronics noise results in the need for 12~bits digitization.}
+\item{The power dissipated by the electronics located in the \dword{lar} must
+be less than \SI{50}{mW/channel}.  Lower power dissipation is desirable 
+because the mass of the power cables scales with  power. Ongoing studies 
+focus on whether the amount of power dissipated by the electronics 
+should be minimized further because of potential complications from 
+argon boiling; in principle, this should not be a problem because the 
+\dword{ce} boxes housing the \dwords{femb} are designed to channel 
+bubbles to the \dword{apa} frames.}
+\end{itemize}
+
+Finally, all electronics in the \dword{lar} must
+be highly reliable because accessing the \dword{ce} for repair is not possible once the cryostat is filled with \dword{lar}. Ongoing studies are quantifying the effect of failures in the \dword{tpc} and electronics, including single wire failures and failures of groups of \num{16}, \num{64}, or \num{128} channels.
+
+\fixme{Will add in formal top-level requirements that have already been included Doc DB 11074 (eight associated with TPC Electronics); Anne will advise how/where to integrate into chapter}
+
+
+
 %% “Front-End Mother Boards” produce digitized waveforms and transmit those 
 %% waveforms on four serial links through a \fdth in the top of the cryostat 
 %% to “Warm Interface Boards” located in crates mounted directly on spool 
