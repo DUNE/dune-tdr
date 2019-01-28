@@ -143,7 +143,7 @@ are derived from the overall physics goals of the experiment. The rest, labeled
 as SP-TPC, are engineering requirements derived from the design choices that
 are discussed later in this Chapter.
 
-%%\input{generated/req-longtable-SP-TPC}
+\input{generated/req-longtable-SP-ELEC}
 
 \begin{itemize}
 \item{The \dword{fe} peaking time must be in the range \numrange{1}{3}\,\si{\micro\second},
@@ -479,8 +479,10 @@ that the ``domino'' architecture used in this design relies on
 excellent transistor matching, and unfortunately transistor matches
 is worse at \dword{lar} temperature. In \dword{pdsp} this problem
 results in some readout channels having a fixed value for some of
-the \dword{adc} bits. These channels can be masked from analysis,
-resulting in a loss of efficiency for \dword{pdsp} and plans have
+the \dword{adc} bits. Some these channels need to be masked 
+from analysis, resulting in a loss of efficiency for \dword{pdsp}, while
+in a majority of cases an approximated value for the charge can
+be obtained via interpolation. Due to this problem, plans have
 been put in place to develop an \dword{adc} with a completely new
 design for \dword{dune}. A new \dword{adc} \dword{asic} (also called 
 \dword{coldadc} \dword{asic}) is being developed by an 
@@ -504,10 +506,75 @@ solution. Hopefully by Summer 2019 there will also be a demonstration
 that one or both of the two custom \dword{asic} solutions satisfy
 the \dword{dune} requirements.
 
-Problems have alsy been observed in \dword{larasic}.
+Initial analysis of the \dword{pdsp} data has shown a new problem 
+with \dword{larasic} The problem occurs when a large amount of 
+change ($>$\SI{50}{fC}) is collected over a period of \SIrange{10}{50}{$\mu$s}.
+This causes the feedback mechanism of the \dword{fe} amplifier 
+to stop working for a certain period of time (several hundred ns). 
+In this period, the readout is not functioning and signals following 
+the large charge deposited may be completely lost. A ledge is observed 
+in the output of the \dword{fe} amplifier, followed by a slow decay 
+and a sudden turn-on of the amplifier. An example of this behavior 
+from data is shown in Figures~\ref{fig:pdsp-ledge}.
 
-No COLDATA
+\begin{dunefigure}
+[Pulse shape on a \dword{pdsp} wire showing the ledge effect]
+{fig:pdsp-ledge}
+{Waveform of an event showing the ledge following a large charge 
+deposition, then a discharge and a final jump to the normal baseline.}
+\includegraphics[width=1.0\linewidth]{sp-tpcelec-ledge.png}
+\end{dunefigure}
 
-During the assembly problem with FEMB cables
+This problem has been reproduced in the laboratory and is being actively 
+studied. It affects all versions of \dword{larasic} fabricated after 
+the one used for the \dword{microboone} experiment. The problem occurs 
+with larger probability for the \SI{200}{mV} baseline used for the collection
+wires than for the \SI{900}{mV} baseline used for the induction wires.
+After the problem and this difference between the two baselines were 
+observed, the decision was taken to operate the \dword{ce} in \dword{pdsp} 
+using the \SI{900}{mV} baseline also for the collection wires, sacrificing
+the dynamic range. Data from the wires where the problem occurs can
+be masked in analysis, resulting in a loss of efficiency. It should be
+noted that the problem occurs more often in \dword{pdsp} compared to
+\dword{dune} due to the presence of cosmic rays traveling parallel
+to the \dword{apa} wires in the first case. The problem cannot be 
+discounted for \dword{dune}, since it could also affect the detection
+of electromagnetic showers that are one of the main physics signals.
+The plan and the timeline for addressing this issue in a new prototype
+of \dword{larasic} are going to be discussed in 
+Section~\ref{sec:fdsp-tpcelec-design-femb-fe}.
+
+\fixme{need a figure here, will be added on January 29}
+
+\begin{dunefigure}
+[Image of a connector for the cold cables lifted from the \dword{femb}]
+{fig:pdsp-ledge}
+{Image of a connector for the cold readout and signal cables lifted from
+the \dword{femb} due to the presence of excess epoxy on the 
+connection between the cold cables and the printed circuit board
+that acts as the ``male'' part of the connector.}
+% \includegraphics[width=1.0\linewidth]{tpcelec_femb_problem.png}
+\end{dunefigure}
+
+During the integration of the \dwords{femb} onto the \dwords{apa}
+and the cold tests that preceded the \dwords{apa} installation
+inside the \dword{pdsp} cryostat a problem was observed on the 
+connection between the cold readout and control cables and the
+\dwords{femb}. In multiple cases the connector is detached from
+the \dword{femb} causing a loss of communication. This problem 
+was fixed for all the \dwords{apa} tested in the cold box by
+replacing the \dword{femb}. One additional \dword{femb} was 
+replaced on the \dword{apa} that was installed without undergoing 
+the test in the cold box. This problem may also be the cause
+of the loss of the external clock signal on one of the \dwords{femb}
+which was observed after the cool-down of the detector.
+The problem has been traced to a mechanical interference between 
+the epoxy deposited as a protective measure on the small printed circuit
+board to which the cold cables are soldered and which forms the
+``male'' part of the connector. The height of the epoxy can cause
+the ``female'' part of the connector to lift from, as shown in
+Figure~\ref{fig:fdsp-femb-connector}. This problem is being 
+addressed by a redesign of the connection between the \dword{femb}
+and the cold cables, as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-overview}.
 
 Residual noise in ProtoDUNE
