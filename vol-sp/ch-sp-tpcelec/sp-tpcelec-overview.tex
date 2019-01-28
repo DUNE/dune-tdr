@@ -133,15 +133,15 @@ an optical fiber network as discussed in Chapter~\ref{ch:sp-daq}.
 \subsection{Requirements}
 \label{sec:fdsp-tpcelec-overview-requirements}
 
-\fixme{the table below needs to be added, I have asked Anne Heavey and Brett Viren
-to generate it from the updated DocDB-6419.}
-
 In addition to the noise requirement (less than \num{1000}\,$e^{-}$), several 
 additional requirements determine most of the other important \dword{dune} \dword{spmod}
 electronics specifications. Some of them, labeled as SP-PD in Table~\ref{tab:specs:SP-TPC},
 are derived from the overall physics goals of the experiment. The rest, labeled
 as SP-TPC, are engineering requirements derived from the design choices that
 are discussed later in this Chapter.
+
+\fixme{this is the first version of this table, there are a few things that need
+to be fixed}
 
 \input{generated/req-longtable-SP-ELEC}
 
@@ -553,7 +553,7 @@ Section~\ref{sec:fdsp-tpcelec-design-femb-fe}.
 the \dword{femb} due to the presence of excess epoxy on the 
 connection between the cold cables and the printed circuit board
 that acts as the ``male'' part of the connector.}
-% \includegraphics[width=1.0\linewidth]{tpcelec_femb_problem.png}
+%% \includegraphics[width=1.0\linewidth]{tpcelec_femb_problem.png}
 \end{dunefigure}
 
 During the integration of the \dwords{femb} onto the \dwords{apa}
@@ -577,4 +577,38 @@ Figure~\ref{fig:fdsp-femb-connector}. This problem is being
 addressed by a redesign of the connection between the \dword{femb}
 and the cold cables, as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-overview}.
 
-Residual noise in ProtoDUNE
+It should be noted that the analysis of the \dword{pdsp} data
+is just starting and that there is a lot to learn about the
+detector and how different components of the detector interact
+among themselves from data. The level of noise mentioned in
+the previous section (approximately \SI{550}{e$^-$} on the collection wires,
+and approximately \SI{700}{e$^-$} on the induction wires) 
+was obtained from the online data monitoring, without any
+filtering or selection applied to the pulses on the \dword{apa}
+wires.A simple common mode filter can reduce significantly the 
+noise, particularly at low frequencies, as shown in Figure~\ref{fig:pdsp-noise},
+that contains the noise spectrum on the three planes of \dword{apa}
+wires before and after the filtering. The spectrum prior to
+the filtering shows some interesting features. At very low
+frequencies $<$\SI{60}{KHz}, the noise is dominated by the
+low voltage regulators that are installed on the \dwords{femb}.
+The noise from the low voltage regulators has actually
+been significantly reduced in \dword{pdsp} compared to
+\dword{microboone}~\cite{Acciarri:2017sde}, thanks to 
+hardware filters that have been added on the \dword{pdsp} 
+\dwords{femb}. The noise spectrum prior to the filtering
+also shows spikes at multiple discrete frequencies and in
+some cases the noise spectrum have been identified (cameras,
+malfunctioning bias voltage supplies). Further data analysis
+and further tests with \dword{pdsp} could result in further
+improvements of the already excellent \dword{ce} performance
+and will be reflected, if appropriate, in changes of the
+detector design.
+
+\begin{dunefigure}
+[Spectrum of the noise on the \dword{pdsp} \dword{apa} wires before and after noise filtering]
+{fig:pdsp-noise}
+{Spectrum of the noise on the different \dword{pdsp} \dword{apa} wire planes before
+(left) and after (right) applying a simple common mode filter}
+\includegraphics[width=1.0\linewidth]{tpcelec_pdsp_noisespectrum.png}
+\end{dunefigure}
