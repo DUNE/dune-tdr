@@ -11,7 +11,7 @@ mounted inside the \dword{lar} to exploit the fact that charge carrier
 mobility in silicon is higher and that thermal fluctuations are lower 
 at \dword{lar} temperature than at room temperature. For \dword{cmos} 
 electronics, this results in substantially higher gain and lower noise 
-at \dword{lar} temperature than at room temperature~\cite{larCMOS}.  
+at \dword{lar} temperature than at room temperature~\cite{DeGeronimo:2011zz}.
 Mounting the front-end electronics on the \dword{apa} frames also minimizes 
 the input capacitance, which also contributes to the noise reduction.  
 Furthermore, placing the digitizing and multiplexing electronics inside 
@@ -20,7 +20,7 @@ and minimizes the number of cables coming out of the cryostat.
 As the full \dword{tpc} electronics chain for the \dword{spmod} includes 
 many components on the warm side of the cryostat as well, the \dword{dune} 
 consortium designated to organize development of this system is called 
-the \dword{dune} \textit{Single-Phase \dword{tpc} Electronics} consortium. 
+the \dword{dune} Single-Phase \dword{tpc} Electronics consortium. 
 It is sometimes referred to as the \dword{ce} consortium for short.
 In Section we start with a review of the considerations that
 have lead to the proposed design for the \dword{dune} \dword{sp} detector,
@@ -70,7 +70,10 @@ electrons drift toward the wires, and negative when they drift away from
 the wires. On the collection wires signals are mostly unipolar (positive).
 The signal duration is of the order of microseconds, and tends to be narrower
 for the collection plane due to the increase of the electrical field and
-therefore of the electron velocities.
+therefore of the electron velocities. Due to lack of amplification of 
+electrons inside \dword{lar}, the low noise obtained with the \dword{ce} is
+essential to reliably extract the ionization electron signal from both the 
+collection and induction wire planes in a single-phase \dword{lar} \dword{tpc}.
 
 The noise level enabled by having the front-end electronics in the cold (roughly 
 half as much noise at \dword{lar} temperature than at room temperature) greatly 
@@ -306,8 +309,14 @@ operating at \SI{{\sim}2}{MHz}; and}
 (referred to as \dword{coldata}).}
 \end{itemize}
 
-The development of custom \dword{asic} for the read-out of \dword{lar}-based
-\dword{tpc} at 
+The development of custom \dword{asic} for the read-out of \dword{lar}
+\dword{tpc} has been going on at \dword{bnl} for many years, and prototypes
+of \dword{larasic} have been used in previous \dword{lar} \dword{tpc}, 
+including \dword{microboone} and \dword{pdsp}. \dword{pdsp} is the first
+experiment for which the digitization of the charge and the data serialization
+have been performed inside the \lar, using the P1-\dword{adc} \dword{asic} 
+developed at \dword{bnl} and a \dword{fpga}, since \dword{coldata} was
+still under development.
 The \dword{fe} \dword{asic} has been prototyped and is close to meeting 
 requirements (discussed in Section~\ref{sec:fdsp-tpcelec-overview-scope}). 
 Another prototype to address issues in the version deployed in \dword{pdsp} 
@@ -324,7 +333,7 @@ testing in June 2019.
 
 To maximize the probability of quickly developing a complete design for cold TPC \dword{fe} electronics, an alternative solution is also being investigated: a single \num{64}-channel \dword{asic} that will consolidate all three functions listed above.  This design is being done at \dword{slac}, and the first prototypes will be tested in February 2019.  An \dword{adc} solution in the form of a commercial, off-the-shelf (COTS) option serves as an additional backup option and has already been tested; this option will be explored further if the other two \dword{adc} solutions being considered do not meet the requirements for \dword{dune}.
 
-While the higher charge carrier mobility at \dword{lar} temperature than at room temperature is central to improving the performance of \dword{ce}, it also leads to the hot carrier effect. In n-type \dword{cmos} transistors, the carriers (electrons) can acquire enough kinetic energy to ionize silicon in the active channel. This charge can become trapped and lead to effects (including threshold shifts) similar to those caused by radiation damage. This effect can cause \dword{cmos} circuits to age much more quickly at \dword{lar} temperature than at room temperature, reducing performance and potentially causing failure. To mitigate this effect, the maximum \efield in transistor channels must be lower than the field that can be reliably used at room temperature. This is accomplished by using transistors fabricated longer than is typical and operated at reduced bias voltage. Any commercial circuits used in the \dword{lar} must be carefully tested to ensure they will perform well for the expected \num{20}-year lifetime of \dword{dune}; reliability studies for front-end electronics designs in consideration are discussed in Section~\ref{sec:fdsp-tpcelec-qa-reliability}.
+While the higher charge carrier mobility at \dword{lar} temperature than at room temperature is central to improving the performance of \dword{ce}, it also leads to the hot carrier effect. In n-type \dword{cmos} transistors, the carriers (electrons) can acquire enough kinetic energy to ionize silicon in the active channel. This charge can become trapped and lead to effects (including threshold shifts) similar to those caused by radiation damage. This effect can cause \dword{cmos} circuits to age much more quickly at \dword{lar} temperature than at room temperature, reducing performance and potentially causing failure. To mitigate this effect, the maximum \efield in transistor channels must be lower than the field that can be reliably used at room temperature. This is accomplished by using transistors fabricated with longer than typical length and operated at reduced bias voltage. Any commercial circuits used in the \dword{lar} must be carefully tested to ensure they will perform well for the expected \num{20}-year lifetime of \dword{dune}; reliability studies for front-end electronics designs in consideration are discussed in Section~\ref{sec:fdsp-tpcelec-qa-reliability}.
 
 A series of tests are planned to demonstrate that the \dword{ce} system design will meet \dword{dune} requirements. These include two system tests: one using the \dword{pdsp} \textit{cold box} at CERN and one using a new small \dword{lartpc} at \fnal. The latter will also accommodate one half-length \dword{dune} \dword{pd} and will provide a low-noise environment that will allow detailed comparisons of the performance of the new \dwords{asic}. It will also enable the study of interactions between the \dword{tpc} readout and other systems, including the \dword{pd} readout and the \dword{hv} distribution. These test facilities are discussed in more detail in Section~\ref{sec:fdsp-tpcelec-qa-facilities}. A second period of data taking is also planned for the \dword{pdsp} detector, with final \dword{apa}s including the final \dwords{asic} and \dwords{femb} replacing the current prototypes. This second run of \dword{pdsp} is planned for 2021-2022.
 
@@ -355,7 +364,7 @@ After the cryostat was filled with \dword{lar} and the drift and wire bias HV we
 With the detector in nominal operating conditions, the \dword{enc} was approximately 550~e$^-$ on the collection wires and approximately 750~e$^-$ averaged over all operational channels. Figure~\ref{fig:apa3-noise} shows the \dword{enc} in electrons for all channels of one of the \dword{apa}+\dword{ce} readout units. The collection channels with \dword{enc}$>$1500~e$^-$ are caused by an artifact in the generation of cold \dword{adc} \dword{asic} used in \dword{protodune}-\dword{sp}. The channels in all three planes with \dword{enc}$<$300~e$^-$ have an open connection somewhere in front of the \dword{ce} system.
 
 \begin{dunefigure}
-[TPC noise levels measured at \dword{pdsp} after \lar fill]
+	[TPC noise levels measured at \dword{pdsp} after \dword{lar} fill]
 {fig:apa3-noise}
 {ENC (in electrons) for all U, V, and X (red, blue, and green curves) sense wire planes for one ProtoDUNE APA with the detector in nominal operating conditions.}
 \includegraphics[width=1.0\linewidth]{sp-tpcelec-apa3-enc.png}
