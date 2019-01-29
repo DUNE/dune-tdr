@@ -203,23 +203,190 @@ The ten differential output drivers source and sink a current whose value can be
 \subsubsection{COLDATA ASIC}
 \label{sec:fdsp-tpcelec-design-femb-coldata}
 
-The \dword{coldata} \dword{asic} was designed by engineers from \dword{fermilab} and Southern Methodist University.  It is responsible for all communications between the \dwords{femb} and the electronics outside the cryostat.  Each \dword{femb} contains two \dword{coldata} chips.  \dword{coldata} receives command and control information from a \dword{wib}.  Each \dword{coldata} provides clocks to four \dwords{coldadc} and relays commands to four \dword{larasic} front-end \dwords{asic} and four \dwords{coldadc} to set operating modes and initiate calibration procedures.  Each \dword{coldata} receives data from four \dwords{coldadc}, merges the data streams, provides 8b/10b encoding, serializes the data, and transmits the data to the warm electronics over two 1.28 Gbps links.  These links are driven by line drivers with programmable pre-emphasis.  A block diagram of \dword{coldata} is shown in Figure xx.yy. \fixme{Don't forget to replace this.}
+The \dword{coldata} \dword{asic} was designed by engineers from \dword{fermilab} 
+and Southern Methodist University. It is responsible for all communications 
+between the \dwords{femb} and the electronics located outside the cryostat. 
+Each \dword{femb} contains two \dword{coldata} chips. \dword{coldata} receives 
+command and control information from a \dword{wib}. Each \dword{coldata} provides 
+clocks to four \dword{coldadc}s and relays commands to four \dword{larasic} 
+\dword{fe} \dwords{asic} and four \dword{coldadc}s to set operating modes and 
+initiate calibration procedures.  Each \dword{coldata} receives data from four 
+\dword{coldadc}s, merges the data streams, provides 8b/10b encoding, serializes 
+the data, and transmits the data to the warm electronics over two \SI{1.28}{Gbps} 
+links.  These links are driven by line drivers with programmable pre-emphasis. 
+A block diagram of \dword{coldata} is shown in Figure~\ref{fig:coldata_block_diagram}.
+The possibility of transmitting data from \dword{coldata} over a single 
+\SI{2.56}{gbps} link will be investigated in 2019, with the goal of further
+reducing the number of cold cables that need to be routed through the
+\dword{apa} frame, as discussed in Section~\ref{sec:fdsp-tpcelec-interfaces-apa}
 
-Most commands are sent from a \dword{wib} to an \dword{femb} using an I2C-like\cite{I2C} protocol.  However, while standard I2C uses single ended \dword{cmos} signals and a bidirectional data line, because of the long cables required between the warm interface electronics and the \dwords{femb}, \dword{coldata} uses low voltage differential pairs for both the I2C clock and data.  Point-to-point links are used with a separate link used for data sent from warm to cold and for data sent from cold to warm.  To reduce the number of cables required, only one of the two \dword{coldata} chips on an \dword{femb} has its main I2C interface directly connected to a \dword{wib}.  That \dword{coldata} chip relays I2C commands and data to the secondary \dword{coldata} chip and relays I2C responses from the secondary \dword{coldata} to the \dword{wib}.  Each \dword{coldata} also relays I2C commands and data sent from the \dword{wib} to a \dword{coldadc} chip, as well as data sent back to the \dword{wib}  from a \dword{coldadc}.  This link (on the \dword{femb}) uses single ended \dword{cmos} signals, but data sent to the \dwords{coldadc} is still separate from data sent from the \dwords{coldadc} to the \dword{coldata}.
+\begin{dunefigure}
+[\dword{coldata} block diagram]
+{fig:coldata_block_diagram}
+{\dword{coldata} block diagram}
+\includegraphics[width=1.0\linewidth]{graphics/coldata_block_diagram.png}
+\end{dunefigure}
 
-\dword{coldata} interprets commands intended for a \dword{larasic} front-end chip and transmits them to the \dwords{larasic} using an SPI\cite{SPI} interface \fixme{Should SPI be in the glossary?}.  The configuration registers in \dword{larasic} are configured to be loaded as a single shift register.  As data is shifted into \dword{larasic} on the MOSI \fixme{Should this be in the glossary?} line, bits from the other end of the shift register are shifted out on the MISO \fixme{Also not in the glossary.} line.  It is thus only possible to read \dword{larasic} configuration registers while writing new configuration data.
+The commands for the control of all the \dwords{asic} on a \dword{femb} are sent 
+from \dword{wib} using an \dword{i2c}-like\cite{i2c} protocol. While standard 
+\dword{i2c} uses single ended \dword{cmos} signals and a bidirectional data 
+line, because of the long cables required between the \dword{wiec} and the 
+\dwords{femb}, \dword{coldata} uses low voltage differential pairs for both 
+the \dword{i2c} clock and data. Point-to-point links are used and separate 
+links are used for data sent from warm to cold and for data sent from cold to 
+warm. In order to reduce the number of cables required, only one of the two 
+\dword{coldata} chips on an \dword{femb} has its main \dword{i2c} interface 
+directly connected to a WIB. That \dword{coldata} chip relays \dword{i2c} 
+commands and data to the secondary \dword{coldata} chip and relays \dword{i2c} 
+responses from the secondary \dword{coldata} to the \dword{wib}. Each 
+\dword{coldata} also relays \dword{i2c} commands and data sent from the 
+\dword{wib} to one of the four \dword{coldadc} chips associated with that 
+\dword{coldata}, as well as data sent back to the \dword{wib} from one of the 
+four \dword{coldadc} chips. The links on the \dword{femb} between \dword{coldata} 
+chips and \dword{coldadc} chips use single-ended (\SI{2.25}{V}) \dword{cmos} 
+signals, but the \dword{i2c} links are still non-standard as separate signals 
+are used for data sent to the \dwords{coldadc} and data sent from the 
+\dwords{coldadc} to \dword{coldata}.
 
-\dword{coldata} receives a master clock and a fast command signal from the \dword{wib} on a differential pair.  The master clock is nominally \SI{64}{MHz} but may be \SI{62.5}{MHz} if that is preferred for reasons related to system synchronization.  It creates a \SI{2}{MHz} ADC sampling clock by dividing the \SI{64}{MHz} clock by 32.  Each \dword{coldata} passes the \SI{64}{MHz} clock and the \SI{2}{MHz} clock to its four \dword{coldadc} chips.  If a \SI{62.5}{MHz} master clock is used, then \dword{coldadc} will convert input data every 512 ns rather than every 500 ns.  The fast command line is used for signals that must be executed at a known time.
+The controls intended for the \dword{larasic} \dword{fe} chips are interpreted 
+inside \dword{coldata} and transmitted to the appropriate \dword{asic} using 
+a \dword{spi}-like interface that uses single-ended (\SI{1.8}{V}) \dword{cmos} 
+signals. The configuration registers in \dword{larasic} are configured to be 
+loaded as a single shift register. As data is shifted into \dword{larasic} on 
+the \dword{mosi} line, bits from the other end of the shift register are shifted 
+out on the \dword{miso} line. It is thus only possible to read \dword{larasic} 
+configuration registers while writing new configuration data.
 
-Both \dword{coldata} and \dword{coldadc} are implemented in the TSMC 65nm \dword{cmos} process.\cite{TSMC65} The designs were done using cold transistor models produced by Logix Consulting.\cite{Logix} Logix made measurements of \dword{fermilab}-supplied TSMC 65 nm transistors at LN2 temperature and extracted and provided to \dword{fermilab} SPICE~\cite{spice} models valid at LN2 temperature.  These models were used in analog simulations of \dword{coldata} and \dword{coldadc} subcircuits.  To eliminate the risk of accelerated aging due to the hot carrier effect,\cite{Hot-electron} no transistor with a channel length less than 90 nm was used in either \dword{asic} design.  A special library of standard cells using 90 nm channel length transistors was developed by members of the University of Pennsylvania and \dword{fermilab} groups.  Timing parameters were developed for this standard cell library using the Cadence Liberate tool\cite{Liberate} and the Logix SPICE models.  With the exception of the \dword{coldata} PLL \fixme{Should this be in the glossary?}, serializer, and output driver, the digital sections of \dword{coldata} and \dword{coldadc} were synthesized from Verilog code using this standard cell library and the Cadence Innovus tool~\cite{Innovus}. Innovus was also used for the layout of the synthesized logic.
+In addition to the configuration commands \dword{coldata} also receives from
+the \dword{wib} a master clock and a fast command signal on a low voltage 
+differential pair. Currently the master clock is \SI{64}{MHz}, but it will be
+changed to \SI{62.5}{MHz} to simplify the overall \dword{dune} \dword{spmod} 
+synchronization. The clock used for sampling the \dword{adc} is created inside
+\dword{coldata} by dividing the master clock by 32. Both the master clock and
+the \dword{adc} sampling clocks are passed from \dword{coldata} to the four
+\dword{coldadc} chips that it controls. Depending on the master clock frequency
+the \dword{adc} will convert input data every \num{500} or \SI{512}{ns}, 
+corresponding to a frequency of \num{2} or \SI{1.95}{MHz}. The fast command 
+line is used for signals that must be executed at a known time. \dword{coldata} 
+uses the falling edge of the master clock to sample fast command bits as shown 
+in Figure ~\ref{fig:coldata_fast_command_timing}. All legal fast commands 
+are \dword{dc} balanced. An ``alert'' pattern is used to establish the 8-bit 
+fast command word boundary. An ``idle'' pattern is used when no command is being 
+sent. Four commands are defined: ``Edge,'' which moves the rising edge of the 
+\dword{adc} sampling clock to coincide with the next rising edge of the 
+master MHz clock, ``Sync,'' which zeros the 8-bit timestamp that is the incremented 
+on the rising edge of each \dword{adc} sampling clock, ``Reset,'' which resets 
+\dword{coldata}, and ``ACT,'' the function of which is determined by an 8-bit 
+register that is programmed using the \dword{i2c} interface.  
 
-\fixme{Include description of Fast Command interface, include performance examples (1.28 Gbps link over 25m of warm Samtec cable), include possible upgrade paths}
+\begin{dunefigure}
+[\dword{coldata} Fast Command Timing]
+{fig:coldata_fast_command_timing}
+{Fast command timing: the leading edges of the fast command and of the master 
+clock are equal time when produced on the \dword{wib}. The fast command bits 
+are captured by \dword{coldata} on the falling edge of the master clock and 
+shifted into a register on the next positive edge.}
+\includegraphics[width=0.4\linewidth]{graphics/coldata_clockandfastcommand.png}
+\end{dunefigure}
 
-%%%%%%%%%%%%%%%%%%
-\subsubsection{Alternative Designs}
-\label{sec:fdsp-tpcelec-design-femb-alt}
+\dword{coldata} receives digitized waveform data from 
+four \dword{coldadc} \dwords{asic}. Each \dword{adc} presents its data on eight 
+serial streams operating in parallel. Data from the \dword{adc}s is captured 
+using the \dword{adc} dataClkOut (one per \dword{adc}) and the start of a 
+sample period is indicated by the frameStart signal (one per \dword{adc}). 
+Each \dword{adc} digitizes 16 channels of information and puts out 16 bits 
+of data per channel. Information from two \dword{adc}s are merged by a Data 
+Frame Formation block. The Data Frame Formation circuitry converts the two 
+groups of 16 16-bits words into one of three types of data frame. For normal 
+data taking, either a 12-bits format or a 14-bits \dword{adc} format can be 
+selected, discarding either the four or two lowest order bits. When the 
+12-bits format is selected, a data frame consists of an 8b/10b command 
+character (K28.2) and an 8-bits time stamp, followed by 48 bytes of \dword{adc} 
+data and two bytes of parity information. When the 14-bits format is selected, 
+a data frame consists of an 8b/10b command character (K28.3) and an 8-bits time 
+stamp, followed by 56 bytes of \dword{adc} data and two bytes of parity 
+information. Two debugging frame formats are also defined. When the ``Frame-12 Test'' 
+format is selected, a data frame consists of an 8b/10b command character 
+(K28.0) and an 8-bits time stamp, followed by 48 bytes of predefined data 
+and two bytes of parity information. The final format is used when the 
+\dword{coldadc}s are read out in debug mode. In this case, 30 bits of raw 
+pipeline stage data are read out from one of the two pipelined \dword{adc}s 
+in each \dword{coldadc} \dword{asic} and passed from \dword{coldadc} to 
+\dword{coldata} using two 16-bit frames. When the ``Frame-15'' format is 
+selected, a \dword{coldata} output data frame consists of an 8b/10b command 
+character (K28.6) and an 8-bit time stamp, followed by 60 bits of \dword{adc} 
+data (30 bits from each \dword{coldadc}). No parity information is generated 
+when this format is selected. This is to ensure that at least one idle 
+character (K28.1) will be sent between each ``Frame-15.'' A series of 8b/10b 
+command characters (K28.5) is sent at the end of each frame of 12-bits or 
+14-bits data to ensure synchronization of the high speed links.
 
-\fixme{A brief introduction to this subsection would help the logical flow of the document.}
+The serializers and output drivers use clocks derived from a micro-mechanical
+system oscillator on the \dword{femb}. A single \dword{pll} generates a 
+\SI{1.28}{GHz} clock for both serializers and output drivers. The 10-bits 
+serializers are implemented using two 5:1 multiplexers (clocked at \SI{128}{MHz}) 
+followed by a single 2:1 multiplexer (clocked at \SI{640}{MHz}). Each serializer 
+derives the \SI{640}{MHz} and \SI{128}{MHz} clock from the \SI{1.28}{GHz} 
+clock provided by the \dword{pll} and provides its \SI{128}{MHz} clock to 
+the Data Frame Formation block, which uses it at the output stage of a 
+clock-domain-crossing \dword{fifo}. A link synchronization sequence of 8b/10b 
+command characters (K28.5) is used when the link is reset to establish the 
+boundary between 10-bits ``words.'' Idle characters (K28.1) are inserted 
+by the Data Frame Formation block when no data is ready for serialization 
+(between data frames). The \SI{1.28}{Gbps} output drivers include programmable 
+pre-emphasis. The pre-emphasis is achieved using a combination of a voltage 
+mode circuit at the input to the current mode driver and current mode 
+pre-emphasis integrated into the driver circuit. Measurements were made 
+of the insertion loss (``S parameters'') as a function of frequency using
+\num{25} and \SI{35}{m} lengths of the twinax cable identical to the 
+cable used in \dword{pdsp}, and the output driver circuit including 
+pre-emphasis was simulated using a \dword{spice} model based on these 
+measurements. The simulated eye diagram after \SI{25}{m} of warm twinax 
+cable is shown in Figure ~\ref{fig:128Gbpseyesim}. The \dword{pll} and 
+serializer circuits used in \dword{coldata} were included in the CDP1 
+test chip which was produced in Fall 2017 and shown to work as designed. 
+The pre-emphasis circuit has been added to the current mode driver which 
+was verified in CDP1 and can be disabled if desired. 
+
+\begin{dunefigure}
+[\dword{coldata} output simulated eye diagram]
+{fig:128Gbpseyesim}
+{Simulated eye diagram after \SI{25}{m} of \dword{pdsp} twinax at room 
+temperature for the \dword{coldata} \SI{1.28}{Gbps} output link.  
+The eye diagram is more open at cryogenic temperature.}
+\includegraphics[width=0.8\linewidth]{graphics/coldata_128Gbpseyesim.png}
+\end{dunefigure}
+
+Both \dword{coldata} and \dword{coldadc} are implemented in the 
+\dword{tsmc} \SI{65}{nm} \dword{cmos} process. The designs were 
+done using cold transistor models produced by Logix Consulting~\cite{Logix}.
+Logix made measurements of \dword{fnal}-supplied \dword{tsmc} 
+\SI{65}{nm} transistors at LN2 temperature and extracted and provided 
+to the design teams \dword{spice} models models valid at \lntwo 
+temperature.  These models were used in analog simulations of 
+\dword{coldata} and \dword{coldadc} subcircuits.  In order to 
+eliminate the risk of accelerated aging due to the hot carrier 
+effect~\cite{Hot-electron}, no transistor with channel length 
+less than \SI{90}{nm} was used in either \dword{asic} design.  
+A special library of standard cells using \SI{90}{nm} channel 
+length transistors was developed by members of the University 
+of Pennsylvania and \dword{fnal} groups. Timing parameters were 
+developed for this standard cell library using the Cadence Liberate 
+tool~\cite{Liberate} and the Logix \dword{spice} models. With the 
+exception of the \dword{coldata} \dword{pll}, serializer, and 
+output driver, the digital sections of \dword{coldata} and 
+\dword{coldadc} were synthesized from Verilog code using this 
+standard cell library and the Cadence Innovus tool~\cite{Innovus}.
+Innovus was also used for the layout of the synthesized logic.
+
+%citation dword{i2c}: http://i2c.info
+%citation SPI: https://en.wikipedia.org/wiki/Serial_Peripheral_Interface
+%citation TSMC65:  http://www.tsmc.com/english/dedicatedFoundry/technology/65nm.htm
+%citation Logix: Logix Consulting™, http://www.lgx.com/
+%citation SPICE: SPICE™ is a general-purpose circuit simulation program, https://bwrcs.eecs.berkeley.edu/Classes/IcBook/SPICE/
+%citation Hot-electron: C. Hu, et al., ``Hot-electron induced MOSFET degradation-model, monitor, and improvement,” IEEE Trans. Electron Devices, vol ED-32, no. 2, pp 375-385, 1985.
+%citation Liberate: https://www.cadence.com/content/cadence-www/global/en_US/home/tools/custom-ic-analog-rf-design/library-characterization/liberate-characterization.html
+%citation Innovus: https://www.cadence.com/content/cadence-www/global/en_US/home/tools/digital-design-and-signoff/hierarchical-design-and-floorplanning/innovus-implementation-system.html
 
 %%%%%%%%%
 \subsubsubsection{CRYO Option}
