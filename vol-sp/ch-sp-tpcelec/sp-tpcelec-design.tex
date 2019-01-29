@@ -167,37 +167,45 @@ P3 \dword{fe} \dword{asic} will be further evaluated on \dwords{femb} in various
 \subsubsection{ADC ASIC}
 \label{sec:fdsp-tpcelec-design-femb-adc}
 
-\dword{coldadc} is a low-noise 12-bit \dword{adc} \dword{asic} designed to digitize 16 input channels at a rate of \SI{{\sim}2}{MHz}.  \dword{coldadc} accepts either single-ended or differential inputs and outputs digitized data to \dword{coldata}.  \dword{coldadc} is implemented in TSMC 65 nm \dword{cmos} technology and was designed by a team of engineers from \dword{lbl}, \dword{bnl}, and \dword{fermilab}.  The \dword{asic} uses a conservative, industry standard design including digital calibration.  Each \dword{coldadc} receives 16 voltage outputs from a single \dword{larasic} chip.  The voltages are buffered, multiplexed by 8, and input to two 15-stage pipelined \dwords{adc} operating at 16 MS/s.  The \dword{adc} uses the well-known pipelined architecture with redundancy~\cite{PipelinedADC, CalibrationCorrection}.  Digital logic is used to correct non-linearity introduced by non-ideal amplifier gain and comparator thresholds in each pipeline stage, and an automatic calibration procedure is implemented to determine the constants used in this logic.  To maximize the probability that the first prototype \dword{coldadc} will perform well, the chip is highly programmable, and many circuit blocks can be bypassed.  A block diagram of the chip is shown in Figure~\ref{fig:coldadc-blockdiagram}.  Each of the major blocks is described below.  \dword{coldadc} uses two bias voltages; 2.25V for I/O and 1.1V for the balance of the \dword{asic}.
+COLDADC is a low-noise ADC ASIC designed to digitize 16 input channels at a rate of 2 MHz. It is implemented in the TSMC 65 nm CMOS technology and has been designed by a team of engineers from LBL, BNL, and Fermilab.  The ASIC uses a conservative, industry standard design including digital calibration.  Each COLDADC receives 16 voltage outputs from a single LArASIC chip.  The voltages are buffered, multiplexed by 8, and input to two 15-stage pipelined ADCs operating at 16 MHz.  The ADC uses the well-known pipelined architecture with redundancy~\cite{PipelinedADC}.  Digital logic is used to correct non-linearity introduced by non-ideal amplifier gain and offsets in each pipeline stage~\cite{CalibrationCorrection}, and an automatic calibration procedure is implemented to determine the constants used in this logic.  The ADC produces 16-bit output which is expected to be truncated to 12 bits.
 
-\begin{dunefigure}
-[Baseline ADC ASIC block diagram]
-{fig:coldadc-blockdiagram}
-{Block diagram of baseline ADC ASIC (COLDADC) design.}
-\includegraphics[width=0.8\linewidth]{sp-tpcelec-COLDADCblockdiagram.png}
+The ADC is highly programmable to optimize performance at different temperatures.
+In order to maximize the probability that the first prototype COLDADC will perform well, many circuit blocks can be bypassed.  A block diagram of the chip is shown in Figure~\ref{fig:COLDADC_Block_Diagram}.  Each of the major blocks is described below.
+
+\begin{dunefigure}[COLDADC block diagram]{fig:COLDADC_Block_Diagram}{COLDADC block diagram}
+\includegraphics[width=1.0\linewidth]{sp-tpcelec-COLDADCblockdiagram.pdf}
 \end{dunefigure}
 
-\fixme{Minor correction to figure needed: shows a non-existent \SI{16}{MHz} clock}
+All required reference voltages and currents are generated on-chip by programmable circuit blocks.  The most accurate reference voltage circuit is a band-gap reference based on a PNP (bipolar) transistor.  However, measurements made at BNL and LBL of a large PNP transistor indicate that the foundry-provided SPICE model does not adequately describe the device operation at liquid argon temperature.  Thus, a CMOS-based voltage reference has also been included in COLDADC.  In the event that both on-chip reference generation circuits fail, an external voltage reference can be used.
 
-All required reference voltages and currents are generated on-chip by programmable circuit blocks.  The most accurate reference voltage circuit is a band-gap reference based on a PNP (bipolar) transistor.  However, the TSMC 65 nm \dword{cmos} process does not allow fabrication of high performance bipolar transistors, and bipolar transistors perform less well at liquid argon temperature than at room temperature.  Thus, a \dword{cmos}-based voltage reference has also been included in \dword{coldadc}.  If both on-chip reference generation circuits fail, an external voltage reference can be used.
+Independently adjustable bias voltage levels and currents are provided for the input buffers, sample-and-hold amplifiers, ADCs, and ADC reference buffers.
 
-Many of the functional blocks in \dword{coldadc} are biased using current sources.  The bias points can be adjusted under digital control to trade power for performance and to allow different bias settings for different temperatures.  The input buffers, sample-and-hold amplifiers, \dword{adc}, and \dword{adc} reference buffers can be independently adjusted.  In addition, the band-gap reference circuit includes a bias current adjustment for an internal amplifier.
+COLDADC has four possible ways to interface with LArASIC.  It can accept either single-ended inputs (provided by existing LArASIC chips) or differential inputs (foreseen for a future LArASIC upgrade).  In either case, to mitigate the risk that the input buffer circuits do not perform well, it is also possible to bypass the input buffers and apply the inputs directly to the sample-and-hold amplifiers.  The sample-and-hold amplifiers are separated into two groups of eight.  They sample the waveform at the rising edge of the (2 MHz) sampling clock.  An internally generated 16 MHz clock is then used to clock an 8-to-1 multiplexer which presents 8 samples in turn to one of the two ADC pipelines.
 
-\dword{coldadc} has four possible ways to interface with \dword{larasic}.  It can accept either single-ended inputs (provided by existing \dword{larasic} chips) or differential inputs (foreseen for a future \dword{larasic} upgrade).  In either case, to mitigate the risk that the input buffer circuits do not perform well, it is also possible to bypass the input buffers and apply the inputs directly to the sample-and-hold amplifiers.  The sample-and-hold amplifiers are separated into two groups of 8.  They sample the waveform at the rising edge of the (\SI{{\sim}2}{MHz}) sampling clock.  An internally generated \SI{16}{MHz} clock is then used to clock an 8-to-1 multiplexer that presents 8 samples in turn to one of the two \dword{adc} pipelines.
+A block diagram of an ADC pipeline is shown in Figure~\ref{fig:pipelinestage}. Each of the 15 stages contains a low-resolution 1.5-bit analog-to-digital subconverter (ADSC) containing two comparators, a 1.5-bit digital-to-analog subconverter (DASC) that produces an voltage based on the two comparator outputs, an analog subtractor, a sample-and-hold amplifier (SHA), and a gain stage (with a nominal gain of two). The transfer function of each stage is identical and is shown in Figure~\ref{fig:ADCXFERFN} along with the nominal ``weights'' (W0 and W2) that are added to form the output of the pipeline. Each pipeline stage makes a three-level coarse decision based on the analog input voltage, selects one of three digital ``weights'' to be added to the results of previous stages, and passes a voltage to the next stage that is proportional to the difference between the input voltage and the voltage corresponding to the digital output of the stage.  Because the stages are weighted by a factor of two, but have three possible digital results, there is redundancy between stages that makes the final result independent of errors in the comparator thresholds (up to $\pm{\frac{V_r}{4}}$ where the stage range is $[-V_r,V_r]$).  An ``error'' in the output of one stage is corrected in subsequent stages (usually the next stage).  In order to take advantage of this redundancy provided by the pipelined architecture it is necessary to include at least one ``extra'' stage in the pipeline.  The COLDADC pipelined ADCs are implemented as 15-stage pipelines.
 
-A block diagram of the \dword{coldadc} pipeline stages is shown in Figure~\ref{fig:coldadc-pipeline}.  Each of the 15 stages contains a low-resolution 1.5-bit analog-to-digital sub-converter (ADSC) \fixme{This abbreviation is not in the glossary.} containing two comparators, a 1.5-bit digital-to-analog sub-converter (DASC) \fixme{Nor is this abbreviation in the glossary.} that produces an voltage based on the two comparator outputs, an analog subtractor, a sample-and-hold amplifier (SHA) \fixme{Nor is this one.}, and a gain stage (with a gain of slightly less than two).  Each pipeline stage makes a three-level coarse decision based on the analog input voltage and then sends a voltage proportional to the quantization error resulting from the coarse decision to the next stage for further processing.  To limit power consumption, the stages of the \dword{adc} are scaled in area (and thus power) taking advantage of the fact that the accuracy requirements of the stages decline at each stage of the pipeline.
-
-\begin{dunefigure}
-[Pipeline circuit blocks in COLDADC ASIC]
-{fig:coldadc-pipeline}
-{Block diagram showing the circuit blocks in each pipeline stage of COLDADC.}
-\includegraphics[width=0.8\linewidth]{sp-tpcelec-pipelinedADCstages.png}
+\begin{dunefigure}[Circuit blocks in each ADC pipeline stage]{fig:pipelinestage}{Circuit blocks in each ADC pipeline stage}
+\includegraphics[width=1.0\linewidth]{sp-tpcelec-Pipelinestage.pdf}
 \end{dunefigure}
 
-\fixme{Discuss correction/calibration logic and data formatter}
+\begin{dunefigure}[ADC stage transfer function]{fig:ADCXFERFN}{1.5-bit stage transfer function and digital output. The voltage range of the ADC as a whole, and of each individual stage is $[-V_r,V_r]$.  Note that the voltage passed to the subsequent stage will not exceed the stage range even if a comparator threshold is wrong by up to $\frac{V_r}{4}$.}
+\includegraphics[width=1.0\linewidth]{sp-tpcelec-ADCXFERFN.pdf}
+\end{dunefigure}
 
-The ten differential output drivers source and sink a current whose value can be digitally controlled.  The minimum current is 165 $\mu$A, which corresponds to approximately 3 mV peak-to-peak with 100$\Omega$ termination.  Seven additional levels spaced by 275 $\mu$A can be selected.  The maximum current is 2.07 mA, about 2/3 of the \dword{lvds} standard of 3.5 mA.
+The calibration logic allows the correction of errors caused by imperfections in the voltage that is passed from one stage to the next.  These arise from errors in the voltage in each stage corresponding to $\pm{V_{r}\over{2}}$ (generated by resistive dividers) and imperfections in the gain and offset of the interstage amplifiers.  The calibration procedure relies on the fact that the required precision is easily satisfied by the last stages of the pipeline.  The number of stages to be calibrated (maximum 7) is set by a programmable register.  An iterative calibration procedure is used.
+Starting with the least significant stage to be calibrated, the input to the stage is set to the threshold levels of $\pm{V_{r}\over{4}}$ and the normal comparator outputs are overridden and forced first to 1 and then to 0.  The lower stages of the ADC digitize the analog value output from the stage being calibrated and the difference between the ADC output when the comparator is forced to 1 and the ADC output when the comparator is forced to 0 is calculated.  These two differences (W0 expressed as a negative number and W2 expressed as a positive number) are stored and used as two of the three possible digital outputs of the stage being calibrated (the third possible output being 0).  This procedure is then repeated for the next most significant pipeline stage until stage 15 has been calibrated.
 
-\fixme{Discuss digital control}
+The main weakness of the 1.5-bit per stage pipeline architecture as presented is that it requires a precise interstage gain of two.  If the gain is greater than two, then when the input voltage to a stage is close enough to the limits of the voltage range of the stage, the voltage passed to the next stage will be out of range.  This will result in skipped ADC codes.  For this reason, the interstage gain of COLDADC is designed to be $\sim1.998$.  The calibration procedure recovers the linearity that would be lost due to non-binary stage weighting.  A small number of ADC codes near two extremes of the voltage range are 
+unused \footnote{Simulations of COLDADC including layout parasitics indicate that $\sim150$ 16-bit codes will be unused at the extremes.}, but no skipped codes appear in the range of codes used.  The number of ADC bits that are useful depends on the effective noise of the various subcircuits of the ADC.  The noise of the first few pipeline stages (associated with the most significant bits) contributes more heavily than subsequent stages.  For this reason, the first stages are designed to be larger, lower noise, and more power hungry than later stages.  The total effective noise expected is $\sim130 \mu$V-rms.  This is similar to the quantization error of an ideal 12-bit ADC with a voltage range of 1.5V for which the bin width is $366 \mu$V and the quantization error is $\sim106 \mu$V.
+
+In normal operation, each pipelined ADC passes a 16-bit result to the data formatter on the rising edge of the 16 MHz clock.  The data formatter separates the two 16-bit words into eight 4-bit nibbles and serializes the nibbles for output (most significant bit first) at 64 MHz.  An output clock and a frame marker are also generated.  The frame marker indicates the most significant bit in each nibble of the first of eight channels digitized by one of the ADC pipelines in each 2 MHz sample period.  The output data is generated on the falling edge of the output clock and is latched by the COLDATA ASIC using the rising edge of the same clock.
+A second mode of operation is included for debugging purposes.  In this mode, (2-bit) raw stage results from each of the 15 stages of one of the two pipelines are formatted into the most significant 15 bits of two 16-bit words, broken into nibbles, and output in the same manner as normal data.
+
+Ten differential output drivers are used for the 64 MHz output clock, frame marker, and ADC data.  The output drivers source and sink a current whose value can be digitally controlled.  The minimum current is 165 $\mu$A, which corresponds to approximately 3 mV peak-to-peak with 100$\Omega$ termination.  Seven additional levels spaced by 275 $\mu$A can be selected.  The maximum current is 2.07 mA, about 2/3 of the LVDS standard of 3.5 mA.
+
+The operation of COLDADC is controlled by a number of 8-bit registers.  These registers can be written to and read back using either an I2C interface or a UART.  COLDATA will use the I2C interface.  The UART is included in the first COLDADC prototype to facilitate chip testing and for risk mitigation.
+
+Results of bench tests (and later system tests in LAr) will be included when they are available.  These will include measurements of performance and also power consumption.
 
 %%%%%%%%%%%%%%%%%%
 \subsubsection{COLDATA ASIC}
@@ -224,11 +232,11 @@ reducing the number of cold cables that need to be routed through the
 [\dword{coldata} block diagram]
 {fig:coldata_block_diagram}
 {\dword{coldata} block diagram}
-\includegraphics[width=1.0\linewidth]{graphics/coldata_block_diagram.png}
+\includegraphics[width=1.0\linewidth]{sp-tpcelec-COLDATA-block-diagram.png}
 \end{dunefigure}
 
 The commands for the control of all the \dwords{asic} on a \dword{femb} are sent 
-from \dword{wib} using an \dword{i2c}-like\cite{i2c} protocol. While standard 
+from \dword{wib} using an \dword{i2c}-like~\cite{i2c} protocol. While standard 
 \dword{i2c} uses single ended \dword{cmos} signals and a bidirectional data 
 line, because of the long cables required between the \dword{wiec} and the 
 \dwords{femb}, \dword{coldata} uses low voltage differential pairs for both 
@@ -269,7 +277,7 @@ the \dword{adc} will convert input data every \num{500} or \SI{512}{ns},
 corresponding to a frequency of \num{2} or \SI{1.95}{MHz}. The fast command 
 line is used for signals that must be executed at a known time. \dword{coldata} 
 uses the falling edge of the master clock to sample fast command bits as shown 
-in Figure ~\ref{fig:coldata_fast_command_timing}. All legal fast commands 
+in Figure~\ref{fig:coldata_fast_command_timing}. All legal fast commands 
 are \dword{dc} balanced. An ``alert'' pattern is used to establish the 8-bit 
 fast command word boundary. An ``idle'' pattern is used when no command is being 
 sent. Four commands are defined: ``Edge,'' which moves the rising edge of the 
@@ -286,7 +294,7 @@ register that is programmed using the \dword{i2c} interface.
 clock are equal time when produced on the \dword{wib}. The fast command bits 
 are captured by \dword{coldata} on the falling edge of the master clock and 
 shifted into a register on the next positive edge.}
-\includegraphics[width=0.4\linewidth]{graphics/coldata_clockandfastcommand.png}
+\includegraphics[width=0.4\linewidth]{sp-tpcelec-clocksandfastcommand.png}
 \end{dunefigure}
 
 \dword{coldata} receives digitized waveform data from 
@@ -342,7 +350,7 @@ of the insertion loss (``S parameters'') as a function of frequency using
 cable used in \dword{pdsp}, and the output driver circuit including 
 pre-emphasis was simulated using a \dword{spice} model based on these 
 measurements. The simulated eye diagram after \SI{25}{m} of warm twinax 
-cable is shown in Figure ~\ref{fig:128Gbpseyesim}. The \dword{pll} and 
+cable is shown in Figure~\ref{fig:128Gbpseyesim}. The \dword{pll} and 
 serializer circuits used in \dword{coldata} were included in the CDP1 
 test chip which was produced in Fall 2017 and shown to work as designed. 
 The pre-emphasis circuit has been added to the current mode driver which 
@@ -354,7 +362,7 @@ was verified in CDP1 and can be disabled if desired.
 {Simulated eye diagram after \SI{25}{m} of \dword{pdsp} twinax at room 
 temperature for the \dword{coldata} \SI{1.28}{Gbps} output link.  
 The eye diagram is more open at cryogenic temperature.}
-\includegraphics[width=0.8\linewidth]{graphics/coldata_128Gbpseyesim.png}
+\includegraphics[width=0.8\linewidth]{sp-tpcelec-128Gbpseyesim.png}
 \end{dunefigure}
 
 Both \dword{coldata} and \dword{coldadc} are implemented in the 
@@ -378,6 +386,9 @@ output driver, the digital sections of \dword{coldata} and
 \dword{coldadc} were synthesized from Verilog code using this 
 standard cell library and the Cadence Innovus tool~\cite{Innovus}.
 Innovus was also used for the layout of the synthesized logic.
+
+
+
 
 %citation dword{i2c}: http://i2c.info
 %citation SPI: https://en.wikipedia.org/wiki/Serial_Peripheral_Interface
