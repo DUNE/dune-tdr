@@ -133,7 +133,7 @@ The \dword{pdsp} version of the \dword{femb} (which uses a single \dword{fpga} o
 \subsubsection{Front End ASIC}
 \label{sec:fdsp-tpcelec-design-femb-fe}
 
-The analog \dword{fe} \dword{asic}~\cite{DeGeronimo:2011zz} receives current signals from the \dword{tpc} sense wires and provides a way to amplify and shape the signals for downstream signal digitization.  The \dword{fe} \dword{asic} has 16 channels and is implemented using the TSMC 180nm CMOS process. It integrates a band-gap reference to generate all the internal bias voltages and currents. This guarantees high stability of the operating point over a wide range of temperatures, including cryogenic temperatures. The channel schematic of the \dword{fe} \dword{asic} is shown in Figure~\ref{fig:feasic1}. 
+The analog \dword{fe} \dword{asic}~\cite{DeGeronimo:2011zz} receives current signals from the \dword{tpc} sense wires and provides a way to amplify and shape the signals for downstream signal digitization.  The \dword{fe} \dword{asic} has 16 channels and is implemented using the \dword{tsmc} 180nm CMOS process. It integrates a band-gap reference to generate all the internal bias voltages and currents. This guarantees high stability of the operating point over a wide range of temperatures, including cryogenic temperatures. The channel schematic of the \dword{fe} \dword{asic} is shown in Figure~\ref{fig:feasic1}. 
 
 \begin{dunefigure}
 [FE ASIC channel schematic]
@@ -168,7 +168,7 @@ P3 \dword{fe} \dword{asic} will be further evaluated on \dwords{femb} in various
 \label{sec:fdsp-tpcelec-design-femb-adc}
 
 \dword{coldadc} is a low-noise \dword{adc} \dword{asic} designed to digitize
-16 input channels at a rate of \SI{2}{MHz}. It is implemented in the TSMC
+16 input channels at a rate of \SI{2}{MHz}. It is implemented in the \dword{tsmc}
 \SI{65}{nm} \dword{cmos} technology and has been designed by a team of engineers
 from LBL, \dword{bnl}, and \dword{fermilab}.  The \dword{asic} uses a conservative,
 industry standard design including digital calibration.  Each \dword{coldadc}
@@ -565,26 +565,61 @@ In February 2019, stand-alone tests of the \dword{cryo} \dword{asic} will begin.
 \subsubsubsection{Commercial off the Shelf ADC Option}
 \label{sec:fdsp-tpcelec-design-femb-alt-cots}
 
-The SBND collaboration has been exploring the \dword{cots} \dword{adc} option for the \dword{tpc} readout electronics development since Spring 2017~\cite{Chen:2018zic}. After a market survey, few candidate \dwords{adc} in \dword{sar} architecture were identified with 100\% cold yield. Since July 2017, a lifetime study plan was developed to evaluate \dword{cots} \dword{adc} in two different phases: exploratory and validation. The lifetime study focused on the %\dword{adi} 
-\fixme{'adi' not in glossary. What is this? Anne} AD7274 implemented in TSMC 350nm \dword{cmos} technology given the optimum performance in cryogenic operation compared to other candidates.
+The SBND collaboration has been exploring the \dword{cots} \dword{adc} option 
+for the \dword{tpc} readout electronics development since Spring 
+2017~\cite{Chen:2018zic}. After a market survey, few candidate \dwords{adc} 
+in \dword{sar} architecture were identified with 100\% cold yield. Since 
+July 2017, a lifetime study plan was developed to evaluate \dword{cots} 
+\dword{adc} in two different phases: exploratory and validation. The 
+lifetime study focused on the Analog Devices~\cite{AnalogDevices} AD7274 
+implemented in \dword{tsmc} \SI{350}{nm} \dword{cmos} technology given 
+the optimum performance in cryogenic operation compared to other candidates.
 
-During the exploratory phase, fresh samples of \dword{cots} \dword{adc} AD7274 were stressed with higher than nominal operation voltage, such as 5 V, while power consumption (current drawn) was monitored continuously. Periodically, the sample would be operated at nominal voltage (V$_{DD}$ = 2.5V and V$_{REF}$ = 1.8V) for a performance characterization test, where both DNL (Differential Non-Linearity) and INL (Integral Non-Linearity) \fixme{DNL and INL should probably go into the glossary.} were monitored and analyzed in addition to the current monitoring. Stress test results were used to extrapolate the lifetime of the \dword{cots} \dword{adc}. We determined that the current drop of 1\% on the V$_{DD}$ be used as the degradation criterion for the lifetime study. In the validation phase, more devices were tested following the develped criteria to collect more data to validate what was learned in the exploratory phase.
+During the exploratory phase, fresh samples of \dword{cots} \dword{adc} 
+AD7274 were stressed with higher than nominal operation voltage, such as
+\SI{5}{V}, while power consumption (current drawn) was monitored continuously. 
+Periodically, the sample would be operated at nominal voltage (V$_{DD}$ = \SI{2.5}{V} 
+and V$_{REF}$ = \SI{1.8}{V}) for a performance characterization test, where 
+both the \dword{dnl} and \dword{inl} were monitored and analyzed in addition 
+to the current monitoring. Stress test results were used to extrapolate the 
+lifetime of the \dword{cots} \dword{adc}. We determined that a current drop 
+of 1\% on the V$_{DD}$ be used as the degradation criterion for the lifetime 
+study. In the validation phase, more devices were tested following the developed 
+criteria to collect more data to validate what was learned in the exploratory phase.
 
-The lifetime projection of \dword{cots} \dword{adc} AD7274 from the stress test with V$_{DD} >$ 5V is shown in Figure~\ref{fig:cotsadc-lifetime}. With ADC7274 operated at 2.5V, which is lower than the nominal 3.6V for 350nm \dword{cmos} technology, the projected lifetime is more than than 10$^6$ years.
+The lifetime projection of \dword{cots} \dword{adc} AD7274 from the stress 
+test with V$_{DD} >$ \SI{5}{V} is shown in Figure~\ref{fig:cotsadc-lifetime}. 
+With the AD7274 operated at \SI{2.5}{V}, which is lower than the nominal 
+\SI{3.6}{V} for the \SI{350}{nm} \dword{cmos} technology, the projected lifetime 
+is more than than 10$^6$ years.
 
 \begin{dunefigure}
-[Lifetime projection of COTS ADC]
+[Lifetime projection of the \dword{cots} \dword{adc}]
 {fig:cotsadc-lifetime}
-	{Lifetime projection of COTS ADC AD7274 from the stress test with V$_{DD} >$ 5V. The current drop of 1\% on the V$_{DD}$ is used as degradation criterion. With nominal operation voltage of 3.6V for 350nm \dword{cmos} technology, the lifetime is projected to be more than 100 years. For SBND and DUNE \dword{fd}, the AD7274 will be operated at 2.5V to add a further margin; the expected lifetime is more than 10$^6$ years.}
+{Lifetime projection of the \dword{cots} \dword{adc} AD7274 from the stress test 
+with V$_{DD} >$ \SI{5}{V}. The current drop of 1\% on the V$_{DD}$ is used as 
+degradation criterion. With nominal operation voltage of \SI{3.6}{V} for the 
+\SI{350}{nm} \dword{cmos} technology, the lifetime is projected to be more 
+than 100 years. For SBND and DUNE \dword{fd}, the AD7274 will be operated at 
+\SI{2.5}{V} to add a further margin; the expected lifetime is more than 10$^6$ years.}
 \includegraphics[width=0.8\linewidth]{sp-tpcelec-cotsadc-lifetime.pdf}
 \end{dunefigure}
 
-Based on the lifetime study of AD7274, an \dword{femb} with \dword{cots} \dword{adc} was developed and characterized for an SBND experiment. The integration test was carried out with 40\% \dword{apa} at \dword{bnl} and showed satisfactory noise performance in Figure~\ref{fig:cotsadc-fembenc}. The \dword{cots} \dword{adc} AD7274 serves as a backup solution for the \dword{dune} \dword{fd} \dword{tpc} readout electronics system. The current plan is to evaluate AD7274 \fixme{Check this please.} in the small \dword{tpc} \dword{iceberg} at \dword{fermilab}. Ten \dwords{femb} with \dword{cots} \dword{adc} are being produced and will be used to instrument \dword{iceberg} \dword{tpc} for system integration tests in early 2019. 
+Based on the lifetime study of AD7274, an \dword{femb} with \dword{cots} 
+\dword{adc} was developed and characterized for the SBND experiment. The 
+integration test was carried out with 40\% \dword{apa} at \dword{bnl} and 
+showed satisfactory noise performance in Figure~\ref{fig:cotsadc-fembenc}. 
+The \dword{cots} \dword{adc} AD7274 serves as a backup solution for the 
+\dword{dune} \dword{fd} \dword{tpc} readout electronics system. The current 
+plan is to evaluate this \dword{adc} in the small \dword{tpc} 
+\dword{iceberg} at \dword{fermilab}. Ten \dwords{femb} with \dword{cots} 
+\dword{adc} are being produced and will be used to instrument \dword{iceberg} 
+\dword{tpc} for system integration tests in early 2019. 
 
 \begin{dunefigure}
-[ENC measurement of FEMB with COTS ADC]
+[Noise measurement of \dwords{femb} with \dword{cots} \dword{adc}]
 {fig:cotsadc-fembenc}
-	{The ENC measurement of FEMB with COTS ADC mounted on 40\% APA at \dword{bnl}. The picture of FEMB is shown in the top left corner. The induction plane (4 m wire) has ENC $\sim$ 400$e^-$ with 1$\mu$s peaking time, and the collection plane (2.8 m wire) has ENC $\sim$ 330$e^-$ with 1$\mu$s peaking time.}
+{The noise measurement of \dwords{femb} with \dword{cots} \dwords{adc} mounted on 40\% APA at \dword{bnl}. The picture of the \dword{femb} is shown in the top left corner. The induction plane (4 m wire) has noise $\sim$ 400$e^-$ with 1$\mu$s peaking time, and the collection plane (2.8 m wire) has noise $\sim$ 330$e^-$ with 1$\mu$s peaking time.}
 \includegraphics[width=0.99\linewidth]{sp-tpcelec-cotsadc-fembenc.pdf}
 \end{dunefigure}
 
@@ -679,7 +714,7 @@ routed to the \dword{ce} and \dword{pd} feedthroughs.
 \subsection{Cold Electronics Feedthroughs}
 \label{sec:fdsp-tpcelec-design-ft}
 
-All cold cables originating inside the cryostat connect to the outside warm electronics through \dword{pcb} \fixme{Does this abbreviation need to be in the glossary ?}board \fdth{}s
+All cold cables originating inside the cryostat connect to the outside warm electronics through \dwords{pcb} \fdth{}s
 installed in the signal flanges distributed along the cryostat roof.
 The \dword{tpc} data rate per \dword{apa}, with an overall multiplexing factor of 32 and 80 $\sim$1~Gbps data channels per \dword{apa},
 is sufficiently low that the \dword{lvds} signals can be driven over copper twin-axial transmission lines.
@@ -769,7 +804,7 @@ the clock is integrated into the \dword{wib} \dword{fpga} (the Altera Arria V\fo
 The \dword{spmod} timing system, described in Section~\ref{sec:sp-daq:design-timing}, is a development of the \dword{pdsp} system and expected to require nearly identical functionality at the \dword{wib} endpoint.
 
 \begin{dunefigure}
-[\dword{pdsp} PTC and timing distribution to the \dword{wib} and FEMBs]
+	[\dword{pdsp} PTC and timing distribution to the \dword{wib} and \dwords{femb}]
 {fig:tpcelec-wib-timing}
 {Power and timing card (\dword{ptc}) and timing distribution to the \dword{wib} and \dwords{femb} used in \dword{pdsp}.}
 \includegraphics[width=0.75\linewidth]{sp-tpcelec-wib-timing-v2.pdf}
@@ -844,7 +879,7 @@ Figure~\ref{fig:tpcelec-powerconn}.
 \includegraphics[width=0.9\linewidth]{sp-tpcelec-power-connector.png}
 \end{dunefigure}
 
-An 18V linear power supply will provide power to the cooling fans for the WIEC \fixme{WIEC is not in the glossary. Should it be?}. It will be interlocked to the 48V power 
+An 18V linear power supply will provide power to the cooling fans for the \dword{wiec}. It will be interlocked to the 48V power 
 supplies, so the \dwords{wib} cannot be powered unless the cooling fans are operating. A 10V power supply will provide
 power to the 4 heating elements on each \dword{pd} and \dword{ce} flange.
 
