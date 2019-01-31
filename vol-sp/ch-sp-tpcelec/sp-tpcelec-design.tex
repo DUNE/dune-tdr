@@ -1,170 +1,278 @@
 \section{System Design}
 \label{sec:fdsp-tpcelec-design}
-\fixme{A brief introduction here would help with the logical development of the document.}
+\fixme{A brief introduction here would help with the logical 
+development of the document.}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Grounding and Shielding}
 \label{sec:fdsp-tpcelec-design-grounding}
 
-\fixme{Needs input from ProtoDUNE studies; specifically, problems with external noises during ProtoDUNE commissioning, and remaining sources of noise that are being investigated}
+\fixme{Needs input from ProtoDUNE studies; specifically, problems 
+with external noises during ProtoDUNE commissioning, and remaining 
+sources of noise that are being investigated}
 
-To minimize system noise, the \dword{ce} cables for each \dword{apa} enter 
-the cryostat through a single \dword{ce} flange, as shown in Figure~\ref{fig:connections}. This creates, for grounding purposes, an integrated unit consisting of an \dword{apa} frame, \dword{femb} ground for all \num{20} \dword{ce} modules, \dword{tpc} flange, and warm interface
-electronics. To do this,
-the input amplifiers on the \dword{fe} \dwords{asic} have their ground terminals connected to the \dword{apa} frame. 
-All power-return leads and cable shields are connected to both the ground plane of the \dword{femb} and to the \dword{tpc} signal flange.
+To minimize system noise, the \dword{ce} cables for each \dword{apa} 
+enter the cryostat through a single \dword{ce} flange, as shown in 
+Figure~\ref{fig:connections}. This creates, for grounding purposes, 
+an integrated unit consisting of an \dword{apa} frame, \dword{femb}
+ground for all \num{20} \dword{ce} modules, \dword{tpc} flange, and 
+warm interface electronics. To do this, the input amplifiers on the 
+\dword{fe} \dwords{asic} have their ground terminals connected to 
+the \dword{apa} frame. All power-return leads and cable shields are 
+connected to both the ground plane of the \dword{femb} and to the 
+\dword{tpc} signal flange.
 
-The only location where this integrated unit makes electrical contact with the 
-cryostat, which defines \textit{detector ground}, is at a single point on the \dword{ce} \fdth board in the \dword{tpc} signal flange where the 
-cables exit the cryostat. Mechanical suspension of the \dword{apa}s is accomplished using insulated supports. 
-To avoid structural ground loops, the \dword{apa} frames described in Chapter~\ref{ch:fdsp-apa} are 
-insulated from each other.
+The only location where this integrated unit makes electrical contact 
+with the cryostat, which defines the detector ground, is at a single 
+point on the \dword{ce} \fdth board in the \dword{tpc} signal flange 
+where the cables exit the cryostat. Mechanical suspension of the 
+\dword{apa}s is accomplished using insulated supports. To avoid 
+structural ground loops, the \dword{apa} frames described in 
+Chapter~\ref{ch:fdsp-apa} are insulated from each other.
 
-Filtering circuits for the \dword{apa} wire-bias voltages are locally referenced to the ground plane of the \dwords{femb} through low-impedance electrical connections. This approach ensures a ground-return path in close proximity to the bias-voltage and signal paths. The close proximity of the current paths minimizes the size of potential loops to further suppress noise pickup.
+Filtering circuits for the \dword{apa} wire-bias voltages are 
+locally referenced to the ground plane of the \dwords{femb} 
+through low-impedance electrical connections. This approach 
+ensures a ground-return path in close proximity to the 
+bias-voltage and signal paths. The close proximity of the 
+current paths minimizes the size of potential loops to further 
+suppress noise pickup.
 
-Signals associated with the \dword{pds}, described in Chapter~\ref{ch:fdsp-pd}, are carried directly on shielded, 
-twisted-pair cables to the signal \fdth. The cable shields are connected to the cryostat 
-at the \dword{pd} flange shown in Figure~\ref{fig:connections}, and to the \dword{pcb} shield layer on the \dwords{pd}. The cable shields have no electrical connection to the \dword{apa} frame.
+Signals associated with the \dword{pds}, described in 
+Chapter~\ref{ch:fdsp-pd}, are carried directly on shielded, 
+twisted-pair cables to the signal \fdth. The cable shields 
+are connected to the cryostat at the \dword{pd} flange 
+shown in Figure~\ref{fig:connections}, and to the \dword{pcb} 
+shield layer on the \dwords{pd}. The cable shields have no 
+electrical connection to the \dword{apa} frame.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Distribution of Bias Voltages}
 \label{sec:fdsp-tpcelec-design-bias}
 
-\fixme{We are going to try to minimize the overlap of this section with the corresponding section in the APA chapter to avoid repetition.  Refer to APA section and strictly discuss parts necessary to explain coupling between wires and readout that is done to minimize cross-talk.}
+\fixme{We are going to try to minimize the overlap of this 
+section with the corresponding section in the APA chapter 
+to avoid repetition. Refer to APA section and strictly discuss 
+parts necessary to explain coupling between wires and 
+readout that is done to minimize cross-talk.}
 
-Each side of an \dword{apa} includes four wire layers, as described in Section~\ref{sec:fdsp-apa-design}. 
-%The innermost X-plane layer of wires is nominally biased at +820~V, with each wire AC coupled 
-%to one of the 128 charge amplifier circuits on the \dword{femb}. The V-plane wire layer is effectively biased at zero volts, 
-%with each wire directly connected to one of the charge amplifier circuits. The U-plane wire layer is nominally 
-%biased at $-$370~V with each wire AC-coupled 
-%to one of the 128 charge amplifier circuits. The outermost G-plane wire layer,
-%which has no connection to the charge amplifier circuits, is biased at $-$665~V.
-Electrons passing through the wire grid must drift unimpeded until they reach the $X$-plane 
-collection layer. The nominal bias voltages are predicted to result in this electrically 
-transparent configuration and are given in Section~\ref{sec:fdsp-apa-design}. 
+Each side of an \dword{apa} includes four wire layers, as 
+described in Section~\ref{sec:fdsp-apa-design}. Electrons passing 
+through the wire grid must drift unimpeded until they reach 
+the $X$-plane collection layer. The nominal bias voltages are 
+predicted to result in this electrically transparent configuration 
+and are given in Section~\ref{sec:fdsp-apa-design}. 
 
-The filtering of wire bias voltages and \dword{ac} coupling of wire signals passing
-onto the charge amplifier circuits is done on \dword{cr} boards that plug in between the \dword{apa} wire-board stacks and \dwords{femb}.
-Each \dword{cr} board includes single RC filters for the $X$- and $U$-plane wire bias voltages. In addition, each board has \num{48} 
-pairs of bias resistors and \dword{ac} coupling capacitors for $X$-plane wires, and \num{40} pairs for the $U$-plane wires. The coupling capacitors block DC while passing \dword{ac} 
-signals to the \dword{ce} motherboards.  A schematic diagram of the \dword{pdsp} \dword{apa} wire bias subsystem is in Figure~\ref{fig:CR-board}.
+The filtering of wire bias voltages and the \dword{ac} coupling 
+of wire signals passing onto the charge amplifier circuits is 
+done on \dword{cr} boards that plug in between the \dword{apa} 
+wire-board stacks and \dwords{femb}. Each \dword{cr} board 
+includes single RC filters for the $X$- and $U$-plane wire 
+bias voltages. In addition, each board has \num{48} pairs of 
+bias resistors and \dword{ac} coupling capacitors for $X$-plane 
+wires, and \num{40} pairs for the $U$-plane wires. The coupling 
+capacitors block \dword{dc} levels while passing \dword{ac} 
+signals to the \dword{ce} motherboards.  A schematic diagram 
+of the \dword{pdsp} \dword{apa} wire bias subsystem is in 
+Figure~\ref{fig:CR-board}.
 
 \begin{dunefigure}
-	[\dword{pdsp} \dword{apa} wire bias schematic diagram, including the \dword{cr} board.]
-	{fig:CR-board}
-	{\dword{pdsp} \dword{apa} wire bias schematic diagram including the \dword{cr} board.}
+[\dword{pdsp} \dword{apa} wire bias schematic diagram, including the \dword{cr} board.]
+{fig:CR-board}
+{\dword{pdsp} \dword{apa} wire bias schematic diagram including the \dword{cr} board.}
 \includegraphics[width=0.8\linewidth]{sp-tpcelec-cr-board.pdf}
 \end{dunefigure}
 
-\fixme{Move Figure~\ref{fig:CR-board} to APA chapter, and replace with simplified picture focusing on wire cross-talk?}
+\fixme{Move Figure~\ref{fig:CR-board} to APA chapter, and replace with simplified 
+picture focusing on wire cross-talk?}
 
-%Separate \dword{cr} boards include a single R-C filter for the G-plane wires and 12 pairs of bias resistors and
-%coupling capacitors.
-%Groups of four wires are tied together to share single
-%bias resistors and filter capacitors. These \dword{cr} boards do not connect to the charge amplifier circuits on the \dword{femb}.
-
-Clamping diodes limit the input voltage received at the amplifier circuits to between \SI{1.8}{V}\,$\pm$\,U$_D$, where U$_D$
+Clamping diodes limit the input voltage received at the amplifier 
+circuits to between \SI{1.8}{V}\,$\pm$\,U$_D$, where U$_D$
 is the breakdown voltage of the diode, approximately \SI{0.7}{V}.
-The amplifier circuit has a \SI{22}{nF} coupling capacitor at input to avoid leakage current from the protection clamping diodes. 
+The amplifier circuit has a \SI{22}{nF} coupling capacitor at 
+input to avoid leakage current from the protection clamping diodes. 
 
-%%% UNCLEAR, REMOVE FOR NOW
-%Coupling capacitors for the X-plane and U-plane wires are required to block DC bias voltages.
-%However they also impact the efficiency of the detector circuits.
-%The sense wires are expected to have $\sim200$~pF of capacitance to the \dword{apa} frame.
-%Induced or collected charges are effectively divided between the wire capacitance and the coupling capacitor.
-%To achieve a charge-calibration accuracy of 0.5 percent or better,
-%the coupling capacitors must be 4.7\,nF at ten percent tolerance, or 2.2\,nF at five percent tolerance.
-%Voltage ratings should be at least 1.5 times the expected operating voltages.
+Bias resistance values should be at least \SI{20}{\mega\ohm} to 
+maintain negligible noise contributions. The higher value helps 
+achieve a longer time constant for the high-pass coupling networks.
+Time constants should be at least \num{25} times the electron 
+drift time so that the undershoot in the digitized waveform
+is small and easily correctable. However, leakage currents can 
+develop on \dword{pcb} that are exposed to high voltages over 
+extended periods. If the bias resistors are much greater than 
+\SI{50}{\mega\ohm}, leakage currents may affect the bias voltages 
+applied to the wires. The target value of \SI{50}{\mega\ohm} 
+was used in \dword{pdsp}.
 
-Bias resistance values should be at least \SI{20}{\mega\ohm} to maintain negligible noise contributions.
-The higher value helps achieve a longer time constant for the high-pass coupling networks.
-Time constants should be at least \num{25} times the electron drift time so that the undershoot in the digitized waveform
-is small and easily correctable.
-However, leakage currents can develop on \dword{pcb} that are exposed to high voltages over extended periods.
-If the bias resistors are much greater than \SI{50}{\mega\ohm}, leakage currents may affect the bias voltages applied to the wires. The target value of \SI{50}{\mega\ohm} was used in \dword{pdsp}.
-
-The bias-voltage filters are RC low-pass networks.
-Resistance values should be much smaller than the bias resistances to control cross-talk between wires
-and limit the voltage drop if any of the wires becomes shorted to the \dword{apa} frame.
-The value of \SI{2.2}{\mega\ohm} was used in \dword{pdsp}.
-Smaller values may be considered for %DUNE 
-the \dword{spmod} although a larger filter capacitor would be required to maintain a given level of noise reduction.
-The target value of \SI{47}{nF} was used in \dword{pdsp} for the filter capacitors.
-
-%For the grid-plane bias filters, component values are less critical.
-%If possible they will be identical to those used for the bias resistors and coupling capacitors
-%(50~M$\Omega$ and 2.2 to 4.7\,nF).
+The bias-voltage filters are RC low-pass networks. Resistance 
+values should be much smaller than the bias resistances to control 
+cross-talk between wires and limit the voltage drop if any of the 
+wires becomes shorted to the \dword{apa} frame. The value of 
+\SI{2.2}{\mega\ohm} was used in \dword{pdsp}. Smaller values may 
+be considered for the \dword{spmod} although a larger filter 
+capacitor would be required to maintain a given level of noise 
+reduction. The target value of \SI{47}{nF} was used in \dword{pdsp} 
+for the filter capacitors.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Front End Motherboard}
 \label{sec:fdsp-tpcelec-design-femb}
 
-\fixme{FEMB description needs to be dramatically expanded for the second draft of the TDR.  A lot of information is missing.}
+\fixme{FEMB description needs to be dramatically expanded for 
+the second draft of the TDR. A lot of information is missing.}
 
-\fixme{The text under 1.2.3.1 (Overview) could be used as the introduction to section 1.2.3 (Front End Motherboard.}
+\fixme{The text under 1.2.3.1 (Overview) could be used as the 
+introduction to section 1.2.3 (Front End Motherboard.}
 %%%%%%%%%%%%%%%%%%
 \subsubsection{Overview}
 \label{sec:fdsp-tpcelec-design-femb-overview}
 
 Each \dword{apa} is instrumented with \num{20} \dwords{femb}.
-The \dwords{femb} plug into the \dword{apa} \dword{cr} boards, making the connections from the wires to the charge amplifier circuits as short as possible.
-Each \dword{femb} receives signals from \num{40} $U$ wires, \num{40} $V$ wires, and \num{48} $X$ wires.
-The baseline \dword{femb} design contains eight \num{16}-channel \dword{fe} (\dword{larasic}) \dwords{asic}, eight \num{16}-channel Cold \dword{adc} \dwords{asic}, and two \dword{coldata} control and communication \dwords{asic} (see Figure~\ref{fig:ce-scheme}).
-The \dword{femb} also contains regulators that produce the voltages required by the \dwords{asic} and 
-filter those voltages.
+The \dwords{femb} plug into the \dword{apa} \dword{cr} boards, 
+making the connections from the wires to the charge amplifier 
+circuits as short as possible. Each \dword{femb} receives signals 
+from \num{40} $U$ wires, \num{40} $V$ wires, and \num{48} $X$ wires.
+The baseline \dword{femb} design contains eight \num{16}-channel 
+\dword{fe} (\dword{larasic}) \dwords{asic}, eight \num{16}-channel 
+\dword{coldadc} \dwords{asic}, and two \dword{coldata} control and 
+communication \dwords{asic} (see Figure~\ref{fig:ce-scheme}).
+The \dword{femb} also contains regulators that produce the voltages 
+required by the \dwords{asic} and filter those voltages.
 The \dword{larasic} inputs are protected by diodes and a series inductor.
 
 \begin{dunefigure}
 [The baseline \dword{ce} architecture.]
 {fig:ce-scheme}
-{The baseline \dword{ce} architecture. The basic unit is the \num{128}-channel \dword{femb}. Note that only one \dword{ce} flange is shown to simplify the illustration. Note that \dword{ssp} stands for \textit{SiPM Signal Processor} (see Chapter~\ref{ch:fdsp-pd}).}
+{The baseline \dword{ce} architecture. The basic unit is the 
+\num{128}-channel \dword{femb}. Note that only one \dword{ce} 
+flange is shown to simplify the illustration. Note that \dword{ssp} 
+stands for \textit{SiPM Signal Processor} (see Chapter~\ref{ch:fdsp-pd}).}
 \includegraphics[width=0.9\linewidth,angle=90]{sp-tpcelec-schematic-v3.pdf}
 \end{dunefigure}
 
-The \dword{pdsp} version of the \dword{femb} (which uses a single \dword{fpga} on a mezzanine card instead of two \dword{coldata} \dwords{asic}) is shown in Figure~\ref{fig:femb}.
+The \dword{pdsp} version of the \dword{femb} (which uses a single 
+\dword{fpga} on a mezzanine card instead of two \dword{coldata} 
+\dwords{asic}) is shown in Figure~\ref{fig:femb}.
 
 \begin{dunefigure}
 [The complete \dword{femb} assembly as used in \dword{pdsp}.]
 {fig:femb}
-{The complete \dword{femb} assembly as used in the \dword{pdsp} detector. The cable shown is the high-speed data, clock, and control cable.}
+{The complete \dword{femb} assembly as used in the \dword{pdsp} 
+detector. The cable shown is the high-speed data, clock, and control cable.}
 \includegraphics[width=0.6\linewidth]{sp-tpcelec-femb.png}
 \end{dunefigure}
 
 %%%%%%%%%%%%%%%%%%
-\subsubsection{Front End ASIC}
+\subsubsection{Front End \dword{asic}}
 \label{sec:fdsp-tpcelec-design-femb-fe}
 
-The analog \dword{fe} \dword{asic}~\cite{DeGeronimo:2011zz} receives current signals from the \dword{tpc} sense wires and provides a way to amplify and shape the signals for downstream signal digitization.  The \dword{fe} \dword{asic} has 16 channels and is implemented using the \dword{tsmc} 180nm CMOS process. It integrates a band-gap reference to generate all the internal bias voltages and currents. This guarantees high stability of the operating point over a wide range of temperatures, including cryogenic temperatures. The channel schematic of the \dword{fe} \dword{asic} is shown in Figure~\ref{fig:feasic1}. 
+The analog \dword{fe} \dword{asic}~\cite{DeGeronimo:2011zz} receives 
+current signals from the \dword{tpc} sense wires and provides a way to 
+amplify and shape the signals for downstream signal digitization. 
+The \dword{fe} \dword{asic} has \num{16} channels and is implemented 
+using the \dword{tsmc} \SI{180}{nm} \dword{cmos} process. It 
+integrates a band-gap reference to generate all the internal bias 
+voltages and currents. This guarantees high stability of the operating 
+point over a wide range of temperatures, including cryogenic temperatures. 
+The channel schematic of the \dword{fe} \dword{asic} is shown in 
+Figure~\ref{fig:feasic1}. 
 
 \begin{dunefigure}
-[FE ASIC channel schematic]
+[\dword{fe} \dword{asic} channel schematic]
 {fig:feasic1}
-{Channel schematic of FE ASIC, which includes a dual-stage charge amplifier and a 5$^{th}$ order semi-Gaussian shaper with complex conjugate poles. Circuits in red circles are programmable to allow different gain and peaking time settings.}
+{Channel schematic of \dword{fe} \dword{asic}, which includes a 
+dual-stage charge amplifier and a \num{5}$^{th}$ order semi-Gaussian 
+shaper with complex conjugate poles. Circuits in red circles are 
+programmable to allow different gain and peaking time settings.}
 \includegraphics[width=0.99\linewidth]{sp-tpcelec-feasic-channelschematic.pdf}
 \end{dunefigure}
 
-Each \dword{fe} \dword{asic} channel has a dual-stage charge amplifier and a 5$^{th}$ order semi-Gaussian shaper as an anti-aliasing filter for the \dword{tpc} signals. It has a programmable gain selectable from one of 4.7, 7.8, 14, or 25mV/fC (corresponding to full-scale charge of 300, 180, 100, and 55 fC), a programmable peaking time selectable from one of 0.5, 1, 2, and 3 $\mu$s, and a programmable baseline for operation with either the collection ($\sim$200mV) or the induction ($\sim$900mV) wires. Each channel has an option to enable the output monitor to probe the analog signal, and an option to enable a high-performance output driver that can be used to drive a long cable. 
+Each \dword{fe} \dword{asic} channel has a dual-stage charge amplifier 
+and a \num{5}$^{th}$ order semi-Gaussian shaper as an anti-aliasing 
+filter for the \dword{tpc} signals. It has a programmable gain 
+selectable from one of \num{4.7}, \num{7.8}, \num{14}, or \SI{25}{mV/fC}
+(corresponding to full-scale charge of \num{300}, \num{180}, \num{100}, 
+and \SI{55}{C}), a programmable peaking time selectable from one of 
+\num{0.5}, \num{1}, \num{2}, and \SI{3}{$\mu$s}, and a programmable 
+baseline for operation with either the collection ($\sim$\SI{200}{mV}) 
+or the induction ($\sim$\SI{900}{mV}) wires. Each channel has an 
+option to enable the output monitor to probe the analog signal, and 
+an option to enable a high-performance output driver that can be 
+used to drive a long cable. 
 
-Each \dword{fe} \dword{asic} channel has a built-in charge calibration capacitor that can be enabled or disabled through a dedicated register. The injection capacitance has been measured using a calibrated external capacitor. The measurements show that the calibration capacitance is extremely stable, changing from 184 fF at room temperature to 183 fF at 77 K. This result and the measured stability of the peaking time demonstrate the high stability of the passive components as a function of temperature. Channel-to-channel and chip-to-chip variation in the calibration capacitor are typically less than 1\%.
+Each \dword{fe} \dword{asic} channel has a built-in charge calibration 
+capacitor that can be enabled or disabled through a dedicated register. 
+The injection capacitance has been measured using a calibrated external 
+capacitor. The measurements show that the calibration capacitance is 
+extremely stable, changing from \SI{184}{F} at room temperature to 
+\SI{183}{F} at \SI{77}{K}. This result and the measured stability of 
+the peaking time demonstrate the high stability of the passive 
+components as a function of temperature. Channel-to-channel and 
+chip-to-chip variation in the calibration capacitor are typically 
+less than \num{1}\%.
 
-Shared among the 16 channels in the \dword{fe} \dword{asic} are the digital interface, programming registers, a temperature monitor, and a band-gap reference monitor. We also can enable \dword{ac} coupling as mitigation of microphonics, a programmable bias current selectable from one of 0.1, 0.5, 1, or 5nA, as well as a programmable pulser generator with 6-bit \dword{dac} for calibration. 
+Shared among the \num{16} channels in the \dword{fe} \dword{asic} are 
+the digital interface, programming registers, a temperature monitor, 
+and a band-gap reference monitor. We also can enable \dword{ac} 
+coupling as mitigation of microphonics, a programmable bias current 
+selectable from one of \num{0.1}, \num{0.5}, \num{1}, or \SI{5}{nA}, 
+as well as a programmable pulser generator with a \num{6}-bit 
+\dword{dac} for calibration. 
 
-The power dissipation of \dword{fe} \dword{asic} is about 5.5mW per channel at 1.8V supply voltage with output buffer disabled. The \dword{asic} is packaged in a commercial, fully encapsulated plastic QFP 80 package. Figure~\ref{fig:feasic2} shows the response of \dword{fe} \dword{asic} for all gains and peaking times and both baselines. Note that the gain is independent of the peaking time; the same amount of charge produces the same peak voltage signal regardless of the peaking time.
+The power dissipation of \dword{fe} \dword{asic} is about \SI{5.5}{mW} 
+per channel at \SI{1.8}{V} supply voltage with output buffer disabled. 
+The \dword{asic} is packaged in a commercial, fully encapsulated 
+plastic \num{80} pin \dword{qfp}. Figure~\ref{fig:feasic2} shows the 
+response of \dword{fe} \dword{asic} for all gains and peaking times 
+and both baselines. Note that the gain is independent of the peaking 
+time; the same amount of charge produces the same peak voltage signal 
+regardless of the peaking time.
 
 \begin{dunefigure}
-[FE ASIC response and layout]
+[\dword{fe} \dword{asic} response and layout]
 {fig:feasic2}
-{Response of FE ASIC for four gains, four peaking times, and both baseline values (left); layout of 16-channel FE ASIC version P3, where revisions with reference to version P2 are highlighted in yellow boxes (right).}
+{Response of \dword{fe} \dword{asic} for four gains, four peaking times, 
+and both baseline values (left); layout of \num{16}-channel \dword{fe} 
+\dword{asic} version P3, where revisions with reference to version 
+P2 are highlighted in yellow boxes (right).}
 \includegraphics[width=0.53\linewidth]{sp-tpcelec-feasic-response.pdf}
 \hspace{6mm}
 \includegraphics[width=0.42\linewidth]{sp-tpcelec-feasic-layout.pdf}
 \end{dunefigure}
 
-Prototype version P2 \dword{fe} \dwords{asic} have been evaluated and characterized at room temperature and LN$_2$ (77 K) temperature. 960 P2 \dword{fe} \dwords{asic}, totaling 15,360 channels, have been used to instrument six \dword{pdsp} \dword{apa}s successfully. Excessive stress of package of \dword{fe} \dword{asic} in cryogenic temperature means \dword{fe} channels have a non-uniform baseline in collection mode, while the baseline DC voltage in induction mode is uniform. A new prototype, version P3, was fabricated in March 2018 to address this issue by making DC circuits for collection mode similar to the induction mode. At the same time, the default gain setting changed to 14mV/fC. The layout of P3 \dword{fe} \dword{asic} is shown in Figure \ref{fig:feasic2}, with modifications highlighted in yellow boxes. The P3 \dword{fe} \dwords{asic} were received and evaluated in September 2018, and both baseline in collection mode and default gain setting are working properly.
+Prototype version P2 \dword{fe} \dwords{asic} have been evaluated and 
+characterized at room temperature and \lntwo (\SI{77}{K}) temperature. 
+\num{960} P2 \dword{fe} \dwords{asic}, totaling \num{15,360} channels, 
+have been used to instrument six \dword{pdsp} \dword{apa}s successfully. 
+Excessive stress of package of \dword{fe} \dword{asic} in cryogenic 
+temperature means \dword{fe} channels have a non-uniform baseline in 
+collection mode, while the baseline \dword{dc} voltage in induction mode 
+is uniform. A new prototype, version P3, was fabricated in March 2018 
+to address this issue by making \dword{dc} circuits for collection mode 
+similar to the induction mode. At the same time, the default gain i
+setting was changed to \SI{14}{mV/fC}. The layout of P3 \dword{fe} 
+\dword{asic} is shown in Figure \ref{fig:feasic2}, with modifications 
+highlighted in yellow boxes. The P3 \dword{fe} \dwords{asic} were 
+received and evaluated in September 2018, and both baseline in collection 
+mode and default gain setting are working properly.
 
-P3 \dword{fe} \dword{asic} will be further evaluated on \dwords{femb} in various integration test stands for performance studies, including 40\% \dword{apa} at \dword{bnl}, \dword{iceberg} \dword{tpc} at \dword{fermilab} and \dword{apa}7 at CERN. Test results of P3 \dword{fe} \dword{asic} will guide the development of the next version P4 \dword{fe} \dword{asic}, which will be implemented single ended to differential (SE-DIFF) converter for interface to recently developed \dword{adc} \dword{asic}. During \dword{pdsp} operation, it was observed that the \dword{fe} \dwords{asic} may enter into a saturation mode when large amounts of charge ($>$ 50fC) collect in 10-50$\mu$s. This is being studied in the laboratory test stand, with the plan to address it in the P4 \dword{fe} \dword{asic} revision as well.
+\fixme{Expand the following part.}
+
+P3 \dword{fe} \dword{asic} will be further evaluated on \dwords{femb} 
+in various integration test stands for performance studies, including 
+the \num{40}\% \dword{apa} at \dword{bnl}, the \dword{iceberg} \dword{tpc} 
+at \dword{fermilab} and the \num{7}$^{th}$ \dword{protodune} \dword{apa} 
+in the cold box at \dword{cern}. Test results of P3 \dword{fe} \dword{asic} 
+will guide the development of the next version P4 \dword{fe} \dword{asic}, 
+which will be implemented a single ended to differential converter for 
+interface to recently developed \dword{coldadc}. During \dword{pdsp} 
+operation, it was observed that the \dword{fe} \dwords{asic} may enter 
+into a saturation mode when large amounts of charge ($>\SI{50}{fC}$) 
+are collected in \SIrange{10}{50}{$\mu$s}. This is being studied in 
+the laboratory test stand, with the plan to address it in the P4 
+\dword{fe} \dword{asic} revision as well.
 
 %%%%%%%%%%%%%%%%%%
-\subsubsection{ADC ASIC}
+\subsubsection{ADC \dword{asic}}
 \label{sec:fdsp-tpcelec-design-femb-adc}
 
 \dword{coldadc} is a low-noise \dword{adc} \dword{asic} designed to digitize
@@ -318,7 +426,7 @@ when they are available.  These will include measurements of performance and
 also power consumption.
 
 %%%%%%%%%%%%%%%%%%
-\subsubsection{COLDATA ASIC}
+\subsubsection{COLDATA \dword{asic}}
 \label{sec:fdsp-tpcelec-design-femb-coldata}
 
 The \dword{coldata} \dword{asic} was designed by engineers from \dword{fermilab} 
@@ -624,7 +732,7 @@ plan is to evaluate this \dword{adc} in the small \dword{tpc}
 \end{dunefigure}
 
 %%%%%%%%%%%%%%%%%%
-\subsubsection{Procedure and Timeline for ASIC Selection}
+\subsubsection{Procedure and Timeline for \dword{asic} Selection}
 \label{sec:fdsp-tpcelec-design-femb-selection}
 
 We are currently pursuing two different \dword{asic} designs
@@ -812,8 +920,8 @@ The \dword{spmod} timing system, described in Section~\ref{sec:sp-daq:design-tim
 
 The \dword{ptc} also receives \SI{48}{V} \dword{lv} power for all cold
 electronics connected through the \dword{tpc} signal flange: one \dword{ptc}, five \dwords{wib}, and \num{20}~\dwords{femb}. The \dword{lv} power is then stepped down
-to \SI{12}{V} via a DC-DC converter onboard the \dword{ptc}. The output of the \dword{ptc} converters is filtered with a common-mode choke and fanned out
-on the PTB to each \dword{wib}, which provides the necessary \SI{12}{V} DC-DC conversions and fans
+to \SI{12}{V} via a \dword{dc}-\dword{dc} converter onboard the \dword{ptc}. The output of the \dword{ptc} converters is filtered with a common-mode choke and fanned out
+on the PTB to each \dword{wib}, which provides the necessary \SI{12}{V} \dword{dc}-\dword{dc} conversions and fans
 the \dword{lv} power out to each of the cold \dwords{femb} supplied by that \dword{wib} 
 as shown in Figure~\ref{fig:tpcelec-wib-power}. The output of the \dword{wib} converters is further filtered by a common-mode choke. Most of the power drawn by a full flange is dissipated in the \dword{lar} by the cold \dword{femb}.
 
@@ -829,7 +937,7 @@ each \dword{ce} system for each \dword{apa} is a complete, stand-alone readout u
 inside the cryostat, and the \dwords{wib} and \dword{ptc} are shielded inside the Faraday cage of the warm interface
 electronics crate, with only shielded power cables and optical fibers connecting to external systems.
 
-As shown in Figure~\ref{fig:tpcelec-dune-wib}, the \dword{wib} can receive \dword{lv} power in the front panel and distribute it directly to the \dword{femb}, bypassing all DC/DC converters.
+As shown in Figure~\ref{fig:tpcelec-dune-wib}, the \dword{wib} can receive \dword{lv} power in the front panel and distribute it directly to the \dword{femb}, bypassing all \dword{dc}-\dword{dc} converters.
 It can also receive the encoded system timing signals over bi-directional optical
 fibers on the front panel and process them using either
 the on-board \dword{fpga} or clock synthesizer chip to provide the clock required by the \dword{ce}.
