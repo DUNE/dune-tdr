@@ -49,11 +49,21 @@ electrical connection to the \dword{apa} frame.
 \subsection{Distribution of Bias Voltages}
 \label{sec:fdsp-tpcelec-design-bias}
 
-\fixme{We are going to try to minimize the overlap of this 
-section with the corresponding section in the APA chapter 
-to avoid repetition. Refer to APA section and strictly discuss 
-parts necessary to explain coupling between wires and 
-readout that is done to minimize cross-talk.}
+\fixme{Marco: there is some overlap between this section and
+section 2.2.5.2 in the APA chapter. The emphasis in the two
+description is different and I think it is fine to have some
+repetition. There is however a problem with the value of 
+resistances and capacitors that is not the same in the two
+sections, and the picture here is also inconsistent. This will
+be fixed before releasing the TDR to the LBNC.}
+
+\fixme{APA: resistors are 50 MOhm for the wires, 2 MOhm for
+the bias, capacitors are 3.9 nF for the wires, 39 nF for the
+bias. The bill of material for the CR boards does not give the
+same values. CE: 50 MOhm for the wires, 2.2 MOhm for the
+bias, capacitors are 4.7 nF for the wires, 47 nF for the bias.
+The figure has 47 nF written as 50 nF. To say the least there
+is some confusion.}
 
 Each side of an \dword{apa} includes four wire layers, as 
 described in Section~\ref{sec:fdsp-apa-design}. Electrons passing 
@@ -65,15 +75,24 @@ and are given in Section~\ref{sec:fdsp-apa-design}.
 The filtering of wire bias voltages and the \dword{ac} coupling 
 of wire signals passing onto the charge amplifier circuits is 
 done on \dword{cr} boards that plug in between the \dword{apa} 
-wire-board stacks and \dwords{femb}. Each \dword{cr} board 
-includes single RC-filters for the $X$- and $U$-plane wire 
-bias voltages. In addition, each board has \num{48} pairs of 
-bias resistors and \dword{ac} coupling capacitors for $X$-plane 
-wires, and \num{40} pairs for the $U$-plane wires. The coupling 
-capacitors block \dword{dc} levels while passing \dword{ac} 
-signals to the \dword{ce} motherboards.  A schematic diagram 
-of the \dword{pdsp} \dword{apa} wire bias subsystem is in 
-Figure~\ref{fig:CR-board}.
+wire-board stacks and \dwords{femb}. The \dword{cr} boards
+have already been described in Section~\ref{sec:crboards},
+and here we focus on the rationale for the choice of the
+value of resistances and capacitors and their impact on the
+wire signals. Each \dword{cr} board includes single RC-filters 
+for the $X$- and $U$-plane wire bias voltages, while the $V$-plane 
+wires are directly connected to ground. In addition, each board 
+has \num{48} pairs of bias resistors and \dword{ac} coupling 
+capacitors for $X$-plane wires, and \num{40} pairs for the $U$-plane 
+wires. The coupling capacitors block \dword{dc} levels while passing \dword{ac} 
+signals to the \dwords{femb}. On the \dwords{femb} there are clamping
+diodes that limit the input voltage received at the amplifier
+circuits to between \SI{1.8}{V}\,$\pm$\,U$_D$, where U$_D$
+is the breakdown voltage of the diode, approximately \SI{0.7}{V}.
+The amplifier circuit has a \SI{22}{nF} coupling capacitor at
+input to avoid leakage current from the protection clamping diodes.
+A schematic diagram of the \dword{pdsp} \dword{apa} wire bias 
+subsystem is in Figure~\ref{fig:CR-board}.
 
 \begin{dunefigure}
 [\dword{pdsp} \dword{apa} wire bias schematic diagram, including the \dword{cr} board.]
@@ -81,15 +100,6 @@ Figure~\ref{fig:CR-board}.
 {\dword{pdsp} \dword{apa} wire bias schematic diagram including the \dword{cr} board.}
 \includegraphics[width=0.8\linewidth]{sp-tpcelec-cr-board.pdf}
 \end{dunefigure}
-
-\fixme{Move Figure~\ref{fig:CR-board} to APA chapter, and replace with simplified 
-picture focusing on wire cross-talk?}
-
-Clamping diodes limit the input voltage received at the amplifier 
-circuits to between \SI{1.8}{V}\,$\pm$\,U$_D$, where U$_D$
-is the breakdown voltage of the diode, approximately \SI{0.7}{V}.
-The amplifier circuit has a \SI{22}{nF} coupling capacitor at 
-input to avoid leakage current from the protection clamping diodes. 
 
 Bias resistance values should be at least \SI{20}{\mega\ohm} to 
 maintain negligible noise contributions. The higher value helps 
@@ -100,18 +110,19 @@ is small and easily correctable. However, leakage currents can
 develop on \dword{pcb} that are exposed to high voltages over 
 extended periods. If the bias resistors are much greater than 
 \SI{50}{\mega\ohm}, leakage currents may affect the bias voltages 
-applied to the wires. The target value of \SI{50}{\mega\ohm} 
-was used in \dword{pdsp}.
+applied to the wires. As discussed in Section~\ref{sec:crboards},
+the bias resistance value is \SI{50}{\mega\ohm}, while the 
+\dword{dc}-blocking capacitors on each wire have a value of
+\SI{3.9}{nF}. This gives a time constant of \SI{0.2}{s} that
+is much larger than the drift time for electrons from tracks
+passing near the cathode.
 
 The bias-voltage filters are RC low-pass networks. Resistance 
 values should be much smaller than the bias resistances to control 
 cross-talk between wires and limit the voltage drop if any of the 
-wires becomes shorted to the \dword{apa} frame. The value of 
-\SI{2.2}{\mega\ohm} was used in \dword{pdsp}. Smaller values may 
-be considered for the \dword{spmod} although a larger filter 
-capacitor would be required to maintain a given level of noise 
-reduction. The target value of \SI{47}{nF} was used in \dword{pdsp} 
-for the filter capacitors.
+wires becomes shorted to the \dword{apa} frame. As discussed
+in Section~\ref{sec:crboards}, these resistors have a resistance
+\SI{2.2}{\mega\ohm}, while the bias filter capacitors are \SI{39}{nF}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Front End Motherboard}
