@@ -1,14 +1,69 @@
 \section{System Design}
 \label{sec:fdsp-tpcelec-design}
-\fixme{A brief introduction here would help with the logical 
-development of the document.}
+
+In order to keep the overall noise of the readout of the \dword{apa}
+wires' planes, all possible sources of noise need to be kept to a
+minimum. This requires not only minimizing the noise sources in each
+of the component of the readout chain of the \dword{apa} wires, like
+the \dword{fe} amplifier noise. It also requires that all system aspects
+are taken into account, including avoiding channelling noise inside
+the cryostat through ground connections and through the readout
+chain of other detector components, like the \dword{pds}, the \dword{hvs},
+or the cryogenic instrumentation. In this Section we describe,the overall
+system design of the \dword{ce}, starting in
+\ref{sec:fdsp-tpcelec-design-grounding} with a description of the
+grounding and shielding scheme adopted in the \dword{dune} \dword{spmod}
+to minimize the overall noise in the detector, followed in
+\ref{sec:fdsp-tpcelec-design-bias} by a discussion of the bias
+voltage distribution system. Later, we describe in 
+\ref{sec:fdsp-tpcelec-design-femb} the \dwords{femb}, including
+the design of the \dwords{asic} that are being considered for
+use in \dword{dune}. In~\ref{sec:fdsp-tpcelec-design-infrastructure}
+we discuss the infrastructure for the \dword{ce} inside the cryostat,
+that includes the cold boxes that shield the \dwords{femb}, the
+cold cables, and the cables trays. Then in
+\ref{sec:fdsp-tpcelec-design-ft}-\ref{sec:fdsp-tpcelec-design-timing} we discuss 
+the infrastructure on the top of the cryostat, including the
+feedthroughs, the \dwords{wiec}, the timing distribution and
+synchronization system, and the services that provide the low
+voltage power and the bias voltage to the \dword{ce}. Finally,
+we conclude in~\ref{sec:fdsp-tpcelec-overview-remaining}
+with a discussion of the design maturity and of
+the remaining prototype activities that are required prior to
+the beginning of he detector construction. Other aspects of
+the system design, pertaining to the grounding of other 
+detector components, are discussed in Section~\ref{sec:fdsp-tpcelec-interfaces}.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Grounding and Shielding}
 \label{sec:fdsp-tpcelec-design-grounding}
 
-\fixme{Needs input from ProtoDUNE studies; specifically, problems 
-with external noises during ProtoDUNE commissioning, and remaining 
-sources of noise that are being investigated}
+The overall approach to minimize the system noise in \dword{dune}
+relies on avoiding noise induced by penetrations in the cryostat
+and on the readout electronics located on the detector. It also
+requires the currents caused by any apparatur or machinery outside 
+the detector are prevented from coming in through ground loops, of
+which the cryostat and the \dword{ce} are a part, and that the
+detector is shielded by a well design Faraday cage. This approach
+is discussed in detail in~\cite{radekaNoise}. 
+
+During the commissioning of \dword{pdsp}, violation of these
+grounding rules have been observed with one of the readout
+boards for the \dword{pdsp}, and with the cameras immersed
+inside the \lar. The power supply used to provide the high
+voltage to the drift chamber cathode has also been observed
+to cause noise inside the detector and has been replaced.
+As mentioned in Section~\ref{sec:fdsp-tpcelec-overview-lessons}
+the low voltage regulators on the \dwords{femb} also give
+a small contribution to the total readout noise. The overall 
+success of \dword{pdsp} owes much to the fact that the
+grounding rules described here were properly implemented
+and that any violation was discovered and addressed during
+the commissioning. As discussed in \ref{sec:fdsp-tpcelec-overview-pdune}
+the initial results from the online monitoring and the
+analysis of the \dword{pdsp} indicate that the system
+noise requirements for the \dword{dune} \dword{spmod}
+can be met.
 
 To minimize system noise, the \dword{ce} cables for each \dword{apa} 
 enter the cryostat through a single \dword{ce} flange, as shown in 
@@ -22,12 +77,13 @@ connected to both the ground plane of the \dword{femb} and to the
 \dword{tpc} signal flange.
 
 The only location where this integrated unit makes electrical contact 
-with the cryostat, which defines the detector ground, is at a single 
-point on the \dword{ce} \fdth board in the \dword{tpc} signal flange 
-where the cables exit the cryostat. Mechanical suspension of the 
-\dword{apa}s is accomplished using insulated supports. To avoid 
-structural ground loops, the \dword{apa} frames described in 
-Chapter~\ref{ch:fdsp-apa} are insulated from each other.
+with the cryostat, which defines the detector ground and acts as a 
+Faraday cage, is at a single point on the \dword{ce} \fdth board in 
+the \dword{tpc} signal flange where the cables exit the cryostat. 
+Mechanical suspension of the \dword{apa}s is accomplished using 
+insulated supports. To avoid structural ground loops, the \dword{apa} 
+frames described in Chapter~\ref{ch:fdsp-apa} are insulated from 
+each other.
 
 Filtering circuits for the \dword{apa} wire-bias voltages are 
 locally referenced to the ground plane of the \dwords{femb} 
@@ -54,16 +110,10 @@ section 2.2.5.2 in the APA chapter. The emphasis in the two
 description is different and I think it is fine to have some
 repetition. There is however a problem with the value of 
 resistances and capacitors that is not the same in the two
-sections, and the picture here is also inconsistent. This will
-be fixed before releasing the TDR to the LBNC.}
-
-\fixme{APA: resistors are 50 MOhm for the wires, 2 MOhm for
-the bias, capacitors are 3.9 nF for the wires, 39 nF for the
-bias. The bill of material for the CR boards does not give the
-same values. CE: 50 MOhm for the wires, 2.2 MOhm for the
-bias, capacitors are 4.7 nF for the wires, 47 nF for the bias.
-The figure has 47 nF written as 50 nF. To say the least there
-is some confusion.}
+sections, and the picture here is also inconsistent. We have
+discussed the issue with the APA group and will update the
+values of resistances and capacitors in the text and in the
+figure prior to submitting the TDR chapter to the LBNC.}
 
 Each side of an \dword{apa} includes four wire layers, as 
 described in Section~\ref{sec:fdsp-apa-design}. Electrons passing 
@@ -128,15 +178,6 @@ in Section~\ref{sec:crboards}, these resistors have a resistance
 \subsection{Front End Motherboard}
 \label{sec:fdsp-tpcelec-design-femb}
 
-\fixme{FEMB description needs to be dramatically expanded for 
-the second draft of the TDR. A lot of information is missing.}
-
-\fixme{The text under 1.2.3.1 (Overview) could be used as the 
-introduction to section 1.2.3 (Front End Motherboard.}
-%%%%%%%%%%%%%%%%%%
-\subsubsection{Overview}
-\label{sec:fdsp-tpcelec-design-femb-overview}
-
 Each \dword{apa} is instrumented with \num{20} \dwords{femb}.
 The \dwords{femb} plug into the \dword{apa} \dword{cr} boards, 
 making the connections from the wires to the charge amplifier 
@@ -147,22 +188,34 @@ The baseline \dword{femb} design contains eight \num{16}-channel
 \dword{coldadc} \dwords{asic}, and two \dword{coldata} control and 
 communication \dwords{asic} (see Figure~\ref{fig:ce-scheme}).
 The \dword{femb} also contains regulators that produce the voltages 
-required by the \dwords{asic} and filter those voltages.
+required by the \dwords{asic} and filter those voltages, and 
+a micro-electromechanical system oscillator that is used to
+filter out the jitter from the clock received from the \dword{wib}.
 The \dword{larasic} inputs are protected by diodes and a series inductor.
+
+\fixme{FEMB description needs to be dramatically expanded for 
+the second draft of the TDR. A lot of information is missing.}
 
 \begin{dunefigure}
 [The baseline \dword{ce} architecture.]
 {fig:ce-scheme}
 {The baseline \dword{ce} architecture. The basic unit is the 
-\num{128}-channel \dword{femb}. Note that only one \dword{ce} 
-flange is shown to simplify the illustration. Note that \dword{ssp} 
-stands for \textit{SiPM Signal Processor} (see Chapter~\ref{ch:fdsp-pd}).}
+128-channel \dword{femb}. The scheme includes also the 
+\dwords{sipm} used for the readout of the photon detectors}
 \includegraphics[width=0.9\linewidth,angle=90]{sp-tpcelec-schematic-v3.pdf}
 \end{dunefigure}
 
 The \dword{pdsp} version of the \dword{femb} (which uses a single 
 \dword{fpga} on a mezzanine card instead of two \dword{coldata} 
-\dwords{asic}) is shown in Figure~\ref{fig:femb}.
+\dwords{asic}) is shown in Figure~\ref{fig:femb}. In the rest of
+this section we describe the \dwords{asic} that can be insalled
+on the \dwords{femb} and discuss the procedure that will be 
+followed to choose the \dword{asic} solution to be implemented
+for the \dword{dune} \dword{spmod} construction. In addition to
+describing \dword{larasic}, \dword{coldadc}, and \dword{coldata},
+we also discuss two alternative solutions, one based on a 
+\dword{cots} \dword{adc}, and one where the functionality of the
+three \dwords{asic} is implemented in a single chip, \dword{cryo}.
 
 \begin{dunefigure}
 [The complete \dword{femb} assembly as used in \dword{pdsp}.]
@@ -571,7 +624,7 @@ character (K28.1) will be sent between each ``Frame-15.'' A series of 8b/10b
 command characters (K28.5) is sent at the end of each frame of \num{12}-bit or 
 \num{14}-bit data to ensure synchronization of the high speed links.
 
-The serializers and output drivers use clocks derived from a micro-mechanical
+The serializers and output drivers use clocks derived from a micro-electromechanical
 system oscillator on the \dword{femb}. A single \dword{pll} generates a 
 \SI{1.28}{GHz} clock for both serializers and output drivers. The \num{10}-bit
 serializers are implemented using two \num{5}:\num{1} multiplexers (clocked at \SI{128}{MHz}) 
