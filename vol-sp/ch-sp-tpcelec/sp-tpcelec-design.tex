@@ -720,98 +720,6 @@ The eye diagram is more open at cryogenic temperature.}
 \includegraphics[width=0.8\linewidth]{sp-tpcelec-128Gbpseyesim.png}
 \end{dunefigure}
 
-
-%%%%%%%%%
-\subsubsubsection{CRYO Option}
-\label{sec:fdsp-tpcelec-design-femb-alt-cryo}
-
-The \dword{slac} \dword{cryo} \dword{asic} differs from the baseline 
-three-chip design by combining the functions of an analog 
-preamplifier, \dword{adc}, and data serialization and transmission 
-for \num{64}~wire channels into a single chip. It is based on a design 
-developed for the \dword{nexo} experiment~\cite{nEXO} and differs from 
-it only in the design of the preamplifier, which is modified for the 
-higher capacitance of the \dword{dune} \dword{spmod} wires compared 
-to the small pads of \dword{nexo}. The \dwords{femb} constructed using 
-this chip would use only two \dwords{asic}, compared to the \num{18} 
-(eight~\dword{fe}, eight~\dword{adc} and two~\dword{coldata}) needed 
-in the baseline design. This drastic reduction in part count may 
-significantly improve \dword{femb} reliability, reduce power, and reduce 
-costs related to production and testing. 
-
-Figure~\ref{fig:cryo-architecture} shows the overall architecture of 
-the \dword{cryo} \dword{asic}, which will be implemented in 
-\SI{130}{nm} \dword{cmos}. It comprises two identical, \num{32}-channel 
-blocks. The current signal from each wire is amplified using a preamplifier 
-with pole zero cancellation and an anti-alias fifth-order Bessel filter. 
-Provisions are also made for injection of test pulses. Gain and peaking 
-time are adjustable to values similar to those of the baseline design.
-
-\begin{dunefigure}
-[Overall architecture of the CRYO \dword{asic}.]
-{fig:cryo-architecture}
-{Overall architecture of the CRYO \dword{asic}.}
-\includegraphics[width=0.8\textwidth]{sp-tpcelec-cryo-schematic.png}
-\end{dunefigure}
-
-The \dword{adc} uses \SI{8}{MHz} \dword{sar}, so four input channels are 
-multiplexed onto a single \dword{adc}. The data serialization and transmission 
-block uses a custom 12b/14b encoder, so \num{32} channels of \num{12}-bit, 
-\SI{{\sim}2}{MHz} data can be transmitted with a digital bandwidth of 
-only \SI{896}{Mbps}, which is significantly less than the required bandwidth 
-of the baseline, which is \SI{1.28}{Gbps}.
-
-One key concern with mixed signal \dwords{asic} is the possibility of 
-interference from the digital side causing noise on the very sensitive preamplifier. 
-Fortunately, well established techniques for isolating substrate are 
-described in the literature~\cite{yeh}, which have been successfully 
-used in previous \dwords{asic} produced by the \dword{slac} group.
-
-The infrastructure requirements for a \dword{cryo} \dword{asic}-based 
-system are similar to those of the baseline option. However, in most 
-cases, somewhat fewer resources are needed.
-\begin{itemize}
-\item{A single voltage is needed for the power supply. This is used to 
-generate two supply voltages using internal voltage regulators.}
-\item{The output digital bandwidth on each of the four lines in an 
-\dword{femb} is \SI{896}{Mbps}. This is lower than the baseline option 
-because of the custom 12b/14b encoder of the \dword{cryo} chip.}
-\item{The warm interface is different. Only a single clock is 
-needed (\SI{56}{MHz}), and the configuration protocol is the 
-\dword{saci}~\cite{SACI} rather than \dword{i2c}.}
-\end{itemize}
-
-The first iteration of the \dword{cryo} \dword{asic} design was 
-submitted to MOSIS~\cite{mosis} for fabrication in November 2018.  
-The first prototypes should arrive in January 2019. Simulation-based 
-studies have already been performed; at \SI{0.8}{\micro\second} peaking 
-time and an input capacitance of \SI{200}{pF} (similar to that expected 
-in the \dword{dune} \dword{spmod}), the \dword{enc} is approximately 
-\num{500}\,e$^-$.  This noise level is similar to that expected with the 
-baseline \dword{fe} and \dword{adc} \dword{asic} design in \dword{lar} 
-with the same input capacitance.  They will first be tested in an existing 
-test stand at \dword{slac}. Subsequent tests are planned for a small test 
-\dword{tpc} at \dword{fermilab} and on an \dword{apa} in the \dword{pdsp} 
-cold box; these test facilities are described in 
-Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
-
-In February 2019, stand-alone tests of the \dword{cryo} \dword{asic} 
-will begin. In addition to standard bringing up tests, measurements i
-of noise (\dword{enc}), linearity (effective number of bits, or \dword{enob} 
-for short), and bit-error rate will be performed. Figure~\ref{fig:cryo-results} 
-shows placeholder plots of the type that will be produced in the initial 
-stand-alone tests.
-
-\begin{dunefigure}
-[Results of stand-alone tests of the CRYO \dword{asic}.]
-{fig:cryo-results}
-{Results of stand-alone tests of the CRYO \dword{asic}. The top row shows 
-noise levels in \dword{enc} measured for each channel at room temperature 
-(left) and liquid nitrogen temperature (right). The bottom row shows the 
-measured linearity for each channel in terms of \dword{enob}.}
-\includegraphics[width=0.8\textwidth]{sp-tpcelec-cryo-results.png}
-\end{dunefigure}
-
 %%%%%%%%%
 \subsubsubsection{Commercial off the Shelf ADC Option}
 \label{sec:fdsp-tpcelec-design-femb-alt-cots}
@@ -822,7 +730,7 @@ for the \dword{tpc} readout electronics development since Spring
 in \dword{sar} architecture were identified with 100\% cold yield. Since 
 July 2017, a lifetime study plan was developed to evaluate \dword{cots} 
 \dword{adc} in two different phases: exploratory and validation. The 
-lifetime study focused on the Analog Devices~\cite{AnalogDevices} AD7274 
+lifetime study focused on the Analog Devices~\cite{AnalogDevices} AD7274~\cite{AD7274}
 implemented in \dword{tsmc} \SI{350}{nm} \dword{cmos} technology given 
 the optimum performance in cryogenic operation compared to other candidates.
 
@@ -838,7 +746,7 @@ of \num{1}\% on the V$_{DD}$ be used as the degradation criterion for the lifeti
 study. In the validation phase, more devices were tested following the developed 
 criteria to collect more data to validate what was learned in the exploratory phase.
 
-The lifetime projection of \dword{cots} \dword{adc} AD7274 from the stress 
+The lifetime projection of the AD7274 \dword{adc} from the stress 
 test with V$_{DD} >$ \SI{5}{V} is shown in Figure~\ref{fig:cotsadc-lifetime}. 
 With the AD7274 operated at \SI{2.5}{V}, which is lower than the nominal 
 \SI{3.6}{V} for the \SI{350}{nm} \dword{cmos} technology, the projected lifetime 
@@ -866,7 +774,7 @@ The \dword{cots} \dword{adc} AD7274 serves as a backup solution for the
 plan is to evaluate this \dword{adc} in the small \dword{tpc} 
 \dword{iceberg} at \dword{fermilab}. Ten \dwords{femb} with \dword{cots} 
 \dword{adc} are being produced and will be used to instrument \dword{iceberg} 
-\dword{tpc} for system integration tests in early 2019. 
+\dword{tpc} for system integration tests in Spring 2019. 
 
 \begin{dunefigure}
 [Noise measurement of \dwords{femb} with \dword{cots} \dword{adc}]
@@ -879,6 +787,79 @@ peaking time, and the collection plane (\SI{2.8}{m} wire) has noise
 $\sim\SI{330}{e^-}$ with \SI{1}{$\mu$s} peaking time.}
 \includegraphics[width=0.99\linewidth]{sp-tpcelec-cotsadc-fembenc.pdf}
 \end{dunefigure}
+
+
+%%%%%%%%%
+\subsubsubsection{CRYO Option}
+\label{sec:fdsp-tpcelec-design-femb-alt-cryo}
+
+The \dword{slac} \dword{cryo} \dword{asic} differs from the baseline 
+three-chip design by combining the functions of an analog 
+preamplifier, \dword{adc}, and data serialization and transmission 
+for \num{64}~wire channels into a single chip. It is based on a design 
+developed for the \dword{nexo} experiment~\cite{nEXO} and differs from 
+it only in the design of the preamplifier, which is modified for the 
+higher capacitance of the \dword{dune} \dword{spmod} wires compared 
+to the small pads of \dword{nexo}. The \dwords{femb} constructed using 
+this chip would use only two \dwords{asic}, compared to the \num{18} 
+(eight~\dword{fe}, eight~\dword{adc} and two~\dword{coldata}) needed 
+in the baseline design. This drastic reduction in part count may 
+significantly improve \dword{femb} reliability, reduce power, and reduce 
+costs related to production and testing. 
+
+Figure~\ref{fig:cryo-architecture} shows the overall architecture of 
+the \dword{cryo} \dword{asic}, which is implemented in 
+\SI{130}{nm} \dword{cmos}. It comprises two identical, \num{32}-channel 
+blocks. The current signal from each wire is amplified using a preamplifier 
+with pole zero cancellation and an anti-alias fifth-order Bessel filter. 
+Provisions are also made for injection of test pulses. Gain and peaking 
+time are adjustable to values similar to those of the baseline design.
+
+\begin{dunefigure}
+[Overall architecture of the CRYO \dword{asic}.]
+{fig:cryo-architecture}
+{Overall architecture of the CRYO \dword{asic}.}
+\includegraphics[width=0.8\textwidth]{sp-tpcelec-cryo-schematic.png}
+\end{dunefigure}
+
+The \dword{adc} uses \SI{8}{MHz} \dword{sar}, so four input channels are 
+multiplexed onto a single \dword{adc}. The data serialization and transmission 
+block uses a custom 12b/14b encoder, so \num{32} channels of \num{12}-bit, 
+\SI{{\sim}2}{MHz} data can be transmitted with a digital bandwidth of 
+only \SI{896}{Mbps}, which is significantly less than the required bandwidth 
+of the baseline, which is \SI{1.28}{Gbps}.
+
+One key concern with mixed signal \dwords{asic} is the possibility of 
+interference from the digital side causing noise on the very sensitive 
+preamplifier. To avoid this interference, the \dword{cryo} design 
+uses well established techniques for isolating the substrate, that are 
+described in the literature~\cite{yeh} and that have been successfully 
+used in previous \dwords{asic}.
+
+The infrastructure requirements for a \dword{cryo} \dword{asic}-based 
+system are similar to those of the baseline option. However, in most 
+cases, somewhat fewer resources are needed.
+\begin{itemize}
+\item{A single voltage is needed for the power supply. This is used to 
+generate two supply voltages using internal voltage regulators.}
+\item{The warm interface is different. Only a single clock is 
+needed (\SI{56}{MHz}), and the configuration protocol is the 
+\dword{saci}~\cite{SACI} rather than \dword{i2c}.}
+\end{itemize}
+
+The first iteration of the \dword{cryo} \dword{asic} design was 
+submitted to MOSIS~\cite{mosis} for fabrication in November 2018.  
+The first prototypes have been delivered at the end of January 2019. Simulation-based 
+studies have already been performed; at \SI{0.8}{\micro\second} peaking 
+time and an input capacitance of \SI{200}{pF} (similar to that expected 
+in the \dword{dune} \dword{spmod}), the noise level is approximately 
+\num{500}\,e$^-$, similar to that expected with the 
+baseline \dword{fe} and \dword{adc} \dword{asic} design in \dword{lar} 
+with the same input capacitance.  They will first be tested in an existing 
+test stand at \dword{slac}. Subsequent tests are planned for a small test 
+\dword{tpc} at \dword{fermilab} and on an \dword{apa} in the \dword{pdsp} 
+cold box; these test facilities are described in 
+Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
 
 %%%%%%%%%%%%%%%%%%
 \subsubsection{Procedure and Timeline for \dword{asic} Selection}
@@ -941,12 +922,16 @@ illustrated in Figure~\ref{fig:ce-box}, is designed to make the
 electrical connection between the \dword{femb} and the \dword{apa} 
 frame, as defined in Section~\ref{sec:fdsp-tpcelec-design-grounding}.
 Mounting hardware inside the \dword{ce} box connects the ground plane 
-of the \dword{femb} to the box casing.
-
-\fixme{mention the test setup at BNL to measure the max
-power that can be dissipated in liquid argon under a 
-12m pressure to understand whether there could be bubble
-formation.}
+of the \dword{femb} to the box casing. If argon bubbles are formed inside
+the \dword{ce} box, these should be channeled through the two side
+\dword{apa} frames, where they would reach the top of the cryostat.
+A test setup is being prepared at \dword{bnl} to measure the
+maximum power that can be dissipated in \dword{lar} at a
+depth equivalent to those of the \dwords{femb} installed on
+the bottom \dword{apa}. Together with measurements of the
+power consumption by new \dwords{asic} this will inform
+the need for further design of a system to collect any
+argon bubbles and channel them through the \dword{apa} frames.
 
 \begin{dunefigure}
 [Prototype \dword{ce} box used in \dword{pdsp}.]
@@ -963,9 +948,6 @@ which also terminate to ground at the \dword{apa} frame, as
 shown in Figure~\ref{fig:CR-board}. As a backup, the casing is 
 also connected to the \dword{apa} frame via a twisted conducting wire.
 
-\fixme{make sure that the text is updated and compatible with
-what is said in the APA chapter}
-
 In addition to the \dword{ce} box and mounting hardware, cable trays 
 for support and routing the cold cables will be installed in the 
 cryostat. One set of cable trays, shown in Figure~\ref{fig:trays} 
@@ -978,14 +960,8 @@ installed inside the cryostat after the \dword{apa}s are
 fixed in their final location to support the cables as they are 
 routed to the \dword{ce} and \dword{pd} feedthroughs.
 
-\fixme{entry in list of figures is too long}
 \begin{dunefigure}
-[Side and end views of mechanical supports for the \dword{ce} 
-xBoxes on the upper (left column) and lower (right column) 
-\dword{apa}s. Shown are the APA cable trays in green and pink, 
-the CE Boxes in dark gray, and the Omega brackets and mounting 
-hardware between the CE Boxes and APA frame in light gray. 
-The CE cables are shown in blue; the PD cables are not shown.]
+[Views of various cable and \dword{ce} cold boxes supports.]
 {fig:trays}
 {Side and end views of mechanical supports for the \dword{ce} 
 Boxes on the upper (left column) and lower (right column) 
@@ -1000,6 +976,8 @@ The CE cables are shown in blue; the PD cables are not shown.}
 \hspace{5mm}
 \includegraphics[width=0.4\linewidth]{sp-tpcelec-lower-tray1.png}
 \end{dunefigure}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Cold Electronics Feedthroughs}
@@ -1090,7 +1068,7 @@ local power control at the flange and a real-time diagnostic readout.
 They are housed in the \dwords{wiec} attached directly to the \dword{ce} 
 flange.  The \dword{wiec} shown in Figure~\ref{fig:tpcelec-flange} 
 contains one power and timing card (\dword{ptc}), five warm interface 
-boards (\dwords{wib}) and a passive power and timing backplane (PTB), 
+boards (\dwords{wib}) and a passive \dword{ptb}
 which fans out signals and \dword{lv} power from the \dword{ptc} to the 
 \dwords{wib}. The \dword{wiec} must provide Faraday-shielded housing, 
 robust ground connections from the \dwords{wib} to the detector ground 
@@ -1120,12 +1098,10 @@ between the compression plate on the cold side and sockets for
 the \dword{wib} on the warm side. Cable strain relief for the cold cables is 
 supported from the back end of the \fdth.
 
-\fixme{Define PTB}
-
 The \dword{pdsp} \dword{ptc} provides a bidirectional fiber interface to the
 timing system. The clock and data streams are separately fanned out to the 
 five \dwords{wib} as shown in Figure~\ref{fig:tpcelec-wib-timing}. The 
-\dword{ptc} fans the clocks out to the \dword{wib} over the PTB, which is a 
+\dword{ptc} fans the clocks out to the \dword{wib} over the \dword{ptb}, which is a 
 passive backplane attached directly to the \dword{ptc} and
 \dwords{wib}.  The received clock on the \dword{wib} is separated into clock and
 data using a clock-data separator. Timing endpoint firmware to receive and transmit
@@ -1150,7 +1126,7 @@ one \dword{ptc}, five \dwords{wib}, and \num{20}~\dwords{femb}.
 The \dword{lv} power is then stepped down to \SI{12}{V} via 
 a \dword{dc}-\dword{dc} converter onboard the \dword{ptc}. The output 
 of the \dword{ptc} converters is filtered with a common-mode choke 
-and fanned out on the PTB to each \dword{wib}, which provides the 
+and fanned out on the \dword{ptb} to each \dword{wib}, which provides the 
 necessary \SI{12}{V} \dword{dc}-\dword{dc} conversions and fans
 the \dword{lv} power out to each of the cold \dwords{femb} supplied 
 by that \dword{wib} as shown in Figure~\ref{fig:tpcelec-wib-power}. 
@@ -1333,6 +1309,12 @@ cables for the sense. The primary protection is the over-current
 protection circuit in the \dword{lv} supply modules, which is set 
 higher than the \SI{20}{A} current draw of the \dword{wiec}. 
 Secondary sense line fusing is provided on the \dword{ptc}.  
+Tests are being performed in \dword{pdsp} to check which is the
+best scheme for connecting the shields of the power cables. Most 
+data was collected with the shield connected to ground on the 
+power supply side, but tests are also planned with the shield
+connected to ground on the \dword{wiec} side, and with both
+connections.
 
 An additional \SI{18}{V} linear power supply will provide power to the 
 cooling fans for the \dword{wiec}. It will be interlocked to the 48V 
@@ -1419,7 +1401,7 @@ construction schedule.
 \begin{dunetable}
 [Status of the design of the different CE detector components]
 {p{0.30\textwidth}p{0.15\textwidth}p{0.40\textwidth}}
-{tab:SPCE:disorientates}
+{tab:SPCE:designstatus}
 {Status of the design of the different CE detector components and expected
 amount of engineering and prototyping required prior to construction.}
 Component & Status & Expected work \\ \toprowrule
@@ -1489,7 +1471,7 @@ for the following reasons:
 lead engineer of the \dword{bnl}-\dword{fnal}-\dword{lbnl} team that has designed the new \dword{coldadc}.
 The new design is required to ensure operation in \lar, and the appropriate
 models for the \SI{65}{nm} technology have been used, as discussed in
-Section~\ref{fdsp-tpcelec-design-femb-adc}.}
+Section~\ref{sec:fdsp-tpcelec-design-femb-adc}.}
 \item{The interfaces between the core of the \dword{adc} and \dword{larasic} on 
 the input side and \dword{coldata} on the output side are entirely new.
 These parts of the design have gone through an extensive verification
