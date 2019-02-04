@@ -141,13 +141,14 @@ circuits to between \SI{1.8}{V}\,$\pm$\,U$_D$, where U$_D$
 is the breakdown voltage of the diode, approximately \SI{0.7}{V}.
 The amplifier circuit has a \SI{22}{nF} coupling capacitor at
 input to avoid leakage current from the protection clamping diodes.
-A schematic diagram of the \dword{pdsp} \dword{apa} wire bias 
-subsystem is in Figure~\ref{fig:CR-board}.
+A schematic diagram of the \dword{dune} \dword{apa} wire bias 
+subsystem, identical to the one used in \dword{pdsp}, is 
+in Figure~\ref{fig:CR-board}.
 
 \begin{dunefigure}
-[\dword{pdsp} \dword{apa} wire bias schematic diagram, including the \dword{cr} board.]
+[\dword{dune} \dword{apa} wire bias schematic diagram, including the \dword{cr} board.]
 {fig:CR-board}
-{\dword{pdsp} \dword{apa} wire bias schematic diagram including the \dword{cr} board.}
+{\dword{dune} \dword{apa} wire bias schematic diagram including the \dword{cr} board.}
 \includegraphics[width=0.8\linewidth]{sp-tpcelec-cr-board.pdf}
 \end{dunefigure}
 
@@ -222,6 +223,64 @@ detector. The cable shown is the high-speed data, clock, and control cable.}
 \includegraphics[width=0.6\linewidth]{sp-tpcelec-femb.png}
 \end{dunefigure}
 
+The functionality of the \dword{femb} for \dword{dune} will be
+almost identical to that of \dword{femb} used in \dword{pdsp}.
+The design will change slightly to accomodate the new \dwords{asic},
+which will also entail changing the connections to the \dword{wib},
+and changing the number of voltage regulators. In addition the
+connector for the control and data cold cables will be replaced
+to address the issue observed in \dword{pdsp} that was discussed
+in Section~\ref{sec:fdsp-tpcelec-overview-lessons}. The new design,
+shown in Figure~\ref{fig:femb-connector}, foresees the addition
+of wings to the \dword{pcb} soldered to the cold cable, with 
+surface mount standoffs to ensure the planarity of the connector
+to the \dword{femb}, and a cutout in the \dword{pcb} to avoid
+any stresses introduced by height variations.
+
+\begin{dunefigure}
+[Modified design of the cold data cable and of the \dword{femb} \dword{pcb}.]
+{fig:femb-connector}
+{Modified design of the cold data cable and of the \dword{femb} \dword{pcb}.}
+\includegraphics[width=0.9\linewidth]{sp-tpcelec-connector.png}
+\end{dunefigure}
+
+All the components on the \dword{femb} need to have a very long lifetime
+in \dword{lar}, including commercial resistances and capacitors, the
+low voltage regulators, and the micro-electromechanical system oscillator.
+In order to achieve the targeted \dunelifetime all commercial components 
+need to be qualified and their lifetime in \dword{lar} need to be measured. 
+In the case of custom \dwords{asic} appropriate steps need to be taken prior 
+to even starting the layout of the chips. Both \dword{coldata} and 
+\dword{coldadc} are implemented in the \dword{tsmc} \SI{65}{nm} \dword{cmos} 
+process~\cite{TSMC65}. The designs were done using cold transistor models 
+produced by Logix Consulting~\cite{Logix}.  Logix made measurements of 
+\dword{fnal}-supplied \dword{tsmc} \SI{65}{nm} transistors at \lntwo 
+temperature and extracted and provided to the design teams \dword{spice} 
+models models valid at \lntwo temperature.  These models were used in 
+analog simulations of \dword{coldata} and \dword{coldadc} subcircuits.  
+In order to eliminate the risk of accelerated aging due to the hot carrier
+effect~\cite{Hot-electron}, no transistor with channel length
+less than \SI{90}{nm} was used in either \dword{asic} design.
+A special library of standard cells using \SI{90}{nm} channel
+length transistors was developed by members of the University
+of Pennsylvania and \dword{fnal} groups. Timing parameters were
+developed for this standard cell library using the Cadence Liberate
+tool~\cite{Liberate} and the Logix \dword{spice}~\cite{spice} models. With the
+exception of the \dword{coldata} \dword{pll}, serializer, and
+output driver, the digital sections of \dword{coldata} and
+\dword{coldadc} were synthesized from Verilog code using this
+standard cell library and the Cadence Innovus tool~\cite{Innovus}.
+Innovus was also used for the layout of the synthesized logic.
+The design of the \dword{cryo} \dword{asic} and of \dword{larasic}
+are implemented in the \dword{tsmc} \SI{130}{nm} and \SI{180}{nm} 
+\dword{cmos} process~\cite{TSMC130,TSMC180}, respectively. In the
+first case the design is based on \dword{spice} models valid at
+\lntwo temperature, that were derived following the same approach
+as for theh \SI{65}{nm} technology. In the case of \dword{larasic}
+the design uses models that were obtained by extrapolating the
+parameters of the models provided by \dword{tsmc}, that are 
+generally valid in the \SIrange{230}{400}{K}.
+
 %%%%%%%%%%%%%%%%%%
 \subsubsection{Front End \dword{asic}}
 \label{sec:fdsp-tpcelec-design-femb-fe}
@@ -230,7 +289,7 @@ The analog \dword{fe} \dword{asic}~\cite{DeGeronimo:2011zz} receives
 current signals from the \dword{tpc} sense wires and provides a way to 
 amplify and shape the signals for downstream signal digitization. 
 The \dword{fe} \dword{asic} has \num{16} channels and is implemented 
-using the \dword{tsmc} \SI{180}{nm} \dword{cmos} process. It 
+using the \dword{tsmc} \SI{180}{nm} \dword{cmos} process~\cite{TSMC180}. It 
 integrates a band-gap reference to generate all the internal bias 
 voltages and currents. This guarantees high stability of the operating 
 point over a wide range of temperatures, including cryogenic temperatures. 
@@ -264,12 +323,15 @@ Each \dword{fe} \dword{asic} channel has a built-in charge calibration
 capacitor that can be enabled or disabled through a dedicated register. 
 The injection capacitance has been measured using a calibrated external 
 capacitor. The measurements show that the calibration capacitance is 
-extremely stable, changing from \SI{184}{F} at room temperature to 
-\SI{183}{F} at \SI{77}{K}. This result and the measured stability of 
+extremely stable, changing from \SI{184}{fF} at room temperature to 
+\SI{183}{fF} at \SI{77}{K}. This result and the measured stability of 
 the peaking time demonstrate the high stability of the passive 
 components as a function of temperature. Channel-to-channel and 
 chip-to-chip variation in the calibration capacitor are typically 
-less than \num{1}\%.
+less than \num{1}\%. The variations of the calibration capacitors
+could be characterized prior to the beginning of \dword{dune}
+data taking,using the \dword{qc} process, discussed in
+Section~\ref{sec:fdsp-tpcelec-integration-qc}.
 
 Shared among the \num{16} channels in the \dword{fe} \dword{asic} are 
 the digital interface, programming registers, a temperature monitor, 
@@ -308,8 +370,8 @@ Excessive stress of package of \dword{fe} \dword{asic} in cryogenic
 temperature means \dword{fe} channels have a non-uniform baseline in 
 collection mode, while the baseline \dword{dc} voltage in induction mode 
 is uniform. A new prototype, version P3, was fabricated in March 2018 
-to address this issue by making \dword{dc} circuits for collection mode 
-similar to the induction mode. At the same time, the default gain i
+to address this issue by making \dword{dc} circuits for the collection mode 
+similar to the induction mode. At the same time, the default gain
 setting was changed to \SI{14}{mV/fC}. The layout of P3 \dword{fe} 
 \dword{asic} is shown in Figure \ref{fig:feasic2}, with modifications 
 highlighted in yellow boxes. The P3 \dword{fe} \dwords{asic} were 
@@ -491,7 +553,7 @@ The maximum current is \SI{2.07}{mA}, about \num{2/3} of the LVDS standard of
 
 The operation of \dword{coldadc} is controlled by a number of \num{8}-bit registers.
 These registers can be written to and read back using either an \dword{i2c}
-interface or a \dword{uart}. \dword{coldata} will use the \dword{i2c} interface.  The
+interface~\cite{bib:I2C} or a \dword{uart}. \dword{coldata} will use the \dword{i2c} interface.  The
 \dword{uart} is included in the first \dword{coldadc} prototype to facilitate chip testing
 and for risk mitigation.
 
@@ -657,39 +719,6 @@ The eye diagram is more open at cryogenic temperature.}
 \includegraphics[width=0.8\linewidth]{sp-tpcelec-128Gbpseyesim.png}
 \end{dunefigure}
 
-Both \dword{coldata} and \dword{coldadc} are implemented in the 
-\dword{tsmc} \SI{65}{nm} \dword{cmos} process. The designs were 
-done using cold transistor models produced by Logix Consulting~\cite{Logix}.
-Logix made measurements of \dword{fnal}-supplied \dword{tsmc} 
-\SI{65}{nm} transistors at LN2 temperature and extracted and provided 
-to the design teams \dword{spice} models models valid at \lntwo 
-temperature.  These models were used in analog simulations of 
-\dword{coldata} and \dword{coldadc} subcircuits.  In order to 
-eliminate the risk of accelerated aging due to the hot carrier 
-effect~\cite{Hot-electron}, no transistor with channel length 
-less than \SI{90}{nm} was used in either \dword{asic} design.  
-A special library of standard cells using \SI{90}{nm} channel 
-length transistors was developed by members of the University 
-of Pennsylvania and \dword{fnal} groups. Timing parameters were 
-developed for this standard cell library using the Cadence Liberate 
-tool~\cite{Liberate} and the Logix \dword{spice} models. With the 
-exception of the \dword{coldata} \dword{pll}, serializer, and 
-output driver, the digital sections of \dword{coldata} and 
-\dword{coldadc} were synthesized from Verilog code using this 
-standard cell library and the Cadence Innovus tool~\cite{Innovus}.
-Innovus was also used for the layout of the synthesized logic.
-
-
-
-
-%citation dword{i2c}: http://i2c.info
-%citation SPI: https://en.wikipedia.org/wiki/Serial_Peripheral_Interface
-%citation TSMC65:  http://www.tsmc.com/english/dedicatedFoundry/technology/65nm.htm
-%citation Logix: Logix Consulting™, http://www.lgx.com/
-%citation SPICE: SPICE™ is a general-purpose circuit simulation program, https://bwrcs.eecs.berkeley.edu/Classes/IcBook/SPICE/
-%citation Hot-electron: C. Hu, et al., ``Hot-electron induced MOSFET degradation-model, monitor, and improvement,” IEEE Trans. Electron Devices, vol ED-32, no. 2, pp 375-385, 1985.
-%citation Liberate: https://www.cadence.com/content/cadence-www/global/en_US/home/tools/custom-ic-analog-rf-design/library-characterization/liberate-characterization.html
-%citation Innovus: https://www.cadence.com/content/cadence-www/global/en_US/home/tools/digital-design-and-signoff/hierarchical-design-and-floorplanning/innovus-implementation-system.html
 
 %%%%%%%%%
 \subsubsubsection{CRYO Option}
