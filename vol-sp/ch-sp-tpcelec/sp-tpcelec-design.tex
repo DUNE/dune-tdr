@@ -373,12 +373,10 @@ is uniform. A new prototype, version P3, was fabricated in March 2018
 to address this issue by making \dword{dc} circuits for the collection mode 
 similar to the induction mode. At the same time, the default gain
 setting was changed to \SI{14}{mV/fC}. The layout of P3 \dword{fe} 
-\dword{asic} is shown in Figure \ref{fig:feasic2}, with modifications 
+\dword{asic} is also shown in Figure \ref{fig:feasic2}, with modifications 
 highlighted in yellow boxes. The P3 \dword{fe} \dwords{asic} were 
 received and evaluated in September 2018, and both baseline in collection 
 mode and default gain setting are working properly.
-
-\fixme{Expand the following part.}
 
 P3 \dword{fe} \dword{asic} will be further evaluated on \dwords{femb} 
 in various integration test stands for performance studies, including 
@@ -387,15 +385,14 @@ at \dword{fermilab} and the \num{7}$^{th}$ \dword{protodune} \dword{apa}
 in the cold box at \dword{cern}. Test results of P3 \dword{fe} \dword{asic} 
 will guide the development of the next version P4 \dword{fe} \dword{asic}, 
 which will be implemented a single ended to differential converter for 
-interface to recently developed \dword{coldadc}. During \dword{pdsp} 
-operation, it was observed that the \dword{fe} \dwords{asic} may enter 
-into a saturation mode when large amounts of charge ($>\SI{50}{fC}$) 
-are collected in \SIrange{10}{50}{$\mu$s}. This is being studied in 
-the laboratory test stand, with the plan to address it in the P4 
-\dword{fe} \dword{asic} revision as well.
+interface to recently developed \dword{coldadc}. The P4 version of 
+\dword{larasic} will also address the saturation problem observed in
+the \dword{pdsp} initial operation, that has been discussed in 
+Section~\ref{sec:fdsp-tpcelec-overview-lessons}. The plan for solving
+this issue is discussed below in Section~\ref{sec:fdsp-tpcelec-overview-remaining}.
 
 %%%%%%%%%%%%%%%%%%
-\subsubsection{ADC \dword{asic}}
+\subsubsection{\dword{coldadc} \dword{asic}}
 \label{sec:fdsp-tpcelec-design-femb-adc}
 
 \dword{coldadc} is a low-noise \dword{adc} \dword{asic} designed to digitize
@@ -422,7 +419,7 @@ the major blocks is described below.
 [\dword{coldadc} block diagram]
 {fig:COLDADC_Block_Diagram}
 {\dword{coldadc} block diagram}
-\includegraphics[width=1.0\linewidth]{sp-tpcelec-COLDADCblockdiagram.pdf}
+\includegraphics[width=0.9\linewidth]{sp-tpcelec-COLDADCblockdiagram.pdf}
 \end{dunefigure}
 
 All required reference voltages and currents are generated on-chip by programmable
@@ -474,7 +471,11 @@ implemented as \num{15}-stage pipelines.
 \begin{dunefigure}
 [Circuit blocks in each \dword{adc} pipeline stage]
 {fig:pipelinestage}
-{Circuit blocks in each \dword{adc} pipeline stage.}
+{Circuit blocks in each \dword{adc} pipeline stage. MUX is circuit that controls
+which weight is applied to the result of the previous stage, that is then subtracted
+in the ADD circuit from the input of the previous stage. SHA is a sample and hold and
+ADCS and DASC are low resolution 1.5 bit analog-to-digital and digital-to-analog 
+subconverters, respectively.}
 \includegraphics[width=1.0\linewidth]{sp-tpcelec-Pipelinestage.pdf}
 \end{dunefigure}
 
@@ -516,10 +517,10 @@ out of range.  This will result in skipped \dword{adc} codes.  For this reason,
 the interstage gain of \dword{coldadc} is designed to be $\sim$\num{1.998}.  The
 calibration procedure recovers the linearity that would be lost due to
 non-binary stage weighting.  A small number of \dword{adc} codes near two
-extremes of the voltage range are unused \footnote{Simulations of \dword{coldadc}
-including layout parasitics indicate that $\sim$\num{150} \num{16}-bit codes will be
-used at the extremes.}, but no skipped codes appear in the range of codes
-used.  The number of \dword{adc} bits that are useful depends on the effective
+extremes of the voltage range are unused, but no skipped codes appear in the
+range of codes used. Simulations of \dword{coldadc} including layout parasitics 
+indicate that $\sim$\num{150} \num{16}-bit codes will be used at the extremes.
+The number of \dword{adc} bits that are useful depends on the effective
 noise of the various subcircuits of the \dword{adc}.  The noise of the first few
 pipeline stages (associated with the most significant bits) contributes more
 heavily than subsequent stages.  For this reason, the first stages are designed
@@ -557,9 +558,9 @@ interface~\cite{bib:I2C} or a \dword{uart}. \dword{coldata} will use the \dword{
 \dword{uart} is included in the first \dword{coldadc} prototype to facilitate chip testing
 and for risk mitigation.
 
-Results of bench tests (and later system tests in \dword{lar}) will be included
+\metainfo {Results of bench tests (and later system tests in \dword{lar}) will be included
 when they are available.  These will include measurements of performance and
-also power consumption.
+also power consumption.}
 
 %%%%%%%%%%%%%%%%%%
 \subsubsection{COLDATA \dword{asic}}
@@ -578,7 +579,7 @@ the data, and transmits the data to the warm electronics over two \SI{1.28}{Gbps
 links.  These links are driven by line drivers with programmable pre-emphasis. 
 A block diagram of \dword{coldata} is shown in Figure~\ref{fig:coldata_block_diagram}.
 The possibility of transmitting data from \dword{coldata} over a single 
-\SI{2.56}{gbps} link will be investigated in 2019, with the goal of further
+\SI{2.56}{Gbps} link will be investigated in 2019, with the goal of further
 reducing the number of cold cables that need to be routed through the
 \dword{apa} frame, as discussed in Section~\ref{sec:fdsp-tpcelec-interfaces-apa}
 
@@ -586,11 +587,11 @@ reducing the number of cold cables that need to be routed through the
 [\dword{coldata} block diagram]
 {fig:coldata_block_diagram}
 {\dword{coldata} block diagram}
-\includegraphics[width=1.0\linewidth]{sp-tpcelec-COLDATA-block-diagram.png}
+\includegraphics[width=0.9\linewidth]{sp-tpcelec-COLDATA-block-diagram.png}
 \end{dunefigure}
 
 The commands for the control of all the \dwords{asic} on a \dword{femb} are sent 
-from \dword{wib} using an \dword{i2c}-like~\cite{i2c} protocol. While standard 
+from \dword{wib} using an \dword{i2c}-like~\cite{bib:I2C} protocol. While standard 
 \dword{i2c} uses single ended \dword{cmos} signals and a bidirectional data 
 line, because of the long cables required between the \dword{wiec} and the 
 \dwords{femb}, \dword{coldata} uses low voltage differential pairs for both 
@@ -619,7 +620,7 @@ the \dword{mosi} line, bits from the other end of the shift register are shifted
 out on the \dword{miso} line. It is thus only possible to read \dword{larasic} 
 configuration registers while writing new configuration data.
 
-In addition to the configuration commands \dword{coldata} also receives from
+In addition to the configuration commands, \dword{coldata} also receives from
 the \dword{wib} a master clock and a fast command signal on a low voltage 
 differential pair. Currently the master clock is \SI{64}{MHz}, but it will be
 changed to \SI{62.5}{MHz} to simplify the overall \dword{dune} \dword{spmod} 
