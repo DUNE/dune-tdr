@@ -339,7 +339,11 @@ and a band-gap reference monitor. We also can enable \dword{ac}
 coupling as mitigation of microphonics, a programmable bias current 
 selectable from one of \num{0.1}, \num{0.5}, \num{1}, or \SI{5}{nA}, 
 as well as a programmable pulser generator with a \num{6}-bit 
-\dword{dac} for calibration. 
+\dword{dac} for calibration. The possibility of configuring various
+parameters controlling the \dword{fe} amplifier (gain, shaping time,
+baseline) has allowed \dword{pdsp} to reduce the impact of the
+saturation effect discussed in Section~\ref{sec:fdsp-tpcelec-overview-lessons}, 
+at the cost of a reduction in dynamic range.
 
 The power dissipation of \dword{fe} \dword{asic} is about \SI{5.5}{mW} 
 per channel at \SI{1.8}{V} supply voltage with output buffer disabled. 
@@ -980,7 +984,7 @@ The CE cables are shown in blue; the PD cables are not shown.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Cold Cables Cold Electronics Feedthroughs}
+\subsection{Cold Cables and Cold Electronics Feedthroughs}
 \label{sec:fdsp-tpcelec-design-ft}
 
 All cold cables originating inside the cryostat connect to the outside 
@@ -1037,13 +1041,13 @@ sharing the clock and fast command lines between the two
 \dword{coldata} \dword{asic}. This would reduce the number
 of data and control cables to either ten or eight. In the
 case of the \dword{cryo}, four cables are required to transmit
-the data at \SI{896}{Mbps}, four cables are required for the
-\dword{saci} protocol, and in the current \dword{femb} prototype
-four cables are used to transmit copies of the same \SI{56}{MHz}
+the data at \SI{896}{Mbps}, five cables are required for the
+\dword{saci} protocol (three shared and one for each \dword{asic}
+on the \dword{femb}), and in the current \dword{femb} prototype
+two cables are used to transmit copies of the same \SI{56}{MHz}
 clock. Also in this case it is possible to reduce the 
-number of data and control cables to either ten or eight, 
-by either doubling the data transmission speed or by
-sharing the clock(s) between the two \dword{cryo} \dwords{asic}
+number of data and control by either doubling the data transmission 
+speed or by sharing the clock(s) between the two \dword{cryo} \dwords{asic}
 on the \dword{femb}, or by doing both.
 
 The \dword{lv} power is passed from the signal flange to the 
