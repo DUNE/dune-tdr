@@ -1,50 +1,64 @@
 \section{System Overview}
 \label{sec:fdsp-tpcelec-overview}
 
-The main difference between the \dword{dune} \dword{sp} detector and 
-previous experiments or prototypes using the \dword{lar} technology is
+The main difference between the \dword{dune} \dword{sp} \dword{detmodule} %detector 
+and 
+previous experiments or prototypes using \dword{lar} technology is
 that for the first time all the signal processing for the readout of the
 wires of the \dwords{apa} takes place inside the the \dword{lar}, in boards that 
 are directly mounted on the \dword{apa}. Accordingly, the \dword{tpc} 
-readout electronics are referred to as the \dword{ce}. The electronics are 
+readout electronics are referred to as the \dword{ce}. 
+
+The electronics are 
 mounted inside the \dword{lar} to exploit the fact that charge carrier 
-mobility in silicon is higher and that thermal fluctuations are lower 
+mobility in silicon is higher, and %that 
+thermal fluctuations are lower,  
 at \dword{lar} temperature than at room temperature. For \dword{cmos} 
 electronics, this results in substantially higher gain and lower noise 
 at \dword{lar} temperature than at room temperature~\cite{DeGeronimo:2011zz}.
-Mounting the front-end electronics on the \dword{apa} frames also minimizes 
+Mounting the \dword{fe} electronics on the \dword{apa} frames also minimizes 
 the input capacitance, which also contributes to the noise reduction.  
 Furthermore, placing the digitizing and multiplexing electronics inside 
 the cryostat reduces the total number of penetrations into the cryostat 
-and minimizes the number of cables coming out of the cryostat.  
+and minimizes the number of cables coming out of it. %the cryostat.  
+
 As the full \dword{tpc} electronics chain for the \dword{spmod} includes 
 many components on the warm side of the cryostat as well, the \dword{dune} 
-consortium designated to organize development of this system is called 
-the \dword{dune} Single-Phase \dword{tpc} Electronics consortium. 
-It is sometimes referred to as the \dword{ce} consortium for short.
-In this Section~\ref{sec:fdsp-tpcelec-overview} we start with a review of the considerations that
-have lead to the proposed design for the \dword{dune} \dword{sp} detector,
-followed by a discussion of how the detector requirements are derived
-from the physics goals of the experiment. Later we demonstrate the 
-validation of the design provided by the early data from the \dword{pdsp}
-prototype. We also discuss how the lessons learned from the construction,
+consortium designated to develop %organize development of 
+this system is formally called 
+the \dword{dune} \dword{sp} \dword{tpc} electronics consortium, but  %It is 
+sometimes referred to as the \dword{ce} consortium. % for short.
+
+%In this Section~\ref{sec:fdsp-tpcelec-overview} we 
+This section starts with a review of the considerations that
+have led to the proposed design for the \dword{dune} \dword{sp} detector, 
+%followed by a discussion of 
+then discusses how the detector requirements follow %are derived
+from the physics goals of the experiment. %Later we demonstrate the validation of the design provided by the early data from the \dword{pdsp} prototype. 
+Later we demonstrate how early data from \dword{pdsp} 
+validates the design and  %We also 
+discuss how the lessons learned from the construction,
 integration, installation, and commissioning of \dword{pdsp} have 
 informed the design changes that we are planning for the \dword{dune}
-\dword{sp} detector. In the rest of this Chapter~\ref{ch:sp-tpcelec} we provide a detailed
+\dword{spmod}. % detector. 
+
+%In the rest of this Chapter~\ref{ch:sp-tpcelec} we provide 
+The reader will find a detailed
 description of all the \dword{ce} detector components in Section
 \ref{sec:fdsp-tpcelec-design}, followed by discussions of the \dword{qa}
-program and of the plans for production and assembly, and for integration,
+program and %of 
+the plans for production and assembly, and for integration,
 installation and commissioning, in 
 Sections~\ref{sec:fdsp-tpcelec-qa}--\ref{sec:fdsp-tpcelec-integration}. 
-Later, we discuss the interfaces with detector components provided by 
-other consortia, with Technical Coordination, and with the Physics group, 
-in Section~\ref{sec:fdsp-tpcelec-interfaces}. This Chapter concludes with a description
-of the plans for addressing safety issues and risks during the
-construction, installation, and operation of the detector, and with
-a discussion of the organization of the \dword{ce} consortium,
-including a timeline for the detector construction and an estimate
-of the resources required, in 
-Sections~\ref{sec:fdsp-tpcelec-safety}--\ref{sec:fdsp-tpcelec-management}.
+%Later, we discuss the interfaces with detector components provided by other consortia, with Technical Coordination, and with the Physics group, in Section~\ref{sec:fdsp-tpcelec-interfaces}. 
+Section~\ref{sec:fdsp-tpcelec-interfaces} discusses the interfaces with detector components provided by other consortia, with \dword{tc}, and with the physics group. 
+%This chapter concludes with a description of 
+Sections~\ref{sec:fdsp-tpcelec-safety}--\ref{sec:fdsp-tpcelec-management} conclude the chapter with  plans for addressing safety issues and risks during the
+construction, installation, and operation of the detector, and %with a discussion of 
+an outline of the organization of the \dword{ce} consortium, 
+%including 
+with a timeline for the \dword{detmodule} construction and an estimate
+of the resources required.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Introduction}
@@ -56,81 +70,101 @@ should be based on Bruce Baller's summary paper (arXiv:1703.0424), with
 numbers tailored to the DUNE-SP case.}
 
 In the \dword{dune} \dword{spmod} a \dword{mip} deposits on average between
-\SI{20}{k}{e$^-$} and \SI{30}{k}{e$^-$} on each collection wire, assuming a drift electric field
-of \SI{0.5}{kV/cm} and an electron lifetime of \SI{6}{ms}, as discussed in
+\SI{20}{k}{e$^-$} and \SI{30}{k}{e$^-$} on each collection wire, assuming a drift \efield
+of %\SI{0.5}{kV/cm} 
+\spmaxfield and an electron lifetime of \SI{6}{ms}, as discussed in
 Chapter~\ref{ch:sp-execsum}, and assuming full transparency during the 
-electron transport through the grid plane and the two plane of induction
-wires as discussed in Chapter~\ref{ch:fdsp-apa}. The larger of the two numbers 
-is for \dwords{mip} close to the collection plane, and the smaller of the two
+electron transport through the grid plane and the two planes of induction
+wires, as discussed in Chapter~\ref{ch:fdsp-apa}. The larger of the two numbers 
+is for \dwords{mip} close to the collection plane, and the smaller %of the two
 takes into account the charge recombination effects caused by impurities for 
-tracks close to the cathode plane. The \dword{dune} \dword{sp} \dword{tpc} is 
+tracks close to the cathode plane. 
+
+The \dword{dune} \dword{sp} \dword{tpc} is 
 a unit gain device where the electrical signal is produced by the drift of the
-charges near the wires, differently from what happens in gaseous wire 
-chambers where the electrical field is strong enough to provide additional
+charges near the wires, %differently from 
+in contrast to signal production %what happens 
+in gaseous wire 
+chambers, where the \efield is strong enough to provide additional
 ionization and signal multiplication. The signal induced in the \dword{dune}
 \dword{spmod} wires is bipolar on the induction wires, negative when the
 electrons drift toward the wires, and positive when they drift away from
 the wires. On the collection wires signals are unipolar (negative).
 The signal duration is of the order of microseconds, and tends to be narrower
-for the collection plane due to the increase of the electrical field and
+for the collection plane due to the increase of the \efield and
 therefore of the electron velocities. Due to lack of amplification of 
-electrons inside \dword{lar}, the low noise obtained with the \dword{ce} is
-essential to reliably extract the ionization electron signal from both the 
-collection and induction wire planes in a single-phase \dword{lar} \dword{tpc}.
+electrons inside \dword{lar}, %the low noise obtained with the \dword{ce} is essential to reliably extract the ionization electron signal from both the 
+ low noise  is
+essential for the \dword{ce} to reliably extract the ionization electron signal from both the 
+collection and induction wire planes in a \dword{sp} \dword{lartpc}. 
+\fixme{anne changed prev sentence. Check}
 
-The noise level enabled by having the front-end electronics in the cold (roughly 
-half as much noise at \dword{lar} temperature than at room temperature) greatly 
-extends the reach of the \dword{dune} physics program. Decreasing the noise level 
-allows measurement of smaller charge deposits, a source of risk mitigation in 
-case the desired drift field cannot be reached or the electron lifetime in the 
-detector is less than desired (due to the electronegative impurities in the 
-detector). For example, given an electron lifetime of \SI{3}{ms} and a drift electric field
-of \SI{0.25}{kV/cm} the charge deposited in the collection wires from a 
+%The noise level enabled by having the \dword{fe} electronics in the cold (roughly 
+%half as much noise at \dword{lar} temperature than at room temperature) 
+The roughly factor-of-two reduction in noise level obtained with the \dword{fe} electronics at \dword{lar} temperature greatly 
+extends the reach of the \dword{dune} physics program. %Decreasing the noise level 
+It allows measurement of smaller charge deposits, which mitigates against the risk of %a source of risk mitigation in case the desired 
+inability to reach the desired drift field %cannot be reached 
+or %the 
+a lower electron lifetime %in the detector is less 
+than desired (due to %the 
+electronegative impurities). % in the detector). 
+For example, given an electron lifetime of \SI{3}{ms} and a drift \efield
+of \SI{0.25}{kV/cm}, the charge deposited in the collection wires from a 
 \dword{mip} close to the cathode plane is reduced to \SI{10}{k}{e$^-$}.
-The exact requirement of the minimal \dword{snr} required for pattern
-recognition depends on the tracking algorithms and on the offline signal processing.
-Initial studies for \dword{dune} indicated that a minimal \dword{snr} of 9 
-on both the collection and induction wires would be necessary. The 
-\dword{sbnd} experiment prefers a minimal \dword{snr} of 12 for the
-collection wires and of 5 for the induction wires~\cite{bib:sbnddoc1921}, taking into account
-the difference between the signal amplitude in the two cases and considering
-also the gain coming from fitting the bipolar shape of the signal on the
-induction wires. For the design of the signal processing hardware for the
-wires of the \dword{dune} \dword{spmod} we are setting a requirement of
-a total noise of less than 1000 e$^-$ consistent with having a \dword{snr}
-of at least 10 on the collection wires even in the pessimistic case 
-where the electron lifetime and the electric field just meet the
-required design values discussed in Chapter~\ref{ch:sp-hv}.
+The exact requirement of the minimal \dword{s/n} required for pattern
+recognition depends on the tracking algorithms and %on 
+the offline signal processing.
+Initial studies for \dword{dune} indicated %that 
+a required minimal \dword{s/n} of \num{9} 
+on both the collection and induction wires. % would be necessary. 
+The 
+\dword{sbnd} experiment prefers a minimal \dword{s/n} of \num{12} for the
+collection wires and of \num{5} for the induction wires~\cite{bib:sbnddoc1921}, taking into account
+the difference between the signal amplitude in the two cases and considering %also 
+the gain coming from fitting the bipolar shape of the signal on the
+induction wires. 
+%For the design of the signal processing hardware for the wires of the \dword{dune} \dword{spmod} we are setting a requirement of a total noise of less than 1000 e$^-$ consistent with having a \dword{s/n} of at least 10 on the collection wires 
+For the signal processing hardware for the \dword{spmod} wires we require 
+a total noise of less than 1000 e$^-$, consistent with a \dword{s/n}
+of at least 10 on the collection wires, 
+even in the pessimistic case  where the electron lifetime and the \efield just meet the required design values discussed in Chapter~\ref{ch:sp-hv}.
 
-The goal is to keep the total noise level as low as possible. For example an 
-increase in the \dword{snr} above 15 allows the observation of MeV scale photons, 
-as recently demonstrated by \dword{argoneut}~\cite{Acciarri:2018myr}, enabling 
-reconstruction of photons released during de-excitation of the nucleus and of part
+The goal is to keep the total noise level as low as possible. For example, an 
+increase in the \dword{s/n} above 15 allows the observation of MeV-scale photons, 
+as recently demonstrated by \dword{argoneut}~\cite{Acciarri:2018myr}. This enables  
+reconstruction of both photons released during de-excitation of the nucleus and %of 
+part
 of the energy transferred to final-state neutrons. Low noise is also crucial
-for the baseline oscillation analysis described in the Physics part of this
-\dword{tdr} (Volume 2 Chapter 5). The event classification is based
-on using a Convolutional Visual Network that uses as input three images
+for the baseline oscillation analysis described in Chapter 5 of Volume~\volnumberphysics{} of this
+\dword{tdr}, \voltitlephysics{}. %the Physics part of  (Volume 2 Chapter 5). 
+The event classification is based
+on %using 
+a \dword{cvn} that %uses as 
+inputs three images
 of the neutrino interactions, one for each of the three readout views, using the
 reconstructed hits on the individual wire planes. This approach relies
-on the low noise levels expected for \dword{dune}.
+%on the low noise levels expected for \dword{dune}.
+on  low noise levels.
 Decreasing the noise level also increases the reach of low-energy 
-physics measurements like those associated with stellar core-collapse supernova 
-burst neutrinos. Finally, a low noise level opens up the possibility of using 
+physics measurements like those associated with stellar core-collapse \dword{snb} neutrinos. Finally, a low noise level opens up the possibility of using 
 $\mathrm{{}^{39}Ar}$ beta decays to calibrate the \dword{dune}
 \dword{spmod}~\cite{MICROBOONE-NOTE-1050-PUB}.
-The noise level has also consequences on the bandwidth requirements
-for the \dword{daq} system, that are discussed in Chapter~\ref{ch:sp-daq}.
-These bandwidth requirements can be a limiting factor for low energy
+The noise level has also affects %consequences on 
+the bandwidth requirements
+for the \dword{daq} system, %that are 
+discussed in Chapter~\ref{ch:sp-daq}; 
+these bandwidth requirements can be a limiting factor for low-energy
 physics signals, particularly those of astrophysical origin.
 
 To retain maximum flexibility in optimizing reconstruction algorithms after 
 the \dword{dune} data is collected, the \dword{spmod} electronics are designed 
 to produce a digital record representing the waveform of the current produced 
-by charge collection/induction on the anode wires.  Each anode wire signal is 
-input to a charge sensitive amplifier, followed by a pulse shaping circuit and 
+by charge collection and induction on the anode wires.  Each anode wire signal is 
+input to a charge-sensitive amplifier, followed by a pulse-shaping circuit and 
 an \dword{adc}.  To minimize the number of cables and cryostat penetrations, 
 the \dwords{adc} as well as the amplifier/shapers are located in the \dword{lar}, 
-and digitized data from many wires merge onto a much smaller set of high speed 
+and digitized data from many wires merge onto a much smaller set of high-speed 
 serial links. The \dword{ce} signal processing is implemented in \dfirsts{asic}
 using \dword{cmos} technology.  The \dword{ce} is continuously 
 read out, resulting in a digitized \dword{adc} sample from each \dword{apa} 
@@ -144,7 +178,7 @@ mounted on the signal flange. From the \dwords{wib} the data is sent to
 the \dword{daq} back-end on an optical fiber network as discussed in 
 Chapter~\ref{ch:sp-daq}.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% anne to here 2/9
 \subsection{Requirements}
 \label{sec:fdsp-tpcelec-overview-requirements}
 
@@ -165,7 +199,7 @@ to match the time required for the drifting charges to travel from one plane of 
 wires to the next, that corresponds to the typical duration of the signal observed
 on the wires. The planes of anode wires are separated by \SI{4.75}{mm}
 as discussed in Chapter~\ref{ch:fdsp-apa}, and the drift velocity for
-the electrical fields considered for \dword{dune} is in the range
+the \efield{}s considered for \dword{dune} is in the range
 \SIrange{1.25}{1.5}{mm/$\mu$s}. Having a peaking time of the \dword{fe}
 similar to the typical signal duration improves the two-track resolution of
 the detector.}
@@ -311,7 +345,7 @@ power supplies for the \dword{apa}s.}
 \end{itemize}
 
 \begin{dunetable}
-[TPC electronics components and quantities for a single \dword{apa} of a \dword{spmod}.]
+[TPC electronics components and quantities for a single APA of a \dword{spmod}.] % dword for apa made this too long
 {llr}
 {tab:elecNums}
 {TPC electronics components and quantities for a single \dword{apa} of the DUNE \dword{spmod}.}
@@ -446,10 +480,10 @@ of roughly 100~e$^-$ is seen on all planes after the common-mode
 filter is applied.
 
 \begin{dunefigure}
-[\dword{tpc} noise levels measured at \dword{pdsp} after \dword{lar} fill]
+[TPC noise levels measured at \dword{pdsp} after \lar fill]
 {fig:apa3-noise}
 {Noise in electrons for all U, V, and X (red, blue, and green curves) sense 
-wire planes for one ProtoDUNE APA with the detector in nominal operating 
+wire planes for one \dword{protodune} \dword{apa} with the detector in nominal operating 
 conditions.}
 \includegraphics[width=0.9\linewidth]{sp-tpcelec-apa3-enc.png}
 \end{dunefigure}
