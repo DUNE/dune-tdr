@@ -1,4 +1,130 @@
 \section{Design Overview}
-\label{sec:fddp-pds-overview}
+\label{sec:dp-pds-overview}
+
+The \dual \dword{pds} is optimized for the physics program of the full-size \dual \dword{dune} detector. Phenomena leading to interactions in the \dword{dune} detectors and to be studied span several orders of magnitude of energy scale, from a few \si{MeV} to several \si{GeV}, with commensurate range in light yield. In particular, low-energy signals like \dword{snb} neutrinos, and proton decay, impose more stringent requirements on \dword{pds} performance than the primarily higher energy, beam-synchronous, neutrino oscillations physics.
+
+%A number of scientific and technical choices and issues impact the \dual \dword{pds}  and \single \dword{pds}  in a similar way, so the consortia for these two systems cooperate closely.  %See \voltitlespfd{}, Chapter 5 for details on the \single \dword{pds}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Scintillation Light Production in the \dual Detector Module}
+\label{sec:dp-pds-overview_scintillation}
+
+\dual \dword{pds} detects light produced from two sources: the scintillation process originated by ionizing particles propagating in the liquid argon (usually referred to as the S1 signal) and by the electroluminescence process due to drift electrons extracted from the liquid phase and accelerated in the argon vapor at the top of the cryostat (usually referred to as the S2 signal). Charge readout anode planes instrument the top while photodetectors are placed at the bottom of the cryostat. The interplay between the charge and light from an event enables pattern recognition and the measurement of energy of interactions.
+
+Ionizing radiation in liquid noble gases leads to the formation of excimers in either singlet or triplet states, which decay radiatively to the dissociative ground state with characteristic S1 fast and slow lifetimes (fast is about \SI{6}{ns}, slow is about \SI{1.3}{$\mu$s} in \lar with the so-called second continuum emission spectrum peaked at the wavelength of approximately \SI{127}{nm}, \SI{126.8}{nm} with a full width at half maximum of \SI{7.8}{nm} \cite{Heindl}). This prompt and relatively high-yield (about \num{40000} photons per \si{MeV} at zero \efield) of \SI{127}{nm} scintillation light is exploited in a \lartpc (both \dshort{dp} and \dshort{sp}) to provide the absolute time ($t_0$) of the ionization signal collected at the anode, thereby providing the absolute value of the drift coordinate of fully contained events, as well as a prompt signal used for triggering purposes.
+
+The secondary scintillation in the argon gas (i.e., the vapor phase) is unique to the \dpmod technology. It is the luminescence in gas caused by accelerated electrons in the \efield and in the \dword{lem} anode through Townsend amplification. The S2 signal provides information on the drift time and amount of ionization charge, thus supplementing information from the charge readout on the anode plane. For a given argon gas density, the number of S2 photons is proportional to the number of electrons, the \efield, and the length of the drift path in gas covered by the electrons. In an extraction field of \SI{3.0}{kV/cm} in gas, one electron generates about \num{100} downward-going photons that cross the liquid argon surface \cite{Lux:2018zwd}. The time scale of S2 reflects the extraction time of original ionization in the liquid phase into the gas phase. Therefore, for about \SI{0.5}{kV/cm} drift \efield, this time scale is of the order of hundreds of microseconds. The time between the occurrence of the primary scintillation light and the secondary scintillation light is equivalent to the drift time of the electrons from the ionization coordinate to the \lar surface. This provides an accurate determination of the drift time in the active volume, and hence a correction tool for the electron attachment (and the associated energy measurement).  
 
 
+%The chapter begins with an overview of the system in Section~\ref{sec:fddp-pd-1}. Section~\ref{sec:fddp-pd-2} describes the photosensors, namely \dwords{pmt} %tubes  
+%and the related \dword{hv} system, wavelength shifters and light collectors. The mechanics associated with the \dwords{pmt} is described in Section~\ref{sec:fddp-pd-3}, and the readout electronics in~\ref{sec:fddp-pd-4}. Section~\ref{sec:fddp-pd-5} details the photon calibration system to monitor the \dword{pmt} gain and stability. Then, the \dword{pd} performance is described in Section~\ref{sec:fddp-pd-6}, and the operations in Section~\ref{sec:fddp-pd-7}. Interfaces with other subsystems are described in Section~\ref{sec:fddp-pd-8}. Section~\ref{sec:fddp-pd-9} includes the installation, integration and commissioning plans. The \dword{qc} procedures are outlined in Section~\ref{sec:fddp-pd-10}. The main safety issues to consider are specified in Section~\ref{sec:fddp-pd-11}. To finish, the management and organization is described in Section~\ref{sec:fddp-pd-12}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Detector Sub-systems and Layout}
+\label{sec:dp-pds-overview_layout}
+
+The baseline design of the light collection system calls for \SI{20.3}{cm} (\SI{8}{in}) diameter cryogenic \dwords{pmt} from Hamamatsu Photonics\footnote{Hamamatsu Photonics\texttrademark{}, \url{http://www.hamamatsu.com/resources/pdf/etd/LARGE_AREA_PMT_TPMH1286E.pdf}} (model R5912-MOD20) distributed uniformly on the floor (bottom) of the cryostat and electrically shielded from the bottom cathode plane. Other \dword{pmt} manufacturers being considered include Electron Tubes Limited~\footnote{Electron Tubes Ltd\texttrademark{}, \url{http://www.electron-tubes.co.uk//}} and HZC~\footnote{HZC Photonics\texttrademark{}, \url{http://hzcphotonics.com/en_index.html}.}. According to the baseline design, the total number of \dwords{pmt} to be installed is \dpnumpmtch. The outline of the \dword{dpmod} is shown in Fig.~\ref{fig:dppd_3_1}. The \dwords{pmt} are individually powered to values between \numrange{1.5}{2.0}\si{kV} in order to separately adjust the \dword{pmt} gains. Since Hamamatsu R5912 \dwords{pmt} are not sensitive to the \SI{127}{nm} scintillation light, a wavelength shifter is required. A thin layer of \dword{tpb}~\cite{tpb} coating is applied directly on the \dword{pmt} window by evaporation. Section~\ref{sec:dp-pds-photosensors} describes the photosensor sysstem.
+
+\begin{dunefigure}[The \dword{dpmod} (partially open)]{fig:dppd_3_1}
+{The \dword{dpmod} (partially open) with cathode, \dwords{pmt}, \dword{fc} and anode plane with chimneys.}
+%\includegraphics[width=0.95\textwidth]{dppd_3_1}
+\includegraphics[width=0.95\textwidth]{dppd_1_1_v2}
+\end{dunefigure}
+
+The \dwords{pmt} are individually attached to the cryostat floor \SI{1.02}{m} apart from each other in both directions, via a \dword{pmt} support structure counteracting the \dword{pmt} buoyancy. In order to increase the spatial uniformity of the \dword{pds} response, \dword{wls} reflector foils are mounted on the inner surfaces of the four field cage vertical walls. The mechanical aspects of the \dword{pds} design are described in Sec.~\ref{sec:dp-pds-mechanics}.
+
+The front-end \dword{pmt} base circuit to read the photo-electron signals relies on a positive \dword{hv} supplied to the \dword{pmt} anode and on a grounded photo-cathode. A single cable for each \dword{pmt} carries both power and signal. \dword{hv} and signal splitters located outside the cryostat are used to separate the fast \dword{pmt} response signal from the positive \dword{hv} with capacitive decoupling. The \dword{pds} readout electronics is described in Sec.~\ref{sec:dp-pds-electronics}.
+
+A photon calibration system is required to determine the \dword{pmt} gain and to monitor the stability of the \dword{pmt} response. The LED-driven fiber calibration system of the \dword{pds} is described in Sec.~\ref{sec:dp-pds-calibration}. 
+
+The basic unit of installation/operation is called a sector. The sectors are indicated as transparent red and yellow panels in Fig.~\ref{fig:dppd_3_1}. One \dual \dword{pds} sector is \SI{6}{\m} x \SI{6}{\m} and houses \num{36} \dwords{pmt}. A total of \num{20} sectors will be installed in the detector. A single \dword{hv} cable per \dword{pmt} will be installed in the cryostat. The cables from the \dword{pmt} locations (RG303/U) will run in bundles at the cryostat floor to either side. The short cables attached to the \dword{pmt} bases will be connected to these long cables during the \dword{pmt} installation at the cryostat floor. The long cables from each sector will be bundled and will run through a cable tray along the \SI{12}{\m} side wall to the top of the cryostat. The cable trays for the two sectors in Fig.~\ref{fig:dppd_3_1} are indicated as black vertical lines. The single cable density is approximately \SI{50}{\g/\m}. The cable length at the cryostat floor will be \SI{9}{\m} (determined by the farthest \dwords{pmt}), the side wall length is \SI{12}{\m}, and the additional average cable length per \dword{pmt} is estimated to be \SI{4}{\m}. Therefore, the overall cable length per \dword{pmt} is \SI{25}{\m}. This corresponds to approximately \SI{2}{\kg/\m} load on the cable trays on the side walls (a total of \SI{24}{\kg} assuming a cable density of \SI{50}{\g/\m}) per sector, also including the \num{6} calibration fibers. 
+
+The high voltage cables and the calibration fibers will be ended through a feedthrough flange with SHV and SMA connectors respectively. One DN250 flange is envisaged per sector of \dual \dword{pds}. One flange will house \num{36} SHV and \num{6} SMA connections. This \dual \dword{pds} design will have \num{20} penetrations along the \SI{60}{\m} length of the cryostat roof, one per sector.
+
+The high voltage and signal crates will be at a density of one per sector, hence resulting in a total of \num{20} \dword{hv}/signal racks on the cryostat roof. Figure~\ref{fig:dppd_1_2} illustrates the layout of the feedthroughs and the \dword{hv}/signal/calibration racks. The racks will contain the \dword{hv} crates, \dword{hv}/signal splitters, the \dword{utca} crates for the front-end electronics and the calibration LED driver and the associated electronics for \num{36} \dwords{pmt}.
+
+\begin{dunefigure}[The sketch of the cryostat roof layout for \dual \dword{pds} penetrations.]{fig:dppd_1_2}
+{The sketch of the cryostat roof layout for \dual \dword{pds} penetrations.}
+%\includegraphics[width=0.95\textwidth]{dppd_3_1}
+\includegraphics[width=0.55\textwidth]{dppd_1_2}
+\end{dunefigure}
+
+The cathode plane, described in Chapter~\ref{ch:dp-hv}, is placed at a height of about \SI{2}{m} above the bottom of the cryostat. Given the high dielectric constant of the \lar phase, the \dword{pmt} plane is a safe distance from the cathode plane. In order to protect the \dwords{pmt}, the ground grid is installed and placed at an identical potential as the \dword{pmt} photocathode (\SI{0}{V}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Operational Modes} %Principles}
+\label{sec:dp-pds-oveerview_operation}
+
+The physics program defines the operational modes of the \dual \dword{pds}: the measurement of the neutrino oscillation parameters requires recording events based on an external trigger coming from the beam, while non-beam physics such as \dwords{snb}, proton decay, or other rare events require special trigger conditions that include the \dword{pds}. Another operation mode is the \Dword{pmt} calibration run which is initiated by the light calibration system with its dedicated hardware trigger.
+%
+Thus, the operation modes are:
+\begin{itemize}
+\item External trigger: %this is mainly the case of 
+a typical case is when the beam generates a hardware trigger (a beam gate);  it also includes software-generated triggers for test data;
+\item Non-beam physics trigger: the electronics based on the \dword{pds} signals provides the trigger for \dword{snb}, proton decay events, etc.;
+\item Calibration trigger: during \dword{pds} calibrations, the trigger is provided by the light calibration system.
+\end{itemize}
+
+The external and non-beam physics triggers run in parallel to ensure that rare events such as \dwords{snb} are recorded efficiently. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Detector Design Specifications}
+\label{sec:dp-pds-overview_specs}
+
+The \dual \dword{pds} detector specifications are given in Tab.~\ref{tab:specs:just:DP-PDS}. The physics-driven rationale for each detector specification, and the means to validate them, are also summarized in the table. Validation of the detector specifications is based on data from \dword{pds} prototypes (Sec.~\ref{sec:dp-pds-prototypes}) and from a full simulation/reconstruction of signal and background optical flashes in the \dpmod (Sec.~\ref{sec:dp-pds-performance}). 
+
+\begin{comment}
+\begin{dunetable}
+[Summary of tentative requirements for the \dword{dpmod} \dword{pds}] % photon detection system of the DP \lartpc.]
+%{|l|l|l| p{0.8\textwidth}}
+{p{0.3\textwidth} p{0.25\textwidth} p{0.45\textwidth}}
+{tab:dppd_t_1_3}
+{Summary of tentative requirements for the \dword{dpmod} \dword{pds}. %the \dword{pds} of the DP \lartpc. 
+%Within 
+This table represents the baseline choice for the R5912-MOD20 \dword{pmt} as manufactured by Hamamatsu Photonics \cite{hamamatsu-5912} is made.}
+\footnotesize
+%  & & \\
+{\bf Feature}	& {\bf Goal}  	& {\bf Comment	}	\\
+%  & & \\ 
+\toprowrule
+%{\bf Optical} & & \\ \colhline
+\multicolumn{3}{l}{\bf Optical} \\ \specialrule{1.5pt}{1pt}{1pt}
+Spectral response & \SI{127}{nm} 	& Wavelength shifters are required.				\\
+Light yield & 2.5 \phel/\si{MeV} & For \dword{pddp}, final value depends on simulation results.\\
+% 	 & 	 & simulation results \\
+\toprowrule
+%{\bf Electronic}	&			&										\\ \colhline
+\multicolumn{3}{l}{\bf Electronic} \\ \specialrule{1.5pt}{1pt}{1pt}
+Minimum light signal & SPE & Required to perform the \dword{pmt} gain measurement. \\
+Gain			& $\sim$\num{e6}-\num{e9} & Given by \dword{pmt} specifications.			\\
+Noise (or signal/noise) &  <\SI{1}{mV} & To distinguish SPE from noise, depends on \dword{pmt} gain. \\
+Timing resolution & few ns & To distinguish S1 from S2 component. \\
+Power		& < \SI{0.2}{W/\dword{pmt}}& Used successfully in the  \dword{wa105}.			\\
+\dword{adc} dynamic range & TBD & Depends on simulation results, see Section \ref{sec:fddp-pd-4.3}  \\ 
+\toprowrule	
+% 	{\bf Electrical}	&			&									\\ \colhline
+\multicolumn{3}{l}{\bf Electrical} \\ \specialrule{1.5pt}{1pt}{1pt}
+ 	\dword{hv} range		& \si{0-2500}{V}	& Individual cable per  \dword{pmt}.			\\
+	\dword{hv} resolution	& \SI{1}{V}		    & Fine tuning of \dword{pmt} gain.			\\
+	\dword{hv} noise		& <\SI{100}{mV}		& Extra filtering is required. \\
+	\dword{hv} grounding	& Isolated		    & \dword{hv} outputs are floating, crate ground is independent of the return of the \dword{hv} channels.	\\
+%				&			& independent of the return of the \dword{hv} channels. 			\\ 
+\dword{pmt} placement		& Isolated		    & \dwords{pmt} electrically shielded from the TPC cage.	\\
+\toprowrule	
+ %     {\bf Mechanical} 	&			&									\\ \hline
+ \multicolumn{3}{l}{\bf Mechanical} \\ \specialrule{1.5pt}{1pt}{1pt}
+    Temperature 	& Cryogenic	        & \dwords{pmt} operated in \lar and tested in liquid nitrogen. 	\\
+	Pressure 		& \SI{+2}{bar}	    & The argon column is about \SI{10}{m} high.	\\		
+\end{dunetable}
+\end{comment}
+
+%\fixme{(from Anne) Here is your requirements table. For SP, we've asked each chapter to include the "top 5" of the FD specs. That may not be appropriate for DP, since those top-level specs (approved by EB) may not exist yet.}
+
+%\input{generated/req-longtable-DP-PDS.tex}
+
+%\fixme{The next table is just the DP PDS. It doesn't include the two SP FD requirements you selected (3 and 15 I think).}
+\input{generated/req-just-DP-PDS.tex}
+
+
+\fixme{Update detector specs according to comments by Ines/Antonio}
