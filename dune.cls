@@ -12,8 +12,8 @@
 
 \newif\iffinal
 %% Switch between draft or final:
-\finalfalse
-%\finaltrue
+%\finalfalse
+\finaltrue
 
 % Required values and their setters
 \newcommand\thedoctitle{DRAFT Technical Design Report}
@@ -329,7 +329,7 @@
 \newcommand{\fixme}[1]{}
 \newcommand{\fixmehl}[1]{}
 \newcommand{\metainfo}[1]{}
-%\linenumbers  %<---- uncomment if you want ONLY linenumbers with otherwise print-ready copy
+\linenumbers  %<---- uncomment if you want ONLY linenumbers with otherwise print-ready copy
 \else
 % "draft"
 %Set default style for todonotes
