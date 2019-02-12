@@ -292,7 +292,7 @@ def build(bld):
         # Tasks to build per chapter
         if bld.options.chapters:
             for chtex in voldir.ant_glob("ch-*.tex"):
-                chname = os.path.basename(chtex.name).replace('.tex','')
+                chname = os.path.basename(chtex.name).replace('.tex','').replace('_','-')
                 chmaintex = bld.path.find_or_declare("%s-%s.tex" % (volname, chname))
                 chmainpdf = bld.path.find_or_declare("%s-%s.pdf" % (volname, chname))
                 maintexs.append(chmaintex)
