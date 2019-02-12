@@ -1,6 +1,7 @@
 \section{System Design}
 \label{sec:fdsp-tpcelec-design}
 
+\begin{comment}
 In order to keep the overall noise of the readout of the \dword{apa}
 wires' planes, all possible sources of noise need to be kept to a
 minimum. This requires not only minimizing the noise sources in each
@@ -33,20 +34,63 @@ the remaining prototype activities that are required prior to
 the beginning of he detector construction. Other aspects of
 the system design, pertaining to the grounding of other 
 detector components, are discussed in Section~\ref{sec:fdsp-tpcelec-interfaces}.
+\end{comment}
+To minimize the overall noise of the readout of the \dword{apa}
+wire planes, all possible sources of noise need to be kept to a
+minimum, e.g., those from  components in the readout chain of the \dword{apa} wires, like
+the \dword{fe} amplifier noise, and from other aspects of the system, e.g., the  channelling of noise inside
+the cryostat through ground connections and through the readout
+chain of other detector components, like the \dword{pds}, the \dword{hvs},
+or the cryogenic instrumentation. 
 
+This section describes the overall
+system design of the \dword{ce}.
+
+\fixme{do we need the rest of the next pgraph?}
+
+, starting in
+\ref{sec:fdsp-tpcelec-design-grounding} with a description of the
+grounding and shielding scheme adopted in the \dword{dune} \dword{spmod}
+to minimize the overall noise in the detector, followed in
+\ref{sec:fdsp-tpcelec-design-bias} by a discussion of the bias
+voltage distribution system. Later, we describe in 
+\ref{sec:fdsp-tpcelec-design-femb} the \dwords{femb}, including
+the design of the \dwords{asic} that are being considered for
+use in \dword{dune}. In~\ref{sec:fdsp-tpcelec-design-infrastructure}
+we discuss the infrastructure for the \dword{ce} inside the cryostat,
+that includes the cold boxes that shield the \dwords{femb}, the
+cold cables, and the cables trays. Then in
+\ref{sec:fdsp-tpcelec-design-ft}-\ref{sec:fdsp-tpcelec-design-timing} we discuss 
+the infrastructure on the top of the cryostat, including the
+feedthroughs, the \dwords{wiec}, the timing distribution and
+synchronization system, and the services that provide the low
+voltage power and the bias voltage to the \dword{ce}. Finally,
+we conclude in~\ref{sec:fdsp-tpcelec-overview-remaining}
+with a discussion of the design maturity and of
+the remaining prototype activities that are required prior to
+the beginning of he detector construction. Other aspects of
+the system design, pertaining to the grounding of other 
+detector components, are discussed in Section~\ref{sec:fdsp-tpcelec-interfaces}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Grounding and Shielding}
 \label{sec:fdsp-tpcelec-design-grounding}
 
 The overall approach to minimize the system noise in \dword{dune}
 relies on avoiding noise induced by penetrations in the cryostat
-and on the readout electronics located on the detector. It also
-requires the currents caused by any apparatur or machinery outside 
-the detector are prevented from coming in through ground loops, of
+and %on 
+from the readout electronics located % on 
+outside the cryostat. %detector. 
+It also
+requires that %the 
+currents caused by any external apparatus or machinery %outside the detector are 
+be prevented from coming in through ground loops, of
 which the cryostat and the \dword{ce} are a part, and that the
-detector is shielded by a well design Faraday cage. This approach
+detector %is 
+be shielded by a %well design 
+Faraday cage. This approach
 is discussed in detail in~\cite{radekaNoise}. 
 
+\fixme{Does the next pgraph belong here? (anne)}
 During the commissioning of \dword{pdsp}, violation of these
 grounding rules have been observed with one of the readout
 boards for the \dword{pdsp}, and with the cameras immersed
@@ -59,7 +103,9 @@ a small contribution to the total readout noise. The overall
 success of \dword{pdsp} owes much to the fact that the
 grounding rules described here were properly implemented
 and that any violation was discovered and addressed during
-the commissioning. As discussed in \ref{sec:fdsp-tpcelec-overview-pdune}
+the commissioning. 
+\fixme{I'd start here:}
+As discussed in \ref{sec:fdsp-tpcelec-overview-pdune}
 the initial results from the online monitoring and the
 analysis of the \dword{pdsp} indicate that the system
 noise requirements for the \dword{dune} \dword{spmod}
@@ -69,8 +115,9 @@ To minimize system noise, the \dword{ce} cables for each \dword{apa}
 enter the cryostat through a single \dword{ce} flange, as shown in 
 Figure~\ref{fig:connections}. This creates, for grounding purposes, 
 an integrated unit consisting of an \dword{apa} frame, \dword{femb}
-ground for all \num{20} \dword{ce} modules, \dword{tpc} flange, and 
-warm interface electronics. To do this, the input amplifiers on the 
+ground for all \num{20} \dword{ce} modules, a \dword{tpc} flange, and 
+warm interface electronics. %To do this, t
+The input amplifiers on the 
 \dword{fe} \dwords{asic} have their ground terminals connected to 
 the \dword{apa} frame. All power-return leads and cable shields are 
 connected to both the ground plane of the \dword{femb} and to the 
@@ -118,31 +165,34 @@ figure prior to submitting the TDR chapter to the LBNC.}
 Each side of an \dword{apa} includes four wire layers, as 
 described in Section~\ref{sec:fdsp-apa-design}. Electrons passing 
 through the wire grid must drift unimpeded until they reach 
-the $X$-plane collection layer. The nominal bias voltages are 
-predicted to result in this electrically transparent configuration 
-and are given in Section~\ref{sec:fdsp-apa-design}. 
+the $X$-plane collection layer. The nominal bias voltages, chosen % are predicted 
+to result in this electrically transparent configuration, %and 
+are given in Section~\ref{sec:fdsp-apa-design}. 
 
 The filtering of wire bias voltages and the \dword{ac} coupling 
 of wire signals passing onto the charge amplifier circuits is 
 done on \dword{cr} boards that plug in between the \dword{apa} 
 wire-board stacks and \dwords{femb}. The \dword{cr} boards
 have already been described in Section~\ref{sec:crboards},
-and here we focus on the rationale for the choice of the
-value of resistances and capacitors and their impact on the
+and here we focus on the rationale for the choice of the %value of 
+resistance and capacitor values and their impact on the
 wire signals. Each \dword{cr} board includes single RC-filters 
 for the $X$- and $U$-plane wire bias voltages, while the $V$-plane 
-wires are directly connected to ground. In addition, each board 
+wires connect directly %are directly connected 
+to ground. In addition, each board 
 has \num{48} pairs of bias resistors and \dword{ac} coupling 
 capacitors for $X$-plane wires, and \num{40} pairs for the $U$-plane 
 wires. The coupling capacitors block \dword{dc} levels while passing \dword{ac} 
-signals to the \dwords{femb}. On the \dwords{femb} there are clamping
-diodes that limit the input voltage received at the amplifier
+signals to the \dwords{femb}. On the \dwords{femb} %there are 
+clamping
+diodes %that 
+limit the input voltage received at the amplifier
 circuits to between \SI{1.8}{V}\,$\pm$\,U$_D$, where U$_D$
 is the breakdown voltage of the diode, approximately \SI{0.7}{V}.
 The amplifier circuit has a \SI{22}{nF} coupling capacitor at
 input to avoid leakage current from the protection clamping diodes.
 A schematic diagram of the \dword{dune} \dword{apa} wire bias 
-subsystem, identical to the one used in \dword{pdsp}, is 
+subsystem, identical to the one used in \dword{pdsp},appears  % is 
 in Figure~\ref{fig:CR-board}.
 
 \begin{dunefigure}
@@ -158,7 +208,7 @@ achieve a longer time constant for the high-pass coupling networks.
 Time constants should be at least \num{25} times the electron 
 drift time so that the undershoot in the digitized waveform
 is small and easily correctable. However, leakage currents can 
-develop on \dword{pcb} that are exposed to high voltages over 
+develop on \dwords{pcb} that are exposed to high voltages over 
 extended periods. If the bias resistors are much greater than 
 \SI{50}{\mega\ohm}, leakage currents may affect the bias voltages 
 applied to the wires. As discussed in Section~\ref{sec:crboards},
@@ -172,7 +222,7 @@ The bias-voltage filters are RC low-pass networks. Resistance
 values should be much smaller than the bias resistances to control 
 cross-talk between wires and limit the voltage drop if any of the 
 wires becomes shorted to the \dword{apa} frame. As discussed
-in Section~\ref{sec:crboards}, these resistors have a resistance
+in Section~\ref{sec:crboards}, these resistors are %have a resistance
 \SI{2.2}{\mega\ohm}, while the bias filter capacitors are \SI{39}{nF}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -192,6 +242,7 @@ The \dword{femb} also contains regulators that produce the voltages
 required by the \dwords{asic} and filter those voltages, and 
 a micro-electromechanical system oscillator that is used to
 filter out the jitter from the clock received from the \dword{wib}.
+\fixme{previous sentence unclear}
 The \dword{larasic} inputs are protected by diodes and a series inductor.
 
 \begin{dunefigure}
@@ -199,17 +250,19 @@ The \dword{larasic} inputs are protected by diodes and a series inductor.
 {fig:ce-scheme}
 {The baseline \dword{ce} architecture. The basic unit is the 
 128-channel \dword{femb}. The scheme includes also the 
-\dwords{sipm} used for the readout of the photon detectors}
+\dwords{sipm} used for the readout of the \dwords{pd}.}
 \includegraphics[width=0.99\linewidth]{sp-tpcelec-schematic-v3.pdf}
 \end{dunefigure}
 
 The \dword{pdsp} version of the \dword{femb} (which uses a single 
 \dword{fpga} on a mezzanine card instead of two \dword{coldata} 
 \dwords{asic}) is shown in Figure~\ref{fig:femb}. In the rest of
-this section we describe the \dwords{asic} that can be insalled
+this section we describe the \dwords{asic} that can be installed
 on the \dwords{femb} and discuss the procedure that will be 
-followed to choose the \dword{asic} solution to be implemented
-for the \dword{dune} \dword{spmod} construction. In addition to
+followed to choose the \dword{asic} %solution to be implemented for 
+to implement in the %\dword{dune} 
+\dword{spmod}. % construction. 
+In addition to
 describing \dword{larasic}, \dword{coldadc}, and \dword{coldata},
 we also discuss two alternative solutions, one based on a 
 \dword{cots} \dword{adc}, and one where the functionality of the
@@ -225,16 +278,16 @@ detector. The cable shown is the high-speed data, clock, and control cable.}
 
 The functionality of the \dword{femb} for \dword{dune} will be
 almost identical to that of \dword{femb} used in \dword{pdsp}.
-The design will change slightly to accomodate the new \dwords{asic},
+The design will change slightly to accommodate the new \dwords{asic},
 which will also entail changing the connections to the \dword{wib},
-and changing the number of voltage regulators. In addition the
+and changing the number of voltage regulators. In addition, the
 connector for the control and data cold cables will be replaced
 to address the issue observed in \dword{pdsp} that was discussed
 in Section~\ref{sec:fdsp-tpcelec-overview-lessons}. The new design,
 shown in Figure~\ref{fig:femb-connector}, foresees the addition
 of wings to the \dword{pcb} soldered to the cold cable, with 
 surface mount standoffs to ensure the planarity of the connector
-to the \dword{femb}, and a cutout in the \dword{pcb} to avoid
+to the \dword{femb}, and a cutout in the \dword{pcb} to preclude %avoid
 any stresses introduced by height variations.
 
 \begin{dunefigure}
@@ -246,39 +299,42 @@ any stresses introduced by height variations.
 
 All the components on the \dword{femb} need to have a very long lifetime
 in \dword{lar}, including commercial resistances and capacitors, the
-low voltage regulators, and the micro-electromechanical system oscillator.
-In order to achieve the targeted \dunelifetime all commercial components 
-need to be qualified and their lifetime in \dword{lar} need to be measured. 
-In the case of custom \dwords{asic} appropriate steps need to be taken prior 
-to even starting the layout of the chips. Both \dword{coldata} and 
+low-voltage regulators, and the micro-electromechanical system oscillator.
+In order to achieve the targeted lifetime of \dunelifetime{}, all commercial components 
+need to be qualified with %and 
+their lifetime in \dword{lar} %need to be 
+measured. 
+In the case of custom \dwords{asic}, appropriate steps must be taken prior 
+to starting the layout of the chips. Both \dword{coldata} and 
 \dword{coldadc} are implemented in the \dword{tsmc} \SI{65}{nm} \dword{cmos} 
 process~\cite{TSMC65}. The designs were done using cold transistor models 
-produced by Logix Consulting~\cite{Logix}.  Logix made measurements of 
+produced by Logix Consulting\footnote{Logix\texttrademark{} Consulting, http://www.lgx.com/.}.  Logix made measurements of 
 \dword{fnal}-supplied \dword{tsmc} \SI{65}{nm} transistors at \lntwo 
 temperature and extracted and provided to the design teams \dword{spice} 
-models models valid at \lntwo temperature.  These models were used in 
+models valid at \lntwo temperature.  These models were used in 
 analog simulations of \dword{coldata} and \dword{coldadc} subcircuits.  
 In order to eliminate the risk of accelerated aging due to the hot carrier
 effect~\cite{Hot-electron}, no transistor with channel length
 less than \SI{90}{nm} was used in either \dword{asic} design.
-A special library of standard cells using \SI{90}{nm} channel
-length transistors was developed by members of the University
+A special library of standard cells using \SI{90}{nm} channel-length 
+transistors was developed by members of the University
 of Pennsylvania and \dword{fnal} groups. Timing parameters were
 developed for this standard cell library using the Cadence Liberate
-tool~\cite{Liberate} and the Logix \dword{spice}~\cite{spice} models. With the
+tool\footnote{Cadence Liberate\texttrademark{}, \url{https://www.cadence.com/content/cadence-www/global/en_US/home/tools/custom-ic-analog-rf-design/library-characterization/liberate-characterization.html}. } 
+and the Logix \dword{spice}~\cite{spice} models. With the
 exception of the \dword{coldata} \dword{pll}, serializer, and
 output driver, the digital sections of \dword{coldata} and
 \dword{coldadc} were synthesized from Verilog code using this
-standard cell library and the Cadence Innovus tool~\cite{Innovus}.
+standard cell library and the Cadence Innovus tool~\footnote{Cadence Innovus\texttrademark{}, \url{https://www.cadence.com/content/cadence-www/global/en_US/home/tools/digital-design-and-signoff/hierarchical-design-and-floorplanning/innovus-implementation-system.html}.}. 
 Innovus was also used for the layout of the synthesized logic.
 The design of the \dword{cryo} \dword{asic} and of \dword{larasic}
 are implemented in the \dword{tsmc} \SI{130}{nm} and \SI{180}{nm} 
 \dword{cmos} process~\cite{TSMC130,TSMC180}, respectively. In the
 first case the design is based on \dword{spice} models valid at
 \lntwo temperature, that were derived following the same approach
-as for theh \SI{65}{nm} technology. In the case of \dword{larasic}
+as for the \SI{65}{nm} technology. In the case of \dword{larasic}, 
 the design uses models that were obtained by extrapolating the
-parameters of the models provided by \dword{tsmc}, that are 
+parameters of the models provided by \dword{tsmc}, which are 
 generally valid in the \SIrange{230}{400}{K}.
 
 %%%%%%%%%%%%%%%%%%
@@ -330,7 +386,7 @@ components as a function of temperature. Channel-to-channel and
 chip-to-chip variation in the calibration capacitor are typically 
 less than \num{1}\%. The variations of the calibration capacitors
 could be characterized prior to the beginning of \dword{dune}
-data taking,using the \dword{qc} process, discussed in
+data taking, using the \dword{qc} process, discussed in
 Section~\ref{sec:fdsp-tpcelec-integration-qc}.
 
 Shared among the \num{16} channels in the \dword{fe} \dword{asic} are 
@@ -385,15 +441,17 @@ mode and default gain setting are working properly.
 P3 \dword{fe} \dword{asic} will be further evaluated on \dwords{femb} 
 in various integration test stands for performance studies, including 
 the \num{40}\% \dword{apa} at \dword{bnl}, the \dword{iceberg} \dword{tpc} 
-at \dword{fermilab} and the \num{7}$^{th}$ \dword{protodune} \dword{apa} 
+at \dword{fermilab} and the seventh \dword{protodune} \dword{apa} 
 in the cold box at \dword{cern}. Test results of P3 \dword{fe} \dword{asic} 
 will guide the development of the next version P4 \dword{fe} \dword{asic}, 
 which will be implemented a single ended to differential converter for 
-interface to recently developed \dword{coldadc}. The P4 version of 
+interface to recently developed \dword{coldadc}. 
+\fixme{I can't parse prev sentence} The P4 version of 
 \dword{larasic} will also address the saturation problem observed in
-the \dword{pdsp} initial operation, that has been discussed in 
+the \dword{pdsp} initial operation, discussed in 
 Section~\ref{sec:fdsp-tpcelec-overview-lessons}. The plan for solving
-this issue is discussed below in Section~\ref{sec:fdsp-tpcelec-overview-remaining}.
+this issue is discussed %below 
+in Section~\ref{sec:fdsp-tpcelec-overview-remaining}.
 
 %%%%%%%%%%%%%%%%%%
 \subsubsection{\dword{coldadc} \dword{asic}}
@@ -402,8 +460,8 @@ this issue is discussed below in Section~\ref{sec:fdsp-tpcelec-overview-remainin
 \dword{coldadc} is a low-noise \dword{adc} \dword{asic} designed to digitize
 \num{16} input channels at a rate of \SI{2}{MHz}. It is implemented in the \dword{tsmc}
 \SI{65}{nm} \dword{cmos} technology and has been designed by a team of engineers
-from LBL, \dword{bnl}, and \dword{fermilab}.  The \dword{asic} uses a conservative,
-industry standard design including digital calibration.  Each \dword{coldadc}
+from LBL, \dword{bnl}, and \dword{fnal}.  The \dword{asic} uses a conservative,
+industry-standard design including digital calibration.  Each \dword{coldadc}
 receives \num{16} voltage outputs from a single \dword{larasic} chip.  The voltages
 are buffered, multiplexed by \num{8}, and input to two \num{15}-stage pipelined \dwords{adc}
 operating at \SI{16}{MHz}.  The \dword{adc} uses the well-known pipelined architecture
@@ -430,7 +488,7 @@ All required reference voltages and currents are generated on-chip by programmab
 circuit blocks. The most accurate reference voltage circuit is a band-gap reference
 based on a \dword{pnp} transistor.  However, measurements made at \dword{bnl} and
 \dword{lbnl} of a large \dword{pnp} transistor indicate that the foundry-provided \dword{spice} model
-does not adequately describe the device operation at liquid argon temperature.  Thus,
+does not adequately describe the device operation at \lar temperature.  Thus,
 a \dword{cmos}-based voltage reference has also been included in \dword{coldadc}.
 In the event that both on-chip reference generation circuits fail, an external voltage
 reference can be used.
@@ -447,13 +505,13 @@ well, it is also possible to bypass the input buffers and apply the inputs direc
 to the sample-and-hold amplifiers.  The sample-and-hold amplifiers are separated
 into two groups of eight.  They sample the waveform at the rising edge of the
 (\SI{2}{MHz}) sampling clock.  An internally generated \SI{16}{MHz} clock is then
-used to clock an \num{8}-to-\num{1} multiplexer which presents eight samples in 
+used to clock an \num{8}-to-\num{1} multiplexer that presents eight samples in 
 turn to one of the two \dword{adc} pipelines.
 
 A block diagram of an \dword{adc} pipeline is shown in
 Figure~\ref{fig:pipelinestage}. Each of the \num{15} stages contains a low-resolution
 \num{1.5}-bit analog-to-digital subconverter containing two comparators, a
-\num{1.5}-bit digital-to-analog subconverter that produces an voltage based on
+\num{1.5}-bit digital-to-analog subconverter that produces a voltage based on
 the two comparator outputs, an analog subtractor, a sample-and-hold amplifier,
 and a gain stage (with a nominal gain of two). The transfer function of
 each stage is identical and is shown in Figure~\ref{fig:ADCXFERFN} along with
@@ -495,7 +553,7 @@ is wrong by up to $V_r/4$.}
 \end{dunefigure}
 
 The calibration logic allows the correction of errors caused by imperfections
-in the voltage that is passed from one stage to the next.  These arise from
+in the voltage that are passed from one stage to the next.  These arise from
 errors in the voltage in each stage corresponding to $\pm V_r/2$
 (generated by resistive dividers) and imperfections in the gain and offset of
 the interstage amplifiers.  The calibration procedure relies on the fact that
@@ -534,6 +592,7 @@ quantization error of an ideal \num{12}-bit \dword{adc} with a voltage range of
 \SI{1.5}{V} for which the bin width is \SI{366}{$\mu$V} and the quantization
 error is \SI{\sim106}{$\mu$V}.
 
+%%%%% Anne to here Feb 12
 In normal operation, each pipelined \dword{adc} passes a \num{16}-bit result to the
 data formatter on the rising edge of the \SI{16}{MHz} clock.  The data formatter
 separates the two 16-bit words into eight \num{4}-bit nibbles and serializes the
