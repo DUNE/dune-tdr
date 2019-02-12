@@ -193,9 +193,8 @@ The rest, labeled
 as SP-TPC, are engineering specifications derived from the design choices for the \dword{ce}. % that
 %are discussed later in this Chapter, in Section~\ref{sec:fdsp-tpcelec-design}.
 %It should be 
-Note that requirements SP-FD-01, SP-FD-03, SP-FD-04, and SP-FD-05
-apply to %on 
-other detector components. % other than the \dword{ce} ones.
+Note that requirements SP-FD-01, SP-FD-03, SP-FD-04, and SP-FD-05 do not 
+apply to the \dword{ce}. %on other detector components. % other than the \dword{ce} ones.
 
 \input{generated/req-longtable-SP-ELEC}
 
@@ -234,7 +233,7 @@ is defined by SP-FD-14. %the previous requirement for the signal saturation leve
 Combining this %those two 
 with SP-FD-2 %requirements with the requirement for 
 on the total electronics noise 
-results in the need for 12~bits digitization.
+results in the need for 12~bits digitization. 
 
 \item SP-FD-21:   The power dissipated by the electronics located in the \dword{lar} must
 be less than \SI{50}{mW/channel}. Lower power dissipation is desirable because 
@@ -260,6 +259,14 @@ the overall noise. % of the readout chain.
 %for each gain setting it translates into requirements on
 %the \dword{adc} parameters, including non-linearity and noise.}
 The \dword{adc} specifications for non-linearity and noise will depend on the gain of the \dword{fe}.
+
+
+\fixme{original for SP-FD-25: All the components of the readout chain, including the \dword{adc}
+and the bias voltage supplies, must not contribute significantly to
+the overall noise of the readout chain. In the case of the \dword{adc}
+this requirement depends on the gain of the \dword{fe} and
+for each gain setting it translates into requirements on
+the \dword{adc} parameters, including non-linearity and noise. (Marco thinks my rewrite is unclear.)}
 
 
 \item SP-FD-28: The fraction of non-functioning channels over %the 
@@ -430,12 +437,15 @@ circuits to age much more quickly at \dword{lar} temperature, %than at room temp
 reducing performance and potentially causing failure. To mitigate this effect,
 the maximum \efield in transistor channels must be lower than % the field 
 that which could %can 
-be used reliably at room temperature. This is accomplished by using transistors
-%fabricated 
-with longer channels % lengths that are larger than the length commonly used
-than those commonly used %for 
-in otherwise similar \dwords{asic}, %using of the same technology, 
-and operated at reduced bias voltage. 
+be used reliably at room temperature. 
+\fixme{orig: This is accomplished by using transistors
+fabricated with channel lengths that are larger than the length commonly used
+for \dwords{asic} using the same technology, and operated at reduced bias voltage.}
+%
+This is accomplished by designing \dwords{asic} to use transistors 
+with  channels two to three times longer than would be used at room temperature
+and operating them at reduced bias voltage. 
+%
 We must carefully test any commercial circuits used in the \dword{lar} %must be carefully tested 
 to ensure 
 they will perform well for the expected experiment lifetime. %\dunelifetime lifetime of \dword{dune}; 
@@ -496,18 +506,22 @@ cycle in GN$_2$ in the CERN cold box; right $y$ axis: temperature
 %%% AH to here EOB 2/11
 After the cryostat was filled with \dword{lar} and the drift and wire 
 bias voltages were set to their nominal values (defined in Chapter~\ref{ch:sp-execsum}), 
-99.7\% of the \dword{tpc} readout channels were alive. The following 
-channels were expected to be unresponsive to charge deposited on the wires
+99.7\% of the \dword{tpc} readout channels were live. % alive. 
+The following 
+channels were expected to be unresponsive %to charge deposited on the wires
 based on tests performed prior to the insertion of the \dword{apa} into
 the cryostat:
 \begin{itemize}
 \item{Four electronics channels, suggesting a dead channel in the electronics, 
-all on collection wires on three different \dwords{apa};}
-\item{14 channels measured with consistent with no capacitive load 
-on the \dword{fe} electronics, suggesting an open connection somewhere in 
-front of the \dword{ce} system, scattered randomly throughout the detector 
+all on collection wires, on three different \dword{apa}s;}
+\item{14 channels measured with consistent with no capacitive load
+\fixme{Fourteen channels that consistently showed no capacitive load?} 
+on the \dword{fe} electronics, suggesting an open connection somewhere upstream %in front 
+of the \dword{ce} system, scattered randomly throughout the detector, 
 and on all wire planes.}
 \end{itemize}
+
+\begin{comment}  No need for itemizing here (anne)
 Two additional sets of channels were observed to be non-responsive
 after filling the detector with \lar:
 \begin{itemize}
@@ -517,21 +531,30 @@ immediately after the \lar filling was complete;}
 high voltage was raised to \SI{120}{kV}, and two more
 when the high voltage reached \SI{180}{kV}.}
 \end{itemize}
-There hasn't been any further loss of readout channels since 
+\end{comment}
+After filling the detector with \lar{}, an additional 18 channels stopped responding. Two more  followed  after the cathode \dword{hv} was raised to \SI{120}{kV}, and another two when the \dword{hv}  reached \SI{180}{kV}.
+
+
+
+No %There hasn't been any 
+further loss of readout channels has occurred since 
 the end of September 2018.
 With the detector in nominal operating conditions, the noise
 measured by the online monitoring program was approximately 550~e$^-$ 
 on the collection wires and approximately 700~e$^-$ on the induction
-wires.averaged over all operational channels. The noise increases
+wires averaged over all operational channels. The noise increased %s
 relative to the tests performed inside the cold box due to the 
-larger dielectric constant of \lntwo relative to GN$_2$. The noise
-measurements in the two conditions are consistent with the 
-ratio of the corresponding capacitances of the \dword{apa} wires.
+larger dielectric constant of \lntwo relative to GN$_2$. 
+These noise measurements  %in the two conditions 
+are consistent with the 
+ratio of the corresponding capacitances of the \dword{apa} wires. 
 Figure~\ref{fig:apa3-noise} 
-shows the noise in electrons for all channels of one of the 
-\dword{apa}+\dword{ce} readout units. The collection channels with 
-noise larger than \SI{1500}{e$^-$} are caused by a problem in the P1-\dword{adc}
-\dword{asic} used in \dword{protodune}-\dword{sp}, that had already
+shows the noise in electrons for all channels of one %of the 
+\dword{apa}+\dword{ce} readout unit. %s. 
+The collection channels with noise larger than \SI{1500}{e$^-$} had a problem %are 
+caused by a problem in the P1-\dword{adc} 
+\dword{asic};  %used in \dword{protodune}-\dword{sp},
+this problem had already
 been identified at the time of testing the components prior to their
 installation on the \dwords{femb}. The channels in all three planes 
 with noise smaller than \SI{300}{e$^-$} have an open connection somewhere in 
@@ -544,8 +567,9 @@ filter is applied.
 \begin{dunefigure}
 [TPC noise levels measured at \dword{pdsp} after \lar fill]
 {fig:apa3-noise}
-{Noise in electrons for all U, V, and X (red, blue, and green curves) sense 
-wire planes for one \dword{protodune} \dword{apa} with the detector in nominal operating 
+{Noise (in electrons) for all U, V, and X (red, blue, and green curves) sense 
+wire planes for one \dword{pdsp} \dword{apa} %with the detector in 
+under nominal operating 
 conditions.}
 \includegraphics[width=0.9\linewidth]{sp-tpcelec-apa3-enc.png}
 \end{dunefigure}
@@ -559,25 +583,29 @@ before and after the application of a simple common-mode filter.}
 \end{dunefigure}
 
 The overall performance of the \dword{ce} system in 
-\dword{protodune}-\dword{sp} satisfies the \dword{dune} 
-single phase \dword{fd} \dword{ce} system requirements 
+\dword{pdsp} satisfies the %\dword{dune} 
+\dword{sp} %\dword{fd} 
+\dword{ce} system requirements for the \dword{fd} 
 listed in Section~\ref{sec:fdsp-tpcelec-overview-requirements}. 
-Another demonstration of the performance achieved
-and of the progress made since previous detectors based on the
-\dword{lartpc} technology is given by a comparison of the raw data from 
-a \dword{pdsp} event shown in Figure~\ref{fig:pdsp-display} with
-the raw data from a \dword{microboone} event shown in
-Figure~\ref{fig:microboone-display}, taken from~\cite{Acciarri:2017sde}.
-The \dword{pdsp} event, collected very early in the data taking
+%Another demonstration of the performance achieved
+%and of the progress made since previous detectors based on the
+%\dword{lartpc} technology is given by 
+%
+A comparison of the raw data from 
+a \dword{pdsp} event (Figure~\ref{fig:pdsp-display}) to 
+that from a \dword{microboone} event (Figure~\ref{fig:microboone-display}~\cite{Acciarri:2017sde}) demonstrates the improvements in performance of \dwords{lartpc}. 
+The \dword{pdsp} event was collected very early in the data taking
 period when the charge collection efficiency was still limited
 by the amount of impurities in the \dword{lar}, shows very little
 noise and appears to be of the same quality as the \dword{microboone}
-event display after offline noise removal. This clearly shows
-that significant progress has been made in the overall system
-design based on the lessons learned from previous experiments
-using the \dword{lartpc} technology, resulting in high quality
-data with very little noise immediately after the beginning of
-data taking.
+event display after offline noise removal. 
+% This clearly demonstrates %shows -- repetitive (anne)
+%that significant progress has been made 
+%significant progress in the overall system
+%design,  % based on the lessons learned from previous experiments
+%using the \dword{lartpc} technology, 
+%resulting in immediate collection of high quality
+%data with very little noise. % immediately after the beginning of data taking.
 
 \fixme{Marco: the ProtoDUNE event display will be replaced (same event, 
 but view before removal of common-mode noise).}
@@ -585,8 +613,8 @@ but view before removal of common-mode noise).}
 \begin{dunefigure}
 [Raw data from a \dword{pdsp} event]
 {fig:pdsp-display}
-{Display of the charge deposited on the collection wires (X-axis) as
-a function of the drift time (Y-axis) for a \dword{pdsp} event 
+{Display of the charge deposited on the collection wires ($x$-axis) as
+a function of the drift time ($y$-axis) for a \dword{pdsp} event 
 that includes two electromagnetic showers and a four-prong interaction.
 The color associated with each time sample on the \dword{apa}
 wires gives a measurement of the charge measured by the \dword{ce}
@@ -598,10 +626,10 @@ ones (red).}
 \begin{dunefigure}
 [Raw data from a \dword{microboone} event]
 {fig:microboone-display}
-{\dword{microboone} 2-D event display of the V plane from run 3493 
+{\dword{microboone} \twod event display of the V plane from run 3493 
 event 41075 showing the raw signal (a) before and (b) after offline 
 noise filtering. A clean event signature is recovered once all the 
-identified noise sources are subtracted. Taken from~\cite{Acciarri:2017sde}.}
+identified noise sources are subtracted~\cite{Acciarri:2017sde}.}
 \includegraphics[width=0.9\linewidth]{microBoone_display.pdf}
 \end{dunefigure}
 
@@ -609,70 +637,89 @@ identified noise sources are subtracted. Taken from~\cite{Acciarri:2017sde}.}
 \subsection{ProtoDUNE-SP Lessons Learned}
 \label{sec:fdsp-tpcelec-overview-lessons}
 
-As discussed in the previous Section, the initial data from \dword{pdsp}
-show that the \dword{dune} detector requirements presented in 
-Section~\ref{sec:fdsp-tpcelec-overview-requirements} can be met.
+As discussed in %the previous 
+Section~\ref{sec:fdsp-tpcelec-overview-pdune}, the initial data from \dword{pdsp}
+show that the \dword{dune} detector can meet the  %requirements 
+specifications presented in 
+Section~\ref{sec:fdsp-tpcelec-overview-requirements}. % can be met.
 However, several improvements and updates to the \dword{ce} system design 
-are motivated by the results of the testing and commissioning of, and 
-the data-taking with, the \dword{pdsp} electronics. A complete list
-of the lessons learned from the construction, testing, integration,
+are motivated by the experience with the \dword{ce} in \dword{pdsp}. 
+%results of the testing, %and 
+%commissioning, and operation of %, and the data-taking with, 
+%the \dword{pdsp} electronics. 
+A complete list of the lessons learned from the construction, testing, integration,
 installation, commissioning of the \dword{ce} detector components
-is available in~\cite{bib:docdb12367}. In addition to reporting the
-lessons learned, the plans and timeline for addressing the issues 
-observed in \dword{pdsp} are also discussed in this document. Here
-only the main issues are discussed, and the plans for their resolution
-are discussed in the next Section, where the planned design changes
-for the \dword{dune} detector are discussed.
+is available in~\cite{bib:docdb12367}. This document also discusses %In addition to reporting the lessons learned, 
+the plans and timeline for addressing the issues 
+observed in \dword{pdsp}. % are also discussed in this document. Here
+This section and the following cover only the main issues  % are discussed, 
+and the plans for their resolution  
+%are discussed in the next Section, where the planned design changes
+for implementation in the \dword{spmod}. %\dword{dune} detector are discussed.
 
 The main problem with the \dword{pdsp} \dword{ce} readout is in the
-P1-\dword{adc} \dword{asic}. This problem was observed already in 2017
+P1-\dword{adc} \dword{asic}. This problem was observed as early as 2017 %already in 2017
 when these \dwords{asic} were being tested prior to their installation
-on the \dwords{femb}. The main issue with the P1-\dword{adc} is 
-that the ``domino'' architecture used in this design relies on
-excellent transistor matching, and unfortunately transistor matching
+on the \dwords{femb}.% The main issue with the P1-\dword{adc} is that the
+The ``domino'' architecture used in this design relies on
+excellent transistor matching, which %and 
+unfortunately %transistor matching
 is worse at \dword{lar} temperature. In \dword{pdsp} this problem
 results in some readout channels having a fixed value for some of
 the \dword{adc} bits. Some these channels need to be masked 
 from analysis, resulting in a loss of efficiency for \dword{pdsp}, while
 in a majority of cases an approximated value for the charge can
-be obtained via interpolation. Due to this problem, plans have
-been put in place to develop an \dword{adc} with a completely new
-design for \dword{dune}. A new \dword{adc} \dword{asic} (also called 
-\dword{coldadc} \dword{asic}) is being developed by an 
-\dword{bnl}-\dword{fermilab}-\dword{lbnl} collaboration and first
-prototypes are planned to be characterized in February 2019. The design
-of this \dword{adc} is discussed in detail in 
-Section~\ref{sec:fdsp-tpcelec-design-femb-adc}. In parallel two
-alternatives are being considered for \dword{dune}. The \dword{sbnd} 
-Collaboration has demonstrated that there is also a \dword{cots} 
-solution for the analog to digital conversion, based on the Analog 
+be obtained via interpolation. 
+\fixme{some of the ``some channels'' needed masking? An approx value was obtained for a majority of the ``some channels'' (not the masked ones?) } 
+%Due to this problem, plans have been put  in place to develop an \dword{adc} with a completely new design for the \dword{dune}. 
+To resolve this problem, a new \dword{adc} \dword{asic} (also called a 
+\dword{coldadc} \dword{asic}) is being developed by a  
+\dword{bnl}-\dword{fermilab}-\dword{lbnl} collaboration, and first
+prototypes are planned to be characterized in February 2019. %The design
+%of this \dword{adc} is discussed in detail in 
+Section~\ref{sec:fdsp-tpcelec-design-femb-adc} presents a detailed design.  In parallel, two
+alternatives are being considered for the \dword{spmod}. % \dword{dune}. 
+First, the \dword{sbnd} 
+collaboration has found %demonstrated that there is also 
+a \dword{cots} 
+solution for the analog-to-digital conversion, based on the Analog 
 Devices~\cite{AnalogDevices} AD7274~\cite{AD7274} \dword{adc}, that meets 
-the \dword{dune} requirements and that could be used \dword{dune}, in the
-case that the custom \dword{asic} developments were not successfully
-completed in time for the detector construction. This \dword{cots}
+the \dword{dune} specifications %requirements 
+and that could be used \dword{dune}, in %the
+case that the custom \dword{asic} is not %developments were not successfully
+completed in time. % for the detector construction. 
+This \dword{cots}
 solution is not the preferred approach for \dword{dune} since it
-requires one \dword{asic} for each readout channel (i.e. a total
-of \num{384,000} chips) which would cause significant cost increases
+requires one \dword{asic} for each readout channel (i.e., a total
+of \num{384,000} chips), which would increase the cost %cause significant cost increases
 and would require a very extensive \dword{qc} program. The qualification
 of this \dword{cots} \dword{adc} for use in \dword{dune} is described
-in Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cots}.
-The second is a single \num{64}-channel \dword{asic}, referred to as \dword{cryo},
+in Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cots}. 
+The second alternative is a single \num{64}-channel \dword{asic}, referred to as \dword{cryo},
 that consolidates the \dword{fe}, the analog-to-digital conversion, and the
-data serialization functionalities in a single chip. This 
-development has also reached the prototype stage with \dwords{asic}
-that are planned to be characterized in February 2019. More details about this
-solution are discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cryo}.
+data serialization functions %alities 
+in a single chip. %This  development 
+It has also reached the prototype stage with \dword{asic} %that are planned to be 
+characterization planned in February 2019. %More details about this solution are discussed in 
+Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cryo} provides details.
 
-Initial analysis of the \dword{pdsp} data has shown a new problem 
-with \dword{larasic} The problem occurs when a large amount of 
-change ($>$\SI{50}{fC}) is collected over a period of \SIrange{10}{50}{$\mu$s}.
-This causes the feedback mechanism of the \dword{fe} amplifier 
-to stop working for a certain period of time (several hundred $\mu$s). 
-In this period, the readout is not functioning and signals following 
-the large charge deposited may be completely lost. A ledge is observed 
+Initial analysis of the \dword{pdsp} data has uncovered %shown 
+a new problem 
+with \dword{larasic} %The problem 
+that occurs when %a large amount of change (
+$>$\SI{50}{fC} is collected over a period of \SIrange{10}{50}{$\mu$s}.
+%This causes 
+The feedback mechanism of the \dword{fe} amplifier 
+% to stop 
+stops working for %a certain period of time (
+several hundred $\mu$s.  %In 
+During this period, the readout does not function %is not functioning 
+and signals following 
+the large charge deposited can %may 
+be completely lost. A ledge is observed 
 in the output of the \dword{fe} amplifier, followed by a slow decay 
-and a sudden turn-on of the amplifier. An example of this behavior 
-from data is shown in Figure~\ref{fig:pdsp-ledge}.
+and a sudden turn-on of the amplifier. %An example of this behavior from data is shown in 
+Figure~\ref{fig:pdsp-ledge} shows an example of this behavior.
 
 \begin{dunefigure}
 [Pulse shape on a \dword{pdsp} wire showing the ledge effect]
@@ -692,14 +739,17 @@ observed, the decision was taken to operate the \dword{ce} in \dword{pdsp}
 using the \SI{900}{mV} baseline also for the collection wires, sacrificing
 the dynamic range. Data from the wires where the problem occurs can
 be masked in analysis, resulting in a loss of efficiency. It should be
-noted that the problem occurs more often in \dword{pdsp} compared to
-\dword{dune} due to the presence of cosmic rays traveling parallel
-to the \dword{apa} wires in the first case. The problem cannot be 
-discounted for \dword{dune}, since it could also affect the detection
-of electromagnetic showers that are one of the main physics signals.
-The plan and the timeline for addressing this issue in a new prototype
-of \dword{larasic} are going to be discussed in 
-Section~\ref{sec:fdsp-tpcelec-design-femb-fe}.
+noted that the problem occurs more often in \dword{pdsp} %compared to
+%\dword{dune} 
+than is expected in the \dword{spmod} due to the presence of cosmic rays traveling parallel
+to the \dword{apa} wires. % in the first case. 
+The problem cannot be 
+discounted for \dword{dune}, however, since it could %also 
+affect the detection
+of electromagnetic showers -- one of the main physics signals.
+%The plan and the timeline for addressing this issue in a new \dword{larasic} prototype
+%of  are going to be discussed in 
+Section~\ref{sec:fdsp-tpcelec-design-femb-fe} discusses the olans and timeline for addressing this issue in a new \dword{larasic} prototype.
 
 \begin{dunefigure}
 [Image of a connector for the cold cables lifted from the \dword{femb}]
@@ -711,26 +761,40 @@ that acts as the ``male'' part of the connector.}
 \includegraphics[width=1.0\linewidth]{sp-tpcelec-femb-problem.png}
 \end{dunefigure}
 
+\begin{comment}During the integration of the \dwords{femb} onto the \dwords{apa}
+and the cold tests that preceded the \dwords{apa} installation
+inside the \dword{pdsp} cryostat a problem occurred %was observed 
+on the 
+connection between the cold readout and control cables and the
+\dwords{femb}. In multiple cases the connector %is 
+detached from
+the \dword{femb} causing a loss of communication. 
+\end{comment}
 During the integration of the \dwords{femb} onto the \dwords{apa}
 and the cold tests that preceded the \dwords{apa} installation
-inside the \dword{pdsp} cryostat a problem was observed on the 
-connection between the cold readout and control cables and the
-\dwords{femb}. In multiple cases the connector is detached from
-the \dword{femb} causing a loss of communication. This problem 
-was fixed for all the \dwords{apa} tested in the cold box by
-replacing the \dword{femb}. One additional \dword{femb} was 
+inside the \dword{pdsp} cryostat multiple connectors  
+detached from
+the \dword{femb}, causing a loss of communication.  
+For \dword{pdsp} we replaced the \dword{femb} %This problem was fixed for 
+on all the \dwords{apa} tested in the cold box. % by replacing the \dword{femb}. 
+One additional \dword{femb} was 
 replaced on the \dword{apa} that was installed without undergoing 
-the test in the cold box. This problem may also be the cause
+the test in the cold box. This %problem 
+detachment may also be the cause
 of the loss of the external clock signal on one of the \dwords{femb}
-which was observed after the cool-down of the detector. The problem 
+that was observed after the cooldown of the detector. 
+%
+The problem 
 with the connector has been traced to a mechanical interference between 
 the epoxy deposited as a protective measure on the small printed circuit
 board to which the cold cables are soldered and which forms the
 ``male'' part of the connector. The height of the epoxy can cause
-the ``female'' part of the connector to lift from, as shown in
-Figure~\ref{fig:pdsp-femb-connector}. This problem is being 
-addressed by a redesign of the connection between the \dword{femb}
-and the cold cables, as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb}.
+the ``female'' part of the connector to lift, % from, 
+as shown in 
+Figure~\ref{fig:pdsp-femb-connector}. %This problem is being 
+%addressed by a redesign of the connection between the \dword{femb}
+%and the cold cables, as discussed in 
+Section~\ref{sec:fdsp-tpcelec-design-femb} discusses the redesign of the connection to address the problem.
 
 \begin{dunefigure}
 [Spectrum of the noise on the \dword{pdsp} \dword{apa} wires before and after noise filtering]
@@ -741,30 +805,38 @@ and the cold cables, as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb}.
 \includegraphics[width=0.49\linewidth]{sp-tpcelec-avgFFT-WithFilt.pdf}
 \end{dunefigure}
 
-Finally, it should be noted that the analysis of the \dword{pdsp} data
-is just starting and that there is a lot to learn about the
-detector and how different components of the detector interact
-among themselves from this data. The level of noise mentioned in
-the previous section (approximately \SI{550}{e$^-$} on the collection wires,
+%Finally, it should be noted that the 
+Analysis of the \dword{pdsp} data
+is just starting, as of February 2019, and %that there is a lot to learn about the
+we will learn more about the detector and how its different components %of the detector 
+interact %among themselves 
+from this data. The level of noise mentioned in Section~\ref{sec:fdsp-tpcelec-overview-pdune}
+%the previous section 
+(approximately \SI{550}{e$^-$} on the collection wires,
 and approximately \SI{700}{e$^-$} on the induction wires) 
 was obtained from the online data monitoring, without any
 filtering or selection applied to the pulses on the \dword{apa}
-wires. A simple common-mode filter can reduce significantly the 
-noise, particularly at low frequencies, as shown in Figure~\ref{fig:pdsp-noise},
-that contains a comparison of the noise spectrum on the three planes 
-of \dword{apa} before and after the filtering. The spectrum prior to
-the filtering shows some interesting features. At very low
-frequencies $<$\SI{60}{kHz}, the noise is dominated by the
-low voltage regulators that are installed on the \dwords{femb}.
-The noise from the low voltage regulators has actually
+wires. A simple common-mode filter can significantly reduce the 
+noise, particularly at low frequencies, as shown in Figure~\ref{fig:pdsp-noise},  
+%,that contains 
+a comparison of the noise spectrum on the three planes of \dword{apa} before and after the filtering. 
+The spectrum prior to
+the filtering shows %some interesting features. At 
+that at very low
+frequencies $<$\SI{60}{kHz}, the %noise is dominated by the
+low voltage regulators that are installed on the \dwords{femb} dominate the noise. 
+%The noise from the low voltage regulators 
+This contribution to the noise has actually
 been significantly reduced in \dword{pdsp} compared to
 initial observations at \dword{microboone}~\cite{Acciarri:2017sde},
 thanks to hardware filters developed at \dword{microboone} that have been
 added on the \dword{pdsp} \dwords{femb}. The noise spectrum prior to the
-filtering also shows spikes at multiple discrete frequencies and in
-some cases the noise spectrum have been identified (cameras,
-malfunctioning bias voltage supplies). Further data analysis
-and further tests with \dword{pdsp} could result in further
-improvements of the already excellent \dword{ce} performance
-and will be reflected, if appropriate, in changes of the
-detector design.
+filtering also shows spikes at multiple discrete frequencies, and in
+some cases the noise spectrum \fixme{sources?} have been identified (cameras,
+malfunctioning bias voltage supplies). We expect that further data analysis
+and %further 
+tests with \dword{pdsp} %could result in further
+will result in improvements to the %already excellent \dword{ce} performance
+%and will be reflected, if appropriate, in changes of the
+%detector design.
+ \dword{ce} design that already demonstrates excellent performance.
