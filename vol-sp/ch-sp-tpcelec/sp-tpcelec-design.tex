@@ -977,7 +977,7 @@ be one criterion, but we will need to consider reliability
 issues (which could favor the single-\dword{asic} solution 
 that requires \dwords{femb} with fewer connections), power 
 density (which could be less favorable to the \dword{cryo} solution),
-and the costs and resources required during constructing
+and the costs and resources required during constructing 
 and testing the \dwords{femb}. We plan to charge a committee
 to draft a series of recommendations on how to select the
 \dword{asic} and review the recommendations in fall
@@ -1073,7 +1073,7 @@ The \dword{ce} cables are shown in blue; the \dword{pd} cables are not shown.}
 
 All cold cables originating inside the cryostat connect to the outside 
 warm electronics through \dwords{pcb} \fdth{}s installed in the signal 
-flanges distributed along the cryostat roof. The \dword{tpc} data rate 
+flanges that are distributed along the cryostat roof. The \dword{tpc} data rate 
 per \dword{apa}, with an overall multiplexing factor of \num{32} and 
 \num{80} $\sim\SI{1}{Gbps}$ data channels per \dword{apa}, is 
 sufficiently low that the \dword{lvds} signals can be driven over 
@@ -1098,7 +1098,7 @@ piece, separate \dword{pcb} \fdth{}s for the \dword{ce} and
 \dword{pds} cables, and an attached crate for the \dword{tpc} 
 warm electronics, as shown in Figure~\ref{fig:tpcelec-signal-ft}.
 The wire bias voltage cables connect to standard \dword{shv} 
-connectors machined directly into the \dword{ce} \fdth, ensuring 
+connectors machined directly into the \dword{ce} \fdth{}, ensuring 
 no electrical connection between the wire bias voltages and other 
 signals passing through the signal flange. Each \dword{ce} \fdth 
 serves the bias, power, and digital I/O needs of one \dword{apa}.  
@@ -1108,7 +1108,7 @@ from the signal flange to the \dword{femb} and stream the $\sim$\SI{1}{Gbps}
 high-speed data from the \dword{femb} to the signal flange. Each 
 \dword{femb} connects to a signal flange via one data cable bundle, 
 leading to \num{20} bundles between one \dword{apa} and one flange. 
-In \dword{pdsp} each data bundle contains 12 low-skew twin-axial cables with a drain 
+In \dword{pdsp} each data bundle contains \num{12} low-skew twin-axial cables with a drain 
 wire to transmit the following differential signals:
 \begin{itemize}
 \item four \SI{1.28}{Gbps} data (two from each \dword{coldata});
@@ -1118,21 +1118,24 @@ wire to transmit the following differential signals:
 \item one multipurpose \dword{larasic} output (temperature, 
 reference voltage, or analog test output).
 \end{itemize}
-For \dword{dune} the total number of data and control cables could be 
+For the \dword{dune} \dword{spmod} the total number of data and control cables could be 
 reduced by doubling the data transmission speed to \SI{2.56}{Gbps}
 and having only one link for each \dword{coldata} and/or by
 sharing the clock and fast command lines between the two 
-\dword{coldata} \dword{asic}. This would reduce the number
+\dword{coldata} \dwords{asic}. This would reduce the number
 of data and control cables to either ten or eight. In the
 case of the \dword{cryo}, four cables are required to transmit
 the data at \SI{896}{Mbps}, five cables are required for the
 \dword{saci} protocol (three shared and one for each \dword{asic}
-on the \dword{femb}), and in the current \dword{femb} prototype
+on the \dword{femb}), and in the current \dword{femb} prototype, 
 two cables are used to transmit copies of the same \SI{56}{MHz}
-clock. Also in this case it is possible to reduce the 
-number of data and control by either doubling the data transmission 
-speed or by sharing the clock(s) between the two \dword{cryo} \dwords{asic}
-on the \dword{femb}, or by doing both.
+clock. It is also possible in this case to reduce the 
+number of data and control \fixme{cables?} by %either 
+doubling the data transmission 
+speed, %or by 
+sharing the clock(s) between the two \dword{cryo} \dwords{asic}
+on the \dword{femb}, or %by doing 
+both.
 
 The \dword{lv} power is passed from the signal flange to the 
 \dword{femb} by bundles of \num{20}AWG twisted-pair wires. Half 
@@ -1140,38 +1143,49 @@ the wires are power feeds; the others are attached to the grounds
 of the input amplifier circuits, as described in 
 Section~\ref{sec:fdsp-tpcelec-design-bias}.
 For a single \dword{femb}, the resistance is measured to be 
-$<\SI{30}{\milli\ohm}$ at room temperature or $<\SI{10}{\milli\ohm}$ 
-at \dword{lar} temperature. Each \dword{apa} has a copper 
+$<\SI{30}{\milli\ohm}$ at room temperature ($<\SI{10}{\milli\ohm}$ 
+at \dword{lar} temperature). Each \dword{apa} has a copper 
 cross section of approximately \SI{80}{mm$^2$} with a 
 resistance <\SI{1.5}{\milli\ohm} at room temperature or 
 $<\SI{0.5}{\milli\ohm}$ at \dword{lar} temperature.
-In the \dword{pdsp} design there is a total of nine 
-twisted-pair wires that are used to bring power to the
-\dwords{femb}, with 4 pairs of wires going to the analog
-motherboard and 5 pairs connected to the mezzanine containing
+In the \dword{pdsp} design %there is 
+a total of nine 
+twisted-pair wires %that are used to 
+bring power to the
+\dwords{femb}, with four pairs of wires going to the analog
+motherboard and five pairs connected to the mezzanine containing
 the \dword{fpga}. Two pairs of wires (one for the motherboard,
-and one for the mezzanone) are used to provide a very low
+and one for the mezzanine) %are used to 
+provide a very low
 current to the digital controls of the \dword{lv} converters 
-(\SI{0.01}{A} at \SI{5}{V}). Six pairs of wires provide 
-various voltages that are used to provide power through the
-\dword{lv} converters to \dword{larasic} and the \dword{adc}
-on the motherboard and to the \dword{fpga} on the mezzanine.
+(\SI{0.01}{A} at \SI{5}{V}). Six pairs of wires at %provide 
+various voltages %that are used to 
+provide power through the
+\dword{lv} converters to the \dword{larasic} and the \dword{adc}
+on the motherboard, and to the \dword{fpga} on the mezzanine.
 The final wire pair is available for sending pulses to the
-\dword{femb}. It is hard to plan the exact number of 
-power connections required for \dword{dune}, since measurements 
+\dword{femb}. %It is hard to plan the exact number of 
+%power connections required for \dword{dune}, since 
+Measurements 
 of power consumption for the new \dwords{asic} (\dword{coldadc}, 
-\dword{coldata}, and \dword{cryo}) are not yet available.
-However it is conceivable that the number of twisted-pair
-wires will be reduced from the current number of nine 
-down to at most seven, by simply removing the pair
-reserved for sending pulses to the \dword{femb} and by
-having a single line providing power to the digital 
-controls of the \dword{lv} converters, most probably
-because all the \dwords{asic} will fit on a single board.
-In the case that the \dword{cryo} is used the reduction
-could be even larger, as \dword{lv} regulators may not
-be needed on the \dword{femb} and fewer voltage levels
-are required, even if two pairs would be needed for voltage sensing.
+\dword{coldata}, and \dword{cryo}) are not yet available, however 
+it is conceivable that we can  reduce the number of twisted-pair
+wires from %will be reduced from the current number of 
+nine %down 
+to at most seven, simply by removing the pair
+reserved for sending pulses to the \dword{femb} and %by
+%having a single line 
+providing power to the digital 
+controls of the \dword{lv} converters using a single line, most probably
+because all the \dwords{asic} will fit on a single board. 
+\fixme{what is most probable? Is it that we can reduce the number of wires (by these methods)  only if all the asics fit on a single board?}
+%In the case that the \dword{cryo} is used the reduction
+%could be even larger, 
+Us of the \dword{cryo} would allow an even larger reduction, %as 
+since the \dword{femb} may not need \dword{lv} regulators.  %may not
+%be needed on the \dword{femb} 
+And %fewer voltage levels are required, 
+even if voltage sensing requires two pairs, fewer voltage levels are required. % would be needed for voltage sensing.
 
 The bias voltages are applied to the $X$-, $U$-, and $G$-plane 
 wire layers, three \dword{fc} terminations, and an electron diverter, 
@@ -1190,8 +1204,8 @@ In Sections~\ref{sec:fdsp-apa-intfc-cables} and \ref{sec:fdsp-tpcelec-interfaces
 we discuss the problem of routing the cold cables (data and control, power,
 bias voltages) for the bottom \dword{apa} through the frames of both
 the top and bottom \dword{apa}s. Routing tests were initially performed
-with the \dword{pdsp} cable bundles (i.e. ten sets of 12 data and
-control cables, ten sets 9 twisted-pair wires for power, and 8 bias voltage
+with the \dword{pdsp} cable bundles (i.e., ten sets of 12 data and
+control cables, ten sets of nine twisted-pair wires for power, and eight bias voltage
 cables). To ensure that the cables could be routed through the
 \dword{apa} frame the cross section of the side tubes has been
 increased from the original $\num{3}\times\SI{3}{in^2}$ cross
