@@ -2,10 +2,10 @@
 \label{sec:fdsp-tpcelec-design}
 
 \begin{comment}
-In order to keep the overall noise of the readout of the \dword{apa}
-wire planes, all possible sources of noise need to be kept to a
+In order to achieve the lowest possible overall noise in the readout of 
+the \dword{apa} wire planes, all possible sources of noise need to be kept to a
 minimum. This requires not only minimizing the noise sources in each
-of the component of the readout chain of the \dword{apa} wires, like
+of the components of the readout chain of the \dword{apa} wires, like
 the \dword{fe} amplifier noise. It also requires that all system aspects
 are taken into account, including avoiding channeling noise inside
 the cryostat through ground connections and through the readout
@@ -77,23 +77,16 @@ detector components, are discussed in Section~\ref{sec:fdsp-tpcelec-interfaces}.
 
 The overall approach to minimize the system noise in \dword{dune}
 relies on avoiding noise induced by penetrations in the cryostat
-and %on 
-from the readout electronics located % on 
-outside the cryostat. %detector. 
-It also
-requires that %the 
-currents caused by any external apparatus or machinery %outside the detector are 
-be prevented from coming in through ground loops, of
-which the cryostat and the \dword{ce} are a part, and that the
-detector %is 
-be shielded by a %well design 
-Faraday cage. This approach
-is discussed in detail in~\cite{radekaNoise}. 
+and from the readout electronics located outside the cryostat.
+It also requires that currents caused by any external apparatus or 
+machinery be prevented from coming in through ground loops, and that the
+detector be shielded by a Faraday cage. This approach is discussed 
+in detail in~\cite{radekaNoise}. 
 
 \fixme{Does the next pgraph belong here? (anne)}
-During the commissioning of \dword{pdsp}, violation of these
+During the commissioning of \dword{pdsp}, violations of these
 grounding rules have been observed with one of the readout
-boards for the \dword{pdsp}, and with the cameras immersed
+boards for the \dword{pds}, and with the cameras immersed
 inside the \lar. The power supply used to provide the \dword{hv} to the drift chamber cathode has also been observed
 to cause noise inside the detector and has been replaced.
 As mentioned in Section~\ref{sec:fdsp-tpcelec-overview-lessons}
@@ -366,8 +359,8 @@ Each \dword{fe} \dword{asic} channel has a dual-stage charge amplifier
 and a \num{5}$^{th}$ order semi-Gaussian shaper as an anti-aliasing 
 filter for the \dword{tpc} signals. It has a programmable gain 
 selectable from one of \num{4.7}, \num{7.8}, \num{14}, or \SI{25}{mV/fC}
-(corresponding to full-scale charge of \num{300}, \num{180}, \num{100}, 
-and \SI{55}{C}), a programmable peaking time selectable from one of 
+(corresponding to full-scale charge of \num{1.9e6}, \num{1.1e6}, \num{625e3}, 
+and \SI{350e3}{$e^-$}), a programmable peaking time selectable from one of 
 \num{0.5}, \num{1}, \num{2}, and \SI{3}{$\mu$s}, and a programmable 
 baseline for operation with either the collection ($\sim$\SI{200}{mV}) 
 or the induction ($\sim$\SI{900}{mV}) wires. Each channel has an 
@@ -377,9 +370,10 @@ used to drive a long cable.
 
 Each \dword{fe} \dword{asic} channel has a built-in charge calibration 
 capacitor that can be enabled or disabled through a dedicated register. 
-The injection capacitance has been measured using a calibrated external 
-capacitor. The measurements show that the calibration capacitance is 
-extremely stable, changing from \SI{184}{fF} at room temperature to 
+Measurements of the injection capacitance have been performed using an 
+external precisely calibrated capacitor. These measurements show that
+the calibraiton capacitance is extremely stable against temperature variations, 
+changing from \SI{184}{fF} at room temperature to 
 \SI{183}{fF} at \SI{77}{K}. This result and the measured stability of 
 the peaking time demonstrate the high stability of the passive 
 components as a function of temperature. Channel-to-channel and 
@@ -392,7 +386,8 @@ Section~\ref{sec:fdsp-tpcelec-integration-qc}.
 Shared among the \num{16} channels in the \dword{fe} \dword{asic} are 
 the digital interface, programming registers, a temperature monitor, 
 and a band-gap reference monitor. We also can enable \dword{ac} 
-coupling as mitigation of microphonics, a programmable bias current 
+coupling as mitigation of baseline variations induced by vibrations
+of the \dword{apa} wire, a programmable input bias current 
 selectable from one of \num{0.1}, \num{0.5}, \num{1}, or \SI{5}{nA}, 
 as well as a programmable pulser generator with a \num{6}-bit 
 \dword{dac} for calibration. The possibility of configuring various
@@ -407,8 +402,8 @@ The \dword{asic} is packaged in a commercial, fully encapsulated
 plastic \num{80} pin \dword{qfp}. Figure~\ref{fig:feasic2} shows the 
 response of \dword{fe} \dword{asic} for all gains and peaking times 
 and both baselines. Note that the gain is independent of the peaking 
-time; the same amount of charge produces the same peak voltage signal 
-regardless of the peaking time.
+time; the same amount of charge, in the impulse approximation, produces 
+the same peak voltage signal regardless of the peaking time.
 
 \begin{dunefigure}
 [\dword{fe} \dword{asic} response and layout]
@@ -444,7 +439,7 @@ the \num{40}\% \dword{apa} at \dword{bnl}, the \dword{iceberg} \dword{tpc}
 at \dword{fermilab} and the seventh \dword{protodune} \dword{apa} 
 in the cold box at \dword{cern}. Test results of P3 \dword{fe} \dword{asic} 
 will guide the development of the next version P4 \dword{fe} \dword{asic}, 
-which will be implemented a single-ended to differential converter for 
+which will implement a single-ended to differential converter for 
 interface to recently developed \dword{coldadc}. 
 \fixme{I can't parse prev sentence} The P4 version of 
 \dword{larasic} will also address the saturation problem observed in
@@ -581,7 +576,7 @@ calibration procedure recovers the linearity that would be lost due to
 non-binary stage weighting.  A small number of \dword{adc} codes near two
 extremes of the voltage range are unused, but no skipped codes appear in the
 range of codes used. Simulations of \dword{coldadc} including layout parasitics 
-indicate that $\sim$\num{150} \num{16}-bit codes will be used at the extremes.
+indicate that $\sim$\num{150} \num{16}-bit codes will be unused at the extremes.
 The number of \dword{adc} bits that are useful depends on the effective
 noise of the various subcircuits of the \dword{adc}.  The noise of the first few
 pipeline stages (associated with the most significant bits) contributes more
@@ -750,8 +745,8 @@ pipeline stage data are read out from one of the two pipelined \dwords{adc}
 in each \dword{coldadc} \dword{asic} and passed from \dword{coldadc} to 
 \dword{coldata} using two \num{16}-bit frames. When the ``Frame-15'' format is 
 selected, a \dword{coldata} output data frame consists of an 8b/10b command 
-character (K28.6) and an \num{8}-bit time stamp, followed by \num{60} bits of \dword{adc} 
-data (\num{30} bits from each \dword{coldadc}). No parity information is generated 
+character (K28.6) and an \num{8}-bit time stamp, followed by \num{60} bytes of \dword{adc} 
+data (\num{30} bytes from each \dword{coldadc}). No parity information is generated 
 when this format is selected. This is to ensure that at least one idle 
 character (K28.1) will be sent between each ``Frame-15.'' A series of 8b/10b 
 command characters (K28.5) is sent at the end of each frame of \num{12}-bit or 
@@ -800,7 +795,7 @@ The eye diagram is more open at cryogenic temperature.}
 The \dword{sbnd} collaboration has been exploring the \dword{cots} \dword{adc} option 
 for the \dword{tpc} readout electronics development since spring of 
 2017~\cite{Chen:2018zic}. After a market survey, few candidate \dwords{adc} 
-in \dword{sar} architecture were identified with 100\% cold yield. Starting in %Since 
+in \dword{sar} architecture were identified with 100\% cold yield. Starting in
 July 2017, a lifetime study plan was developed to evaluate \dword{cots} 
 \dword{adc} in two different phases: exploratory and validation. The 
 lifetime study focused on the Analog Devices AD7274\footnote{AnalogDevices, AD7274\texttrademark{}, \url{https://www.analog.com/en/products/ad7274.html}.},
@@ -919,9 +914,9 @@ cases, somewhat fewer resources are needed.
 \begin{itemize}
 \item{A single voltage is needed for the power supply. This is used to 
 generate two supply voltages using internal voltage regulators.}
-\item{The warm interface is different. Only a single clock is 
-needed (\SI{56}{MHz}), and the configuration protocol is the 
-\dword{saci}~\cite{SACI} rather than \dword{i2c}.}
+\item{The warm interface is different. \dword{cryo} operates with
+a \SI{56}{MHz} clock, does not require a fast command, and uses
+the \dword{saci}~\cite{SACI} protocol for configuration rather than \dword{i2c}.}
 \end{itemize}
 
 The first iteration of the \dword{cryo} \dword{asic} design was 
@@ -1033,7 +1028,7 @@ which also terminate to ground at the \dword{apa} frame, as
 shown in Figure~\ref{fig:CR-board}. 
 \fixme{the input amplifier circuits,  which also terminate to ground at the \dword{apa} frame, are connected to the \dword{cr} board...?}
 As a backup, the casing is 
-also connected to the \dword{apa} frame via a twisted conducting wire.
+also connected to the \dword{apa} frame via a wire.
 
 In addition to the \dword{ce} box and mounting hardware, cable trays 
 for support and routing the cold cables will be installed in the 
@@ -1107,8 +1102,9 @@ from the signal flange to the \dword{femb} and stream the $\sim$\SI{1}{Gbps}
 high-speed data from the \dword{femb} to the signal flange. Each 
 \dword{femb} connects to a signal flange via one data cable bundle, 
 leading to \num{20} bundles between one \dword{apa} and one flange. 
-In \dword{pdsp} each data bundle contains \num{12} low-skew twin-axial cables
-to transmit the following differential signals:
+Based on the existing \dword{pdsp} data bundle, containing \num{12} 
+low-skew twin-axial cables, the following differential signals
+can be transmitted between the \dword{wib} and the \dword{femb}:
 \begin{itemize}
 \item four \SI{1.28}{Gbps} data (two from each \dword{coldata});
 \item two \SI{64}{MHz} clocks (one input to each \dword{coldata});
@@ -1140,13 +1136,16 @@ The \dword{lv} power is passed from the signal flange to the
 \dword{femb} by bundles of \num{20}AWG twisted-pair wires. Half 
 the wires are power feeds; the others are attached to the grounds 
 of the input amplifier circuits, as described in 
-Section~\ref{sec:fdsp-tpcelec-design-bias}.
+Section~\ref{sec:fdsp-tpcelec-design-bias}, and they provide
+lowest resistance current return path.
 For a single \dword{femb}, the resistance is measured to be 
 $<\SI{30}{\milli\ohm}$ at room temperature ($<\SI{10}{\milli\ohm}$ 
-at \dword{lar} temperature). Each \dword{apa} has a copper 
-cross section of approximately \SI{80}{mm$^2$} with a 
+at \dword{lar} temperature) for cables with a length of \SI{9}{m}. 
+The total cross section of all the power return wires for one
+\dword{apa} is approximately \SI{80}{mm$^2$}, corresponding to a
 resistance <\SI{1.5}{\milli\ohm} at room temperature or 
-$<\SI{0.5}{\milli\ohm}$ at \dword{lar} temperature.
+$<\SI{0.5}{\milli\ohm}$ at \dword{lar} temperature for the
+\SI{9}{m} cables.
 In the \dword{pdsp} design %there is 
 a total of nine 
 twisted-pair wires %that are used to 
@@ -1330,7 +1329,7 @@ necessary \SI{12}{V} \dword{dc}-\dword{dc} conversions and fans
 the \dword{lv} power out to each of the cold \dwords{femb} supplied 
 by that \dword{wib}, as shown in Figure~\ref{fig:tpcelec-wib-power}. 
 The output of the \dword{wib} converters is further filtered by a 
-common-mode choke. Most of the power drawn by a full flange is 
+common-mode choke. Three quarters of the power drawn by a full flange is 
 dissipated in the \dword{lar} by the cold \dword{femb}.
 
 \begin{dunefigure}
@@ -1379,7 +1378,7 @@ two \dwords{femb} (2$\times\SI{5}{Gbps}$) could be transmitted
 on a single link. The \dword{fpga} will have an additional 
 Gbps Ethernet transceiver I/O based 
 \fixme{I/O-based transceiver?} on the \SI{125}{MHz} clock, which 
-provides real-time digital data readout to the slow control system.
+provides real-time monioring of the \dword{wib} status to the slow control system.
 
 %%%%%%%%%%%%%%%%%%
 \subsection{Timing Distribution and Synchronization}
@@ -1412,19 +1411,15 @@ protocol~\cite{bib:docdb1651,bib:docdb11233}% that is needed
 for aligning
 the phase of the clock at the endpoint of the distribution tree.
 
-\fixme{Marco: the DAQ group should provide the information about 
-the WIB synchronization. In \citedocdb{11233} it looks like this is 1 ns,
-and I have asked David Cussans for confirmation.}
-
 The timing distribution and synchronization system ensures that
-all the \dwords{wib} are synchronized to within \SI{5}{ns}. %For
- The synchronization of the \dword{pdsp} \dwords{femb} relies on
+all the \dwords{wib} are synchronized to within $\sim\SI{3}{ns}$. %For
+The synchronization of the \dword{pdsp} \dwords{femb} relies on
 the fact that all the cables connecting the \dwords{wib} to the
 \dwords{femb} have approximately the same length (a length 
 difference of \SI{0.5}{m} corresponds to a difference in the
 sampling time of \SI{2.5}{ns}). We could use the same approach %could also be used 
 for the \dword{dune} \dword{spmod}, correcting %inside the \dword{fpga} of the \dword{wib} 
-for the top-bottom \dword{apa} cable length difference (corresponding to $\sim\,\SI{30}{ns}$) %in length between the cables for top and bottom \dword{apa}s
+for the top-bottom \dword{apa} cable length difference (corresponding to $\sim\,\SI{65}{ns}$) %in length between the cables for top and bottom \dword{apa}s
 inside the \dword{fpga} of the \dword{wib}.  
 %that corresponds to approximately \SI{30}{ns}. 
 %This time difference could be measured for a sample of short and long cables 
@@ -1515,7 +1510,7 @@ Multiplying by the total number of \dwords{wiec}, less
 than \SI{1}{kW} of power is dissipated in the cabling system 
 over the entire surface of the cryostat. 
 
-Four wires are used for each module; two 10AWG, shielded, twisted-pair 
+Four wires are used for each \dword{ptc} module; two 10AWG, shielded, twisted-pair 
 cables for the power and return; and two 20AWG, shielded, twisted-pair 
 cables for the sense. The primary protection is the over-current 
 protection circuit in the \dword{lv} supply modules, which is set 
@@ -1539,10 +1534,10 @@ the responsibility of the \dword{tpc} electronics consortium.  The
 current from each of these supplies should be very close to zero in 
 normal operation. However, the ripple voltage must be carefully 
 controlled to avoid injecting noise into the \dword{fe} electronics.  
-RG-58 coaxial cables connect the wire bias voltages from the mini-crate 
-to the standard \dword{shv} connectors machined directly into the 
-\dword{ce} \fdth, so the \dword{lv} power and data connectors do not 
-have electrical connections to wire bias voltages.
+RG-58 coaxial cables connect the wire bias voltages from the bias voltage
+supply to the standard \dword{shv} connectors that are machined directly 
+into the \dword{ce} \fdth and insulated from the low voltage and 
+data connectors.
 
 Optical fibers are used for all connections between the \dwords{wiec} %, 
 %which act as Faraday-shielded boxes,  <<--- already said
@@ -1745,7 +1740,7 @@ shaping. Depending on the results of the tests the status of the
 The first complete prototype of \dword{coldata} will be submitted in 
 March 2019, with the delivery of chips expected for June 2019.
 The design of this first complete prototype builds on the success of
-the first partial prototype (CDP1) that was fabricated and tested in 2018.
+the first partial prototype (CDP1) that was fabricated and tested in 2017.
 This first prototype included the control registers inside the 
 \dword{asic}, the \dword{i2c} interface required to program and read-out
 the status of these registers, the \dword{spi} interface required to
@@ -1753,7 +1748,7 @@ configure \dword{larasic}, the phase-lock loop required to generate
 clocks internal to the chip, the data serializer, and a current-mode
 line driver. The transition to the first complete prototype that
 will be submitted in March 2019 and tested in Summer 2019
-requires the addition of two interfaces to the \dword{coldadc} (\dword{uart}
+requires the addition of interfaces to the \dword{coldadc} (\dword{uart}
 and \dword{i2c}), an additional \dword{i2c} interface to allow programming two
 \dword{coldata} \dword{asic}s on the same \dword{femb}, and the
 addition of a line-driver with pre-emphasis required for operation
