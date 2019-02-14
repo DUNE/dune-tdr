@@ -284,13 +284,10 @@ factor of the \dword{cr} boards introduced in Section~\ref{sec:crboards}.
 \item SP-ELEC-3: The data from the \dwords{femb} must be transmitted to the
 \dwords{wib} on a maximum of four links per board, to minimize
 the number of connections on the cryostat penetrations. This 
-requires data transmission at high speeds, which %has the drawback of 
-increases the power consumption inside the \dword{lar} and %that 
-may result in unacceptable bit error rates, particularly for the 
-\SI{\sim23.5}{m} links on %for 
-the bottom \dword{apa}. A reduction of
-the number of links per \dword{femb} to two should be investigated. 
-\fixme{will be investigated?}
+requires data transmission at high speeds, which 
+increases the power consumption inside the \dword{lar}.
+A reduction in the number of links per \dword{femb} to two
+will be investigated.
 
 \item SP-ELEC-4: Each \dword{wib} must read out four \dwords{femb}. This number
 is chosen to %a 
@@ -315,13 +312,12 @@ the \dword{apa}, as discussed in Section~\ref{sec:fdsp-apa-intfc}.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Design Considerations}
+\subsection{Design}
 \label{sec:fdsp-tpcelec-overview-design}
 
 The baseline design of the \dword{ce} detector components is
 based on the specifications %requirements 
 presented in Section~\ref{sec:fdsp-tpcelec-overview-requirements}. 
-\fixme{The following information is the design, not considerations feeding into the design (anne)}
 Each individual \dword{apa} has \num{2560} channels read out by \num{20} 
 \dfirsts{femb}, with each \dshort{femb} enabling digitized wire readout 
 from \num{128} channels. One cable bundle connects each \dshort{femb} to
@@ -375,10 +371,12 @@ signal flanges (cold cables);}
 and control signals; \dword{lv} power; and \dword{apa} wire bias 
 voltages between the inside and outside of the cryostat; and 
 the corresponding cryostat penetrations and spool pieces;}
-\item{\dwords{wiec} mounted on the signal flanges %and 
-that contain
-the \dwords{wib} and \dword{ptc}s for further processing
-and distribution of the signals entering and exiting the cryostat;}
+\item{\dwords{wiec} mounted on the signal flanges 
+containing the \dwords{wib} and a \dword{ptc} for further processing
+and distribution of the signals entering and exiting the cryostat;
+low voltage power and clock and control signals are transmitted
+from the \dword{ptc} to the \dwords{wib} on 
+the \dword{ptb}.}
 \item{cables for \dword{lv} power and wire bias voltages between 
 the signal flange and external power supplies (warm cables); and}
 \item{\dword{lv} power supplies for the \dword{ce} and bias-voltage 
@@ -404,6 +402,7 @@ Signal flange & \num{1} per \dword{apa} & \num{2560} \\ \colhline
 Warm interface board (\dword{wib}) & \num{5} per \dword{apa} & \num{512} \\ \colhline
 Warm interface electronics crate (\dword{wiec}) & \num{1} per \dword{apa} & \num{2560} \\ \colhline
 Power and timing card (\dword{ptc}) & \num{1} per \dword{apa} & \num{2560} \\ \colhline
+Power and timing backplane (\dword{ptb}) & \num{1} per \dword{apa} & \num{2560} \\ \colhline
 \end{dunetable}
 
 %The 
@@ -518,8 +517,7 @@ measured by the online monitoring program was approximately $\SI{550}{e^-}$
 on the collection wires and approximately $\SI{650}{e^-i}$ on the induction
 wires, averaged over all operational channels. The noise increased %s
 relative to the tests performed inside the cold box due to the 
-larger dielectric constant of \lntwo 
-\fixme{not \lar{}?} relative to GN$_2$. 
+larger dielectric constant of \dword{lar} relative to GN$_2$. 
 These noise measurements  %in the two conditions 
 are consistent with the 
 ratio of the corresponding capacitances of the \dword{apa} wires. 
@@ -664,10 +662,10 @@ and that could be used in the \dword{spmod} in %the
 case  the custom \dword{asic} is not %developments were not successfully
 completed in time. % for the detector construction. 
 This \dword{cots}
-solution is not the preferred approach for \dword{dune} since it
-requires one \dword{asic} for each readout channel (i.e., a total
+solution is not the baseline approach for \dword{dune} since it
+requires one chip for each readout channel (i.e., a total
 of \num{384000} chips), which would increase the cost %cause significant cost increases
-and %would 
+and may
 require a very extensive \dword{qc} program. The qualification
 of this \dword{cots} \dword{adc} for use in \dword{dune} is described
 in Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cots}. 

@@ -182,12 +182,10 @@ to ground. In addition, each board
 has \num{48} pairs of bias resistors and \dword{ac} coupling 
 capacitors for $X$-plane wires, and \num{40} pairs for the $U$-plane 
 wires. The coupling capacitors block \dword{dc} levels while passing \dword{ac} 
-signals to the \dwords{femb}. On the \dwords{femb} %there are 
-clamping
-diodes %that 
-limit the input voltage received at the amplifier
-circuits to between \SI{1.8}{V}\,$\pm$\,U$_D$, where U$_D$
-is the breakdown voltage of the diode, approximately \SI{0.7}{V}.
+signals to the \dwords{femb}. On the \dwords{femb} 
+clamping diodes limit the input voltage received at the amplifier
+circuits to between $\SI{1.8}{V}+U_D$ and $\SI{0}{V}-U_D$, where U$_D$
+is the threshold voltage of the diode, approximately \SI{0.7}{V}.
 The amplifier circuit has a \SI{22}{nF} coupling capacitor at
 input to avoid leakage current from the protection clamping diodes.
 A schematic diagram of the \dword{dune} \dword{apa} wire bias 
@@ -239,9 +237,8 @@ The baseline \dword{femb} design contains eight \num{16}-channel
 communication \dwords{asic} (see Figure~\ref{fig:ce-scheme}).
 The \dword{femb} also contains regulators that produce the voltages 
 required by the \dwords{asic} and filter those voltages, and 
-a micro-electromechanical system oscillator that is used to
-filter out the jitter from the clock received from the \dword{wib}.
-\fixme{previous sentence unclear}
+a micro-electromechanical system oscillator that provides
+a reference to the \dword{coldata} \dword{pll}.
 The \dword{larasic} inputs are protected by diodes and a series inductor.
 
 \begin{dunefigure}
@@ -1110,8 +1107,8 @@ from the signal flange to the \dword{femb} and stream the $\sim$\SI{1}{Gbps}
 high-speed data from the \dword{femb} to the signal flange. Each 
 \dword{femb} connects to a signal flange via one data cable bundle, 
 leading to \num{20} bundles between one \dword{apa} and one flange. 
-In \dword{pdsp} each data bundle contains \num{12} low-skew twin-axial cables with a drain 
-wire to transmit the following differential signals:
+In \dword{pdsp} each data bundle contains \num{12} low-skew twin-axial cables
+to transmit the following differential signals:
 \begin{itemize}
 \item four \SI{1.28}{Gbps} data (two from each \dword{coldata});
 \item two \SI{64}{MHz} clocks (one input to each \dword{coldata});
@@ -1159,7 +1156,7 @@ motherboard and five pairs connected to the mezzanine containing
 the \dword{fpga}. Two pairs of wires (one for the motherboard,
 and one for the mezzanine) %are used to 
 provide a very low
-current to the digital controls of the \dword{lv} converters 
+current to the bias line of the \dword{lv} converters 
 (\SI{0.01}{A} at \SI{5}{V}). Six pairs of wires at %provide 
 various voltages %that are used to 
 provide power through the
@@ -1177,8 +1174,8 @@ nine %down
 to at most seven, simply by removing the pair
 reserved for sending pulses to the \dword{femb} and %by
 %having a single line 
-providing power to the digital 
-controls of the \dword{lv} converters using a single line, most probably
+providing power to the bias
+line of the \dword{lv} converters using a single line, most probably
 because all the \dwords{asic} will fit on a single board. 
 \fixme{what is most probable? Is it that we can reduce the number of wires (by these methods)  only if all the asics fit on a single board? Also check the two sentences below.}
 %In the case that the \dword{cryo} is used the reduction
@@ -1433,26 +1430,21 @@ inside the \dword{fpga} of the \dword{wib}.
 %This time difference could be measured for a sample of short and long cables 
 We could measure the time difference for a sample of short and long cables prior to the installation of the \dwords{femb} on
 the \dwords{apa}. %Using the cable lengths, 
-Synchronizing
- the \dword{ce} with the \dword{pds} requires one (or two)
+Synchronizing the \dword{ce} with the \dword{pds} requires one (or two)
 additional time constants that correspond to the transit 
 time of the Fast Command sent from the \dword{wib} to
 \dword{coldata} and from there to the \dword{coldadc},
 which includes the propagation time along the cables
-(\SIrange{35}{65}{ns}) plus the propagation time inside
+(\SI{45}{ns} for the \SI{9}{m} long cables to the top \dword{apa}s
+and \SI{110}{ns} for the \SI{22}{m} long cables to the bottom \dword{apa}s) 
+plus the propagation time inside
 the \dwords{asic}. This overall time constant  %that is ... below 
-($<$\SI{100}{ns} in any case) could be obtained offline
+can be obtained offline
 from the data, but it represents at most a correction
-of $\mathcal{O}(\SI{100}{\mu m})$ on the position of
-a track along the drift distance. %Studies will be performed
-%to understand whether the relative phase of the \dword{femb}
-%and the \dword{wib} can be aligned more precisely by
-%implementing a timer inside the \dword{fpga} in the
-%\dword{wib} and measuring the transit time of a command
-%sent to the \dword{femb} and of the corresponding return
-%message.
+of $\mathcal{O}(\SI{150}{\mu m})$ on the position of
+a track along the drift distance.
 We will implement a timer inside the \dword{wib}'s \dword{fpga} 
- and measure the transit time of a command
+and measure the transit time of a command
 sent to the \dword{femb} and its corresponding return
 message. This study will help us understand whether the 
 relative phases of the \dword{femb}and the \dword{wib} 
@@ -1515,13 +1507,13 @@ a distance of \SI{20}{m} between the \dword{lv} power supplies
 that are situated on the detector mezzanine and the most distant
 cryostat penetration for a row of \dword{apa}s, a \SI{0.8}{V} 
 drop should occur along the cable with a required power of 
-\SI{306}{W} out of \SI{650}{W} available. The power is almost entirely
-dissipated inside the \dword{wiec} that is air-cooled, and
-only a few watts are dissipated in the cables. Multiplying by
-the total number of \dwords{wiec}, %there is
- less than \SI{1}{kW} of power %that 
-is dissipated in the cabling system over the entire
-surface of the cryostat.
+$\sim\SI{240}{W}$ out of \SI{650}{W} available, as measured
+in \dword{pdsp}. Three quarters of the power is dissipated in
+the \dwords{femb}, one quarter is dissipated inside the \dword{wiec} 
+that is air-cooled, and only a few watts are dissipated in the cables. 
+Multiplying by the total number of \dwords{wiec}, less 
+than \SI{1}{kW} of power is dissipated in the cabling system 
+over the entire surface of the cryostat. 
 
 Four wires are used for each module; two 10AWG, shielded, twisted-pair 
 cables for the power and return; and two 20AWG, shielded, twisted-pair 
@@ -1765,7 +1757,7 @@ requires the addition of two interfaces to the \dword{coldadc} (\dword{uart}
 and \dword{i2c}), an additional \dword{i2c} interface to allow programming two
 \dword{coldata} \dword{asic}s on the same \dword{femb}, and the
 addition of a line-driver with pre-emphasis required for operation
-with long cables (up to \SI{23.5}{m}) in \lar. The same design and
+with long cables (up to \SI{22}{m}) in \lar. The same design and
 validation methodology used for the CDP1 prototype and the \dword{coldadc}
 is being used. This should guarantee that after the tests done in
 Summer 2019 \dword{coldata} will reach the ``Advanced'' design 
