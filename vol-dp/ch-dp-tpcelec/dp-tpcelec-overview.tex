@@ -5,15 +5,13 @@
 
 The function of the \dword{dp} \dword{tpc} electronics system is to collect and digitize the signals from the \dwords{crp} (see chapter~\ref{ch:dp-crp}) and \dwords{pds} (see chapter~\ref{ch:dp-pds}). The first task is accomplished by the \dword{cro} and the second by the \dword{lro} subsystems. 
 
-The design of the electronics system for the \dword{dune} \dword{dpmod} is the result of an R\&D program that begun in 2006. Some of its key objectives have been developing and building custom analog and digital electronics circuits optimized for \dword{dp} operation and %capable of 
+The design of the electronics system for the \dword{dune} \dword{dpmod} is the result of an R\&D program that began in 2006. Some of its key objectives have been developing and building custom analog and digital electronics circuits optimized for \dword{dp} operation and %capable of 
 ensuring the capability to perform continuous acquisition and data transmission to \dword{daq} backend. The optimization aspects included matching the dynamics of the cryogenic charge amplifiers to the \dword{dp} readout and wide signal dynamic range, and tailoring the digital \dword{fe} system to the overall \dword{dpmod} design concept; %, which 
-this allows decoupling of these parts from the analog stage and placing them %at warm 
-outside%of 
-the cryostat. A key criterion of the R\&D was to create cost-effective and easily scalable solutions to meet the needs of a large-scale neutrino \dword{lar} detector. The design, finalized in 2016,  went though several prototyping phases. % being continuously improved in the process. It was finalized in 2016. 
+this allows decoupling of these parts from the analog stage and placing them outside the cryostat. A key criterion of the R\&D was to create cost-effective and easily scalable solutions to meet the needs of a large-scale neutrino \dword{lar} detector. The design, finalized in 2016,  went though several prototyping phases. % being continuously improved in the process. It was finalized in 2016. 
 We subsequently launched %The 
 full-scale production of all of the components necessary for charge readout of \dword{pddp}.  %was subsequently launched. 
 Also in 2016, a subset of the produced electronics was deployed in the \dword{wa105} at CERN, a preliminary \dual \lartpc %prototype 
-with an active volume  of \SI[product-units=power]{3x1x1}{m} (\dword{crp} area of \SI[product-units=power]{3x1}{m}), that took data in the summer and fall of 2017. The operation of the \dword{wa105} \cite{Aimard:2018yxp} gave early validation of theelectronics  design choices %for the electronics 
+with an active volume  of \SI[product-units=power]{3x1x1}{m} (\dword{crp} area of \SI[product-units=power]{3x1}{m}), that took data in the summer and fall of 2017. The operation of the \dword{wa105} \cite{Aimard:2018yxp} gave early validation of the electronics  design choices %for the electronics 
 and provided checks on various performance markers, such as noise. As an example, Figure~\ref{fig:dp-tpcelec-311-dqds-etaucorrected} shows a distribution of charge measured from reconstructed cosmic muon tracks for each of its collection views. % in that detector. 
 %Given the average \dword{mip} charge loss expected in \lar after taking into account recombination, is around \SI{10}{\femto\coulomb/\cm}, the effective gain of \dword{crp} in the \dword{wa105} was between \numrange{3}{4}, which is lower than the target gain of \num{20} for \dword{dpmod} operation. 
 After taking into account recombination, the average \dword{mip} charge loss expected in \lar is approximately \SI{10}{\femto\coulomb/\cm}. The effective gain of the \dword{crp} in the \dword{wa105} was between \numrange{3}{4}, which is lower than the target gain of \num{20} for \dword{dpmod} operation. 
@@ -67,8 +65,8 @@ Each \dword{utca} crate for either charge or light readout is connected to the \
 \label{ssec:dp-tpcelec-requir}
 
 %The \dword{cro} electronics design covers the analog \dword{fe} cards containing pre-amplifier \dwords{asic} operating at cryogenic temperatures and digitization cards with the relevant system for their synchronization working in the warm environment outside of the cryostat. The system reads and digitizes signals from \num{153600} channels (per one \dword{dpmod}) and can continuously stream the collected and losslessly compressed data to the \dword{daq} without any zero suppression. 
-The \dword{cro} electronics design includes the analog \dword{fe} cards (containing pre-amplifier \dwords{asic} operating at cryogenic temperatures) and digitization cards with their synchronization system installed outside of the cryostat. The system reads and digitizes signals from \num{153600} channels (per one \dword{dpmod}) \fixme{one per what?} and can continuously stream the losslessly compressed data to the \dword{daq} with no zero suppression. 
-
+The \dword{cro} electronics design includes the analog \dword{fe} cards (containing pre-amplifier \dwords{asic} operating at cryogenic temperatures) and digitization cards with their synchronization system installed outside of the cryostat. The system reads and digitizes signals from \num{153600} channels (the total number of \dword{cro} channels per one \dword{dpmod}) and can continuously stream the losslessly compressed data to the \dword{daq} with no zero suppression. 
+%\fixme{one per what?} CLARIFIED
 The% designed 
 \dshort{cro} electronics system meets the following specifications: %fits the following requirements:
 \fixme{to be replaced with a standardized table of specifications  }
@@ -88,7 +86,7 @@ The% designed
 
 \item{The \dword{fe} analog electronics must be replaceable without contaminating the main \lar volume to guarantee the long-term reliability of the system.}
 
-\item{The \dword{adc} resolution must be such that the noise is at the level of an \dword{adc}, given a dynamic range wide enough to match the response of the \dword{fe} amplifier. This can be achieved with a \num{12} bit \dword{adc}.} \fixme{?? noise at the level of an ADC what? count?} 
+\item{The \dword{adc} resolution must be such that the noise is at the level of an \dword{adc} count, given a dynamic range wide enough to match the response of the \dword{fe} amplifier. This can be achieved with a \num{12} bit \dword{adc}.} 
 
 \item{%The digital electronics placed outside the cryostat in the warm environment must be capable of 
 The warm digital electronics must accommodate standard industrial components and solutions to keep costs low and to benefit from technological evolution, e.g., higher network speeds.}
@@ -105,8 +103,8 @@ with an \rms noise level less than \SI{1}{\dword{adc}}.
 
 
 %The primary objective of the \dword{lro} system is to detect signals from a minimum of one \phel on one \dword{pmt}, giving a precise timestamp that can be used in conjunction with the charge signals to determine the absolute event time ($T_0$). Precise measurements of \dword{lro} signal charge allow  continual monitoring of the \dword{pmt} gain at a single \phel level, as well as determining the number of photons in each scintillation event.  In addition, an \dword{adc}  continuously streams data, downsampled to \SI{400}{ns} as for the \dword{cro} signals,  which, among other things, allows the scintillation time profile to be measured. The \dword{lro} system also reads \num{20} channels from reference SiPM sensors from the \dword{pd} calibration system.
-The  \dword{lro} system must detect signals from a minimum of one \phel on one \dword{pmt}, giving a precise timestamp that can be used in conjunction with the charge signals to determine the absolute event time ($t_0$). Precise measurements of \dword{lro} signal charge allow  continual monitoring of the \dword{pmt} gain at a single \phel level, as well as determination of the number of photons in each scintillation event. 
-\fixme{how does the precision of the measurements connect to the continual aspect of the monitoring?}
+The  \dword{lro} system must detect signals from a minimum of one \phel on one \dword{pmt}, giving a precise timestamp that can be used in conjunction with the charge signals to determine the absolute event time ($t_0$). Precise measurements of \dword{lro} signal charge at a single \phel level allow continual monitoring of the \dword{pmt} gain, as well as determination of the number of photons in each scintillation event. 
+%\fixme{how does the precision of the measurements connect to the continual aspect of the monitoring?} -> PMT gain can be continuosly measured/monitored from single photoelectron events; the sentence is correct.
 The continuous \dword{adc} streaming of data, downsampled to \SI{400}{ns} as for the \dword{cro} signals, allows measurement of the scintillation time profile. The \dword{lro} system also reads \num{20} channels from reference \dword{sipm}  sensors from the \dword{pd} calibration system.
 
 
@@ -115,7 +113,8 @@ The cryogenic analog electronics for the \dword{cro} is housed in the dedicated 
 The digital electronics for both charge and light readout is in the warm environment on the top of the cryostat support structure. % and is easily accessible. 
 This removes any constraints associated with  accessibility and operation in cryogenic environments, allowing use of standard components and industrial solutions in the design. Digital electronics must be continuously and automatically synchronized to more than \SI{400}{\nano\s} to ensure the correct temporal alignment of the \dword{adc} samples from all of the readout channels. This is a minimal requirement dictated by a sampling rate of \SI{2.5}{\MHz}.  
 
-\fixme{I just noted that the header in the PDF reads LIST OF TABLES.} Key parameters for the electronics system design are summarized in Table~\ref{tab:dp-tpcelec-physicsparams}. 
+%\fixme{I just noted that the header in the PDF reads LIST OF TABLES.} 
+Key parameters for the electronics system design are summarized in Table~\ref{tab:dp-tpcelec-physicsparams}. 
 
 \begin{dunetable}
 [Key parameters for the TPC electronics system design]

@@ -5,14 +5,13 @@
 The \dword{cro} \dword{fe} analog electronics uses a cryogenic \dword{asic} chip with a large dynamic range (up to \SI{1200}{\femto\coulomb}) to accomodate the charge amplification in the \dword{crp}. The \dword{fe} cards read \num{64} \dword{crp} channels each. They are mounted in dedicated  \dwords{sftchimney} \SI{<1}{\metre} from each \dword{crp} to minimize noise caused by long cables (large cable capacitance). The cards remain accessible throughout the \dword{dpmod} operation. Each \dword{sftchimney} accommodates \num{10} \dword{fe} analog cards, which corresponds to the readout of %\num{640} 
 \dpchperchimney \dword{crp} channels per chimney. Therefore, \num{240} \dwords{sftchimney} must be installed for the charge readout in a given \dword{dpmod}.   
 
-The differential analog signals from the analog \dword{fe} cards, carried by the twisted-pair ribbon cables and routed through an interface flange of the \dwords{sftchimney}, are digitized by the \dword{amc} cards located outside the cryostat. These cards are installed in \dword{utca} crates placed near the \dwords{sftchimney} (one crate per chimney). In %the design for 
-\dword{pddp}, each \dword{amc} digitizes \num{64} channels, corresponding to %reading 
-one \dword{fe} analog card. Each \dword{utca} \fixme{for the \dword{dpmod}?} contains \num{10} \dwords{amc} reading a total of \num{640} channels. However, using \dwords{amc} that support a higher channel density is under investigation to reduce costs. 
+The differential analog signals from the analog \dword{fe} cards, carried by the twisted-pair ribbon cables and routed through an interface flange of the \dwords{sftchimney}, are digitized by the \dword{amc} cards located outside the cryostat. These cards are installed in \dword{utca} crates placed near the \dwords{sftchimney} (one crate per chimney). In the current design, each \dword{amc} digitizes \num{64} channels, corresponding to one \dword{fe} analog card. Each \dword{utca} thus contains \num{10} \dwords{amc} reading a total of \num{640} channels. However, using \dwords{amc} that support a higher channel density is under investigation to reduce costs. 
+%\fixme{for the \dword{dpmod}?} no this is for each chimney: one chimney = one crate
 
 The \dword{lro} \dword{fe} analog and digital electronics are based on a custom-built \dword{amc}. The card contains a \dword{catiroc} \dword{asic} \cite{Blin:2017}, which is used to determine the precise charge and start times of signals from the %each 
 individual \dwords{pmt}. In addition, a \SI{14}{bit} \SI{65}{MHz} \dword{adc} digitizes data for continuous streaming of \dword{pmt} signals. Each card reads up to \num{16} channels. %One 
-A potential upgrade \fixme{under consideration?} would increase the channel density per card to \num{32} channels. The \dword{lro} cards are housed in five dedicated \dword{utca} crates close to the \dword{pmt} instrumentation \fdth{}s.
-
+A potential upgrade under consideration would increase the channel density per card to \num{32} channels. The \dword{lro} cards are housed in five dedicated \dword{utca} crates close to the \dword{pmt} instrumentation \fdth{}s.
+%\fixme{under consideration?} DONE
 \begin{dunefigure}[Top corner view of \dword{dpmod}]{fig:dp-tpcelec-sft-chimney-pattern}
 {Corner view of \dword{dpmod} showing the pattern of the \dwords{sftchimney} and \dword{utca} crates for charge readout above \dwords{crp}.}
 \includegraphics[width=0.6\textwidth]{dp-tpcelec-sft-chimney-pattern}
@@ -48,7 +47,7 @@ Name & Number  \\ \toprowrule
    \dword{lro} \dword{utca} crate                      & \num{5} \\ \colhline
    \dword{wrmch} per \dword{utca} crate                 & \num{1} \\ 
 \end{dunetable}
-\fixme{The distinction between this table and \ref{tab:dp-tpcelec-physicsparams} was not clear enough, so I retitled them. Anne  }
+%\fixme{The distinction between this table and \ref{tab:dp-tpcelec-physicsparams} was not clear enough, so I retitled them. Anne  } OK
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -73,9 +72,9 @@ We selected the \dword{asic} version with the double-slope gain for \dword{pddp}
 \includegraphics[width=0.7\textwidth]{dp-tpcelec-fe-card-blade-image}
 \end{dunefigure}
 
-Each cryogenic \dword{fe} card, shown in Figure~\ref{fig:dp-tpcelec-fe-card-blade-image}, holds four \dword{asic} amplifier chips 
-\fixme{the black square elements?} and a few passive discrete components. The input stage of each amplifier channel has a \SI{1}{\giga\ohm} resistor to ground followed by a \SI{2.2}{\nano\farad} decoupling capacitor; both are rated for \dword{hv} operation. The %function of the 
+Each cryogenic \dword{fe} card, shown in Figure~\ref{fig:dp-tpcelec-fe-card-blade-image}, holds four \dword{asic} amplifier chips (black rectangular elements in the picture) and a few passive discrete components. The input stage of each amplifier channel has a \SI{1}{\giga\ohm} resistor to ground followed by a \SI{2.2}{\nano\farad} decoupling capacitor; both are rated for \dword{hv} operation. The %function of the 
 resistor grounds the \dword{crp} anode strips. A TVS diode\footnote{Bourns\texttrademark{} CDSOD323-T08LC TVS diode.} protects each input stage against discharges coming from the \dword{dpmod}. This component was selected after studying how well different devices protected against electrostatic discharge by subjecting them systematically to discharges of a few \si{kV} with an energy similar to that of the \dwords{lem} in the \dword{crp}. The \dword{fe} cards also house the blocking capacitors for further filtering of \dword{lv} power lines. These are first filtered at the power supply and transported via shielded cables.
+%\fixme{the black square elements?} DONE
 
 \begin{dunefigure}[Noise measurements in the \dword{wa105}]{fig:dp-tpcelec-311-noise}
 {Noise of measurements in the \dword{wa105} under different conditions. Left: warm only,  with the slow control cables connected to the cryostat flanges (red points) and disconnected (black points). The horizontal dashed line in this plot indicates the noise level expected for \SI{3}{\meter} strips. Right: warm (red points) and cold (black points) with the slow control cables disconnected. The channels with negative (positive) channel number correspond to the strips of \SI{3}{\meter} (\SI{1}{\meter}).}
@@ -143,10 +142,10 @@ Channels & \num{8} \\ \colhline
 Sampling & up to \SI{40}{MSPS} \\ \colhline 
 Resolution & \SI{0.122}{\milli\volt} \\ \colhline
 Dynamic range & \num{14} bit/ \SI{2.0}{\volt} \\ \colhline
-Differential non-linearity & typical \num{\pm0.6} LSB\\ 
-& with min. \num{-1.0} and max. \num{+1.7} LSB  \\ \colhline
-Integral non-linearity & typical \num{\pm1.1}  LSB\\
-& with min. \num{-3.1} and max. \num{+3.1} LSB  \\ 
+Differential non-linearity & typical \num{\pm0.6} \dword{lsb}\\ 
+& with min. \num{-1.0} and max. \num{+1.7} \dword{lsb}  \\ \colhline
+Integral non-linearity & typical \num{\pm1.1}  \dword{lsb}\\
+& with min. \num{-3.1} and max. \num{+3.1} \dword{lsb}  \\ 
 \end{dunetable}
 
 \begin{dunefigure}[Block diagram of \dword{cro} \dword{amc}]{fig:dp-tpcelec-amc-scheme}
@@ -154,13 +153,16 @@ Integral non-linearity & typical \num{\pm1.1}  LSB\\
 \includegraphics[width=0.9\textwidth]{dp-tpcelec-amc-scheme}
 \end{dunefigure}
 Figure~\ref{fig:dp-tpcelec-amc-scheme} illustrates %shows block diagram of 
-the \dword{amc} functionality. Each \dword{amc} generates a continuous compressed stream of \SI{2.5}{MSPS} \num{12}\,bit data per readout channel. The on-board \dwords{adc} operate at a rate of \SI{25}{\MHz} per channel. The data are down-sampled in the \dword{fpga} to \SI{2.5}{\MHz} by performing ten-sample averaging, which leads to further digital filtering of the noise. The data, consisting of only the  \num{12} most significant bits from each digitized \num{14}\,bit sample, are then compressed using an optimized version of the Huffman algorithm \fixme{ref?} and organized into frames for transmission.  The frames contain the absolute timing information of the first data sample for reliability. In the current design, each \dword{amc} has \num{64} channels and reads one analog \dword{fe} card.
+the \dword{amc} functionality. Each \dword{amc} generates a continuous compressed stream of \SI{2.5}{MSPS} \num{12}\,bit data per readout channel. The on-board \dwords{adc} operate at a rate of \SI{25}{\MHz} per channel. The data are down-sampled in the \dword{fpga} to \SI{2.5}{\MHz} by performing ten-sample averaging, which leads to further digital filtering of the noise. The data, consisting of only the  \num{12} most significant bits from each digitized \num{14}\,bit sample, are then compressed using an optimized version of the Huffman algorithm \cite{Wu:2010zzk} and organized into frames for transmission.  The frames contain the absolute timing information of the first data sample for reliability. In the current design, each \dword{amc} has \num{64} channels and reads one analog \dword{fe} card.
+%\fixme{ref?} DONE
 
 The \dwords{amc} are housed in \dword{utca} crates and send their data via the \dword{mch} switch. The timing synchronization of \dwords{amc} is achieved via a \dword{wrmch} module (also housed in the crate) that is connected to the \dword{wr} network. In addition, a  \dword{wrmch} could also be used for triggered \dwords{amc} readout %of % by sending it 
 if it were sent dedicated packets containing trigger timestamp information over the \dword{wr} network.
 
-In \dword{pddp}, \dwords{amc} are operated in the triggered mode, reading a \SI{4}{\milli\second} drift time window at a trigger rate of \SI{100}{Hz}, which is not far from continuous readout mode. The analog data are continuously digitized and buffered. It is possible to acquire a sub-sample of these data by providing the \dword{amc} with a timestamp generated by an external trigger. The timestamp defines the start time for the data sequence to be read, while the length of the sequence is determined by the size of the drift window. In \dword{pddp}, this length corresponds to \num{10000} \SI{400}{\nano\second} samples per full drift window (\SI{4}{\milli\second}). Triggers (beam counters, cosmic-ray counters, \dwords{pmt} detecting the UV light, and starts of beam spills) are timestamped in a dedicated \dword{wr} slave node (\dword{wr}-TSN), an FMC-DIO mezzanine mounted on \dword{wr} SPEC carrier card, which runs custom firmware and is hosted in a computer. \fixme{fix prev sentence} The \dword{wr}-TSN is connected to the \dword{wrgm} for synchronization and transmission of trigger information. The timestamp data produced by the \dword{wr}-TSN are sent over the \dword{wr} network as Ethernet packets with a customized protocol. 
-\fixme{TSN and FMC-DIO are not defined}
+In \dword{pddp}, \dwords{amc} are operated in the triggered mode, reading a \SI{4}{\milli\second} drift time window at a trigger rate of \SI{100}{Hz}, which is not far from continuous readout mode. The analog data are continuously digitized and buffered. It is possible to acquire a sub-sample of these data by providing the \dword{amc} with a timestamp generated by an external trigger. The timestamp defines the start time for the data sequence to be read, while the length of the sequence is determined by the size of the drift window. In \dword{pddp}, this length corresponds to \num{10000} \SI{400}{\nano\second} samples per full drift window (\SI{4}{\milli\second}). Triggers (beam counters, cosmic-ray counters, \dwords{pmt} detecting the UV light, and starts of beam spills) are timestamped in a dedicated \dword{wr} slave node (\dword{wrtsn}), an FMC-DIO mezzanine\footnote{Seven Solutions, \url{https://sevensols.com/index.php/fmc-dio/}} mounted on a \dword{wr} SPEC\footnote{Seven Solutions, \url{https://sevensols.com/index.php/products/spec/}} carrier card. \dword{wrtsn}, hosted in a computer, runs a custom firmware developed for \dword{pddp}. 
+%\fixme{fix prev sentence}  OK added footnote for FMC-DIO and SPEC and fixed the sentence
+The \dword{wrtsn} is connected to the \dword{wrgm} for synchronization and transmission of trigger information. The timestamp data produced by the \dword{wrtsn} are sent over the \dword{wr} network as Ethernet packets with a customized protocol. 
+%\fixme{TSN and FMC-DIO are not defined} DONE
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Electronics for Light Readout}
@@ -168,7 +170,9 @@ In \dword{pddp}, \dwords{amc} are operated in the triggered mode, reading a \SI{
 
 The \dword{lro} card is a \num{16} channel \dword{amc} containing one \num{16} channel \num{14} bit \SI{65}{\MHz} \dword{adc} (AD9249) and one \dword{catiroc} \dword{asic}. Figure~\ref{fig:dp-tpcelec-lro-scheme} illustrates %shows a block diagram of 
 the prototype board used for \dword{pddp}, and Figure~\ref{fig:dp-tpcelec-lro-proto} is %provides 
-a \fixme{fuzzy} photograph. In this prototype, a mezzanine board containing the \dword{asic} and \dword{adc} sits on a commercial mother board (Bittware S4 \dword{amc}\footnote{Bittware\texttrademark{}, Inc., \url{https://www.bittware.com/fpga/intel/boards/s4am/}.}) with a high specification \dword{fpga} (Alterra\footnote{Alterra\texttrademark{}, \url{https://www.altera.com/products/fpga/stratix-series/stratix-iv/overview.html}.} Stratix IV). In the final implementation %of 
+a photograph. 
+%\fixme{fuzzy} DONE
+In this prototype, a mezzanine board containing the \dword{asic} and \dword{adc} sits on a commercial mother board (Bittware S4 \dword{amc}\footnote{Bittware\texttrademark{}, Inc., \url{https://www.bittware.com/fpga/intel/boards/s4am/}.}) with a high specification \dword{fpga} (Alterra\footnote{Alterra\texttrademark{}, \url{https://www.altera.com/products/fpga/stratix-series/stratix-iv/overview.html}.} Stratix IV). In the final implementation %of 
 for the \dword{dpmod}, the mezzanine is integrated with the layout of the \dword{amc} board developed for the charge readout.  
 A proposed upgrade, a \num{32} channel card, would reduce the required number of cards and increase the channel density to \num{352} channels per \dword{utca} crate.
 
@@ -176,7 +180,7 @@ A proposed upgrade, a \num{32} channel card, would reduce the required number of
 {Block diagram of \dword{lro} prototype.}
 \includegraphics[width=0.95\textwidth]{dp-tpcelec-lro-scheme}
 \end{dunefigure}
-\fixme{type is too small to read in \ref{fig:dp-tpcelec-lro-scheme}; i'm increasing size from .8 to .95}
+%\fixme{type is too small to read in \ref{fig:dp-tpcelec-lro-scheme}; i'm increasing size from .8 to .95} OK
 
 \begin{dunefigure}[Photo of prototype \dword{lro} card]{fig:dp-tpcelec-lro-proto}
 {A photo of the \dword{lro} prototype.}
@@ -197,16 +201,17 @@ Channels & \num{16} \\ \colhline
 Sampling & \SI{65}{MSPS} \\ \colhline
 Resolution & \SI{0.122}{\milli\volt} \\ \colhline
 Dynamic range & \num{14} bit/ \SI{2}{\volt} \\ \colhline
-Differential non-linearity & typical \num{\pm0.6} LSB\\
-& with min. \num{-0.9} and max. \num{+1.6} LSB  \\ \colhline
-Integral non-linearity & typical \num{\pm0.9}  LSB\\
-& with min. \num{-3} and max. \num{+3} LSB  \\ 
+Differential non-linearity & typical \num{\pm0.6} \dword{lsb}\\
+& with min. \num{-0.9} and max. \num{+1.6} \dword{lsb}  \\ \colhline
+Integral non-linearity & typical \num{\pm0.9}  \dword{lsb}\\
+& with min. \num{-3} and max. \num{+3} \dword{lsb}  \\ 
 \end{dunetable}
 
 %For normal operation, in the continuous mode, the digitized signals are down-sampled by the \dword{fpga} to a coarse \SI{400}{ns} sampling to match the \dword{cro} and limit the quantity of data streamed. Using a higher specification \dword{adc}, with time-sampling of \SI{15.4}{ns}, allows more flexibility. For particular calibration runs, waveforms with finer time sampling could be read out, allowing studies of, for example, the \lar scintillation time profiles. During normal operation, moreover, online pulse processing is possible within the \dword{fpga} using finer time-sampled waveforms (before the down sampling); this would enable continuous measurements of quantities like the rise and fall times of the pulses. Even at the coarse sampling rate of \SI{400}{ns}, studies of the \lar scintillation time profile are possible (given the long fall-time constant of $\sim$\SI{1500}{ns}), as is matching of the electroluminescence signal (also known as proportional scintillation light) to the charge signal.  Low light-level signals, from single or a few \phel{}s, will show no time structure but will consist of one sample several LSB \fixme{Does this abbreviation need to go in the glossary?} above the baseline. 
 For normal operation in continuous mode, the  \dword{fpga} down-samples the digitized signals to a coarse \SI{400}{ns} sampling to match the \dword{cro} and limit the quantity of data streamed. Use of a higher-specification \dword{adc}, with time sampling of \SI{15.4}{ns}, allows more flexibility. For particular calibration runs, waveforms with finer time sampling could be read out, allowing studies of, e.g., the \lar scintillation time profiles. During normal operation, moreover, online pulse processing is possible within the \dword{fpga} using finer time-sampled waveforms (before the down sampling); this %would 
-enables continuous measurements of quantities like the rise and fall times of the pulses. Even at the coarse sampling rate of \SI{400}{ns}, studies of the \lar scintillation time profile are possible (given the long fall-time constant of $\sim$\SI{1500}{ns}), as is matching of the electroluminescence signal (also known as proportional scintillation light) to the charge signal.  Low light-level signals, from single or a few \phel{}s, will show no time structure but will consist of one sample several LSB \fixme{Does this abbreviation need to go in the glossary?} above the baseline. 
-\fixme{Yes, please, along with others noted earlier. }
+enables continuous measurements of quantities like the rise and fall times of the pulses. Even at the coarse sampling rate of \SI{400}{ns}, studies of the \lar scintillation time profile are possible (given the long fall-time constant of $\sim$\SI{1500}{ns}), as is matching of the electroluminescence signal (also known as proportional scintillation light) to the charge signal.  Low light-level signals, from single or a few \phel{}s, will show no time structure but will consist of one sample several \dword{lsb} above the baseline. 
+%\fixme{Does this abbreviation need to go in the glossary?} ADDED
+%\fixme{Yes, please, along with others noted earlier. } DONE
 
 %%%%%%%%%%%%%%%%%%%%%
 \subsubsection{CATIROC branch} 
