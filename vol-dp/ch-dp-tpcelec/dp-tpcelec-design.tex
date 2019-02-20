@@ -6,12 +6,11 @@ The \dword{cro} \dword{fe} analog electronics uses a cryogenic \dword{asic} chip
 \dpchperchimney \dword{crp} channels per chimney. Therefore, \num{240} \dwords{sftchimney} must be installed for the charge readout in a given \dword{dpmod}.   
 
 The differential analog signals from the analog \dword{fe} cards, carried by the twisted-pair ribbon cables and routed through an interface flange of the \dwords{sftchimney}, are digitized by the \dword{amc} cards located outside the cryostat. These cards are installed in \dword{utca} crates placed near the \dwords{sftchimney} (one crate per chimney). In the current design, each \dword{amc} digitizes \num{64} channels, corresponding to one \dword{fe} analog card. Each \dword{utca} thus contains \num{10} \dwords{amc} reading a total of \num{640} channels. However, using \dwords{amc} that support a higher channel density is under investigation to reduce costs. 
-%\fixme{for the \dword{dpmod}?} no this is for each chimney: one chimney = one crate
 
 The \dword{lro} \dword{fe} analog and digital electronics are based on a custom-built \dword{amc}. The card contains a \dword{catiroc} \dword{asic} \cite{Blin:2017}, which is used to determine the precise charge and start times of signals from the %each 
 individual \dwords{pmt}. In addition, a \SI{14}{bit} \SI{65}{MHz} \dword{adc} digitizes data for continuous streaming of \dword{pmt} signals. Each card reads up to \num{16} channels. %One 
 A potential upgrade under consideration would increase the channel density per card to \num{32} channels. The \dword{lro} cards are housed in five dedicated \dword{utca} crates close to the \dword{pmt} instrumentation \fdth{}s.
-%\fixme{under consideration?} DONE
+
 \begin{dunefigure}[Top corner view of \dword{dpmod}]{fig:dp-tpcelec-sft-chimney-pattern}
 {Corner view of \dword{dpmod} showing the pattern of the \dwords{sftchimney} and \dword{utca} crates for charge readout above \dwords{crp}.}
 \includegraphics[width=0.6\textwidth]{dp-tpcelec-sft-chimney-pattern}
@@ -47,7 +46,6 @@ Name & Number  \\ \toprowrule
    \dword{lro} \dword{utca} crate                      & \num{5} \\ \colhline
    \dword{wrmch} per \dword{utca} crate                 & \num{1} \\ 
 \end{dunetable}
-%\fixme{The distinction between this table and \ref{tab:dp-tpcelec-physicsparams} was not clear enough, so I retitled them. Anne  } OK
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -74,7 +72,7 @@ We selected the \dword{asic} version with the double-slope gain for \dword{pddp}
 
 Each cryogenic \dword{fe} card, shown in Figure~\ref{fig:dp-tpcelec-fe-card-blade-image}, holds four \dword{asic} amplifier chips (black rectangular elements in the picture) and a few passive discrete components. The input stage of each amplifier channel has a \SI{1}{\giga\ohm} resistor to ground followed by a \SI{2.2}{\nano\farad} decoupling capacitor; both are rated for \dword{hv} operation. The %function of the 
 resistor grounds the \dword{crp} anode strips. A TVS diode\footnote{Bourns\texttrademark{} CDSOD323-T08LC TVS diode.} protects each input stage against discharges coming from the \dword{dpmod}. This component was selected after studying how well different devices protected against electrostatic discharge by subjecting them systematically to discharges of a few \si{kV} with an energy similar to that of the \dwords{lem} in the \dword{crp}. The \dword{fe} cards also house the blocking capacitors for further filtering of \dword{lv} power lines. These are first filtered at the power supply and transported via shielded cables.
-%\fixme{the black square elements?} DONE
+
 
 \begin{dunefigure}[Noise measurements in the \dword{wa105}]{fig:dp-tpcelec-311-noise}
 {Noise of measurements in the \dword{wa105} under different conditions. Left: warm only,  with the slow control cables connected to the cryostat flanges (red points) and disconnected (black points). The horizontal dashed line in this plot indicates the noise level expected for \SI{3}{\meter} strips. Right: warm (red points) and cold (black points) with the slow control cables disconnected. The channels with negative (positive) channel number correspond to the strips of \SI{3}{\meter} (\SI{1}{\meter}).}
@@ -154,15 +152,14 @@ Integral non-linearity & typical \num{\pm1.1}  \dword{lsb}\\
 \end{dunefigure}
 Figure~\ref{fig:dp-tpcelec-amc-scheme} illustrates %shows block diagram of 
 the \dword{amc} functionality. Each \dword{amc} generates a continuous compressed stream of \SI{2.5}{MSPS} \num{12}\,bit data per readout channel. The on-board \dwords{adc} operate at a rate of \SI{25}{\MHz} per channel. The data are down-sampled in the \dword{fpga} to \SI{2.5}{\MHz} by performing ten-sample averaging, which leads to further digital filtering of the noise. The data, consisting of only the  \num{12} most significant bits from each digitized \num{14}\,bit sample, are then compressed using an optimized version of the Huffman algorithm \cite{Wu:2010zzk} and organized into frames for transmission.  The frames contain the absolute timing information of the first data sample for reliability. In the current design, each \dword{amc} has \num{64} channels and reads one analog \dword{fe} card.
-%\fixme{ref?} DONE
+
 
 The \dwords{amc} are housed in \dword{utca} crates and send their data via the \dword{mch} switch. The timing synchronization of \dwords{amc} is achieved via a \dword{wrmch} module (also housed in the crate) that is connected to the \dword{wr} network. In addition, a  \dword{wrmch} could also be used for triggered \dwords{amc} readout %of % by sending it 
 if it were sent dedicated packets containing trigger timestamp information over the \dword{wr} network.
 
 In \dword{pddp}, \dwords{amc} are operated in the triggered mode, reading a \SI{4}{\milli\second} drift time window at a trigger rate of \SI{100}{Hz}, which is not far from continuous readout mode. The analog data are continuously digitized and buffered. It is possible to acquire a sub-sample of these data by providing the \dword{amc} with a timestamp generated by an external trigger. The timestamp defines the start time for the data sequence to be read, while the length of the sequence is determined by the size of the drift window. In \dword{pddp}, this length corresponds to \num{10000} \SI{400}{\nano\second} samples per full drift window (\SI{4}{\milli\second}). Triggers (beam counters, cosmic-ray counters, \dwords{pmt} detecting the UV light, and starts of beam spills) are timestamped in a dedicated \dword{wr} slave node (\dword{wrtsn}), an FMC-DIO mezzanine\footnote{Seven Solutions, \url{https://sevensols.com/index.php/fmc-dio/}} mounted on a \dword{wr} SPEC\footnote{Seven Solutions, \url{https://sevensols.com/index.php/products/spec/}} carrier card. \dword{wrtsn}, hosted in a computer, runs a custom firmware developed for \dword{pddp}. 
-%\fixme{fix prev sentence}  OK added footnote for FMC-DIO and SPEC and fixed the sentence
 The \dword{wrtsn} is connected to the \dword{wrgm} for synchronization and transmission of trigger information. The timestamp data produced by the \dword{wrtsn} are sent over the \dword{wr} network as Ethernet packets with a customized protocol. 
-%\fixme{TSN and FMC-DIO are not defined} DONE
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Electronics for Light Readout}
@@ -184,8 +181,9 @@ A proposed upgrade, a \num{32} channel card, would reduce the required number of
 
 \begin{dunefigure}[Photo of prototype \dword{lro} card]{fig:dp-tpcelec-lro-proto}
 {A photo of the \dword{lro} prototype.}
-\includegraphics[width=0.7\textwidth]{dp-tpcelec-lro-proto}
+%\includegraphics[width=0.7\textwidth]{dp-tpcelec-lro-proto}
 \end{dunefigure}
+\fixme{figure dp-tpcelec-lro-proto not found}
 
 The analog signals from each \dword{pmt} channel are split equally into two separate branches, waveform and \dword{catiroc} (see Figure~\ref{fig:dp-tpcelec-lro-scheme}). %One path (waveform branch), through an anti-aliasing low-pass filter and the \num{14} bit \SI{65}{\MHz} \dword{adc} (AD9249), produces continuous digitization of the \dword{pmt} waveform data, which are down-sampled to \SI{2.5}{MHz} before transmitting them to \dword{daq}. The other (\dword{catiroc} branch) is routed directly to the \dword{catiroc} \dword{asic} for precise measurements of pulse charge and timing. Both paths produce data continuously and independently.
 The waveform branch goes through an anti-aliasing low-pass filter after which the \num{14} bit \SI{65}{\MHz} \dword{adc} (AD9249) produces continuous digitization of the \dword{pmt} waveform data, which are then down-sampled to \SI{2.5}{MHz} before transmission to \dword{daq}. The \dword{catiroc} branch is routed directly to the \dword{catiroc} \dword{asic} for precise measurements of pulse charge and timing. Both paths produce data continuously and independently.
@@ -207,11 +205,9 @@ Integral non-linearity & typical \num{\pm0.9}  \dword{lsb}\\
 & with min. \num{-3} and max. \num{+3} \dword{lsb}  \\ 
 \end{dunetable}
 
-%For normal operation, in the continuous mode, the digitized signals are down-sampled by the \dword{fpga} to a coarse \SI{400}{ns} sampling to match the \dword{cro} and limit the quantity of data streamed. Using a higher specification \dword{adc}, with time-sampling of \SI{15.4}{ns}, allows more flexibility. For particular calibration runs, waveforms with finer time sampling could be read out, allowing studies of, for example, the \lar scintillation time profiles. During normal operation, moreover, online pulse processing is possible within the \dword{fpga} using finer time-sampled waveforms (before the down sampling); this would enable continuous measurements of quantities like the rise and fall times of the pulses. Even at the coarse sampling rate of \SI{400}{ns}, studies of the \lar scintillation time profile are possible (given the long fall-time constant of $\sim$\SI{1500}{ns}), as is matching of the electroluminescence signal (also known as proportional scintillation light) to the charge signal.  Low light-level signals, from single or a few \phel{}s, will show no time structure but will consist of one sample several LSB \fixme{Does this abbreviation need to go in the glossary?} above the baseline. 
+%For normal operation, in the continuous mode, the digitized signals are down-sampled by the \dword{fpga} to a coarse \SI{400}{ns} sampling to match the \dword{cro} and limit the quantity of data streamed. Using a higher specification \dword{adc}, with time-sampling of \SI{15.4}{ns}, allows more flexibility. For particular calibration runs, waveforms with finer time sampling could be read out, allowing studies of, for example, the \lar scintillation time profiles. During normal operation, moreover, online pulse processing is possible within the \dword{fpga} using finer time-sampled waveforms (before the down sampling); this would enable continuous measurements of quantities like the rise and fall times of the pulses. Even at the coarse sampling rate of \SI{400}{ns}, studies of the \lar scintillation time profile are possible (given the long fall-time constant of $\sim$\SI{1500}{ns}), as is matching of the electroluminescence signal (also known as proportional scintillation light) to the charge signal.  Low light-level signals, from single or a few \phel{}s, will show no time structure but will consist of one sample several LSB  above the baseline. 
 For normal operation in continuous mode, the  \dword{fpga} down-samples the digitized signals to a coarse \SI{400}{ns} sampling to match the \dword{cro} and limit the quantity of data streamed. Use of a higher-specification \dword{adc}, with time sampling of \SI{15.4}{ns}, allows more flexibility. For particular calibration runs, waveforms with finer time sampling could be read out, allowing studies of, e.g., the \lar scintillation time profiles. During normal operation, moreover, online pulse processing is possible within the \dword{fpga} using finer time-sampled waveforms (before the down sampling); this %would 
 enables continuous measurements of quantities like the rise and fall times of the pulses. Even at the coarse sampling rate of \SI{400}{ns}, studies of the \lar scintillation time profile are possible (given the long fall-time constant of $\sim$\SI{1500}{ns}), as is matching of the electroluminescence signal (also known as proportional scintillation light) to the charge signal.  Low light-level signals, from single or a few \phel{}s, will show no time structure but will consist of one sample several \dword{lsb} above the baseline. 
-%\fixme{Does this abbreviation need to go in the glossary?} ADDED
-%\fixme{Yes, please, along with others noted earlier. } DONE
 
 %%%%%%%%%%%%%%%%%%%%%
 \subsubsection{CATIROC branch} 
@@ -261,8 +257,8 @@ the external \dword{fpga} reads. %is read by the external \dword{fpga}.
 \subsection{Network-based $\mu$TCA Architecture}
 \label{ssec:dp-tpcelec-design-utca}
 
-The digital electronics use the \dword{utca} standard, which offers an industrial solution in a very compact and easily scalable architecture to handle a large number of channels at low cost.  The standard (or related standards such as \dword{atca} or xTCA) is widely used in the telecommunication industry and is being adopted by the HEP community. The backplane of the \dword{utca} crates host high-speed serial links that support a variety of transmission protocols (e.g., Ethernet, PCI Express, SRIO). In addition, dedicated lanes are available to distribute clock signals to all boards hosted in the crate.  The Ethernet-based solution has been adopted for both the data and clock distribution in this design of the \dual electronics system for both charge and light readout. 
-\fixme{define xTCA}
+The digital electronics use the \dword{utca} standard, which offers an industrial solution in a very compact and easily scalable architecture to handle a large number of channels at low cost.  The standard (and related standards such as \dword{atca} and \dword{amc}) is widely used in the telecommunication industry and is being adopted by the HEP community. The backplane of the \dword{utca} crates host high-speed serial links that support a variety of transmission protocols (e.g., Ethernet, PCI Express, SRIO). In addition, dedicated lanes are available to distribute clock signals to all boards hosted in the crate.  The Ethernet-based solution has been adopted for both the data and clock distribution in this design of the \dual electronics system for both charge and light readout. 
+%\fixme{define xTCA} xTCA is a general term to refer to the family of the related standards atca utca and amc, removed from the sentence
 
 %Each \dword{amc}, either for charge or light readout and plugged into the \dword{utca}, is 
 Each \dword{amc}, either for charge or light readout, is plugged into the \dword{utca} and  connected to the crate \dword{mch} board through the backplane serial links. The \dword{mch} provides switch functionality that enables \dwords{amc} to communicate with one other or with external systems through the \dword{mch} uplink interface. In the \dual electronics system design, \dword{mch} also manages the \dword{wr} clock distribution. 
@@ -278,15 +274,16 @@ Parameter & Value  \\ \toprowrule
   Upgradable \dword{mch} bandwidth & \SI{40}{Gibit/s}           \\ 
 \end{dunetable}
 
-In the current design, 
-\fixme{the \dword{dpmod} design?} 
+In the current \dword{dpmod} design, 
 as for \dword{pddp}, the \dword{mch} operates with a \SI{10}{Gbit/s} uplink. Given that a \dword{utca} crate hosts \num{10} \dwords{amc} for charge readout, the required bandwidth to stream data to the \dword{daq} is about \SI{1.8}{Gbit/s}. This assumes that data exiting the \dwords{amc} are losslessly compressed with the compression factor \num{10}. The bandwidth required per crate link for streaming the \dword{lro} data is \SI{4.7}{Gbit/s}. The \SI{10}{Gbit/s} \dword{mch} is therefore sufficient to support these data rates. However, the technology is moving toward supporting \SI{40}{Gbit/s} rates. In addition, channel density per \dword{amc} could also be increased to optimize costs. For these reasons, an upgrade to a \SI{40}{Gbit/s} \dword{mch} is possible in the future. This also indicates that the optical links connecting the \dword{daq} system to \dword{utca} \dword{mch} should operate at \SI{40}{Gbit/s}. Table~\ref{tab:dp-utcabandwidth} provides a summary of the required and supported bandwidths per \dword{utca} crate for continuous data streaming.
 
 
-\begin{dunefigure}[Instrumented \dshort{utca} crate from the \dword{wa105}]{fig:dp-tpcelec-311-utca-image}
-{Pictures of an instrumented \dword{utca} crate from the \dword{wa105}. The crate contains five \dword{amc} cards, corresponding to the number of readout channels per  \dword{sftchimney}. The lower images show the crate after the  cables are connected to the warm flange of the \dword{sftchimney}.\fixme{to be replaced with the ones of ProtoDUNE-DP after the chimneys/crates installed and cabled}}
+\begin{dunefigure}[Instrumented \dshort{utca} crate from the \dword{wa105}]
+{fig:dp-tpcelec-311-utca-image}
+{Pictures of an instrumented \dword{utca} crate from the \dword{wa105}. The crate contains five \dword{amc} cards, corresponding to the number of readout channels per  \dword{sftchimney}. The lower images show the crate after the  cables are connected to the warm flange of the \dword{sftchimney}.}
 \includegraphics[width=0.8\textwidth]{dp-tpcelec-311-utca-image}
 \end{dunefigure}
+\fixme{to be replaced with the ones of ProtoDUNE-DP after the chimneys/crates installed and cabled}
 
 Figure~\ref{fig:dp-tpcelec-311-utca-image} shows photographs of one instrumented \dword{utca} crate used for the charge readout of the \dword{wa105} at CERN. In this detector, each \dword{sftchimney} reads \num{320} channels, thus requiring only five \dwords{amc} per the \dword{utca} crate. The two optical fiber links, one (\SI{10}{Gbit/s}) for data and the other (\SI{1}{Gbit/s}) for clock and trigger timing distribution, are labeled %visible 
 in the top image. % images.     
@@ -297,17 +294,24 @@ in the top image. % images.
 The time synchronization system selected for the \dword{dpmod} uses a \dword{wr} network  that combines the synchronous \SI{1}{Gbit/s} Ethernet (SyncE) technology with the exchange of PTPV2 packets  to synchronize clocks of distant nodes to a common time. A high-stability GPS disciplined oscillator (GPSDO) with  accuracy similar to an atomic clock provides a clock reference signal to be distributed over the physical layer interface of the \dword{wr} Ethernet network. The network topology uses specially designed switches that have standard IEEE802.1x Ethernet bridge functionality with additional \dword{wr}-specific extensions to preserve clock accuracy. Time and frequency information are distributed to the nodes on the \dword{wr} network via optical fibers. The \dword{wr} protocol automatically performs dynamic self-calibrations to account for any propagation delays and keeps all connected nodes continuously synchronized to sub-\si{\nano\second} precision. 
 
 The  sub-\si{\nano\second} precision on the clock synchronization is not strictly needed for aligning samples in the different \dword{amc} digitization units because the timing granularity on the data is \SI{400}{ns}. However, the \dword{wr} timing system has readily available industrial components and the necessary protocols for synchronization with automatic calibration of delay propagation. R\&D on this timing distribution solution started in 2006; the final design for integrating this system, planned for the \dword{wa105}, \dword{pddp}, and the \dword{dpmod} readout, was completed in 2016. 
-\fixme{what's the connection with the sub-ns precision and ``readily available industrial components and the necessary protocols for synchronization'' ?}
+\fixme{Ok, that wasn't clear to me. I suggest: ``... because the timing granularity on the data is \SI{400}{ns}. However, the \dword{wr} timing system is a good choice for other reasons. It has readily available industrial...''}
+%\fixme{what's the connection with the sub-ns precision and ``readily available industrial components and the necessary protocols for synchronization'' ?} These sentences just convey the idea that although the sub-ns precesion is not needed when one works with ADC sampling rate of 2.5 MHz, the solution offered the White Rabbit components provides the benefit that one does not need to design additional cards or develop the syncronization protocols from scratch and debug them. We prefer to leave the sentence unchanged.
 
-In the implementation specific to \dword{pddp}, a GPS-disciplined clock unit (Meinberg LANTIME M600\footnote{Meinberg\texttrademark{}, \url{https://www.meinbergglobal.com/english/products/advanced-1u-ntp-server.htm}.}) feeds \SI{10}{MHz} and \num{1}\,PPS reference signals to a commercial \dword{wr} switch (Seven Solutions WRS v3.4\footnote{Seven Solutions\texttrademark{}, \url{http://sevensols.com/index.php/products/white-rabbit-switch/}.}). The switch acts as grandmaster of the \dword{wr} network. It is connected via \SI{1}{Gbit/s} optical links to both the dedicated \dword{wr} timestamping node (\dword{wr}-TSN) and the \dword{wr} end-node slave cards present within each \dword{utca} crate (\dword{wrmch}), keeping these synchronized to its reference time. The \dword{wrgm} also communicates through a standard Ethernet port with the LANTIME unit for its date and time synchronization via NTP. The \dword{wr}-TSN module recieves analog TTL-level trigger signals, generates their timestamps, and transmits them over the \dword{wr} network to the connected \dword{wrmch} units. This timestamp information is then used by \dwords{amc} to find the data frame corresponding to the trigger.  \fixme{defs needed for LANTIME, TSN, TTL, NTP?}
+In the implementation specific to \dword{pddp}, a GPS-disciplined clock unit (Meinberg LANTIME M600\footnote{Meinberg\texttrademark{}, \url{https://www.meinbergglobal.com/english/products/advanced-1u-ntp-server.htm}.}) feeds \SI{10}{MHz} and \num{1}\,PPS reference signals to a commercial \dword{wr} switch (Seven Solutions WRS v3.4\footnote{Seven Solutions\texttrademark{}, \url{http://sevensols.com/index.php/products/white-rabbit-switch/}.}). The switch acts as grandmaster of the \dword{wr} network. It is connected via \SI{1}{Gbit/s} optical links to both the dedicated \dword{wr} timestamping node (\dword{wrtsn}) and the \dword{wr} end-node slave cards present within each \dword{utca} crate (\dword{wrmch}), keeping these synchronized to its reference time. The \dword{wrgm} also communicates through a standard Ethernet port with the LANTIME unit for its date and time synchronization via \dword{ntp}. The \dword{wrtsn} module recieves analog TTL-level trigger signals, generates their timestamps, and transmits them over the \dword{wr} network to the connected \dword{wrmch} units. This timestamp information is then used by \dwords{amc} to find the data frame corresponding to the trigger.  
+%\fixme{defs needed for LANTIME, TSN, TTL, NTP?} 
+%LANTIME is the name of the equipment and the link is provided in the footnote
+%TTL is well-known nomenclature and we would much rather write TTL-level signal than transistor-transistor logic level signals
+%TSN was added to glossary 
+%replaced NTP with \dword{ntp}
+% Great, thanks! Anne
 
 \begin{dunefigure}[Picture of \dword{wr} slave node card]{fig:dp-tpcelec-wrmch-image}
 {Picture of the \dword{wr} slave node card (\dword{wrmch}) present in each \dword{utca} crate for time synchronization. The \dword{wr}-LEN mezzanine card is visible in the bottom right corner.}
 \includegraphics[width=0.55\textwidth]{dp-tpcelec-wrmch-image}
 \end{dunefigure}
-\fixme{what information is this figure intended to impart?}
+%\fixme{what information is this figure intended to impart?} The figure shows first of all that the card actually exists and not just an abstract design. It also shows how the commercial part WR-LEN is interated.  OK, makes sense. Thanks. (Anne)
 
-The \dword{wrmch} card (Figure~\ref{fig:dp-tpcelec-wrmch-image}) enables clock/timing/trigger distribution to \dwords{amc}. It communicates with them via dedicated lines in the backplane of the \dword{utca} crate using a customized data-frame protocol. The module contains a commercial \dword{wr} slave node card, the \dword{wr} Lite Embedded Node (Seven Solutions OEM WR-LEN\footnote{Seven Solutions\texttrademark{}, \url{http://sevensols.com/index.php/products/oem-wr-len/}.}), as mezzanine card. WR-LEN runs on customized firmware that also enables it to decode the trigger timestamp data packet received over the \dword{wr} network.
+The \dword{wrmch} card (Figure~\ref{fig:dp-tpcelec-wrmch-image}) enables clock/timing/trigger distribution to \dwords{amc}. It communicates with them via dedicated lines in the backplane of the \dword{utca} crate using a customized data-frame protocol. The module contains a commercial \dword{wr} slave node card, the \dword{wr} Lite Embedded Node (Seven Solutions OEM \dword{wr}-LEN\footnote{Seven Solutions\texttrademark{}, \url{http://sevensols.com/index.php/products/oem-wr-len/}.}), as mezzanine card. \dword{wr}-LEN runs on customized firmware that also enables it to decode the trigger timestamp data packet received over the \dword{wr} network.
 
 \begin{dunefigure}[Architecture of \dword{wr} network]{fig:dp-tpcelec-wrnet-layout}
 {Architecture of WR network for time synchronization of digital readout electronics.}
