@@ -48,7 +48,7 @@ VERSION = '0.0'
 top='.'
 
 # "top-level" reqs/spec names
-TOP_LEVEL_SPECS = ('SP-FD',)
+TOP_LEVEL_SPECS = ('SP-FD','DP-FD')
 
 def options(opt):
     opt.load('tex')
@@ -73,6 +73,10 @@ def configure(cfg):
 
     # To automate requirements table generation some special programs are needed.  They are optional
     cfg.find_program('dune-reqs', var='DUNEREQS',
+                     mandatory = False);
+    cfg.find_program('dune-risks', var='DUNERISKS',
+                     mandatory = False);
+    cfg.find_program('dune-costs', var='DUNECOSTS',
                      mandatory = False);
     cfg.find_program('dunegen.sh', var='DUNEGEN',
                      path_list=[os.path.join(os.path.realpath("."),"util")],
