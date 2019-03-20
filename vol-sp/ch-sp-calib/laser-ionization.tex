@@ -1,0 +1,254 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Ionization Laser System}
+\label{sec:sp-calib-sys-las-ion}
+
+%%%%%%%%%%%%%%%
+\subsubsubsection{Physics Motivation}
+\label{sec:sp-calib-sys-las-ion-phys} 
+
+%Adapted from IDR
+The primary purpose of a laser system is to provide an independent, fine-grained estimate of the \efield in space and %changed or to and
+time. 
+Through its effect on drift velocity and recombination, the \efield is a critical parameter for physics signals as it ultimately impacts the spatial resolution and energy response of the detector.
+
+ There are multiple sources which may distort the electric field temporally  or spatially in the detector. Current simulation studies indicate that positive ion accumulation and drift (space charge) due to ionization sources such as cosmic rays or ${}^{39}$Ar is small in the DUNE \dword{fd};  however, not enough is known yet about the fluid flow pattern in the FD to exclude the possibility of stable eddies which may amplify the effect for both \single and \dual modules. This effect can get further amplified significantly in the \dword{dpmod} due to ion accumulation at the liquid-gas interface. 
+Additionally, other sources in the detector (especially detector imperfections) can cause \efield distortions. For example, field cage resistor failures, non-uniform resistivity in the voltage dividers, CPA misalignment, CPA structural deformations, and APA and CPA offsets and  deviations from flatness can create localized \efield distortions. 
+In both SP and DP systems, the failure of a resistor will create significant, local electric field distortions which will need to be identified\footnote{In the DP system, four registers would have to fail to cause a failure across the field cage gap, but even one failure in the SP can have an impact; this may be partially mitigated by modifying the HV, but not completely.}. While the resistor failure will be detected temporally, its location in space is not possible to determine from monitoring data. Misalignments of detector objects or deformations may also create (small) electric field distortions; while individual effects may be small, it is possible to have a combined, significant effect.
+Each individual \efield distortion may add in quadrature with other effects, and can reach 4\% under certain conditions. Understanding all these effects require in-situ measurement of \efield for proper calibration. 
+
+Many useful secondary uses of laser include alignment (especially modes that are weakly constrained by cosmic rays),
+%; see Figure~\ref{fig:apacurtainalign}),
+stability monitoring, and diagnosing detector failures (e.g., \dword{hv}).  
+Misalignment may include physical deformation and/or rotations of objects within the detector.  Certain alignment ``directions''  are difficult to assess with cosmic rays alone, such as distortions of the detector that preserve the gap widths and do not shift the \dwords{apa} in $x$ near the gaps relative to one another.
+%are difficult to assess with cosmic rays alone. 
+These distortions include global shifts and rotations in the locations of all detector elements, and crumpling modes where the edges of the \dwords{apa} hold together but angles are slightly different from nominal.   
+%Addressed with (complementary) proposed laser and external muon tracking systems.
+
+%% JM %% from early IDR version
+
+A laser system also has the intrinsic advantage of
+being immune to recombination, thus eliminating particle-dependent effects.  
+
+%JM % from early IDR version. Now should go on PE laser section
+%
+%Even if the laser is not intense enough to ionize the \dword{lar}, electrons may be liberated from material on the cathode, which provides many useful measurements. The total drift time can be  assessed from laser pulse to readout of charge on the anode. A photo-electron-based calibration system was used in the T2K gaseous (predominantly Ar), TPCs~\cite{Abgrall:2010hi}. Targets placed on the cathode provided dots and lines that were then imaged by the electronics, and relative distortions of the surveyed positions could be used. The T2K photo-electron system provided measurements of adjacent electronics modules' relative timing response, drift velocity with few \si{\nano\s} resolution of \SI{870}{\milli\m} drift distance, electronics gain, transverse diffusion, and an integrated measurement of the electric field along the drift direction. For DUNE, the system would be similarly used as on T2K to diagnose electronics or TPC response issues on demand, and provide an integral field measurement and relative distortions of $y$, $z$ positions with time, and of either $x$ or drift velocity. Ejection of photo-electrons from the direct ionization laser system has also been observed.
+
+%% JM %% end % from early IDR version
+
+%%%%%%%%%%%%%%%
+
+%JM % this should likely go in intro to both lasers.
+%
+%The Calibration task force has considered multiple systems that use a laser to extract the electric field map.  They fall into two categories: photo-electron and direct ionization of the \dword{lar}, both driven by a \SI{266}{\nano\m} laser system.
+
+%Start by design requirements:
+% size of voxels, crossing tracks
+
+%\subsubsubsection{Requirements}
+%\label{sec:laserReq}
+
+%The energy and position reconstruction requirements for physics measurements lead to requirements on the necessary precision of the calibration \efield measurement and its spatial granularity.  
+
+%As mentioned in the DUNE Physics TDR (Section 4.4.1.1), a \num{1}\% bias in the lepton energy scale is significant for the LBL sensitivity to CPV. Since a smaller \efield leads to higher electron/ion recombination and therefore a lower collected charge, distortions of the \efield are one of the possible causes of an energy scale bias.  According to \cite{mooney2018}, a \num{1}\% distortion on \efield leads to a \num{0.3}\% bias on collected charge.
+%Since other effects will contribute to the lepton energy scale uncertainty budget, we consider a goal for the calibration system to measure the \efield to a precision of $\sim\num{1}\%$ so that its impact on the collected charge is well below \num{1}\%.
+
+%The IDR states that a fiducial volume uncertainty of \num{1}\% is required (ref. \cite{idr-vol-1}, p. 4-46) and that this translates to a position uncertainty of \num{1.5}~cm in each coordinate (ref. \cite{idr-vol-2}, p. 2-12). Also that in the $y$ and $z$ coordinates, the wire pitch of \num{4.7}~mm  achieves that while in the drift ($x$) direction, the position is calculated from timing so it is claimed it should be known better.
+
+%But the position uncertainty depends also on the electric field, via the drift velocity. Since the position distortions accumulate over the drift path of the electron, it is not enough to specify an uncertainty on the field, we must accompany it by specifying the size of the spatial region of that distortion. i.e. a \num{10}\% distortion would not be relevant if it was confined to a \num{2}~cm region, for instance, and the rest of the drift region was nominal. So what matters is the product of [size of region]x[distortion]. Moreover, we should distinguish distortions of two types:
+%\begin{enumerate}
+%\item affecting the magnitude of the field. Then the effect on the drift velocity $v$ is also a change of magnitude. According to the function provided in \cite{walkoviak2000}, close to \num{500}~V/cm, the variation of the velocity with the field is such that a \num{4}~\% variation in $E$ leads to a \num{1.5}~\% variation in $v$.
+%\item 	affecting the direction of the field. Nominally, the field $E$ should be along $x$, so $E = E_L$ (the longitudinal component). If we consider that the distortions introduce a new transverse component $E_T$, in this case this translates directly into the same effect in the drift velocity, that gains a $v_T$ component that is $v_T=v_L  E_T/E_L $, i.e. a\num{4}~\% transverse distortion on the field leads to a \num{4}~\% transverse distortion on the drift velocity.
+%\end{enumerate}
+
+%So, a \num{1.5}~cm shift comes about from a constant \num{1.5}~\% distortion in the velocity field over a region of \num{1}~m. In terms of electric field, that could be from a \num{1.5}~\% distortion in ET over 1 m or a \num{4}~\% distortion in EL over the same distance.
+
+%From ref. \cite{idr-vol-1}, page 4-53, \efield distortions can be caused by space-charge effects due to accumulation of positive ions caused by $^{39}$Ar decays (cosmic rate is low in FD), or detector defects, such as field cage resistor failures, resistivity disuniformities, etc... The total effects added in quadrature can be as high as \num{4}~\%. 
+%From ref. \cite{mooney2018}, the space charge effects due to $^{39}$Ar can be of the order of \num{0.1}~\% for the single phase (SP), and \num{1}~\% for the dual phase (DP), so in practice that kind of distortion needs to cover several meters in order to be relevant.
+%Other effects due to cathode plane assembly (CPA) or field cage (FC) imperfections can be higher than those due to space charge, but they are also much more localized. 
+ %If we assume that there are no foreseeable effects that would distort the field more than \num{4}~\%, and considering the worst case (transverse distortions), then the smallest region that would produce a \num{1.5}~cm  shift is \num{1.5}/\num{0.04}~=~\num{37.5}~cm. That provides a target for the granularity of the measurement of the \efield distortions in $x$, with of course a larger region if the distortions are smaller. Given the above considerations, then a voxel size of \num{10}x\num{10}x\num{10}~cm appears to be enough to measure the \efield with the granularity needed for a good position reconstruction precision.
+%In fact, since the effects that can likely cause bigger \efield distortions are the problems or alignments in the CPA (or APA), or in the FC, it could be conceivable to have different size voxels for different regions, saving the highest granularity of the probing for the walls/edges of the drift volume.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsubsection{Requirements}
+\label{sec:sp-calib-laser-req}
+
+\input{vol-sp/ch-sp-calib/requirements}
+
+\subsubsubsection{Design}
+\label{sec:sp-calib-sys-las-ion-des}
+
+\paragraph{Baseline design}
+
+The design of the laser calibration system for DUNE is strongly based on the design of the system built for \dword{microboone} ~\cite{microboone}, that was based on several previous developments~\cite{rossi2009,Zeller:2013sva,ereditato2014,Ereditato:2014tya}. A similar system was also built for CAPTAIN~\cite{captain-wp} and in the near future, will be built for SBND~\cite{sbn-prop}. Operation of the \dword{microboone} system has already taken place and a preliminary report was given in~\cite{chen2018}.
+
+Ionization of \dword{lar} by laser can occur via a multiphoton process in which a two-photon absorption~\cite{badhrees2010} leads the atom to the excited states band, and a third photon can cause ionization. This can only occur with high photon fluxes, and so the employed lasers need to be pulsed and have pulse energies of \num{60}~mJ or more. Contrary to muons, the laser beams do not suffer multiple scattering and travel along straight lines determined by the steering mirror optics. The basic measurement consists in recording the laser beams with the TPC and comparing the reconstructed tracks with the direction known from the steering hardware. An apparent curvature of the measured track is attributed to \efield distortions (either in direction or magnitude).
+
+An unambiguous field map requires crossing laser tracks in every relevant "voxel" of the detector. If two tracks that enter the same spatial voxel ($10 \times 10 \times 10 ~\textrm{cm}^3$ volume) in the \dword{detmodule}, the relative position of the tracks provides an estimate of the local \threed \efield.
+
+With a single, steerable laser track, there would be ambiguity in the direction/magnitude of the position displacement and so the information obtained would be limited. Even if not crossing, a set of several tracks from opposite directions can still be used to obtain a displacement map via an iterative procedure~\cite{chen2018}.
+
+%The laser track location placement precision is limited solely by the optics design and self-focusing effects can impact the practical range of the track (theoretically, the Rayleigh scattering length of 266~nm light is about 40~m). As discussed in Section~\ref{sec:FTs}, this is mitigated by spacing lasers about 15~m apart which is very close to the laser track range demonstrated by the MicroBooNE experiment. 
+ 
+%\fixme{Clarify the extra degeneracy in this case, related to overall parameterization of TPC response model?}
+%\fixme{Need to reference optics of system?}
+
+%\fixme{Add a comment on how long a run takes} 
+
+%A \phel{}-based calibration system was used in the T2K gaseous (predominantly Ar), TPCs~\cite{Abgrall:2010hi}. %Targets placed on the cathode provided dots and lines that were then imaged by the electronics, and relative distortions of the surveyed positions could be used. 
+%Thin metal surfaces placed at surveyed positions on the cathode provided point-like and line sources of \phel{}s when illuminated by a laser. The T2K \phel system provided measurements of adjacent electronics modules' relative timing response, drift velocity with few \si{\nano\s} resolution of \SI{870}{\milli\m} drift distance, electronics gain, transverse diffusion, and an integrated measurement of the electric field along the drift direction. For DUNE, the system would be similarly used as on T2K to diagnose electronics or TPC response issues on demand, and provide an integral field measurement and relative distortions of $y$, $z$ positions with time, and of either $x$ or drift velocity. Ejection of \phel{}s from the direct ionization laser system has also been observed, so it is likely this is a reasonable addition to the nominal design.% and would only be considered a primary system if the intensity of the laser is problematic. 
+
+%% JM %% from early IDR version
+
+
+% Mini workshop: https://indico.fnal.gov/event/14909/
+
+Laser beams with lengths of \num{10}~m in \dword{lar} have been observed in \dword{microboone}, and beams with \num{20}~m (possibly more) are reasonably expected to be possible to obtain with a similar system. While the Rayleigh scattering of the laser light is about \SI{40}{\m}, additional optics effects, including self-focusing (Kerr) effects may limit the maximum practical range.
+This has determined the choice of locating 5 calibration ports in the cryostat roof at \num{15}~m intervals along each of the 4 drift volumes of the SP module, for a total of 20 ports. In fact, there are 4 ports just outside each of the FC end-walls, and 12 ports located over the top FC, close to the APA of each drift volume, as shown in Fig. \ref{fig:ftmap}.
+
+
+\begin{figure}[htb!] 
+\centering 
+\includegraphics[width=0.45\linewidth]{graphics/uB_laser_schematic.png}
+\includegraphics[width=0.5\linewidth]{graphics/uB_laser_box.png}
+\caption{Left: Schematics of the ionization laser system in one port (from\cite{sbn-prop}). Right: Schematics of the laser box (from\cite{microboone}).}
+\label{fig:laser_schematic} 
+\end{figure} 
+
+
+For each of those 20 ports, a laser module can be schematically represented by Fig. \ref{fig:laser_schematic} (Left), and consists of the following elements:
+\begin{itemize}
+    \item a laser box Fig. \ref{fig:laser_schematic} (Right) that provides:
+    \begin{itemize}
+        \item an attenuator and a collimator to control the intensity and size of the beam;
+        \item a photodiode that gives a TPC-independent trigger signal;
+        \item a low-power red laser, aligned with the UV one, to facilitate alignment operations;
+        \item a Faraday cage to shield the surrounding electronics from the accompanying EM pulse.
+    \end{itemize}
+    \item a feedthrough (Fig. \ref{fig:laser_cad} (Left)) into the cryostat that provides:
+    \begin{itemize}
+        \item the optical coupling that allows the UV light to pass through into the cryostat directly into the liquid phase, avoiding distortions due to the gas-liquid interface and the gas itself;
+        \item a rotational coupling that allows the whole structure to rotate while maintaining the cryostat seal;
+        \item a periscope structure (Fig.~\ref{fig:laser_cad} (Right)) mounted under that rotating coupling, that supports a mirror within the \dword{lar};
+        \item the additional theta rotation of the mirror is accomplished by a precision mechanism coupled to an external linear actuator;
+        \item both the rotation and linear movements of the steering mechanism are read-out by precision encoders.
+    \end{itemize}
+    
+\end{itemize}
+
+\begin{figure}[htb!] 
+\centering 
+\includegraphics[width=0.49\linewidth]{graphics/uB_laser_ft.png}
+\includegraphics[width=0.248\linewidth]{graphics/uB_laser_periscope.png}
+\caption{Left: CAD drawing of the \dword{microboone} feedthrough. Right: CAD drawing of the \dword{microboone} periscope. Both figures from\cite{microboone}.}
+\label{fig:laser_cad} 
+\end{figure} 
+
+In the case of the lasers in the end-wall ports, the beams enter the FC laterally, while in the case of the lasers in the ports over the TPC, the beams enter the TPC from the top. In both cases, the laser beam can enter the FC only through the gaps between the FC electrodes. These gaps are \num{1.4}~cm wide and the electrodes themselves are \num{4.6}~cm wide, so it's clear that the shadowed regions are very significant. In one of the alternative designs, the top FC is modified as to allow small openings for the bottom of the periscope to penetrate within the FC, significantly increasing coverage.
+
+For the six most central ports, the distance between them is small enough that we can consider having the same laser box serving two feedthroughs, in order to reduce the costs associated with the laser and its optics.
+
+%a \SI{266}{\nano\m} laser would be mounted on the top of the cryostat, and service two adjacent feedthroughs. A steerable head and fiber interface would be mounted in the feedthrough, which is coated in a insulator. Two options are under investigation: (1) the \dword{fc} (but not the \dword{gp}) is penetrated, and (2) the \dword{fc} is not penetrated. In the former case, the \dword{fc} penetration has been shown to create a small distortion to the E-field, for the benefit of full volume E-field mapping. When the \dword{fc} is not penetrated, the laser shines through the \dword{fc} tubes, producing some regions that are not mappable by the laser. Unlike the ports that are inwards of the cryostat, the lasers through penetrations that are outside the \dword{fc} on the far east and west side of the cryostat will not penetrate the field cage. The photo-electron system would include a fiber and no steering; the necessity of penetrating the \dword{fc} is unlikely but has not been assessed yet.
+
+A scan of the full detector using \SI{1}{L} volume elements would require a number of tracks on the order of 800k, would take about three days. It is expected that shorter runs could be done to investigate specific regions. The sampling granularity, and therefore the amount of data taken, is dependent on \dword{daq} requirements. In fact, even to be able to record the desired 800k tracks, a dedicated data reduction algorithm will have to be devised, so that only a drift window of about $100 \mu s$ of data is recorded, and the position of that window depends on the beam position and direction and which wire is being read out. More details on this are given in section~\ref{sec:sp-calib-daqreq}.
+
+%The direct ionizing laser system may also be used to create \phel{}s from the cathode, even under low power operation.
+
+%% JM %% end % from early IDR version
+
+\paragraph{Alternative design 1: Top \dword{fc} penetration}
+
+Given that the FC electrodes are 4.6~cm wide with only a small 1.4~cm gap between them, the shadows caused when the laser source is outside the FC are substantial. We estimate that the maximum angle at which beams can go through is about 45$^{o}$. Given the limitations of the region above the FC, especially the geometry of the ground plane, it is likely that the mirror cannot be placed much higher up than 40~cm away from the FC. That means that, close to the top FC, the covered region will be only about 40-60~cm long, in each 3.6~m long drift volume. Considering for simplicity no limitations to movement along the direction of the FC electrodes, that means that only about 10-15\% of the top area of the FC would be covered by the laser system. On the bottom FC, that ratio would be slightly higher, corresponding to the ratio of gap (1.4~cm) to total (1.4+4.6~cm) width, i.e. about 25\%.
+
+Penetration of the FC would eliminate those shadows and allow a practically unimpeded coverage. Fig.~\ref{fig:laser_intofc} shows a possible way to accomplish this for the top-of-TPC ports. In practice, it might be necessary to remove two FC electrodes, to achieve a 10~cm diameter free circle. 
+
+\begin{figure}[htb!] 
+\centering 
+\includegraphics[width=0.8\linewidth]{graphics/dune_laser_sbndstyle.png}
+\caption{CAD drawing of a possible way for the periscope to penetrate the FC.}
+\label{fig:laser_intofc} 
+\end{figure} 
+
+In the end-walls, such a solution is more complicated
+%not possible 
+since the ports are on the side, not on top of the FC. Alternative 2 in the next section addresses the coverage issues with that design.
+
+\paragraph{Alternative design 2: End-wall horizontal track}
+
+The baseline design is based on laser entry points in which the movement of the steering mirror has two angular degrees of freedom.
+ 
+A possible alternative design would change that end part of the system so that there is a translation and a rotation movement. A mirror at a \num{45}$^{o}$ angle would send the beam horizontally, perpendicular to the APA/CPA, but externally to the field cage. A horizontal track, installed in that same direction, would allow the translation movement of a secondary mirror (or two of them, one on each side), mounted with an angle of \num{45}$^{o}$ with respect to the incident beam. This allows the mirror to be aligned with the \num{1.4}~cm wide gaps between the field cage profiles. This second mirror would have a rotation movement, around the same axis, keeping the \num{45}$^{o}$ angle to the beam, but causing its reflection to sweep a vertical plane. Figure~\ref{fig:laser_alter2} provides an illustration of the mirror movements in this arrangement.
+
+\begin{figure}[htb!] 
+\centering 
+\includegraphics[width=0.5\linewidth]{graphics/Laser_alternative2.png}
+\caption{Sketch of the beam array using end-wall horizontal track arrangement. The two planes on either side of the laser tracks (magenta) are cathode and anode.}
+\label{fig:laser_alter2} 
+\end{figure} 
+
+In terms of cryostat penetration, the design of the feedthrough and periscope would follow the baseline one, but the $\theta$ angle would be practically always num{45}$^{o}$, with only minor adjustments, and the angle would flip between 0$^{o}$ and 180$^{o}$. 
+%ref Newport mirror for 266 nm, https://www.newport.com/p/10QM20HM.75
+The reflected beam is parallel to the FC wall and perpendicular to the APA. There would have to be a new \num{14}~m long tray for the movement of the secondary mirror(s). 
+Long plastic threaded rods could be used for the movement along the tray. Rotation of the first rod would push/pull a small platform along the tray, and the rotation of the second rod is transmitted to a mechanism on that platform to achieve the rotation around the $x$ axis.
+
+The FC profiles are 4.6~cm wide with a 1.4~cm gap between. That's the gap close to which the mirror needs to stop. That means that there is a finite amount of $x$ values where we can position the mirror, effectively every 6~cm. In order to correct for possible FC shifts, one can use the laser positioning system to see if beam is passing to the other side. Choosing the $z$ coordinate of the tray to be located close to an edge of the drift volume, the angular range of movement needed to fully cover a vertical plane with the rotation of the mirror is only 90$^{o}$.
+
+The advantages of this mirror movement system are the following:
+\begin{itemize}
+\item should allow a good coverage of most of the TPC active volume, even coming from outside the FC;
+\item one can use the same calibration port laser to illuminate all drift volumes;
+\item the beam is always parallel to the APA, especially the PDS, so has less risk of hitting it directly or through reflections on the cathode (but by reflections on the FC electrodes, that's still possible);
+% * <maneira@gmail.com> 2018-10-22T07:07:38.035Z:
+% 
+% is there any calculation of the space charge effect of the laser beams themselves? the number of tracks we want to use is pretty high.
+% 
+% ^.
+\end{itemize}
+
+With respect to the reference system, possible disadvantages are the following:
+\begin{itemize}
+\item in terms of construction, this option has more moving parts and movement transmitted at long distances, so it can be more challenging to reach the same kind of mechanical precision as the baseline one;
+\item if the field cage profiles shift during cooling, there will be the need to fine-tune the alignment of the mirror with the FC gaps. This could be accomplished with the laser positioning system described in section~\ref{sec:calib-laser-pos};
+%% JM %% include Jelena's text about it and reference it here.
+ 
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%
+\subsubsubsection{Possible Measurements}
+\label{sec:sp-calib-sys-las-ion-meas}
+
+
+The method for \efield measurement is based on the measurement of position displacements. The laser produces straight tracks in a known position and deviations from that seen in reconstructed tracks are attributed to \efield distortions. Therefore the precision with which the \efield distortions can be measured depends on the precision with which we can know the laser track position and the TPC position reconstruction precision.
+The TPC precision is given primarily by the wire spacing of 4.7~mm in the $y$, $z$ coordinates and slightly better than that (maybe 2~mm) on the $z$ coordinate, determined by the $1~\mu s$ peaking time of the electronics. Given infinite laser positioning accuracy, the smallest measurable \efield distortions would be those that cause displacements of this magnitude --- 2 mm in $x$ and 5 mm in $y$, $z$. The precision on the drift velocity distortions depends on the size of the spatial region where they are present. For distortions present in regions of 0.5~m and larger, drift velocity distortions can therefore be measured with an accuracy of 1\% in $y$, $z$ and 0.4\% in $x$. In $y$, $z$, 1\% precision on drift velocity distortions translates to a 1\% precision on the transverse field distortions. Along $x$, one must consider that, at 500 V/cm, a 1\% change in \efield leads to 0.375 \% change in drift velocity. Therefore finally, this means that the smallest measurable distortions given the TPC design (wire pitch, timing precision) are of 1\% in \efield if they are present in regions of 0.5~m and above (smaller field distortions could be in principle be measurable if they are present over larger regions, so that their effect accumulates over the drift path).
+On one side, this gives us an ultimate limit to the \efield precision achievable with the laser system, but on the other side, since these TPC precision considerations apply to physics events too, it also tells us that an \efield precision much better than 1\% should not have an impact on physics.
+
+In principle, if we were confident about the field in one detector region and would like to probe another, we could use tracks that cross both regions and use the TPC measurements in the ''good'' region as the ``true'' track direction, without needing the hardware information on the mirror angles, etc. But in a general case, the TPC precision is only one of the components of the laser measurement precision, the other being the mechanical beam positioning accuracy. The goal of the mechanical design of the system is to achieve a precision close to that of the TPC measurements, so that no single factor is dominant in the overall systematics. The starting point of the laser beams is given by the position of the mirror in the periscope, that is known from construction drawings and cool down calculations. Warm surveys might be necessary. The angle of the beam is given by the angles ($\theta$, $\phi$) of the mirror, that are set by the periscope motors and read-out by the encoders. 
+Reference~\cite{chen2018} quotes a mechanical precision of 0.05 ~mrad for the \dword{microboone} system, for both angles. At 10~m, the maximum distance in \dword{microboone}, that's 0.5~mm. In DUNE, we count on having 20~m long beams, so the precision is 1~mm at that distance, if we equal the precision of the \dword{microboone} system. The beam itself is wider than that. In fact, with a 0.5~mrad divergence, we expect the beam to be 1~cm wide at 20~m. The profile is Gaussian, so the centroid of the charge creation should be more accurate. During cool down, there can be shifts that need to be measured and corrected for, so we aim to have a system that can measure the beam position in a few positions, at least one per drift volume and laser beam. Our goal is to provide the position of the beam to an accuracy of 5~mm with positioning systems located at about 10~m from the beam origin.
+
+
+
+ 
+ %% JM %% discuss how to get the \efield from the measurements even if the absolute knowledge of the laser track is not perfect.
+ % - need for crossing tracks
+ % - use positioning system
+ % - do relative measurements between tracks close by. actual advantage of the alternative system: many parallel tracks at different x
+ 
+ % also, estimate time needed and discuss idea of having the photo-laser for a quick/rough monitoring, and the ionization laser as a detailed probe of regions identified as possibly problematic.
+
+
+%The remaining studies for the laser systems to be done prior to the \dword{tdr} are: 
+%\begin{itemize}
+%\item Determine a nominal design for photoelectric thin metal surfaces on the cathode. A survey in cold conditions is not possible for the \single system, and the photoelectric system could provide both known positions in the detector and information complementary to a survey or cosmic data.
+%\item For the \dual system, quantify the additional benefit of a photoejection system since it will be possible to survey the \dwords{crp} externally under cold conditions.
+%\item  Determine whether the known classes of possible \efield distortions warrant a mechanical penetration of the \dword{fc} (versus reduced sampling from projecting laser light inward between \dword{fc} elements) and further understand sensitivity of the laser to realistic \efield distortions. 
+%\item Continue to study the range of possible \efield distortions in order to further refine the estimation of overall variation of the \efield  in the \dword{detmodule}. 
+%\end{itemize}
+%\begin{itemize}
+%\item Determine  a nominal design for photoelectric targets on the cathode, and whether  such targets would provide sufficient survey-like information.
+%\item Determine if the known classes of possible \efield distortions require penetration of the \dword{fc} (versus reduced sampling from shining between the field cage). 
+%\item Further understand limitations on laser location precision, practical range of propagation due to optics design and Rayleigh scattering. \fixme{KM: Is this too vague to be helpful or sets us up for failure? What specifically will be studied?}
+%\item Continue to quantify the range of possible \efield distortions in the DUNE FD to further refine the estimation of overall variation of \efield (both locally and globally) in the detector.
+%\end{itemize}
+
+%\fixme{}
+

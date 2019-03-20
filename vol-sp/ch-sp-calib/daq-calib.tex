@@ -1,0 +1,125 @@
+%\section{DAQ Requirements}
+%\label{sec:sp-calib-daqreq}
+
+The calibration systems must interface with the DUNE data acquisition system, discussed in detail in Section~\ref{sec:daq}.
+The primary interface with calibrations will be through the DUNE timing system, which is responsible for providing synchronization across all subsystems and absolute time stamps, as well as for distributing triggers. Whenever possible, it is preferred that subsystems like calibrations are triggered {\it by} the DAQ rather than providing a trigger {\it to} the DAQ. Therefore the calibration systems must be designed to accept such triggers (which will have the form of a time stamp for when a trigger should occur) and it must have a way of accepting general timing information so that it is synchronized to the rest of DUNE.
+
+Each calibration system will nevertheless be handled slightly differently, and each will have a different way for the DAQ to handle its data.  The calibration systems could easily dominate the entire data volume for DUNE, and thus exceptions to the standard triggering and readout discussed in Section~\ref{sec:daq} are needed. We discuss below these details and the associated differences.
+           
+\begin{dunetable}
+[Calibration DAQ summary]
+{p{0.2\textwidth}p{0.15\textwidth}p{0.5\textwidth}}
+{tab:calib-daq}
+{Estimated DAQ rates per year per 10~kton for various calibration systems.}   
+System & Data Volume (TB/year) & Assumptions  \\ \toprowrule
+Ionization Laser System & 185 & 800k laser pulses, 10x10x10 cm voxel sizes, a 100~$\mu$s zero suppression window (lossy readout), and 2 times/year  \\ \colhline
+Neutron Source System & 84 & 10$^{6}$~neutrons/pulse, 1000 neutron captures/m$^{3}$, 1300 observed neutron captures per pulse, 6~times/year  \\ \colhline
+Proposed Radioactive Source System & 200 & Source rate < 10~Hz; single fragment readout,  lossless readout; 4 times/year   \\ \colhline
+
+\end{dunetable}           
+           
+\subsubsection{Laser System}
+
+%The proposed laser source is the only practical way to unambiguously measure the electric field vectors within the detector. 
+The \efield vector from ionization laser calibration is determined by looking at the deflection of crossing laser tracks within detector voxels. The voxels are currently estimated at the size of $10\times10\times10~{\rm cm}^3$. Because any given laser track
+illuminates many such voxels, one laser pulse can be used for multiple
+measurements---essentially the number that matters is the area of each voxel.
+The number of total laser ``events'' are estimated to be 800,000---about half the rate of cosmic rays, and thus nominally a substantial total data volume.
+
+Fortunately, unlike every other event type in the detector, the laser track has both a reasonably well known position and time; thus tight zero-suppression can be applied for both collection and induction plane wires. %Brett Viren suggests that 
+A 100~$\mu$s zero suppression window is estimated to be wide enough to
+avoid windowing problems in the induction plane wire deconvolution process, and we
+therefore assume such a window for the laser pulses. Note that the zero
+suppression happens {\it after} the trigger, not at the front-end or in the DAQ
+readout; thus the rate that the laser can be run will have to take into account
+the bandwidth through the Event Builder (where the zero-suppression would
+occur). From the standpoint of data volume, however, the total assuming the
+100~$\mu$s zero-suppression window is:
+\begin{equation}
+800,000/{\rm scan/10~kton} \times 100\mu{\rm s} \times 1.5{\rm Bytes/sample}\times 2~{\rm MHz}\times 384000~{\rm channels}   = 92~{\rm TB/scan/10~kton}   
+\end{equation}
+
+If such a calibration scan were done twice/year, then the total annual data volume for the laser is 184~TB/year/10~kton.
+
+\subsubsection{Pulsed Neutron Source}
+%\todo{SG: JW to update this text and the number in the DAQ table 1.3.}
+%There are two radioactive sources suggested to provide low-energy calibration data for DUNE: a neutron generator source, and a $\gamma$ source. 
+
+The pulsed neutron source system creates a burst of neutrons which
+%, because of the interesting neutron cross section of argon, 
+get captured throughout a large fraction of the total cryostat volume. From a triggering and data volume
+standpoint, this is very convenient: the existing scheme of taking 5.4~ms of data for each trigger means all of these neutrons will be collected in a single DUNE event. Thus the data volume is simply 6.22~GB times the total number of such pulses, but these are likely to be few: a single burst can produce thousands of neutrons whose $t_0$ is known up to the neutron capture time of 200~$\mu$s or so.
+
+
+Typically, a commercial $DD$ neutron generator produces 10$^{5}$ - 10$^{8}$ neutrons/pulse, depending on the adjustable pulse width. The current assumption for neutron yield from the $DD$ generator is 10$^{6}$ neutrons per pulse\footnote{Ideal assumption based on $DD$ generators that produce highest neutron yield with a pulse width less than 100~$\mu$s. Such type of $DD$ generators are being developed in labs; commercial devices may require further development to reach this level of performance.}. With the current deployment designs in figure~\ref{fig:PNS_source_design}, about 1300 neutron captures per $DD$ generator pulse are expected to be observed inside a 10~kt module. As the suggested number for localized energy calibration is 1000 neutron captures per m$^{3}$, a total number of 4600 pulses would be needed for the calibration of a 10~kt module. Assuming there will be two identical Pulsed Neutron Sources operating in synchronization mode, 2300 pulses are needed for each calibration run. Therefore, the total data volume per run would be
+\begin{equation}
+2300~Pulses \times 1.5~{\rm Bytes}\times
+2~{\rm MHz}\times 5.4~{\rm ms}\times384000~{\rm channels} = 14~{\rm TB/run}.
+\end{equation}
+Running the Pulsed Neutron Source calibration system every two months would result in a total data volume of 84~TB per 10~kton per year and running 12 times/year would result in 168~TB/year per 10~kton. 
+
+\subsubsection{Proposed Radioactive Source System}
+
+The proposed $\gamma$ source is somewhat more complicated to handle in the DAQ, depending on its rate. An initial proposal suggests 8 hour runs at four feedthroughs, and because only a single APA is being illuminated typically, the Module Level trigger could reduce the total data rate by issuing trigger
+commands only to the readout of the currently active APA. Nevertheless, if the rate of such a source is anywhere close to one per 5.4~ms, the detector would be running 
+continuously 
+%in ``DC'' 
+in the current scheme. Therefore we assume that the
+interaction rate in the detector is 10~Hz or less.  With this rate, and with localization of events to one APA, the total data volume would be
+\begin{equation}
+8~{\rm hours} \times 4~{\rm FTs} \times 10~Hz \times 1.5~{\rm Bytes}\times
+2~{\rm MHz}\times 5.4~{\rm ms}\times2560~{\rm channels} = 50~{\rm TB/scan}.
+\end{equation}
+Running this calibration 4 times/year would yield 200~TB of data in 10~kton per year.
+
+
+
+
+
+\begin{comment}
+%SG: This is not under the scope of this chapter. Needs to be moved to physics. 
+\subsubsection{Intrinsic Radioactivity}
+
+        Mike Mooney has suggested using the intrinsic $^{39}$Ar as a
+calibration source. This has many advantages over either of the radioactive
+source calibrations, in particular the known level of $^{39}$Ar, its uniform
+distribution in the detector, and the fact that it is always there and
+therefore integrates correctly over the detector livetime. The difficulty is
+that because any individual $^{39}$Ar event's $x$ position is not known
+(because there is no $t_0$, the distribution of these events must be used to
+make measurements, thus requiring fairly high statistics.
+
+        Mooney's proposal is that roughly 250,000 $^{39}$Ar can provide a 1\%
+measurement of electron lifetime. (Note that 1\% is a reaonable goal;
+if the lifetime and maximum drift time are the same, this results
+in a 2\% uncertainty on energy scale which would begin to compromise DUNE's
+physics program). This number of events is easily obtained with the existing
+random triggers as well as every other trigger source excluding laser pulses
+and front-end calibrations.
+
+        Like all other parameters that must be calibrated, however, what is not
+clear is what the spatial and temporal variations will be in the detector.
+Other LAr TPCs have performed lifetime calibrations daily (using cosmic rays
+primarily), and a pixelization of 1~m$^2$ is not unreasonable, leading to a
+need for 250,000 events for every m$^2$ in the detector each day, or about a
+1~Hz trigger rate.
+
+        In the existing scheme, this would be overwhelmingly the dominant
+source of data. Thus either the pixelization would need to be reduced (say, to
+each of the TPC volumes) or a zero-suppression scheme would have to be used.
+Such a zero-suppression scheme would happen post-trigger---for example, running
+random triggers at 1~Hz and based upon that trigger type, zero suppressing
+signals. In the current scheme, this would happen in the Event Builder but at
+1~Hz the data rate would be too high. To do zero suppression upstream---say in
+the APA-level readout---based on the trigger type will likely require more
+hardware resources.
+\end{comment}
+
+%\subsection{External Muon Tracker}
+
+%        An External Muon Tracker (EMT) has also been proposed, likely as a scintillator-bar telescope at the front face of the detector. The EMT would be intended to trigger on rock muons and provide a known entry position and direction for these. It is thus the only way to test reconstruction in the DUNE FD for a sample of events in the same energy regime as the beam events.
+
+%        Because the EMT is measuring events that will already be triggered by the TPC, the additional data volume comes only from the scintillator counters themselves. Because the only information needed for these events is the time of a hit in each counter, and because only four counters are likely to be hit by each muon (two planes of $x$ and $y$), the additional data rate from the EMT is very small.  If we limit ourselves to just the rock muons and assume that four counters are hit resulting in 4 12-bit words/counter (one charge and one time each, plus the counter ID and a local timestamp, then we get a yearly total data volume of
+%\begin{equation}
+%735{\rm year/10 ktonne} \times 24~{\rm B/event} = 17.6~{\rm kB/year}   
+%\end{equation}

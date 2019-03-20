@@ -1,0 +1,66 @@
+
+% KM outline
+%% Requirements we are held to from other systems -- EB table -- see Jose's early talk
+%% Targets for SN and LBL physics -- or just remind in other subsections? \fixme{KM: right now the targets for SN and LBL physics exist in the design sections.}
+%% System must operate for a long time
+    % SG: physics driven calibration requirements, need a table to connect calibration requirements to high level physics requirements, not easy, but we need to try
+
+%\fixme{guidance coming soon!}
+
+%\fixme{KM: adjusted to be specific to laser; SG: I have made some edits as well. JM: OK, signing off.}
+
+%The DUNE physics requirements and the high level specifications of other existing systems are the driving motivation for the specifications of the performance of the dedicated calibration systems, described below. From those, and the constraints due to detector dimensions, etc, derive also the engineering specifications of each calibration system, described in each system's respective section.
+
+%\paragraph{\efield measurements}
+The energy and position reconstruction requirements for physics measurements lead to requirements on the necessary precision of the laser calibration \efield measurement, its spatial coverage and granularity. The next sections discuss the rationale behind each requirement, which we take as the DUNE specification.
+%, with ALARA (or AHARA for the coverage) as goal.
+
+\paragraph{\efield precision}
+
+In the \dword{lbl} and high-energy range, the DUNE IDR states that ``...calibration information needs to provide approximately 1-2\% understanding of normalization, energy, and position resolution within the detector.'' (from \cite{idr-vol-1}, p. 4-47). 
+The DUNE Physics TDR (Section 4.4.1.1) indicates that a \num{1}\% bias in the lepton energy scale is significant for the \dword{lbl} sensitivity to CPV.
+
+Since a smaller \efield leads to higher electron/ion recombination and therefore a lower collected charge, distortions of the \efield are one of the possible causes of an energy scale bias. In order to connect that requirement to a specification on the necessary precision of the \efield measurement, we note that, via recombination studies\cite{mooney2018}, we expect a \num{1}\% distortion on \efield to lead to a \num{0.3}\% bias on collected charge.
+
+Since other effects will contribute to the lepton energy scale uncertainty budget, we consider a goal for the calibration system to measure the \efield to a precision of $\sim\num{1}\%$ so that its impact on the collected charge is well below \num{1}\%.
+This is also motivated by consistency with the high level DUNE specification on field uniformity throughout the volume due to component alignment and HV system, that was set at \num{1}\%.
+
+Together with two other high-level DUNE specifications, the APA wire spacing (4.7~mm) and the front end peaking time (1~$\mu s$), the impact of this \efield precision requirement on engineering parameters of the calibration laser system is discussed further ahead, in Section \ref{sec:sp-calib-sys-las-ion-meas}.
+
+\paragraph{\efield measurement coverage}
+
+In practice, measuring the \efield  ~``throughout the [whole] volume'' of the TPC will be difficult, 
+%hard, 
+so we must establish a goal for the coverage and granularity of the measurement. 
+Until a detailed study of the propagation of the coverage and granularity into a resolution metric is available, we can already make a rough estimation of the necessary coverage in the following way. Taking \num{4}\% as the maximum \efield distortion resulting from a compounding of multiple possible effects in the DUNE FD (\cite{idr-vol-1}, page~4-53), we can then ask what would be the maximum acceptable size of the spatial region uncovered by the calibration system, if a distortion of that magnitude (systematically biased in the same direction) were present. In order to keep the overall (average) \efield distortion at the \num{1}\% level, then that region should be no larger than \num{25}\% of the total fiducial volume. Therefore, we aim to have a coverage of \num{75}\% or better.
+
+\paragraph{\efield measurement granularity}
+
+The IDR states that a fiducial volume uncertainty of \num{1}\% is required (ref.~\cite{idr-vol-1}, p.~4-46) and that this translates to a position uncertainty of \num{1.5}~cm in each coordinate (ref.~\cite{idr-vol-2}, p.~2-12). Also that in the $y$ and $z$ coordinates, the wire pitch of \num{4.7}~mm achieves that while in the drift ($x$) direction, the position is calculated from timing so it is claimed it should be known better.
+
+But the position uncertainty depends also on the electric field, via the drift velocity. Since the position distortions accumulate over the drift path of the electron, it is not enough to specify an uncertainty on the field, we must accompany it by specifying the size of the spatial region of that distortion. i.e. a \num{10}\% distortion would not be relevant if it was confined to a \num{2}~cm region, for instance, and the rest of the drift region was nominal. So what matters is the product of [size of region] $\times$ [distortion]. Moreover, we should distinguish distortions of two types:
+\begin{enumerate}
+\item those affecting the magnitude of the field. Then the effect on the drift velocity $v$ is also a change of magnitude. According to the function provided in \cite{walkoviak2000}, close to \num{500}~V/cm, the variation of the velocity with the field is such that a \num{4}~\% variation in $E$ leads to a \num{1.5}~\% variation in $v$.
+\item those affecting the direction of the field. Nominally, the field $E$ should be along $x$, so $E = E_L$ (the longitudinal component). If we consider that the distortions introduce a new transverse component $E_T$, in this case this translates directly into the same effect in the drift velocity, that gains a $v_T$ component that is $v_T=v_L  E_T/E_L $, i.e. a \num{4}~\% transverse distortion on the field leads to a \num{4}~\% transverse distortion on the drift velocity.
+\end{enumerate}
+
+So, a \num{1.5}~cm shift comes about from a constant \num{1.5}~\% distortion in the velocity field over a region of \num{1}~m. In terms of electric field, that could be from a \num{1.5}~\% distortion in $E_T$ over 1~m or a \num{4}~\% distortion in $E_L$ over the same distance.
+
+From ref.~\cite{idr-vol-1}, page~4-53, \efield distortions can be caused by space-charge effects due to accumulation of positive ions caused by $^{39}$Ar decays (cosmic rate is low in FD), or detector defects, such as field cage resistor failures, resistivity non-uniformities, etc. These effects added in quadrature can be as high as \num{4}~\%. From ref. ~\cite{mooney2018}, the space charge effects due to $^{39}$Ar can be of the order of \num{0.1}~\% for the single phase (SP), and \num{1}~\% for the dual phase (DP), so in practice these level of 
+%that kind of distortion 
+distortions need to cover several meters in order to be relevant.
+Other effects due to \dword{cpa} or \dword{fc} imperfections can be higher than those due to space charge, but they are also much more localized. If we assume that there are no foreseeable effects that would distort the field more than \num{4}~\%, and considering the worst case (transverse distortions), then the smallest region that would produce a \num{1.5}~cm  shift is \num{1.5}/\num{0.04}~=~\num{37.5}~cm. This provides a target for the granularity of the measurement of the \efield distortions in $x$ to be smaller than about \num{30}~cm, with of course a larger region if the distortions are smaller. Given the above considerations, then a voxel size of \num{10}x\num{10}x\num{10}~cm appears to be enough to measure the \efield with the granularity needed for a good position reconstruction precision. In fact, since the effects that can likely cause bigger \efield distortions are the problems or alignments in the CPA (or APA), or in the FC, it could be conceivable to have different size voxels for different regions, saving the highest granularity of the probing for the walls/edges of the drift volume.
+
+\begin{comment}
+\begin{dunetable}
+[Calibration Requirements]
+{p{0.5\textwidth}p{0.15\textwidth}p{0.15\textwidth}}
+{tab:calibreq}
+{Calibration Specifications and Goals}   
+Requirement & Specification & Goal \\ \toprowrule
+\efield measurement precision & < 1\% & ALARA \\ \colhline
+\efield measurement coverage & > 75\% & AHARA \\ \colhline
+\efield measurement granularity & < 30x30x30 cm & ALARA \\ \colhline
+\end{dunetable}
+\end{comment}
+
