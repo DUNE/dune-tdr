@@ -64,39 +64,36 @@ This chapter provides a description for the design of the \dword{dune}
 \dword{fd} \dword{daq} system developed by the \dword{dune} \dword{fd}
 \dword{daq} consortium. 
 This consortium brings together resources and expertise from CERN,
-Columbia, France, Japan, Netherlands the UK, and the USA. 
-Its members bring considerable experience from ICARUS, MicroBooNE, and
+Colombia, France, Japan, the Netherlands, the UK, and the USA. 
+Its members bring considerable experience from ICARUS, MicroBooNE,
+SBND, and
 DUNE prototype LArTPCs, as well as from ATLAS at the LHC and other major
 HEP experiments across the world.
 
 The system is designed %so that it 
 to service all \dword{fd}
-\dwords{detmodule}, and therefore most aspects of the design are
-identical across them. % different \dwords{detmodule}. 
+\dword{detmodule} designs indistinguishably. % different \dwords{detmodule}. 
 %The descriptions for those parts of the system are reproduced verbatim in some sections of this chapter as found in the TDR volume for each \dword{detmodule}.
 %A small part 
 However, some aspects of the \dword{daq} design must be tailored to meet
-module-specific requirements. 
-%Those portions of the design 
-These aspects are documented in sections of this chapter %which are 
+module-specific requirements, and those are documented in sections of this chapter which are 
 unique to the \dword{detmodule} covered in this TDR volume;  
 these sections are %identified 
 identifiable by their use of module-specific terms.
 
-The chapter begins with %requirements 
-specifications for \dword{daq} 
+The chapter begins with requirements 
+for the \dword{daq} 
 and interfaces between it and other \dword{dune} systems. 
-Subsequently, Section~\ref{sec:fd-daq:protodune} compares the
-\dword{protodune} experiment with \dword{dune} in order to highlight
-important information already provided by \dword{protodune}, and
-future understanding expected by further exploitation of it, as well as what must be understood by other means. 
-Section~\ref{sec:fd-daq:design} comprises the bulk of this chapter and
-describes the design of the \dword{fd} \dword{daq}. 
+Subsequently, Section~\ref{sec:fd-daq:design} comprises the bulk of this chapter and
+describes the design of the \dword{fd} \dword{daq}.
+Section~\ref{sec:fd-daq:protodune} describes the 
+\dword{protodune} system which has served as a demonstrator of several
+key aspects of the design, and serves as a platform for further design
+development. 
 Finally, the chapter finishes with details on management of the
 \dword{daq} project describing the completion of the design,
 production, and installation of the system, as well as cost, schedule and
 safety considerations.
-
 
 
 \section{Design Overview}
@@ -184,7 +181,7 @@ An extensive R\&D program informed by several years of \microboone data
 and \dword{daq} developments, as well as ongoing development efforts on
 \dword{protodune}, has led to a solution. %the adopted solution described later in this chapter. 
 
-\subsection{Specifications}
+\subsection{Requirements and Specifications}
 \label{sec:fd-daq:specifications}
 %\fixme{single-phase module}
 
@@ -207,11 +204,6 @@ by the \dword{dune} physics mission, and with minimal compromise to
 
 
 %\metainfo{One sentence introducing the contents of this section.}
-
-
-
-
-
 
 To ensure the \dword{fd}-level requirements %above 
 are met, several key specifications must be defined for the \dword{daq}
@@ -397,43 +389,43 @@ furthermore facilitate online monitoring of the detector and  of itself. %the \d
 
 
 
-\subsection{Philosophy}
+% \subsection{Philosophy}
 
-%\metainfo{Describe how the design addresses the requirements.}
-The \dword{dune} \dword{fd} \dword{daq} addresses the requirements above by following a
-design philosophy that prioritizes robustness, availability,
-scalability, adaptability, ease of
-deployment and commissioning, and ease of design and construction. %In principle, 
-This dictates that we must:
-\begin{itemize}
-\item Provide a single scalable system design for all \dwords{detmodule} capable of recording and storing full detector data with
-  zero deadtime.
-\item Design very conservatively for the first \dword{detmodule}, e.g.,~utilizing
-  all available infrastructure, keeping \dword{daqdsn} decisions
-  simple early on, and making the system leaner and more efficient as it
-  scales to full size.
-\item Preserve the possibility to add \dword{daq} capacity as required.
-\end{itemize}
+% %\metainfo{Describe how the design addresses the requirements.}
+% The \dword{dune} \dword{fd} \dword{daq} addresses the requirements above by following a
+% design philosophy that prioritizes robustness, availability,
+% scalability, adaptability, ease of
+% deployment and commissioning, and ease of design and construction. %In principle, 
+% This dictates that we must:
+% \begin{itemize}
+% \item Provide a single scalable system design for all \dwords{detmodule} capable of recording and storing full detector data with
+%   zero deadtime.
+% \item Design very conservatively for the first \dword{detmodule}, e.g.,~utilizing
+%   all available infrastructure, keeping \dword{daqdsn} decisions
+%   simple early on, and making the system leaner and more efficient as it
+%   scales to full size.
+% \item Preserve the possibility to add \dword{daq} capacity as required.
+% \end{itemize}
 
-We must implement these key strategies to follow this philosophy:
-\begin{itemize}
-\item Develop the \dword{daq} functionality as a suite of loosely coupled and somewhat autonomous processes that are distributed and connected through high-speed %but 
-commodity networking.
-\item Provide inter-process communication mechanisms that support
-  fail-over between redundant instances of a process and that
-  facilitate horizontal scaling in order to satisfy throughput
-  constraints and needs.
-\item Define an interface layer that isolates the majority of \dword{daq} functionality such that it may be implemented independent of %details specific to each \dword{detmodule} from a minority functionality that must be module-specific.
-module-specific functionality. 
-\end{itemize}
+% We must implement these key strategies to follow this philosophy:
+% \begin{itemize}
+% \item Develop the \dword{daq} functionality as a suite of loosely coupled and somewhat autonomous processes that are distributed and connected through high-speed %but 
+% commodity networking.
+% \item Provide inter-process communication mechanisms that support
+%   fail-over between redundant instances of a process and that
+%   facilitate horizontal scaling in order to satisfy throughput
+%   constraints and needs.
+% \item Define an interface layer that isolates the majority of \dword{daq} functionality such that it may be implemented independent of %details specific to each \dword{detmodule} from a minority functionality that must be module-specific.
+% module-specific functionality. 
+% \end{itemize}
 
-%With this philosophy and strategy the \dword{daq} may be expected to handle the variety of technical challenges posed. 
-This philosophy and strategy enable the \dword{daq} to handle the variety of technical challenges posed. 
-These include simultaneously accepting a constant high rate input from multiple %sub-detector components 
-subsystems (e.g., TPC and PDS) from multiple detector modules while immediately processing a substantial portion of this data in order to identify data containing activity that should be selected and then recording that data to final output.
-%The design following this philosophy and strategy are presented in Section~\ref{sec:fd-daq:design}.
+% %With this philosophy and strategy the \dword{daq} may be expected to handle the variety of technical challenges posed. 
+% This philosophy and strategy enable the \dword{daq} to handle the variety of technical challenges posed. 
+% These include simultaneously accepting a constant high rate input from multiple %sub-detector components 
+% subsystems (e.g., TPC and PDS) from multiple detector modules while immediately processing a substantial portion of this data in order to identify data containing activity that should be selected and then recording that data to final output.
+% %The design following this philosophy and strategy are presented in Section~\ref{sec:fd-daq:design}.
 
-\metainfo{Do \textbf{not} talk about actual design here, as tempting as it may be do to do so.  Previous design intro has been moved to the design overview.}
+% \metainfo{Do \textbf{not} talk about actual design here, as tempting as it may be do to do so.  Previous design intro has been moved to the design overview.}
 
 \subsection{Summary of Key Parameters}
 \label{sec:sp-daq:parameters}
@@ -566,7 +558,9 @@ the calibration systems themselves;  %, and those
 the latter are to be distributed through the
 \dword{daq} timing system.
 
-\subsection{Timing System}
+\fixme{This needs more detail.}
+
+\subsection{Timing Subystem}
 
 %Because 
 The timing system of the \dword{dune} \dword{fd} connects with
@@ -575,222 +569,10 @@ them. %, rather than providing a set of  bilateral interface documents,
 A single interface document,
 \citedocdb{11224}, describes all these timing interfaces. 
 
-\section{The \dword{protodune} and \dword{dune} \dword{daq} Systems}
-
-\label{sec:fd-daq:protodune}
-\metainfo{Here we write what similarities and differences there are between \dword{protodune} and \dword{dune} \dword{daq} designs.}
-
-The \dword{fd} \dword{daq} consortium constructed and operated the \dword{daq} system for
-\dword{protodune}, which included %facilitated two incarnations of 
-two \dword{daq} readout 
-architectures, one based on \dword{felix}, develped by ATLAS \cite{xx}, and the other on \dword{rce}, developed at
-SLAC \cite{xx}. \dword{daq} design and construction for
-\dword{protodune} began in Q3 of 2016, and the system was operational at the start of the beam data run %when \dword{protodune} beam running began 
-in Q4 of 2018. The detector is
-continuing to run as of the writing of this document, recording cosmic
-ray activity, and %facilitating 
-providing further input for \dword{daq} development toward
-\dword{dune}. 
-
-Figure~\ref{xx} depicts the \dword{protodune} \dword{daq} system.  The \dword{daq} is split %among %two readout architecture implementations, one involving 
-between the  \dword{felix}  and \dword{rce} implementations. The two architectures share the same back-end and
-timing and trigger systems. 
-Neither of these tested % readout 
-architectures %( \dword{felix}  or RCE) 
-exclusively represents the
-baseline design for the DUNE \dword{fd}. Instead, each %readout architecture
-qualitatively maps into one of
-two data processing approaches: one in which the data is processed
-exclusively in
-custom-designed \dword{fpga}, and the other  in which the data is processed primarily in commodity
-CPUs. The baseline system for a %DUNE FD 
-\dword{detmodule} instead
-merges elements of the two approaches. Specifically, it uses  \dword{felix}  as
-the hardware platform for data receiving and handling, and an
-\dword{fpga}-based co-processor (analogous to the \dword{rce} platform) that
-interfaces with  \dword{felix}  to provide additional, dedicated data processing
-resources. In that sense,\dword{protodune} has provided demonstration of the
- \dword{felix}  platform as \dword{fe} readout data receiver, and
-demonstration of \dword{fpga}-based data reduction for TPC.
-
-Besides overall readout architecture, %there are two additional key differences between 
-the \dword{protodune} and
-\dword{dune} \dwords{daq} exhibit two key differences. %, namely that (1) 
-First, the \dword{protodune} \dword{daq} is externally
-triggered (and at a trigger rate %which is more than 
-over an order of
-magnitude higher than that anticipated for \dword{dune}). Because of this, 
-%and therefore 
-the% current 
-\dword{protodune} \dword{daq} 
-does not facilitate online data
-processing from the TPC or \dword{pd} systems for self-triggering. % and (2) 
-Second, the \dword{protodune} 
-system sits at the surface with a much higher %and therefore the 
-data occupancy %is much higher
-due to cosmic ray activity. % in the detector. 
-%Key difference (1) must be overcome to demonstrate data selection capability for the DUNE \dword{daq} design, and this is a main component of future \dword{daq} development plans, described in Sec.~\ref{xx}.
-Overcoming the first key difference to demonstrate \dword{daqdsn} capability for the \dword{fd} \dword{daq} design is a main component of future \dword{daq} development plans, described in Section~\ref{xx}.
+\fixme{This needs more detail.}
 
 
-\subsection{ProtoDUNE Outcomes}
-
-Despite its %being a 
-variant design %and 
-with more limited scope, the %already
-successful operation of the \dword{protodune} \dword{daq} has provided several key
-demonstrations for \dword{dune} \dword{daq}, in particular data flow
-architecture, run configuration and control, and back-end
-functionality. % In the following subsection we discuss important lessons learned.
-
-Besides demonstrating end-to-end data flow and \dword{fe} readout functionality
-explicitly for  \dword{felix}, possibly the most important outcome has been the delineation of
-interfaces, i.e., understanding the exact \dword{daq} scope and the interfaces to TPC, \dword{pds}, and offline. The use of commercial off-the-shelf solutions
-where possible, and leverage of professional support from CERN IT 
-substantially expedited the development and success of the project, as
-did the strong on-site presence during early installation and
-commissioning. 
-
-The use of multiple clock frequencies for different
-detector subsystems, on the other hand, was found to be too cumbersome, and 
-a central timing interface document for the \dword{dune}
-\dword{fd} \citedocdb{} formalizes the decision %therefore the desire
-to use a single clock frequency for all \dword{detmodule} subdetectors.
-Largely due to limited
-availability of hardware and experts, the hardware integration tests prior to
-installation and commissioning %were found
- proved insufficient. %, and were primarily a consequence of ; 
-These will be %for \dword{dune} those are to be 
-carefully planned out for the early stages of \dword{fd} \dword{daq} development and
-pre-production, and we will work %and also 
-to proliferate the subsystem expertise across
-the consortium. 
-
-Finally, % in the case of 
-despite the simplicity of the \dword{protodune} trigger 
-relative to the \dword{dune}'s data-driven \dword{daqdsn} scheme, % it was found that 
-the system required more commissioning time, and  
-%This has been built into 
-the \dword{dune} project schedule gives it more time. 
-
-%More specific outcomes, per \dword{protodune} subsystem, are outlined below.
-Outcomes specific to \dword{protodune} subsystems are outlined below.
-
-For the \dword{rce} TPC readout implementation, \dword{protodune} demonstrated that 
-%it was found that 
-a full
-working vertical slice of the system is essential, and that
-development and debugging should not be limited to simulation and
-remote system operations (as often time differences are an
-issue). 
-\fixme{what needs to be added? anne}
-Hardware failure recovery requires more efficient handling %should be handled more efficiently
-than straight hardware reboots, along with %and %this should be augmented with 
-additional
-hardware monitoring and debugging functionality that integrates with
-run control. Similar findings emerged from the  \dword{felix} TPC readout implementation
-% had similar findings 
-with respect to debugging hardware issues from the \dword{daq} upstream end. %It was
-Also,  %found that 
-more project-specific firmware expertise than available was needed.
-
-\dword{protodune} showed that the back-end subsystem was %found to be 
-too monolithic. Future incarnations of
-this subsystem need to more loosely couple the hardware configuration
-and readout processes, and provide  %should be more loosely coupled in , with 
-flexibility to bring these processes up or down 
-independently and without faulting the system. It is important to develop better bookkeeping of 
-the configurations used and of the bookkeeping definitions, %should be developed 
-as well, in advance of %both 
-commissioning and operations. This should also
-extend to software package releases and data format versioning. The horizontal
-scaling capability of the design (from originally four to sixteen envisioned event
-builder machines) was crucial for achieving desired performance, and 
-%maintaining this same capability 
-is part of the DUNE \dword{daq} philosophy.
-
-%More specifically in the case of run control, the resource utilization
-%prompts reconsideration of what might be the right rool for Run
-The \dword{protodune} run control resource utilization
-prompts reconsideration of the right tool for the \dword{dune} \dword{fd} run control. This should happen early in
-the design stage to allow sufficient development and maturity of the
-design. At the same time a development environment %should be provided, 
-distinct from production is required for the %necessary
-development and optimization of run control during commissioning %in a way that it doesn't 
-so as to avoid inhibiting other commisioning tasks. Better slow
-control integration, % and 
-fewer rudimentary alarms, %along with 
-better
-metric monitoring (in part facilitated by a more appropriate run
-control tool), and a better user interface %user friendliness 
-are also %deemed 
-desirable for the \dword{fd}. %DUNE. 
-
-%A major finding regarding Run Control was the need for a partitioning
-%and resource management scheme which should be designed a priori with careful
-%consideration of possible run modes during commisisoning as well as
-%during operations. The DUNE FD \dword{daq} partitioning scheme is described in
-%Sec.~xx.
-Importantly, the \dword{protodune} run control demonstrated the need for a priori design of a 
-partitioning and resource management scheme with careful
-consideration of the possible run modes during both commissioning and operations. This scheme is described in Section~xx.
-
-%In the case of O
-For online monitoring, the monitoring tool response times are a
-concern for scaling to DUNE. %, and this necessitates an evaluation plan of future envisioned tools with simulations. 
-This requires an evaluation plan that incorporates simulations to select the proper tools that will allow
-%Online Monitoring tools for DUNE will require 
-integration with \dword{cisc} monitoring and run control
-states,  and closer collaboration with nearline developers. It will be
-important to define ownership and resource responsibilities within the
-\dword{daq} consortium on this
-subsystem early during the DUNE project.
-
-Other outcomes include established needs for 
-\begin{itemize}
-\item on-site
-subsystem experts; 
-\item support from computing professionals
-for systems administration; 
-\item well defined and frozen interfaces;
-a formalized data model agreed upon by both system experts and the wider
-collaboration, including data record format and metadata format, which can facilitate both commissioning and operation
-data analysis; 
-\item standardization of remote \dword{daq} operation solutions;
-\item better control room tools; additional \dword{daq} infrasturcture (disk
-space, CPUs) to support installation and commissioning of other DUNE
-FD systems; and 
-\item good
-installation practices.
-\end{itemize}
-
-%In summary, \dword{protodune} has been a successful platform for \dword{daq} 
-%development and design for the \dword{dune} \dword{fd}. Most
-%critically, it demonstrated that the eventual design must 
-
-%\item accommodate changes in the overall system and provide more
-%flexibility and granularity.
-%\item \dword{dune}: input to DFO is the trigger command, providing all space/time addressing required to identify the data to collect.  Information about the trigger decision itself is also included, but the DFO merely passes this through to output.  The addressing contains all information needed for the DFO to act.
-%\item \dword{dune}: The EB updates DFO about the resources (buffers) it has available.
-%\end{itemize}
-
-%\subsection{Detector Readout Hardware}
-
-%\metainfo{Compare and contrast design elements related to the detector readout hardware.}
-
-%\subsubsection{RCE}
-
-%\subsubsection{ \dword{felix} }
-
-%\subsection{Backend Event Building}
-
-%\subsection{Other}
-
-\subsection{Ongoing ProtoDUNE Efforts}
-
-(This subsection is currently empty.) \fixme{anne added this}
-
-\section{\dword{daq} Design}
+\section{Data Acquisition System Design}
 \label{sec:fd-daq:design}
 % \fixme{module-generic}
 
@@ -1754,7 +1536,221 @@ GPS are fed through optical single mode fibers to the \dword{cuc}, where
 either GPS signal can act as a hot spare while the other is active. 
 Differential delays between these two paths are resolved by a second pair of fibers, one running back from the timing system to each antenna.
 
-\subsection{Design Validation and Development Plan}
+
+\section{Design Validation and Development Plans}
+
+\subsection{Design Validation and Development at \dword{protodune}}
+
+\label{sec:fd-daq:protodune}
+\metainfo{Here we write what similarities and differences there are between \dword{protodune} and \dword{dune} \dword{daq} designs.}
+
+The \dword{fd} \dword{daq} consortium constructed and operated the \dword{daq} system for
+\dword{protodune}, which included %facilitated two incarnations of 
+two \dword{daq} readout 
+architectures, one based on \dword{felix}, develped by ATLAS \cite{xx}, and the other on \dword{rce}, developed at
+SLAC \cite{xx}. \dword{daq} design and construction for
+\dword{protodune} began in Q3 of 2016, and the system was operational at the start of the beam data run %when \dword{protodune} beam running began 
+in Q4 of 2018. The detector is
+continuing to run as of the writing of this document, recording cosmic
+ray activity, and %facilitating 
+providing further input for \dword{daq} development toward
+\dword{dune}. 
+
+Figure~\ref{xx} depicts the \dword{protodune} \dword{daq} system.  The \dword{daq} is split %among %two readout architecture implementations, one involving 
+between the  \dword{felix}  and \dword{rce} implementations. The two architectures share the same back-end and
+timing and trigger systems. 
+Neither of these tested % readout 
+architectures %( \dword{felix}  or RCE) 
+exclusively represents the
+baseline design for the DUNE \dword{fd}. Instead, each %readout architecture
+qualitatively maps into one of
+two data processing approaches: one in which the data is processed
+exclusively in
+custom-designed \dword{fpga}, and the other  in which the data is processed primarily in commodity
+CPUs. The baseline system for a %DUNE FD 
+\dword{detmodule} instead
+merges elements of the two approaches. Specifically, it uses  \dword{felix}  as
+the hardware platform for data receiving and handling, and an
+\dword{fpga}-based co-processor (analogous to the \dword{rce} platform) that
+interfaces with  \dword{felix}  to provide additional, dedicated data processing
+resources. In that sense,\dword{protodune} has provided demonstration of the
+ \dword{felix}  platform as \dword{fe} readout data receiver, and
+demonstration of \dword{fpga}-based data reduction for TPC.
+
+Besides overall readout architecture, %there are two additional key differences between 
+the \dword{protodune} and
+\dword{dune} \dwords{daq} exhibit two key differences. %, namely that (1) 
+First, the \dword{protodune} \dword{daq} is externally
+triggered (and at a trigger rate %which is more than 
+over an order of
+magnitude higher than that anticipated for \dword{dune}). Because of this, 
+%and therefore 
+the% current 
+\dword{protodune} \dword{daq} 
+does not facilitate online data
+processing from the TPC or \dword{pd} systems for self-triggering. % and (2) 
+Second, the \dword{protodune} 
+system sits at the surface with a much higher %and therefore the 
+data occupancy %is much higher
+due to cosmic ray activity. % in the detector. 
+%Key difference (1) must be overcome to demonstrate data selection capability for the DUNE \dword{daq} design, and this is a main component of future \dword{daq} development plans, described in Sec.~\ref{xx}.
+Overcoming the first key difference to demonstrate \dword{daqdsn} capability for the \dword{fd} \dword{daq} design is a main component of future \dword{daq} development plans, described in Section~\ref{xx}.
+
+
+\subsubsection{ProtoDUNE Outcomes}
+
+Despite its %being a 
+variant design %and 
+with more limited scope, the %already
+successful operation of the \dword{protodune} \dword{daq} has provided several key
+demonstrations for \dword{dune} \dword{daq}, in particular data flow
+architecture, run configuration and control, and back-end
+functionality. % In the following subsection we discuss important lessons learned.
+
+Besides demonstrating end-to-end data flow and \dword{fe} readout functionality
+explicitly for  \dword{felix}, possibly the most important outcome has been the delineation of
+interfaces, i.e., understanding the exact \dword{daq} scope and the interfaces to TPC, \dword{pds}, and offline. The use of commercial off-the-shelf solutions
+where possible, and leverage of professional support from CERN IT 
+substantially expedited the development and success of the project, as
+did the strong on-site presence during early installation and
+commissioning. 
+
+The use of multiple clock frequencies for different
+detector subsystems, on the other hand, was found to be too cumbersome, and 
+a central timing interface document for the \dword{dune}
+\dword{fd} \citedocdb{} formalizes the decision %therefore the desire
+to use a single clock frequency for all \dword{detmodule} subdetectors.
+Largely due to limited
+availability of hardware and experts, the hardware integration tests prior to
+installation and commissioning %were found
+ proved insufficient. %, and were primarily a consequence of ; 
+These will be %for \dword{dune} those are to be 
+carefully planned out for the early stages of \dword{fd} \dword{daq} development and
+pre-production, and we will work %and also 
+to proliferate the subsystem expertise across
+the consortium. 
+
+Finally, % in the case of 
+despite the simplicity of the \dword{protodune} trigger 
+relative to the \dword{dune}'s data-driven \dword{daqdsn} scheme, % it was found that 
+the system required more commissioning time, and  
+%This has been built into 
+the \dword{dune} project schedule gives it more time. 
+
+%More specific outcomes, per \dword{protodune} subsystem, are outlined below.
+Outcomes specific to \dword{protodune} subsystems are outlined below.
+
+For the \dword{rce} TPC readout implementation, \dword{protodune} demonstrated that 
+%it was found that 
+a full
+working vertical slice of the system is essential, and that
+development and debugging should not be limited to simulation and
+remote system operations (as often time differences are an
+issue). 
+\fixme{what needs to be added? anne}
+Hardware failure recovery requires more efficient handling %should be handled more efficiently
+than straight hardware reboots, along with %and %this should be augmented with 
+additional
+hardware monitoring and debugging functionality that integrates with
+run control. Similar findings emerged from the  \dword{felix} TPC readout implementation
+% had similar findings 
+with respect to debugging hardware issues from the \dword{daq} upstream end. %It was
+Also,  %found that 
+more project-specific firmware expertise than available was needed.
+
+\dword{protodune} showed that the back-end subsystem was %found to be 
+too monolithic. Future incarnations of
+this subsystem need to more loosely couple the hardware configuration
+and readout processes, and provide  %should be more loosely coupled in , with 
+flexibility to bring these processes up or down 
+independently and without faulting the system. It is important to develop better bookkeeping of 
+the configurations used and of the bookkeeping definitions, %should be developed 
+as well, in advance of %both 
+commissioning and operations. This should also
+extend to software package releases and data format versioning. The horizontal
+scaling capability of the design (from originally four to sixteen envisioned event
+builder machines) was crucial for achieving desired performance, and 
+%maintaining this same capability 
+is part of the DUNE \dword{daq} philosophy.
+
+%More specifically in the case of run control, the resource utilization
+%prompts reconsideration of what might be the right rool for Run
+The \dword{protodune} run control resource utilization
+prompts reconsideration of the right tool for the \dword{dune} \dword{fd} run control. This should happen early in
+the design stage to allow sufficient development and maturity of the
+design. At the same time a development environment %should be provided, 
+distinct from production is required for the %necessary
+development and optimization of run control during commissioning %in a way that it doesn't 
+so as to avoid inhibiting other commisioning tasks. Better slow
+control integration, % and 
+fewer rudimentary alarms, %along with 
+better
+metric monitoring (in part facilitated by a more appropriate run
+control tool), and a better user interface %user friendliness 
+are also %deemed 
+desirable for the \dword{fd}. %DUNE. 
+
+%A major finding regarding Run Control was the need for a partitioning
+%and resource management scheme which should be designed a priori with careful
+%consideration of possible run modes during commisisoning as well as
+%during operations. The DUNE FD \dword{daq} partitioning scheme is described in
+%Sec.~xx.
+Importantly, the \dword{protodune} run control demonstrated the need for a priori design of a 
+partitioning and resource management scheme with careful
+consideration of the possible run modes during both commissioning and operations. This scheme is described in Section~xx.
+
+%In the case of O
+For online monitoring, the monitoring tool response times are a
+concern for scaling to DUNE. %, and this necessitates an evaluation plan of future envisioned tools with simulations. 
+This requires an evaluation plan that incorporates simulations to select the proper tools that will allow
+%Online Monitoring tools for DUNE will require 
+integration with \dword{cisc} monitoring and run control
+states,  and closer collaboration with nearline developers. It will be
+important to define ownership and resource responsibilities within the
+\dword{daq} consortium on this
+subsystem early during the DUNE project.
+
+Other outcomes include established needs for 
+\begin{itemize}
+\item on-site
+subsystem experts; 
+\item support from computing professionals
+for systems administration; 
+\item well defined and frozen interfaces;
+a formalized data model agreed upon by both system experts and the wider
+collaboration, including data record format and metadata format, which can facilitate both commissioning and operation
+data analysis; 
+\item standardization of remote \dword{daq} operation solutions;
+\item better control room tools; additional \dword{daq} infrasturcture (disk
+space, CPUs) to support installation and commissioning of other DUNE
+FD systems; and 
+\item good
+installation practices.
+\end{itemize}
+
+%In summary, \dword{protodune} has been a successful platform for \dword{daq} 
+%development and design for the \dword{dune} \dword{fd}. Most
+%critically, it demonstrated that the eventual design must 
+
+%\item accommodate changes in the overall system and provide more
+%flexibility and granularity.
+%\item \dword{dune}: input to DFO is the trigger command, providing all space/time addressing required to identify the data to collect.  Information about the trigger decision itself is also included, but the DFO merely passes this through to output.  The addressing contains all information needed for the DFO to act.
+%\item \dword{dune}: The EB updates DFO about the resources (buffers) it has available.
+%\end{itemize}
+
+%\subsection{Detector Readout Hardware}
+
+%\metainfo{Compare and contrast design elements related to the detector readout hardware.}
+
+%\subsubsection{RCE}
+
+%\subsubsection{ \dword{felix} }
+
+%\subsection{Backend Event Building}
+
+%\subsection{Other}
+
+\subsubsection{Planned Development at \dword{protodune}}
 \label{sec:sp-daq:design-validation}
 \fixme{single-phase module}
 
@@ -1789,7 +1785,7 @@ will be used to finalize the \dword{daq} design.
  % \textbf{how its outcome will be used to make a decision in the
   %  future}.}
 
-\subsubsection{Ongoing  \dword{felix}  Throughput Demonstration at \dword{protodune}}
+\subsubsubsection{Ongoing  \dword{felix}  Throughput Demonstration at \dword{protodune}}
 \label{sec:sp-daq:validation-pdune-felix}
 %\fixme{single-phase module}
 
@@ -1813,7 +1809,7 @@ significant difference is the much higher rate of data propagation from the
 host RAM to the back-end system in \dword{protodune} than anticipated for the \dword{fd}. Future development
 will concentrate on data processing and \dword{daqdsn}.  This is described in more detail in Section~\ref{sec:sp-daq:validation-pd-demonstrator}.
 
-\subsubsection{Ongoing RCE Throughput Demonstration at \dword{protodune}}
+\subsubsubsection{Ongoing RCE Throughput Demonstration at \dword{protodune}}
 \label{sec:sp-daq:validation-pdune-rce}
 %\fixme{single-phase module}
 
@@ -1826,7 +1822,7 @@ compression factors consistent with those expected based on observed
 to demonstrate how \dwords{trigprimitive} are generated in FPGA as
 described in Section~\ref{sec:sp-daq:validation-pd-demonstrator}.
 
-\subsubsection{Validation of Trigger Primitives in Software}
+\subsubsubsection{Validation of Trigger Primitives in Software}
 \label{sec:sp-daq:validation-software-trigger-primitives}
 %\fixme{single-phase module}
 
@@ -1859,7 +1855,7 @@ of approximately 16 \dword{adc} counts. Although the total rates are much higher
 anticipated for DUNE, the algorithm performance is promising and should improve as \dword{protodune} continues
 to run and improve its noise understanding.
 
-\subsubsection{Validation of Trigger Primitives in Firmware}
+\subsubsubsection{Validation of Trigger Primitives in Firmware}
 \label{sec:sp-daq:validation-firmware-trigger-primitives}
 %\fixme{single-phase module}
 
@@ -1874,7 +1870,7 @@ for region-of-interest hit finding in an \dword{fpga} \cite{NNN18}.
 %\metainfo{Succinctly describe algorithm, include physics and computing
 %  performance numbers.}
 
-\subsubsection{Validation of Hierarchical Trigger Layers}
+\subsubsubsection{Validation of Hierarchical Trigger Layers}
 
 As described in Section~\ref{sec:sp-daq:design-selection-algs}, the \dfirst{daqdss} is structured as a layered hierarchy. 
 It must take in constant, high-rate data and output a minuscule rate that provides summary of activity in the data (trigger commands).
@@ -1894,12 +1890,14 @@ This will require development of the following elements:
 
 
 
-\subsubsection{Validation of High Level Trigger in Software}
+\subsubsubsection{Validation of High Level Trigger in Software}
 
 
-\subsubsection{Prototype Inter-process Communication System}
+\subsubsubsection{Prototype Inter-process Communication System}
 \label{sec:fd-daq:validation-demonstrators}
 \fixme{module-generic}
+
+\fixme{This must be condensed.}
 
 A prototype \dfirst{ipc} system is currently under development. 
 Some of the goals of this prototype are:
@@ -1942,7 +1940,7 @@ Given reasonably linear scaling as well as benchmarks preformed on faster networ
 The ZeroMQ-based prototype software will continue to be developed with the goal to understand how to manage software and configuration complexity and to participate in the other demonstrators described in this section. 
 
 
-\subsubsection{Planned \dword{protodune} \dword{daq} Demonstrator}
+\subsubsection{Future \dword{protodune} \dword{daq} Demonstrator}
 \label{sec:sp-daq:validation-pd-demonstrator}
 
 A demonstration of the \dword{daq} system design based in \dword{protodune} is
@@ -1971,7 +1969,7 @@ cards, and an integration test will be conducted in 2019 with a
 prototype \dword{fpga} processing module and the  \dword{felix} \dword{fe}.
 
 
-\subsubsection{Planned Vertical Slice Teststands}
+\subsection{Vertical Slice Teststands}
 \label{sec:sp-daq:validation-demonstrators}
 %\fixme{single-phase module}
 %\metainfo{Describe VST demonstrators and why we must build them.}
