@@ -301,10 +301,86 @@ outside ROIs and excluded from the output.
 Decoding for protoDUNE-SP is currently done with all 6 APAs in memory. As each 3 ms APA readout consists of over 15M 12 bit values, decompression and conversion to floating point results in substantial memory expansion.  Decoding and deconvolution of 6 APAs with 3 ms readout fits within a normal 2 GB memory/core footprint but the 7.5 ms readout window used in some cosmic ray studies requires a correspondingly larger memory footprint. As electrical signals are correlated between channels within an APA wire plane, but not between planes, better memory performance can be achieved by processing each wire plane (3/APA) independently. These changes are being implemented.
 
 
-However,  while subdividing the detector into wire planes solves the memory problems for short readouts it is  not a viable solution for the long readouts expected for supernova events. We are still exploring the best strategy for dealing with these much larger time windows. The DAQ group is already testing 1 second (300 x longer time window) readouts of small numbers of channels.  These are being used as tests of optimal models for data segmentation. 
+However,  while subdividing the detector into wire planes solves the memory problems for short readouts it is  not a viable solution for the long readouts expected for supernova events. We are still exploring the best strategy for dealing with these much larger ($\times 10,000$)time windows. The DAQ group is already testing 1 second ($300 \times$ longer time window) readouts of small numbers of channels.  These are being used as tests of optimal models for data segmentation. 
+
+\begin{dunetable}[Compressed size for Raw data - 7 GeV beam event]{rrl}{tab:comp-raw-data-size}{Compressed size for Raw data - 7 GeV beam events}
+Size in Kbytes	&	Fraction	&	Data Product Name	\\
+\hline
+44,155.47	&	0.576	&	artdaq::Fragments\_daq\_ContainerTPC\_DAQ.	\\
+27,952.64	&	0.364	&	artdaq::Fragments\_daq\_ContainerFELIX\_DAQ.	\\
+4,586.82	&	0.06	&	artdaq::Fragments\_daq\_ContainerPHOTON\_DAQ.	\\
+5.72	&	0	&	artdaq::Fragments\_daq\_ContainerCTB\_DAQ.	\\
+0.17	&	0	&	artdaq::Fragments\_daq\_TIMING\_DAQ.	\\
+0.09	&	0	&	art::TriggerResults\_TriggerResult\_\_DAQ.	\\
+\hline
+76,703.25 & 1.0 & Total\\
+\end{dunetable}
+
+\begin{dunetable}[Compressed size for Reconstructed data - 7 GeV beam event]{rrl}{tab:comp-raw-data-size}{Compressed size for Reconstructed data - 7 GeV beam events}
+Size in kBytes&	Fraction&		Data Product Name	\\
+4,218,536	&	0.185	&	recob::Wires\_digitwire\_\_DecoderandReco.	\\
+2,236,432	&	0.098	&	recob::Hits\_hitpdune\_\_DecoderandReco.	\\
+2,102,520	&	0.092	&	recob::Hits\_gaushit\_\_DecoderandReco.	\\
+2,052,796	&	0.090	&	recob::Hits\_linecluster\_\_DecoderandReco.	\\
+2,020,575	&	0.089	&	artdaq::Fragments\_daq\_ContainerPHOTON\_DAQ.	\\
+1,532,502	&	0.067	&	raw::OpDetWaveforms\_ssprawdecoder\_internal\_DecoderandReco.	\\
+1,018,088	&	0.045	&	anab::Calorimetrys\_pandoracalo\_\_DecoderandReco.	\\
+873,797&	0.038	&	recob::Tracks\_pandoraTrack\_\_DecoderandReco.	\\
+806,513&	0.035	&	anab::Calorimetrys\_pmtrackcalo\_\_DecoderandReco.	\\
+555,775&	0.024	&	recob::SpacePoints\_pandora\_\_DecoderandReco.	\\
+479,599&	0.021	&	recob::Tracks\_pmtrack\_\_DecoderandReco.	\\
+414,824&	0.018	&	raw::OpDetWaveforms\_ssprawdecoder\_external\_DecoderandReco.	\\
+391,791&	0.017	&	recob::Hitrecob::Trackrecob::TrackHitMetaart::Assns\_pmtrack\_\_DecoderandReco.	\\
+379,553&	0.017	&	recob::SpacePoints\_pmtrack\_\_DecoderandReco.	\\
+310,021&	0.014	&	recob::SpacePoints\_reco3d\_pre\_DecoderandReco.	\\
+260,143&	0.011	&	recob::Hitrecob::SpacePointvoidart::Assns\_hitpdune\_\_DecoderandReco.	\\
+250,175&	0.011	&	recob::Hitrecob::SpacePointvoidart::Assns\_reco3d\_\_DecoderandReco.	\\
+229,711&	0.01	&	recob::SpacePoints\_reco3d\_noreg\_DecoderandReco.	\\
+218,874&	0.01	&	recob::SpacePoints\_reco3d\_\_DecoderandReco.	\\
+200,618&	0.009	&	recob::Hitrecob::SpacePointvoidart::Assns\_pandora\_\_DecoderandReco.	\\
+2,407,376&0.106	&Smaller Objects	\\
+\hline
+22,759,597&	1.000		&Total	\\
+\end{dunetable}
+
+\begin{dunetable}[Reconstruction times for 7 GeV beam event]{lrr}{tab:comp-raw-data-size}{Reconstruction times for 7 GeV beam events}
+Processing step  	&	 Avg CPUtime(sec) 	\\			
+\hline			
+Fullevent	&	503.7	\\
+\hline			
+source:RootInput(read)	&	0.2	\\
+%decode:timingrawdecoder:TimingRawDecoder	&	0.0	\\
+decode:ssprawdecoder:SSPRawDecoder	&	0.3	\\
+decode:tpcrawdecoder:PDSPTPCRawDecoder	&	15.9	\\
+%decode:crtrawdecoder:CRTRawDecoder	&	0.0	\\
+%decode:ctbrawdecoder:PDSPCTBRawDecoder	&	0.0	\\
+decode:beamevent:BeamEvent	&	0.7	\\
+decode:caldata:DataPrepModule	&	89.1	\\
+decode:wclsdatasp:WireCellToolkit	&	113.3	\\
+decode:digitwire:EventButcher	&	0.8	\\
+decode:gaushit:GausHitFinder	&	20.7	\\
+decode:reco3d:SpacePointSolver	&	18.0	\\
+decode:hitpdune:DisambigFromSpacePoints	&	23.0	\\
+decode:linecluster:LineCluster	&	3.9	\\
+decode:pandora:StandardPandora	&	93.2	\\
+decode:pandoraTrack:LArPandoraTrackCreation	&	12.3	\\
+decode:pandoraShower:LArPandoraShowerCreation	&	5.2	\\
+decode:pandoracalo:Calorimetry	&	5.8	\\
+decode:pandorapid:Chi2ParticleID	&	0.0	\\
+decode:pmtrack:PMAlgTrackMaker	&	142.0	\\
+decode:pmtrackcalo:Calorimetry	&	6.1	\\
+%decode:pmtrackpid:Chi2ParticleID	&	0.0	\\
+%decode:ophitInternal:OpHitFinder	&	0.0	\\
+%decode:ophitExternal:OpHitFinder	&	0.0	\\
+%decode:opflashInternal:OpFlashFinder	&	0.0	\\
+%decode:opflashExternal:OpFlashFinder	&	0.0	\\
+%[art]:TriggerResults:TriggerResultInserter	&	0.0	\\
+%end_path:out1:RootOutput	&	0.0	\\
+:out1:RootOutput(write)	&	3.3	\\\end{dunetable}
+
 
 \subsection{Further reconstruction}
-The downstream pattern recognition steps starting with \dword{roi} are described further in section ??? \todo{Find out how to reference PR}.  For the first reconstruction pass in November, the main algorithms used the Pandora framework \cite{Acciarri:2017hat}.
+The downstream pattern recognition steps starting with \dword{roi} are described further in the Tools and Methods chapter of the Physics Volume.  For the first reconstruction pass in November, the main algorithms used the Pandora framework \cite{Acciarri:2017hat}.
 Full reconstruction of ProtoDUNE-SP interactions, with beam particles and of order 20-40 cosmic rays per readout window took 600-1200 sec/event.
 
 
