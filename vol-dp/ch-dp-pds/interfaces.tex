@@ -13,7 +13,7 @@ The \dword{pds} has several interfaces with other subsystems and the global \dwo
 %\dual \dword{pd} Interface Document & DUNE docdb number \\ \toprowrule
 Interfacing System & Description & Linked Reference \\ \toprowrule
 \dword{dp} electronics & Electronics racks, connectors & \citedocdb{6772} \\
-\dword{dp} \dword{hv} & \dword{fc}, cathode, \dword{gg} and \dword{pds} installation sequence, possibility of individual \dwords{gg} on the \dword{pmt} support structures, possibility of reflective wavelength shifting foils on the inner surface of the \dword{fc}   & \citedocdb{6799} \\
+\dword{hv} & \dword{fc}, cathode, \dword{gg} and \dword{pds} \dword{pmt} and reflector/\dword{wls} panel assemblies installation sequence, possibility of individual \dwords{gg} on the \dword{pmt} support structures  & \citedocdb{6799} \\
 \dword{daq} & Data format, trigger distribution & \citedocdb{6802} \\
 %\dword{cisc} & 6781 \\
 \dshort{cisc} & Layout of cryogenic instrumentation, slow control of the \dword{pds} power supplies and calibration system & \citedocdb{6781} \\ %capitalize first letter dword workaround
@@ -21,8 +21,8 @@ Interfacing System & Description & Linked Reference \\ \toprowrule
 Software and Computing & Development of simulation, reconstruction, and analysis tools & \citedocdb{7114} \\
 Calibration & Global monitoring of \dword{pds} \dwords{pmt} & \citedocdb{7060} \\
 %\dword{itf} & 7033 \\
-\dword{itf} & Shipping and receiving of the \dword{pds} components, \dword{tpb} coating of the \dwords{pmt} & \citedocdb{7033}\\
-Detector and Facilities Infrastructure & \dword{pmt} supporting bases, cable trays, feedthrough flanges, access to conventional facilities, participation in the \dword{dss} & \citedocdb{6979} \\
+%\dword{itf} & Shipping and receiving of the \dword{pds} components, \dword{tpb} coating of the \dwords{pmt} & \citedocdb{7033}\\
+Detector and Facilities Infrastructure & \dword{pmt} supporting bases, cable trays, feedthrough flanges, access to conventional facilities, participation in the \dword{ddss} & \citedocdb{6979} \\
 \dshort{uit} & Transportation of the \dword{pds} components to and between underground areas, clean room activities, storage, and installation & \citedocdb{7006} \\
 \end{dunetable}
 
@@ -33,11 +33,11 @@ Detector and Facilities Infrastructure & \dword{pmt} supporting bases, cable tra
 \item \dword{dp} Electronics: The \dword{pds} shares the same \dword{fe} electronics standard as the charge readout, which is \dword{utca}-based \cite{utca}. The \dword{dp} electronics will provide data in continuous streaming %(\num{12} bits at \SI{2.5}{\MHz} sampling) 
 of all \dword{pds} channels over the \SI{10}{\Gbps} links. The number of photomultipliers to be read out is \dpnumpmtch, to be distributed among \num{60} AMC cards (\num{20} \dword{utca} crates for the \num{20} \dword{pds} sectors, \num{36} readout channels in \num{3} AMC cards/crate). Readout racks for the sectors will be \SI{6}{\m} apart along the \SI{60}{\m} side and on both sides. Deeper understanding of \dword{pmt} characteristic (e.g., saturation, recovery time, ringing, pre- and after-pulsing) will be provided by \dword{dp} \dword{pds}. The type of connectors used at the FE input panel will be determined by the \dword{dp} Electronics Consortium and will be implemented by \dword{dp} \dword{pds}.
 
-\item \dword{hv}: This interface includes the consideration of the distance between the cathode/ground grid and the \dword{pmt} planes, the possible implementation of the ground grid at the individual \dword{pmt} level, and the possible implementation of the wavelength shifting foils on the inner surface of the \dword{fc}. The \dword{hv} consortium and \dword{pds} consortium will be communicating to harmonize the underground installation.
+\item \dword{hv}: This interface includes the consideration of the distance between the cathode/ground grid and the \dword{pmt} planes, the installation of the reflector/\dword{wls} panel assemblies on the inner surface of the \dword{fc} and the possible implementation of the ground grid at the individual \dword{pmt} level. The \dword{hv} consortium and \dword{pds} consortium will be communicating to harmonize the underground installation.
 
 \item \dword{daq}: The hardware interface uses mainly optical fibers. \dword{dp} \dword{pds} provides trigger and data in continuous streaming;  the interface also includes the \dword{daq} software.
 
-\item \dshort{cisc}: The main interface points with the \dword{cisc} are the layout of the cryogenic instrumentation (e.g., purity monitors, temperature sensors and light emitting system for the cameras) and the \dword{pmt} support structures and cabling, as well as the slow control of the \dword{pds} power supplies and calibration system. The \dword{pds} \dwords{pmt} are part of \num{20} sectors with \num{36} \dwords{pmt} each and will be controlled with \num{20} \dword{hv} crates.
+\item \dshort{cisc}: The main interface points with the \dword{cisc} are the layout of the cryogenic instrumentation (e.g. purity monitors, temperature sensors and light emitting system for the cameras) and the \dword{pmt} support structures and cabling, as well as the slow control of the \dword{pds} power supplies and calibration system. The \dword{pds} \dwords{pmt} are part of \num{20} sectors with \num{36} \dwords{pmt} each and will be controlled with \num{20} \dword{hv} crates.
 
 \item \dune Physics: \dual \dword{pds} has interfaces with the overall physics requirements on energy and time as well as classification of events, decay modes, and neutrino flavors.
 
@@ -45,12 +45,12 @@ of all \dword{pds} channels over the \SI{10}{\Gbps} links. The number of photomu
 
 \item Calibration: The \dword{pds} participates in the \dword{dune} global calibration task force and will provide handles to allow global monitoring of \dword{pmt} performance.
 
-\item \dword{itf}: The operations at the \dword{itf} are described in Section~\ref{subsec:dp-pds-itf}. The interface items can be summarized as shipping and receiving of the \dword{pds} components, \dword{tpb} coating of the \dword{pmt} windows, basic functionality testing, repairing, and repackaging at the facility. The interface includes recycling and returning packaging materials.
+%\item \dword{itf}: The operations at the \dword{itf} are described in Section~\ref{subsec:dp-pds-itf}. The interface items can be summarized as shipping and receiving of the \dword{pds} components, \dword{tpb} coating of the \dword{pmt} windows, basic functionality testing, repairing, and repackaging at the facility. The interface includes recycling and returning packaging materials.
 
 \item Detector and Facilities (\dword{lbnf}) Infrastructure: The \dword{pds}
-\dword{pmt} supporting base on the cryostat floor; cold cables and cable trays; and the feedthroughs are the major interfaces with the facility. The cables and calibration fibers are routed in cable trays from the ceiling \fdth flanges to the bottom of the cryostat fall under the responsibility of the facility. Installing the \dwords{pmt} and connecting the fibers and \dword{hv}/signal cables to the \dwords{pmt} fall under the responsibility of \dword{pds}. Other interfaces with the facility include access to conventional facilities and participation in the \dword{dss}. 
+\dword{pmt} supporting base on the cryostat floor; cold cables and cable trays; and the feedthroughs are the major interfaces with the facility. The cable trays from the ceiling \fdth flanges to the bottom of the cryostat in which the cables and calibration fibers are routed fall under the responsibility of the facility. Installing the \dwords{pmt} and connecting the fibers and \dword{hv}/signal cables to the \dwords{pmt} fall under the responsibility of \dword{pds}. Other interfaces with the facility include access to conventional facilities and participation in the \dword{ddss}.
 
-\item \dshort{uit}: This interface with the \dword{uit} includes the transporting \dword{pds} components to and between underground areas, clean room activities and storage, and coordinating installation with the other teams. The details are described in Section~\ref{subsec:dp-pds-undergroundinstallation}.
+\item \dshort{uit}: This interface with the \dword{uit} includes the transportation of \dword{pds} components to and between underground areas, clean room activities, storage, and coordination of the installation with the other teams. The details are described in Section~\ref{subsec:dp-pds-undergroundinstallation}.
 
 \end{itemize}
 
