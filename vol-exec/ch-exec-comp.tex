@@ -76,13 +76,15 @@ The consortium resource model benefits from existing Grid and \dword{wlcg} infra
 
 The DUNE science program is expected to produce raw data volumes similar in scale to the data volumes that current LHC Run-2 experiments have already recorded.  Baseline predictions for the DUNE data, dependent on actual detector performance and noise levels, are 30-60 PB of raw data per year.  These data, with simulations and derived analysis samples, need to be available to all collaborating institutions.  We anticipate that institutions worldwide will play an important role both as contributors and end-users of storage and CPU resources for DUNE.
 
-To enable these resource contributions in cooperation with the LHC and other communities, we plan to utilize common computing layers for infrastructure access and use common tools to ease integration of facilities with both the DUNE and LHC computing ecosystems.  For example, we plan to utilize common data storage methodologies to establish large highly available data lakes worldwide  and to collaborate with the broader HEP community in developing other common tools.
+To enable these resource contributions in cooperation with the LHC and other communities, we plan to utilize common computing layers for infrastructure access and use common tools to ease integration of facilities with both the DUNE and LHC computing ecosystems.  We will use common data storage methodologies to establish large highly available data lakes worldwide  and to collaborate with the broader HEP community in developing other common tools.
 
-The 2018 test beam run of protoDUNE Single-Phase (SP) was a valuable live test of this model.  The ProtoDUNE Single Phase detector at CERN produced raw data at rates of up to ~2GB/s of data.  These data were stored on tape at CERN and Fermilab and replicated at sites in the UK and Czech Republic.  In total 1.8 PB of raw data were produced during the test beam run. 
+
+HEP has considerable infrastructure in place for international computing collaboration thanks to the LHC program.  Other large experiments - LSST, SKA, DUNE and HyperK will be coming on board over the next decade.   This cooperation is being formalized through the HEP Software Foundation(\dshort{hsf})\lcite{Alves:2017she}, an organization of interested parties working to gather and disseminate common solutions based on the extensive knowledge we have gained over the past two decades. 
+DUNE's strategy is to work with and contribute to this global community to maximize the use of common tools for data movement and storage, job control and monitoring, accounting and authentication.   All large-scale experiments will encounter similar issues and worldwide cooperation on common tools is the most cost-effective way to proceed. For example, in collaboration with the Fermilab, CERN and the UK groups, we are investigating the use of {\it \dword{rucio}}  as our primary data manager.
+
+The 2018 test beam run of ProtoDUNE Single-Phase (SP) was a valuable live test of this model.  The ProtoDUNE Single Phase detector at CERN produced raw data at rates of up to ~2GB/s of data.  These data were stored on tape at CERN and Fermilab and replicated at sites in the UK and Czech Republic.  In total 1.8 PB of raw data were produced during the test beam run. 
 This prototype run has been extremely beneficial in exercising the existing computing infrastructure and in building a team of interested institutions.
 
-HEP has considerable infrastructure in place for international computing collaboration thanks to the LHC program.  Other large experiments - LSST, SKA, DUNE and HyperK will be coming on board over the next decade.   This cooperation is being formalized through the HEP Software Foundation\dword{hsf}\lcite{Alves:2017she}, an organization of interested parties working to gather and disseminate common solutions based on the extensive knowledge we have gained over the past two decades. 
-DUNE's strategy is to work with and contribute to this global community to maximize the use of common tools for data movement and storage, job control and monitoring, accounting and authentication.   All large-scale experiments will encounter similar issues and worldwide cooperation on common tools is the most cost-effective way to proceed. For example, in collaboration with the Fermilab, CERN and the UK groups, we are investigating the use of  \dword{rucio}  as our primary data manager.
 
 In addition to traditional HEP computational strategies, DUNE's data consists of simple but very large 2D data objects which share many characteristics with astrophysical images.  This presents opportunities to use current advances in machine learning and pattern recognition as a frontier user of High Performance Computing facilities capable of massively parallel processing.  We share this problem, and propose to share solutions, with the other Liquid Argon experiments - ArgoNeut, MicroBooNE, SBND and ICARUS.  We have already benefited greatly from prior work and plan to contribute cooperatively.
 
@@ -93,9 +95,9 @@ In summary, DUNE's computing strategy is to be {\bf global}, working with partne
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Overview}		
 \label{ch:exec-comp-ovr}
-The main goal of the computing effort is to facilitate the acquisition, processing and analysis of data and simulations from the DUNE experiment across the many physics drivers for the experiment in a cost effective way. Computing and Software provides the bridge between the real-time online systems of the DUNE/LBNF hardware and the physics groups who develop high-level algorithms and perform data analysis. S+C works with collaborating institutions to identify CPU and storage resources and to support basic software infrastructure such as software frameworks, data catalogs, database infrastructure and code distributions systems. 
+The main goal of the computing effort is to facilitate the acquisition, processing and analysis of data and simulations from the DUNE experiment across the many physics drivers for the experiment in a cost effective and secure way. Computing and Software provides the bridge between the real-time online systems of the DUNE/LBNF hardware and the physics groups who develop high-level algorithms and perform data analysis. S+C works with collaborating institutions to identify CPU and storage resources and to support basic software infrastructure such as software frameworks, data catalogs, database infrastructure and code distributions systems. 
 
-The Consortium is currently working with national agencies and major laboratories to negotiate CPU and storage provision for the near term protoDUNE runs and development of the full DUNE computing model and is starting the process of evaluating major software infrastructure systems such as workload management, emphasizing collaboration and reuse of existing systems. 
+The Consortium is currently working with national agencies and major laboratories to negotiate CPU and storage provision for the near term ProtoDUNE runs and development of the full DUNE computing model and is starting the process of evaluating major software infrastructure systems such as workload management, emphasizing collaboration and reuse of existing systems. 
 
 Our initial assessment of needs indicates that data rates and CPU needs for DUNE are significantly less than those for the large LHC experiments but that the extremely large size of individual DUNE events presents unique technical challenges that will require substantial effort to address.  In addition, the collaboration is truly international and will require a distributed computing model to both fully exploit our global computing resources and to make those resources easily available to all collaborators. 
 
@@ -150,28 +152,28 @@ The near detector will have fewer channels and better signal/noise discriminatio
 \subsection{Simulation}
 The bulk of data collected is likely to be backgrounds, with real high energy events in the far detector numbering in the thousands/year, not millions. Thus the size of simulation samples is likely to be less than that of the raw data.  Lower energy events are either very rare or can be simulated in sub-volumes of the whole detector.  As a result, while simulation will be an important part of the experiment, it is not expected to dominate data volumes as it does in many experiments.  
 
-However, simulation inputs such as flux files, overlay samples and shower libraries pose a special problem as they must be distributed to simulation jobs carefully.  Proper simulation requires that these inputs be delivered in an unbiased fashion. This can be technically difficult in a widely distributed environment. 
+However, simulation inputs such as flux files, overlay samples and shower libraries pose a special problem as they must be distributed to simulation jobs carefully.  Proper simulation requires that these inputs be delivered in an unbiased fashion. This can be technically difficult in a widely distributed environment and will require thoughtful design. 
 
 \subsection{Analysis}
 
 Analysis formats have not yet been fully defined.  We anticipate that most analysis samples will be orders of magnitude smaller than the raw data.  However, as they are idiosyncratic to particular analyses and in fact particular users,  producing and cataloging them will be sociologically difficult. 
-Likely there will be a mix of official samples  produced by physics groups and distributed through a common catalog and file transfer mechanisms and user samples on local disk. 
+Likely there will be a mix of official samples -  produced by physics groups and distributed through a common catalog and file transfer mechanisms - and user samples on local disk. 
 
 
 \section{ProtoDUNE-SP as an example}		
 \label{ch:exec-comp-proto-SP}
-The first protoDUNE single phase run at CERN in late 2018 has already led to a small-scale test of a global computing model.  In the following we will describe the protoDUNE data design and the lessons learned from our experience. Much of this carries over into planning for full far-detector operations. 
+The first ProtoDUNE single phase run at CERN in late 2018 has already led to a small-scale test of a global computing model.  In the following we will describe the ProtoDUNE data design and the lessons learned from our experience. Much of this carries over into planning for full far-detector operations. 
 
 \subsection{Introduction}
 
-The protoDUNE Single Phase detector ran at CERN in the np04 beamline from September to November of 2018. Since then, studies with cosmic rays have continued. Prior to that run there were several data challenges at high rate to validate the data transfer mechanisms. 
+The ProtoDUNE Single Phase detector ran at CERN in the np04 beamline from September to November of 2018. Since then, studies with cosmic rays have continued. Prior to that run there were several data challenges at high rate to validate the data transfer mechanisms. 
 
-The first phase of operations was commissioning of the detector readout systems while the argon reached full purity.  Data were taken with cosmic rays and beam during the commissioning period.  Data were then taken with beam at full purity through October and half of November.  Since that period, cosmic ray data has been taken with varying detector conditions, such as modified high voltage and purity. 
+The first phase of operations was commissioning of the detector readout systems while the argon reached full purity.  Data were taken with cosmic rays and beam during the commissioning period.  Physics data were then taken with beam at full  Argon purity through October and half of November.  Since beam was turned off, cosmic ray data continues to be taken with varying detector conditions, such as modified high voltage and purity and new readout schemes. 
 
 
 
 \subsection{Data volumes}
-The single-phase protoDUNE detector consists of a \dshort{tpc} with  6 Anode Plane Assemblies (\dshort{apa}), photon detectors (\dshort{pd}s) and a Cosmic Ray Tagger (\dshort{crt}). In addition, the np04 beamline is instrumented with hodoscopes and Cerenkov counters to generate beam triggers and random readouts were done at lower rates to collect unbiased cosmic ray information. The data volume from the test beam run was dominated by readout of the \dshort{apa} planes.  Each \dshort{apa} has 2,560 channels and reads out 12 bit ADC values at 2 MHz.  During beam running, the detector was triggered on the incoming beam. The nominal readout window during beam running was  3 ms to match the drift time at the full voltage of 180 kV that was maintained for most of the run.  The total size of the \dshort{tpc} data without compression was thus 138 MB/event.  Compression was implemented before the October beam physics run, lowering the total size per event from around 180 MB to 75 MB.  
+The single-phase ProtoDUNE detector consists of a \dshort{tpc} with  6 Anode Plane Assemblies (\dshort{apa}), photon detectors (\dshort{pd}s) and a Cosmic Ray Tagger (\dshort{crt}). In addition, the np04 beamline is instrumented with hodoscopes and Cerenkov counters to generate beam triggers and random readouts were done at lower rates to collect unbiased cosmic ray information. The data volume from the test beam run was dominated by readout of the \dshort{TPC}.  Each \dshort{apa} has 2,560 channels and reads out 12 bit ADC values at 2 MHz.  During beam running, the detector was triggered on the incoming beam. The nominal readout window during beam running was  3 ms to match the drift time at the full voltage of 180 kV that was maintained for most of the run.  The total size of the \dshort{tpc} data without compression was thus 138 MB/event.  Compression was implemented before the October beam physics run, lowering the total size per event from around 180 MB to 75 MB.  
 
 \begin{dunetable}[Data volumes]{lrr}{tab:exec-comp-pd-volumes}{Data volumes  recorded by ProtoDUNE-SP}
 Type  & Events & Size\\ %\rowtitlestyle
@@ -187,7 +189,7 @@ Beam stopped in November 12 but cosmic ray studies of the detector continue, som
 
 
 \subsection{ProtoDUNE-SP data streams}
-The protoDUNE-SP data consist of multiple sources in addition to the TPC data. One of the major challenges for the offline computing systems is merging of these multiple streams into a coherent whole for analysis. 
+The ProtoDUNE-SP data consist of multiple sources in addition to the TPC data. One of the major challenges for the offline computing systems is merging of these multiple streams into a coherent whole for analysis.  Table \ref{tab:exec-comp-pd-sources} lists the data sources used and their granularity. 
 
 \begin{dunetable}[Data sources]{lrr}{tab:exec-comp-pd-sources}{Data sources  }
 Type & indexed by & destination\\
@@ -205,15 +207,15 @@ File metadata & file & \dword{sam} file database\\
 Information about the detector conditions, \dword{daq} configuration and run quality is spread across a number of sources and must be collected and then boiled down into the quantities relevant for offline data analysis.  For example, the Slow Controls system logs detector conditions continually.  Offline analysis needs to know about these data with coarser granularity and then have algorithms capable of using that information. A full conditions database transfer mechanism is being developed but was not available during the run.  As a result, with the exception of beamline information, coarse information is currently added to the \dword{sam} file catalog run by run to allow files with given operating conditions to be easily identified and retrieved. Beam data is stored in the \dword{ifbeam}
 database and connected to event data via time stamps.
 
-\section{Reconstruction of protoDUNE-SP data}
-Thanks to substantial previous effort by the 35T prototype, \dword{microboone} and the liquid argon community, high quality algorithms were already in place to reconstruct the data.  As a result, a first pass reconstruction of the protoDUNE-SP data with beam triggers was completed by early December, less than a month after the end of data taking.
+\section{Reconstruction of ProtoDUNE-SP data}
+Thanks to substantial previous effort by the 35T prototype, \dword{microboone} and the liquid argon community, high quality algorithms were already in place to reconstruct the TPC  data.  As a result, a first pass reconstruction of the ProtoDUNE-SP data with beam triggers was completed by early December, less than a month after the end of data taking.
 
-\subsection{Reconstruction}
-
-The TPC data read from the protoDUNE detector includes a waveform for
-each of 15,360 channels. Each waveform is the output of a 12-bit ADC sampling
-at 2~MHz the output voltage of a charge-sensitive amplifier connected to one of
-the TPC Wires. 
+%\subsection{Reconstruction}
+%
+%The TPC data read from the ProtoDUNE detector includes a waveform for
+%each of 15,360 channels. Each waveform is the output of a 12-bit ADC sampling
+%at 2~MHz the output voltage of a charge-sensitive amplifier connected to one of
+%the TPC Wires. 
 %%The most interesting contribution to these signals is the
 %charge on the wire induced by the motion of electrons in the TPC.
 %There are also deliberate voltage offsets to put the signal in the amplifier
@@ -235,7 +237,7 @@ electrons approach the plane and then negative as they move away.
 %time which is used to deduce the drift distance.
 \subsection{Data preparation}
 
-Before pattern recognition, data from the protoDUNE detector is
+Before pattern recognition, data from the ProtoDUNE detector is
 unpacked and copied to a standard format.
 The same format is produced in detector simulation.
 This reformatted raw data includes the waveform for each channel, an
@@ -271,8 +273,8 @@ The sequence is described more fully in docdb-12349\lcite{ref:docdb12349} and in
 
 
 
-\subsection{Signal processing}
-Figures~\ref{fig:ch-exec-comp-chtraw}-\ref{fig:ch-exec-comp-chtroi} show how the ADC data changes during data
+%\subsection{Signal processing}
+Figures~\ref{fig:ch-exec-comp-chtraw}-\ref{fig:ch-exec-comp-chtroi} illustrate the transformation of TPC data  during data
 preparation.
 
 \begin{figure}[t]
@@ -306,15 +308,15 @@ Same as Fig.~\ref{fig:ch-exec-comp-chtraw} except after calibration, cleanup, de
 %\todo{Statement about timing and memory for this phase}
 
 \subsection{Computational characteristics of data preparation and deconvolution }
-Decoding for protoDUNE-SP is currently done with all 6 APAs in memory. As each 3 ms APA readout consists of over 15M 12 bit values, decompression and conversion to floating point results in substantial memory expansion.  Decoding and deconvolution of 6 APAs with 3 ms readout fits within a normal 2 GB memory/core footprint but the 7.5 ms readout window used in some cosmic ray studies requires a correspondingly larger memory footprint. As electrical signals are correlated between channels within an APA wire plane, but not between planes, better memory performance can be achieved by processing each wire plane (3/APA) independently. These changes are being implemented.
+Decoding for ProtoDUNE-SP is currently done with all 6 APAs in memory. As each 3 ms APA readout consists of over 15M 12 bit values, decompression and conversion to floating point results in substantial memory expansion.  Decoding and deconvolution of 6 APAs with 3 ms readout fits within a normal 2 GB memory/core footprint but the 7.5 ms readout window used in some cosmic ray studies requires a correspondingly larger memory footprint. As electrical signals are correlated between channels within an APA wire plane, but not between planes, better memory performance can be achieved by processing each wire plane (3/APA) independently. These changes are being implemented.
 
 
-However,  while subdividing the detector into wire planes solves the memory problems for short readouts it is  not a viable solution for the long readouts expected for supernova events. We are still exploring the best strategy for dealing with these much larger ($\times 10,000$)time windows. The DAQ group is already testing 1 second ($300 \times$ longer time window) readouts of small numbers of channels.  These are being used as tests of optimal models for data segmentation. 
+However,  while subdividing the detector into wire planes solves the memory problems for short readouts it is  not a viable solution for the long readouts expected for supernova events. We are still exploring the best strategy for dealing with these much larger ($\times 10,000$)time windows. The DAQ group is already testing 1 second ($300 \times$ longer time window) readouts of small numbers of channels.  These are being used as tests of optimal models for data segmentation.  Section \ref{ch:exec-comp-mod} describes the start of a bottoms-up collaboration with the \dshort{daq} consortium on an optimal data model for the full DUNE detectors. 
 
 \subsection{Further reconstruction}
 The downstream pattern recognition steps starting with \dword{roi} are described further in the Tools and Methods chapter of the Physics Volume.  
 Full reconstruction of ProtoDUNE-SP interactions, with beam particles and of order 20-40 cosmic rays per readout window took 600-1200 sec/event.
-Table  \ref{tab:comp-raw-data-size} shows the input datasize for a typical beam event, dominated by TPC information. Table  \ref{tab:comp-reco-data-size} shows the size of different reconstructed objects while \ref{tab:comp-reco-data-time} shows the reconstruction time breakdown.  This event had a 3 ms readout window.  The input size and reconstruction time scale reasonably linearly with the readout window.  
+Table  \ref{tab:comp-raw-data-size} shows the input datasize for a typical beam event, dominated by around 71 MB of TPC waveform information. Table  \ref{tab:comp-reco-data-size} shows the size of different reconstructed objects, still dominated by around 10 MB of reduced TPC hit information,  while \ref{tab:comp-reco-data-time} shows the reconstruction time breakdown.  This event had a 3 ms readout window.  The input size and reconstruction time scale reasonably linearly with the readout window.  
 
 \subsection{Reconstruction characteristics}
 
@@ -429,7 +431,7 @@ Figure \ref{fig:ch-exec-comp-cpupie} shows the distribution of production jobs w
 %\includegraphics[height=2.3in]{comp-dunepro_mcc11.png}%
 %\includegraphics[height=2.3in]{comp-dunepro_mcc11_legend.png}
 %}
-\caption{CPU wall-time for November 2018 during ProtoDUNE-SP reconstruction showing multiple site contributions}
+\caption{CPU wall-time for November 2018 during ProtoDUNE-SP reconstruction showing multiple site contributions.  The major contributions were from FNAL, CERN, many UK institutions and FZU.}
 \label{fig:ch-exec-comp-cpupie}
 \end{figure}
 
@@ -535,7 +537,7 @@ Total&CPU, MH&
 93.5\\
 \end{dunetable}
 
-\section{Lessons learned}
+\subsection{Lessons learned}
 
 \begin{itemize}
     \item Data and simulation challenges led to a reasonably mature and robust model for acquiring, storing and cataloging the main data stream. 
@@ -548,20 +550,22 @@ Total&CPU, MH&
 
 Overall, the ProtoDUNE-SP data taking and processing was a success but overly dependent on doing things "by hand" as automated processes were not always in place. 
 
+\subsection{Near future}
+
+Table \ref{tab:exec-comp-needs} summarizes the known resource usage for 2018 and projections for 2019-2021.  The collaboration has requested a substantial test beam run for both single and dual phase detectors in 2021.  The \dshort{csc} views this run as a first production test for the full DUNE computing infrastructure. 
 
 
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Evolving Data Model}		
+\section{Data Model for the Far and Near Detectors}		
 \label{ch:exec-comp-mod}
 
 %%%%%%%%%%%%%%%%%%%%
 \subsection{Introduction}	
 \label{ch:exec-comp-mod-int}
-In parallel with the ProtoDUNE-SP data, a joint Data Model task force was formed by the DAQ and Computing Consortia. 
-
+In parallel with the ProtoDUNE-SP data, a joint Data Model task force was formed by the DAQ and Computing Consortia to lay a framework for the full near and far DUNE detectors. 
 The Data Model task force grappled with the problems of efficiently triggering, reading out and storing data from an enormous detector on multiple time scales.
 
 They defined major concepts.
@@ -587,10 +591,12 @@ These definitions are intended to allow triggering, recording and reconstruction
 
 The main data stream will be augmented by beam, slow controls, \dword{daq} configuration and calibration information. 
 
+This work continues and informs  the  joint  calibration, \dshort{csc} and \dshort{daq} designs.
+
 
 \section{Consortium Organization}
 
-The DUNE computing and software consortium was formed in October 2018.  
+%The DUNE computing and software consortium was formed in October 2018.  
 %%%%%%%%%%%%%%%%%%%%
 %\subsection{Requirements}	
 %\label{ch:exec-comp-mod-req}
@@ -903,18 +909,22 @@ Collaborative Tools
 \section{Cooperative Work with Other Collaborations	}
 \label{ch:exec-comp-gov-coop}
 
-The HEP computing community has come together to form an HEP Software Foundation \dword{hsf}\cite{Alves:2017she} which through working groups, workshops and white-papers is guiding the next generation of shared HEP software.  DUNE's time-scale, where we are in the planning and evaluation phase, is almost perfect for us to contribute to and benefit from these efforts.  Our overall strategy for computing infrastructure is to carefully evaluate existing and proposed field-wide solutions, to participate in their design where they are useful and to only build our own solutions where the common solutions do not fit.  This section describes some of these common activities. 
+The HEP computing community has come together to form an HEP Software Foundation (\dshort{hsf})\cite{Alves:2017she} which through working groups, workshops and white-papers is guiding the next generation of shared HEP software.  DUNE's time-scale, where we are in the planning and evaluation phase, is almost perfect for us to contribute to and benefit from these efforts.  Our overall strategy for computing infrastructure is to carefully evaluate existing and proposed field-wide solutions, to participate in their design where they are useful and to only build our own solutions where the common solutions do not fit.  This section describes some of these common activities. 
+
+
+
+\subsection{\dword{larsoft} for event reconstruction}
+
+The \dword{larsoft} \lcite{Snider:2017wjd} reconstruction package is shared by a collaboration of LAr neutrino experiments.  MicroBooNE, SBND, DUNE and others share in the development of a common core software framework with customization for each experiment. The existence of this software suite and prior efforts by other experiments is what made the rapid reconstruction of the ProtoDUNE-SP data possible.  DUNE will be a major contributor to  the future evolution of this package, in particular in introducing full multi-threading to allow parallel reconstruction of parts of large events in anticipation of the extremely large events expected from the full detector. 
 
 
 
 \subsection{Relation to WLCG/OSG}
-The Worldwide LHC Computing Grid organization (\dword{wlcg})\cite{WLCG} has proposed a future governance structure that splits the dedicated resource provision for LHC experiments from the general middleware infrastructure used to access those resources.  This Scientific Computing Infrastructure (\dword{sci}) is already used by many other experiments worldwide.  In a white paper submitted to the European Strategy Group in December 2018\lcite{http://wlcg-docs.web.cern.ch/wlcg-docs/technical\_documents/HEP-Computing-Evolution.pdf}, a formal Scientific Computing Infrastructure organization is proposed. As part of the transition to that structure the DUNE collaboration has been provisionally invited to join the WLCG with observer status and participate in the Grid Management Board. The goal of our participation is to have input into the technical decisions on global computing infrastructure while contributing to that infrastructure. 
+The Worldwide LHC Computing Grid organization (\dshort{wlcg})\cite{WLCG}, which currently combines the resource and infrastructure missions for the LHC experiments, has proposed a future governance structure that splits the dedicated resource provision for LHC experiments from the general middleware infrastructure used to access those resources.  This Scientific Computing Infrastructure (\dshort{sci}) is already used by many other experiments worldwide.  In a white paper submitted to the European Strategy Group in December 2018\lcite{http://wlcg-docs.web.cern.ch/wlcg-docs/technical\_documents/HEP-Computing-Evolution.pdf}, a formal Scientific Computing Infrastructure organization is proposed. As part of the transition to that structure the DUNE collaboration has been provisionally invited to join the WLCG with observer status and participate in the Grid Management Board. The goal of our participation is to have input into the technical decisions on global computing infrastructure while contributing to that infrastructure. 
 
 Areas of collaboration include:
 
-\subsection{\dword{larsoft} for event reconstruction}
 
-The \dword{larsoft} \lcite{Snider:2017wjd} reconstruction package is shared by a collaboration of LAr neutrino experiments (MicroBooNE, SBND, DUNE) who share in the development of a common core software framework with customization for each experiment. The existence of this software suite and prior efforts by other experiments,  is what made the rapid reconstruction of the protoDUNE-SP data possible.  DUNE will be a major contributor to  the future evolution of this package, in particular in introducing full multi-threading to allow parallel reconstruction of parts of large events in anticipation of the extremely large events expected from the full detector.  
 
 \subsection{Rucio Development and Extension}
 
@@ -923,34 +933,29 @@ The \dword{larsoft} \lcite{Snider:2017wjd} reconstruction package is shared by a
 is a data management system originally developed by the ATLAS collaboration and now an open-source project.  DUNE has chosen to use \dword{rucio} for our large scale data movement.  In the short term it is being combined with the \dword{sam} data catalog used by Fermilab experiments.  DUNE collaborators at FNAL and in the UK are actively collaborating in the \dword{rucio} project, adding value for DUNE but also the wider effort.
 
 
-There is a global \dword{rucio} team which now includes Fermilab SCD staff, DUNE collaborators, and CMS collaborators in addition to the core ATLAS developers who wrote it in the first place.  Some tasks are currently under way or will soon begin.  These include (a) making object stores (such as Amazon S3 and compatible utilities) work with Rucio.  There is a large object store in the UK on which DUNE has a sizable allocation.  (b) Monitoring of the \dword{rucio} system, leveraging the Landscape system at Fermilab.  (c) Getting a metadata engine that can be used as a replacement for the SAM system we currently use.
+There is a global \dword{rucio} team which now includes Fermilab SCD staff, DUNE collaborators, and CMS collaborators in addition to the core ATLAS developers who wrote it in the first place.  Consortium members have started collaborative work on several projects.   These include (a) making object stores (such as Amazon S3 and compatible utilities) work with Rucio.  There is a large object store in the UK on which DUNE has a sizable allocation.  (b) Monitoring  and administration of the \dword{rucio} system, leveraging the Landscape system at Fermilab.  (c) Designing a  data description engine that can be used as a replacement for the SAM system we currently use.
+
+Rucio has already been shown to be a powerful and useful tool for getting defined datasets from point A to point B.  Our initial observation is that \dword{rucio} is a good solution for file localization but is missing the detailed tools for data description and granular dataset definition available in the current \dword{sam} system.  The rapidly varying conditions in the test beam have highlighted a need for a sophisticated data description database interfaced to \dword{rucio}'s location functions. 
 
 In addition the data management team has a design decision to be made with regards to Rucio.  LHC experiments such as ATLAS and CMS work with disk stores and tape stores that are independent of each other.  This is different than the dCache model used by most Fermilab experiments in which most of dCache is a caching frontend for a tape store.  Efficient integration of caching into the \dword{rucio} model will be an important component for DUNE unless  \dword{larsoft}we can afford to have most data on disk to avoid staging.
 
 \subsection{Testing of New Storage Technologies and Interfaces}
 
 There is currently a Data Organization, Management, and Access (\dword{doma}) taskforce working in the larger HEP community\cite{Berzano:2018xaa}
- in which several DUNE collaborators are involved in some way or other. This has several sub taskforces. These include taskforces on authorization, caching, third party copy, hierarchical storage, and quality of service. 
-The authorization issues are of much importance to DUNE and are covered in the subsection below. 
+ in which several DUNE collaborators are involved. There are task forces for authorization, caching, third party copy, hierarchical storage, and quality of service. All of these are of interest to DUNE as they will determine the long-term standards for common computing infrastructure in the field. 
+In particular, the authorization issues are of much importance to DUNE and are covered in subsection \ref{ch-comp-auth}
 
-The caching technologies under discussion sound quite promising and there are DUNE sites who have staff who have been involved in the development.  These are useful for transporting auxiliary files such as flux files that are commonly used in neutrino analysis.  DUNE will have to devote some effort to testing them for our use cases.
-
-Perhaps the key thing from DOMA is the third party copy taskforce.  The biggest difficulty we have faced to date with \dword{rucio} to date is finding appropriate sets of protocols to communicate with third party copy between all the various sites.  The task is complicated because each underlying storage element is based on different legacy technologies, each of which has its own implementation of SRM and xrootd protocols.  The trend is toward web based services.  We will also have to find some way to trigger staging of files off tape for the third party copies; there is not a uniform way to do this at the moment.
-
-There are also various low level technologies for transferring data across the WAN which may be better than the conventional TCP/IP stack.  Some work should be done to evaluate these, particularly for transferring data between the so-called "Data lakes".
-
-We will probably have to investigate high throughput storage for some data buffering at the interface of DAQ and offline.  We will also have to deal with the issue of how to utilize proprietary storage systems on commercial clouds, and non-grid-enabled storage systems at high performance computing centers which don't have the same type of network connectivity to which HEP is accustomed.
 
 \subsection{Data Management and Retention Policy Development}
 
-Rucio has already been shown to be a powerful and useful tool for getting data from point A to point B.  We need to develop a policy to figure out how many of its features we will expose to users.  We also need to specify and then develop some kind of an auditing mechanism so we understand the chain of custody of our data, tracking moves, writes, and deletes.  We also have to re-explore the process of defining data sets in the future SAM replacement.
+
 
 There is a data life cycle built into the DUNE data model.  Particularly old simulations and histograms, old commissioning data, don't have to live forever.  We should have automated ways to enforce the data life cycle model.  We need to plan in an automated way as possible to organize the structure of lower storage so that the various retention types are stored separately for easy deletion if necessary.  This should be configured in such a way to minimize the possibility for human error.
 
-\subsection{Authentication and Authorization Security and Interoperability}
+\subsection{Authentication and Authorization Security and Interoperability}\label{ch-comp-auth}
 
 Within the next 2-3 years we expect the global HEP community to make significant changes in the methods of authentication and authorization of computing and storage.  %One of the new ideas already in testing for storage is something called "capability-based authentication" and employs technologies such as "SciTokens" or "Macaroons".  There are also various proposals to replace the long-standing VOMS mechanism with a different type of authentication.
-In the 1-2 year term DUNE needs to collaborate with the US and European HEP computing communities on improved authentication methods  that will allow secure but transparent access to storage and other resources such as logbooks and code repositories across the collaboration. The current model where individuals need to authenticate through different mechanisms for access to US and European resources is already a roadblock to efficient integration  of personnel and storage. 
+Over that period, DUNE needs to collaborate with the US and European HEP computing communities on improved authentication methods  that will allow secure but transparent access to storage and other resources such as logbooks and code repositories across the collaboration. The current model where individuals need to authenticate through different mechanisms for access to US and European resources is already a roadblock to efficient integration  of personnel and storage. 
 
 
 
@@ -960,16 +965,22 @@ In the 1-2 year term DUNE needs to collaborate with the US and European HEP comp
 
 
 
-\section{Evaluations of other important infrastructure}
+\subsection{Evaluations of other important infrastructure}
 
 The DUNE S+C effort is still evaluating major infrastructure components, notably databases and workflow management systems.
 
-For databases\cite{Laycock:2019ynk}, the Fermilab Conditions Database is being used for the first run of protoDUNE but the Belle II\cite{Ritter:2018jxh} system supported by BNL is also being considered for subsequent runs. 
+For databases\cite{Laycock:2019ynk}, the Fermilab Conditions Database is being used for the first run of ProtoDUNE but the Belle II\cite{Ritter:2018jxh} system supported by BNL is also being considered for subsequent runs. 
 
-For workflow management, we are evaluating DIRAC \cite{Falabella:2016waj} and plan to investigate PANDA \cite{Megino:2017ywl}. Both of these systems are used by multiple LHC and non-LHC experiments and are being integrated with \dword{rucio}. 
+For workflow management, we are evaluating \dword{dirac}\cite{Falabella:2016waj} and plan to investigate PANDA \cite{Megino:2017ywl}. Both of these systems are used by multiple LHC and non-LHC experiments and are already being integrated with \dword{rucio}. 
 
 
+\section{Conclusion}
 
+The DUNE Software and Computing efforts have already undergone a substantial test with the successful run of ProtoDUNE-SP, including demonstration of data movement to storage at 2GB/s, reconstruction with high quality algorithms of the full test beam sample and the start of analysis of the multiple PB of reconstructed data. 
+
+The Consortium is now working with the global HEP computing community to evaluate and specify modern infrastructure that will serve the needs of DUNE and the rest of the community.  We plan to collaborate wherever possible with other experiments where we have common technical challenges. However, the extremely large but simple events generated by Liquid Argon TPC's, even with short readouts, present a unique challenge. 
+
+At this point our major goals to do careful reviews of available and potential tools, to build collaborations and to find the resources necessary to do a large number of ambitious projects. 
 %%%%%%%%%%%%%%%%%%%%
 %\subsection{Resource Needs}	
 %\label{ch:exec-comp-gov-res}
