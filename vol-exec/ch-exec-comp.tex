@@ -9,6 +9,7 @@
 % define a local dword for later incorporation
 \newcommand{\ldword}[1]{{\bf{[#1]}}\footnote{define word#1}}
 \newcommand{\ldshort}[1]{{\bf{[#1]}}\footnote{define abbr #1}}
+\newcommand{\ignore}[1]{}
 \newcommand{\lcite}[1]{
 {#1}}
 \renewcommand\thedoctitle{\voltitleexec} % defined in common/defs.tex
@@ -88,16 +89,16 @@ The main goal of the computing effort is to facilitate the acquisition, processi
 
 The Consortium is currently working with national agencies and major laboratories to negotiate CPU and storage provision for the near term protoDUNE runs and development of the full DUNE computing model and is starting the process of evaluating major software infrastructure systems such as workload management, emphasizing collaboration and reuse of existing systems. 
 
-Our initial assessment of needs indicates that data rates and CPU needs for DUNE are significantly less than those for the large LHC experiments but that the extremely large size of individual DUNE events presents unique technical challenges that will require substantial effort to address. 
+Our initial assessment of needs indicates that data rates and CPU needs for DUNE are significantly less than those for the large LHC experiments but that the extremely large size of individual DUNE events presents unique technical challenges that will require substantial effort to address.  In addition, the collaboration is truly international and will require a distributed computing model to both fully exploit our global computing resources and to make those resources easily available to all collaborators. 
 
 
-\subsection{Data types and volumes}
+\section{Data types and volumes}
 Maximum raw data volumes from the detectors are reasonably easy to estimate, as a product of trigger rate, number of channels, \# of time slices/channel,  size for each ADC readout and compression. However, those data sizes would be well beyond the ability of any system to handle. Thus decisions must be made about what to keep and what not to keep. Those decisions are the purview of the collaboration scientists and the data acquisition design with feedback from computing on what is possible.  The ProtoDUNE experience has provided invaluable information to feed back to the experiment design. 
 
 
 
 
-\subsubsection{Far detector data volumes}
+\subsection{Far detector}
 
 The computing model needs to be able to handle a wide range of data inputs from the far detectors, as documented in more detail in docdb-9240\lcite{bib:docdb9240}.
 
@@ -134,13 +135,19 @@ Trigger rate&1 & per month&(assumption)\\
 %Users 
 \end{dunetable}
 
-\subsubsection{Near Detector data volumes}
+\subsection{Near Detector}
 In addition, a near detector of reasonable size will have multiple neutrino interactions/beam spill leading to a need to read out at the full beam rate of 0.8-1.2 Hz.
 The near detector will have fewer channels and better signal/noise discrimination but much higher readout rates.  While the details of the detector design are still unknown, we assume data volumes of similar size to the far detector (30PB/year) in our planning.
 
-\subsubsection{Simulation}
+\subsection{Simulation}
 The bulk of data collected is likely to be backgrounds, with real high energy events in the far detector numbering in the thousands/year, not millions. Thus the size of simulation samples is likely to be less than that of the raw data.  Lower energy events are either very rare or can be simulated in sub-volumes of the whole detector.  As a result, while simulation will be an important part of the experiment, it is not expected to dominate data volumes as it does in many experiments.  
 
+However, simulation inputs such as flux files, overlay samples and shower libraries pose a special problem as they must be distributed to simulation jobs carefully.  Proper simulation requires that these inputs be delivered in an unbiased fashion. This can be technically difficult in a widely distributed environment. 
+
+\subsection{Analysis}
+
+Analysis formats have not yet been fully defined.  We anticipate that most analysis samples will be orders of magnitude smaller than the raw data.  However, as they are idiosyncratic to particular analyses and in fact particular users,  producing and cataloging them will be sociologically difficult. 
+Likely there will be a mix of official samples  produced by physics groups and distributed through a common catalog and file transfer mechanisms and user samples on local disk. 
 
 
 \section{ProtoDUNE-SP as an example}		
@@ -169,6 +176,7 @@ Pre-commissioning&13.89 M&641 TB\\
 Events were written out in raw files of size 8 GB with each containing of order 100 events. The beam was live for two 4.5 s spills every 32 s beam cycle and data were taken at peak rates of up to 50 Hz (typically 25 Hz) leading to compressed DC rates out of the detector of 400-800MB/sec.  Each beam cycle could therefore produce 1-4  8 GB output files.  In earlier running with uncompressed data, and during an April data challenge, transfer rates of up to 2GB/s were demonstrated over substantial periods. 
 
 Beam stopped in November 12 but cosmic ray studies of the detector continue, some with an increase time window of 7.5 ms to collect more complete tracks/readout.  This raises the compressed event size to around 170 MB.
+
 
 \subsection{ProtoDUNE-SP data streams}
 The protoDUNE-SP data consist of multiple sources in addition to the TPC data. One of the major challenges for the offline computing systems is merging of these multiple streams into a coherent whole for analysis. 
@@ -204,7 +212,7 @@ the TPC Wires.
 %and ADC ranges and there is noise from the electronics (jitter and pickup)
 %and wire motion. Finally, each ADC channel has response nonlinearity and
 %distortions.
-
+\ignore{
 The electrons produced in the \dword{tpc} volume drift % away from a cathode plane
 toward three planes of anode wires with voltage bias such that the electrons
 pass through the first two planes (called induction planes) and are collected
@@ -214,6 +222,7 @@ and the pedestal-subtracted area of the signal is roughly proportional to the
 charge collected on that wire.
 The signals on the induction wires are bipolar: first a positive signal is produced as
 electrons approach the plane and then negative as they move away.
+}
 %The time (i.e. waveform sample) at which the signal appears provides a measure of the drift
 %time which is used to deduce the drift distance.
 \subsection{Data preparation}
@@ -222,13 +231,11 @@ Before pattern recognition, data from the protoDUNE detector is
 unpacked and copied to a standard format (larsoft raw::RawDigit).
 The same format is produced in detector simulation.
 This reformatted raw data includes the waveform for each channel, an
-integer in the range [0, 4095] for each of 6000-15,000 ticks.
+integer in the range [0, 4095] for each of 6000-15,000 time slices. 
 
 The first step in reconstruction is data preparation with the goal of
 converting each ADC waveform into a calibrated charge waveform with
-signals proportional to charge (e.g. number of electrons) passing through
-the anode plane area read out by its wire.
-At the end of data preparation, regions of interest (ROIs), i.e. blocks of contiguous samples where
+signals proportional to charge. At the end of data preparation, regions of interest (ROIs), i.e. blocks of contiguous samples where
 useful signals appear, are identified and the data outside these regions are discarded.
 
 %Perhaps most important, the bipolar signals in induction wires are made unipolar.
@@ -238,7 +245,7 @@ useful signals appear, are identified and the data outside these regions are dis
 %responses of the amplifiers and ADCs.
 %And attempts are made to remove noise and mitigate ADC distortions.
 
-The sequence is described more fully in docdb-12349\lcite{ref:docdb12349} but is summarized here:
+The sequence is described more fully in docdb-12349\lcite{ref:docdb12349} and in the Methods section of the Physics Volume but is summarized here:
 
 \begin{enumerate}
 \item Each waveform is unpacked into integers.
@@ -250,7 +257,7 @@ The sequence is described more fully in docdb-12349\lcite{ref:docdb12349} but is
 
 
 
-\item Finally regions of interest are defined where the signal exceeds a given threshold and ticks well outside the ROI are dropped, leading to significant reduction in the size of the remaining data. These data are then fed into the reconstruction algorithms for further pattern recognition. %\label{local:roi}
+\item Finally regions of interest are defined where the signal exceeds a given threshold and time slices well outside the ROI are dropped, leading to significant reduction in the size of the remaining data. These data are then fed into the reconstruction algorithms for further pattern recognition. %\label{local:roi}
 \end{enumerate}
 
 
@@ -261,15 +268,9 @@ Figures~\ref{fig:ch-exec-comp-chtraw}-\ref{fig:ch-exec-comp-chtroi} show how the
 preparation.
 
 \begin{figure}[t]
-\includegraphics[width=\textwidth,angle=0]{comp-adcraw_tpp0z_run005152_evt000089.png}
+\includegraphics[width=\textwidth,angle=0]{comp-evd_twq-proj_5449_20926_raw.png}
 \caption{
-Example of pedestal-subtracted data for one of the ProtoDUNE collection wire planes.
-The color scale indicates the signal strength for selected ticks in all channels
-in TPC-side collection plane for APA~3 which reads out the TPC where the beam enters.
-This plot is made after trivial calibration, i.e. subtracting the pedestal from the raw data.
-The channels for the plane are handled by ten FEMBs and the boundaries between those
-are shown with horizontal dotted lines. They are numbered 301, 302,~..., 310 going
-downstream, i.e.\ from the bottom in this figure.
+Example of pedestal-subtracted data for one of the ProtoDUNE  wire planes.  The top pane shows the ADC values in a V (induction) plane with the x-axis being channel number and the y-axis, time slice. The bottom pane shows the bipolar pulses induced on one channel. 
 }
 \label{fig:ch-exec-comp-chtraw}
 \end{figure}
@@ -277,19 +278,18 @@ downstream, i.e.\ from the bottom in this figure.
 
 
 
-\begin{figure}[t]
-  \includegraphics[width=\textwidth]{comp-adcdco_tpp0z_run005152_evt000089.png}
-\caption{
-Same as Fig.~\ref{fig:ch-exec-comp-chtraw} except after hit correction, tail removal and deconvolution.
-}
-\label{fig:ch-exec-comp-chtdco}
-\end{figure}
+%\begin{figure}[t]
+%  \includegraphics[width=\textwidth]{ccomp-evd.twq-proj.5449.20926.recon..png}
+%\caption{
+%Same as Fig.~\ref{fig:ch-exec-comp-chtraw} except after hit correction, tail removal and deconvolution.
+%}
+%\label{fig:ch-exec-comp-chtdco}
+%\end{figure}
 
 \begin{figure}[t]
-  \includegraphics[width=\textwidth]{comp-adcroi_tpp0z_run005152_evt000089.png}
+  \includegraphics[width=\textwidth]{comp-evd_twq-proj_5449_20926_decon.png}
 \caption{
-Same as Fig.~\ref{fig:ch-exec-comp-chtdco} except after ROI finding. The regions in gray are
-outside ROIs and excluded from the output.
+Same as Fig.~\ref{fig:ch-exec-comp-chtraw} except after calibration, cleanup, deconvolution and ROI finding. 
 }
 \label{fig:ch-exec-comp-chtroi}
 \end{figure}
@@ -303,7 +303,22 @@ Decoding for protoDUNE-SP is currently done with all 6 APAs in memory. As each 3
 
 However,  while subdividing the detector into wire planes solves the memory problems for short readouts it is  not a viable solution for the long readouts expected for supernova events. We are still exploring the best strategy for dealing with these much larger ($\times 10,000$)time windows. The DAQ group is already testing 1 second ($300 \times$ longer time window) readouts of small numbers of channels.  These are being used as tests of optimal models for data segmentation. 
 
-\begin{dunetable}[Compressed size for Raw data - 7 GeV beam event]{rrl}{tab:comp-raw-data-size}{Compressed size for Raw data - 7 GeV beam events}
+\subsection{Further reconstruction}
+The downstream pattern recognition steps starting with \dword{roi} are described further in the Tools and Methods chapter of the Physics Volume.  
+Full reconstruction of ProtoDUNE-SP interactions, with beam particles and of order 20-40 cosmic rays per readout window took 600-1200 sec/event.
+Table  \ref{ab:comp-raw-data-size} shows the input datasize for a typical beam event, dominated by TPC information. Table  \ref{tab:comp-reco-data-size} shows the size of different reconstructed objects while \ref{tab:comp-reco-data-time} shows the reconstruction time breakdown.  This event had a 3 ms readout window.  The input size and reconstruction time scale reasonably linearly with the readout window.  
+
+\subsection{Reconstruction characteristics}
+
+The data preparation phase can be segmented by detector component, for example into wire planes within a APA  The operations performed in signal processing require few decisions to be made but do include operations such as fast-Fourier transforms and deconvolution.  These operations are well suited to GPU's. 
+
+Once ROI's have been identified, several 3-D reconstruction packages are used. For the first reconstruction pass in November, the  \dword{pandora}\cite{Acciarri:2017hat}, \dword{wirecell}\cite{wirecell} and \dword{pma}\cite{ref:PMA}  frameworks were used with results described in the Physics volume.   Table \ref{tab:comp-reco-data-time} indicates that they are comparable in terms of CPU time used.   Deep Learning techniques based on image pattern recognition algorithms are also being developed. Many of these algorithms can be adapted to run on HPC's, but probably different architectures that would be optimal for the data preparation phase. 
+
+All of these algorithms are currently being run on conventional unix CPU's using OSG/WLCG resources. 
+
+
+
+\begin{dunetable}[Compressed size for Raw data - 7 GeV beam events with a 3 ms time window]{rrl}{tab:comp-raw-data-size}{Compressed size for Raw data - 7 GeV beam events with a 3 ms time window}
 Size in Kbytes	&	Fraction	&	Data Product Name	\\
 \hline
 44,155.47	&	0.576	&	artdaq::Fragments\_daq\_ContainerTPC\_DAQ.	\\
@@ -316,7 +331,11 @@ Size in Kbytes	&	Fraction	&	Data Product Name	\\
 76,703.25 & 1.0 & Total\\
 \end{dunetable}
 
-\begin{dunetable}[Compressed size for Reconstructed data - 7 GeV beam event]{rrl}{tab:comp-raw-data-size}{Compressed size for Reconstructed data - 7 GeV beam events}
+\begin{dunetable}
+[Compressed size for Reconstructed data - 7 GeV beam event]
+{rrl}
+{tab:comp-reco-data-size}
+{Compressed size for Reconstructed data - 7 GeV beam events}
 Size in kBytes&	Fraction&		Data Product Name	\\
 4,218,536	&	0.185	&	recob::Wires\_digitwire\_\_DecoderandReco.	\\
 2,236,432	&	0.098	&	recob::Hits\_hitpdune\_\_DecoderandReco.	\\
@@ -343,21 +362,18 @@ Size in kBytes&	Fraction&		Data Product Name	\\
 22,759,597&	1.000		&Total	\\
 \end{dunetable}
 
-\begin{dunetable}[Reconstruction times for 7 GeV beam event]{lrr}{tab:comp-raw-data-size}{Reconstruction times for 7 GeV beam events}
-Processing step  	&	 Avg CPUtime(sec) 	\\			
-\hline			
-Fullevent	&	503.7	\\
-\hline			
+\begin{dunetable}[Algorithm timing for 7 GeV beam event]{lrr}{tab:comp-reco-data-time}{Algorithm timing for 7 GeV beam events.  Smaller processes not shown for clarity. A 10 event job used 2.7 GB of memory to do this reconstruction.}
+Processing step&Average CPU time, sec\\									
 source:RootInput(read)	&	0.2	\\
 %decode:timingrawdecoder:TimingRawDecoder	&	0.0	\\
-decode:ssprawdecoder:SSPRawDecoder	&	0.3	\\
+%decode:ssprawdecoder:SSPRawDecoder	&	0.3	\\
 decode:tpcrawdecoder:PDSPTPCRawDecoder	&	15.9	\\
 %decode:crtrawdecoder:CRTRawDecoder	&	0.0	\\
 %decode:ctbrawdecoder:PDSPCTBRawDecoder	&	0.0	\\
 decode:beamevent:BeamEvent	&	0.7	\\
 decode:caldata:DataPrepModule	&	89.1	\\
 decode:wclsdatasp:WireCellToolkit	&	113.3	\\
-decode:digitwire:EventButcher	&	0.8	\\
+%decode:digitwire:EventButcher	&	0.8	\\
 decode:gaushit:GausHitFinder	&	20.7	\\
 decode:reco3d:SpacePointSolver	&	18.0	\\
 decode:hitpdune:DisambigFromSpacePoints	&	23.0	\\
@@ -366,7 +382,7 @@ decode:pandora:StandardPandora	&	93.2	\\
 decode:pandoraTrack:LArPandoraTrackCreation	&	12.3	\\
 decode:pandoraShower:LArPandoraShowerCreation	&	5.2	\\
 decode:pandoracalo:Calorimetry	&	5.8	\\
-decode:pandorapid:Chi2ParticleID	&	0.0	\\
+%decode:pandorapid:Chi2ParticleID	&	0.0	\\
 decode:pmtrack:PMAlgTrackMaker	&	142.0	\\
 decode:pmtrackcalo:Calorimetry	&	6.1	\\
 %decode:pmtrackpid:Chi2ParticleID	&	0.0	\\
@@ -376,17 +392,16 @@ decode:pmtrackcalo:Calorimetry	&	6.1	\\
 %decode:opflashExternal:OpFlashFinder	&	0.0	\\
 %[art]:TriggerResults:TriggerResultInserter	&	0.0	\\
 %end_path:out1:RootOutput	&	0.0	\\
-:out1:RootOutput(write)	&	3.3	\\\end{dunetable}
+cout1:RootOutput(write)	&	3.3\\	
+Total&	503.7\\
+\end{dunetable}
 
 
-\subsection{Further reconstruction}
-The downstream pattern recognition steps starting with \dword{roi} are described further in the Tools and Methods chapter of the Physics Volume.  For the first reconstruction pass in November, the main algorithms used the Pandora framework \cite{Acciarri:2017hat}.
-Full reconstruction of ProtoDUNE-SP interactions, with beam particles and of order 20-40 cosmic rays per readout window took 600-1200 sec/event.
 
 
 
  
-  Add table showing CPU utilization from end of job
+
 
 
 
