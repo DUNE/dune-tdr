@@ -49,12 +49,13 @@
 %   \textbf{Do} describe the lexicographical convention used to demark
 %   shared sections (this needs coordination with other chapters in the
 %   same boat).}
-The \dword{fd} \dword{daq} system provides
+The \dword{fd} \dword{daq} system is responsible for receiving,
+processing, and recording data from the \dword{dune} \dword{fd}. In doing so, it provides
 timing and synchronization for all \dwords{detmodule} and
 subdetectors; receives, synchronizes, compresses, and buffers streaming
 data from the subdetectors; extracts information from the data at a
 local level to subsequently make local, module, and cross-module data
-selection decisions; builds  events %``events''
+selection decisions; builds event records %``events''
  from selected space-time volumes 
 and relays them to permanent storage; and carries out local data
 reduction and filtering of the data as needed.
@@ -81,20 +82,23 @@ unique to the \dword{detmodule} covered in this TDR volume;
 these sections are %identified 
 identifiable by their use of module-specific terms.
 
-The chapter begins with requirements 
-for the \dword{daq} 
-and interfaces between it and other \dword{dune} systems. 
-Subsequently, Section~\ref{sec:fd-daq:design} comprises the bulk of this chapter and
-describes the design of the \dword{fd} \dword{daq}.
-Section~\ref{sec:fd-daq:protodune} describes the 
-\dword{protodune} system which has served as a demonstrator of several
-key aspects of the design, and serves as a platform for further design
-development. 
-Finally, the chapter finishes with details on management of the
-\dword{daq} project describing the completion of the design,
-production, and installation of the system, as well as cost, schedule and
+The chapter begins with an overview of the \dword{daq} design,
+including requirements that the design must meet, and specification of
+interfaces between the \dword{daq}  and other \dword{dune} \dword{fd} systems. 
+Subsequently, Section~\ref{sec:fd-daq:design}, which comprises the
+bulk of this chapter, describes the design of the \dword{fd}
+\dword{daq} in greater detail.
+Section~\ref{sec:fd-daq:protodune} describes design validation efforts
+to date, and future design development and validation plans. At the
+center of these efforts is the 
+\dword{protodune} \dword{daq} system, which has served as a demonstrator of several
+key aspects of the  \dword{dune}  \dword{daq}  design, and continues to serve as a
+platform for further design development and validation. 
+Finally, the chapter finishes with two sections providing details on
+the management of the
+\dword{daq} project, including schedule to completion of the design, 
+production, and installation of the system, as well as cost, resources, and
 safety considerations.
-
 
 \section{Design Overview}
 %\section{Requirements}
@@ -103,27 +107,37 @@ safety considerations.
 
 %\metainfo{One sentence introducing the contents of this section.}
 
-The \dword{dune} \dword{fd} \dword{daq} system must meet the
-\dword{dune} top-level as well as \dword{daq}-level requirements. These
-are summarized in Table~\ref{tab:specs:SP-DAQ}.
-The system is designed to meet these requirements and does so by
-following key specifications provided in Table~\ref{tab:specs:SP-DAQ}
+An overview of the \dword{dune} \dword{fd} \dword{daq} system design is
+provided in Fig.~\ref{fig:fd-daq:designoverview}. The system is
+physically located at the \dword{fd} site, and occupies space and
+power both in the central utility cavern (CUC) and the on-surface DAQ
+room.  Specifically, the front-end part of the system, which is responsible for
+raw detector data reception and pre-processing, lives
+underground in the CUC, while the back-end part of the system, which is responsible for
+event-building and post-event-building processing, lives on surface. Data selection, which includes
+data reduction, triggering, and filtering, spans both underground and
+above-ground physical spaces. 
+
+The \dword{dune} \dword{fd} \dword{daq} system is designed to meet the
+\dword{dune} top-level as well as \dword{daq}-level requirements
+summarized in Table~\ref{tab:specs:SP-DAQ}, following also the key
+specifications provided in Table~\ref{tab:specs:SP-DAQ} 
 and described in Section~\ref{sec:fd-daq:specifications}. 
 
 
-DUNE has three main physics drivers: neutrino \dword{cpv} and related
+The DUNE Far Detector has three main physics drivers: neutrino \dword{cpv} and related
 long baseline oscillation studies using the high intensity beam provided
 by \fnal, off-beam measurements of atmospheric neutrinos and searches
 for rare processes such decays allowed through baryon number violation,
 and detection of \dfirst{snb} occurring within our galaxy.
-The \dword{dune} \dword{fd} modules in the current design implement two
-detection technologies: \dfirst{tpc} and \dfirst{pds}.
 
-The two technologies access the physics %each 
+The \dword{dune} \dword{fd} modules in the current design implement two
+active detector technologies: \dfirst{tpc} and \dfirst{pds}. The two technologies access the physics %each 
 with very different readout
 time scales.
 Charge measurement by the \dword{tpc} of an ionizing event requires a
-nominal recording of data over a time window of \SIrange{5}{10}{\milli\second}
+nominal recording of data over a time window of
+\SIrange{5}{10}{\milli\second},
 %in order 
 to collect information from the full detector volume. 
 This time scale is determined by the ionization electron drift speed in
@@ -133,7 +147,7 @@ occurs and is detected over a timescale of a multiple nanoseconds for
 any given event and/or subsequent subevent process. 
  
 Much of the \dword{daq} design incorporates experience from earlier
-\dword{lartpc} experiments like ICARUS and \microboone,
+\dword{lartpc} experiments like ICARUS, \microboone, and
 \dword{protodune}, and other long-baseline experiments like T2K, \nova,
 and MINOS. 
 Unlike these past neutrino experiments, that either observe a
