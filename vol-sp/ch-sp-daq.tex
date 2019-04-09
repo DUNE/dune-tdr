@@ -60,7 +60,6 @@ selection decisions; builds event records %``events''
 and relays them to permanent storage; and carries out local data
 reduction and filtering of the data as needed.
 
-
 This chapter provides a description for the design of the \dword{dune}
 \dword{fd} \dword{daq} system developed by the \dword{dune} \dword{fd}
 \dword{daq} consortium. 
@@ -109,12 +108,13 @@ safety considerations.
 
 An overview of the \dword{dune} \dword{fd} \dword{daq} system design is
 provided in Fig.~\ref{fig:fd-daq:designoverview}. The system is
-physically located at the \dword{fd} site, and occupies space and
+physically located at the \dword{fd} site, and it is split between the
+4850 ft level and surface at SURF. Specifically, it occupies space and
 power both in the central utility cavern (CUC) and the on-surface DAQ
-room.  Specifically, the front-end part of the system, which is responsible for
+room.  The front-end part of the system, which is responsible for
 raw detector data reception and pre-processing, lives
 underground in the CUC, while the back-end part of the system, which is responsible for
-event-building and post-event-building processing, lives on surface. Data selection, which includes
+event-building and post-event-building processing, lives on the surface. Data selection, which includes
 data reduction, triggering, and filtering, spans both underground and
 above-ground physical spaces. 
 
@@ -122,13 +122,12 @@ above-ground physical spaces.
   \includegraphics[width=0.8\textwidth]{daq-overview.pdf}
 \end{dunefigure}
 
-
 \subsection{Requirements and Specifications}
 \label{sec:fd-daq:requirements}
 
 The \dword{dune} \dword{fd} \dword{daq} system is designed to meet the
 \dword{dune} top-level as well as \dword{daq}-level requirements
-summarized in Table~\ref{tab:specs:SP-DAQ}, following also the key
+summarized in Table~\ref{tab:specs:SP-DAQ}, following the 
 specifications provided in the same table.
 
 The DUNE Far Detector has three main physics drivers: neutrino \dword{cpv} and related
@@ -139,11 +138,29 @@ and detection of \dfirst{snb} occurring within our galaxy. The
 \dword{dune} \dword{fd} \dword{daq} system must facilitate data
 readout for delivering on these main physics drivers.
 
+The DAQ is designed as a single, scalable system which can service
+all FD modules. It is also designed on the principle that the system should be
+able to record and store full detector data with zero dead time; and
+that it should be evolutionary, taking advantage of the staged
+construction for the DUNE FD, and thus beginning very conservatively
+for the first DUNE FD module, and agressively reducing the design
+conservatism as further experience is gained with detector
+operations. At the same time, it is designed to preserve the possibility of additional capacity
+as required.
+
+There are three key challenges for the DUNE FD DAQ system: First, the system must accommodate
+a long (``permanent'') commissioning state for the far detector, and
+must therefore be a fully ``partitionable'' system. Secondly, the \dword{snb}  physics
+requirements necessitate large buffering in the upstream DAQ and low fake
+supernova burst trigger rates. Finally, the difficult-to-access
+location requires that the DAQ operates with high reliability and fully remote operation.
+
 The \dword{dune} \dword{fd} modules employ two
 active detector components: \dfirst{tpc} and \dfirst{pds}. The two components access the physics %each 
 by sensing and collecting signals associated with very different 
 sensing time scales.
-Ionization charge measurement by the \dword{tpc} requires a
+Ionization charge measurement by the \dword{tpc} for any given
+localized activity in the detector requires a
 nominal recording of data over a time window of order 
 \SIrange{1}{10}{\milli\second}. 
 This time scale is determined by the ionization electron drift speed in
@@ -152,67 +169,77 @@ On the other hand, the \dword{pds} measures argon scintillation light emission, 
 occurs and is detected over a timescale of multiple nanoseconds for
 any given event and/or subsequent subevent process. 
  
-Much of the \dword{daq} design incorporates experience from earlier
-\dword{lartpc} experiments including ICARUS, \microboone, and
-\dword{protodune}, and other long-baseline neutrino experiments including T2K, \nova,
-and MINOS. 
-Unlike these past neutrino experiments, that either observe a
-high occupancy of neutrino events or  can trigger on neutrino beam
-spill timing while still producing data at a manageable rate, the
-\dword{dune} \dword{fd} \dword{daq} must largely rely on data-driven
-self-triggering in order to record all physics data. 
-Still, the \dword{daq} expects to receive beam spill time information from
-\fnal either promptly while the corresponding data still resides in
-buffers or through a predictive mechanism. 
-However, due to the rarity of a beam neutrino interacting in the
-\dword{fd} and the high frequency of beam spills, triggering solely on
-this information would lead to a prohibitive output data rate.
-Instead, the high-energy activity expected from interactions of beam neutrinos
-(as well as atmospheric neutrinos and from any nucleon decays) in the
-\dword{dune} \dword{fd} will provide robust \dword{pds} and \dword{tpc}
-signatures.
-A trigger decision that captures these signatures may be formed in a
-straightforward and data-driven manner soon after the corresponding data
-is acquired from the detector electronics and enters the \dword{daq} buffers.
+%Much of the \dword{daq} design incorporates experience from earlier
+%\dword{lartpc} experiments including ICARUS, \microboone, and
+%\dword{protodune}, and other long-baseline neutrino experiments including T2K, \nova,
+%and MINOS. 
 
-A unique 
-challenge for DUNE is to self-trigger on \dword{snb} activity.
-This challenge is two-fold. 
+%Unlike these past neutrino experiments, that either observe a
+%high occupancy of neutrino events or  can trigger on neutrino beam
+%spill timing while still producing data at a manageable rate, the
+%\dword{dune} \dword{fd} \dword{daq} must largely rely on data-driven
+%self-triggering in order to record all physics data. 
+%Still, the \dword{daq} expects to receive beam spill time information from
+%\fnal either promptly while the corresponding data still resides in
+%buffers or through a predictive mechanism. 
+%However, due to the rarity of a beam neutrino interacting in the
+%\dword{fd} and the high frequency of beam spills, triggering solely on
+%this information would lead to a prohibitive output data rate.
+%Instead, the high-energy activity expected from interactions of beam neutrinos
+%(as well as atmospheric neutrinos and from any nucleon decays) in the
+%\dword{dune} \dword{fd} will provide robust \dword{pds} and \dword{tpc}
+%signatures.
+%A trigger decision that captures these signatures may be formed in a
+%straightforward and data-driven manner soon after the corresponding data
+%is acquired from the detector electronics and enters the \dword{daq} buffers.
+
+Self-triggering on \dword{snb} activity is a unique challenge for the
+DUNE FD, and an aspect of the design which has never been demonstrated
+in a LArTPC. The challenge with \dword{snb} triggering is two-fold. 
 First, the activity of the individual \dword{snb} neutrino interactions
-is expected to be of relatively low energy ($<\SI{100}{MeV}$) and the
-ensemble of \bigo{100} events is expected to occur sparsely over the
-entire detector and over an extended period of \bigo{10}\si{s}. 
-Second, to assure high efficiency in collecting \dword{snb} interactions
-that individually are below the nominal trigger threshold, data from
+is expected to be of relatively low energy ($\SIrange{10}{30}{MeV}$),
+often indistinguishable from radiological background activity in the
+detector.  Triggering on an ensemble of \bigo{100} events expected on
+average in the case of a galactic supernova burst is therefore
+advantageous; however, since this ensemble of events is expected to occur sparsely over the
+entire detector and over an extended period of \bigo{10}\si{s},
+sufficient buffering capability must be designed into the system. 
+Furthermore, to assure high efficiency in collecting \dword{snb} interactions
+that individually are below individual interaction activity threshold, data from
 all channels will be recorded over an extended and contiguous period of
 time \bigo{100}\si{s} around every \dword{snb} trigger.
 
-Whether it is to capture localized high-energy activity or the extended,
-sparse \dword{snb} activity, or indeed unexpected activity of yet unknown
-origin, the data-driven trigger decisions must be performed by consuming
-a large portion of the full, unbiased data stream from the detector. 
-Based on that processing, almost all of 
-the data over large periods of time must be
-positively categorized as being consistent with known, well understood
-and unwanted activity (i.e., ``just noise''). 
-The decision to record all data that is not so categorized must be
-promptly executed while that data is still retained in buffers.
-An extensive R\&D program informed by several years of \microboone data
-and \dword{daq} developments, as well as ongoing development efforts on
-\dword{protodune}, has motivated the adopted solution described later in this chapter. 
+%Whether it is to capture localized high-energy activity or the extended,
+%sparse \dword{snb} activity, or indeed unexpected activity of yet unknown
+%origin, the data-driven trigger decisions must be performed by consuming
+%a large portion of the full, unbiased data stream from the detector. 
+%Based on that processing, almost all of 
+%the data over large periods of time must be
+%positively categorized as being consistent with known, well understood
+%and unwanted activity (i.e., ``just noise''). 
+%The decision to record all data that is not so categorized must be
+%promptly executed while that data is still retained in buffers.
+%An extensive R\&D program informed by several years of \microboone data
+%and \dword{daq} developments, as well as ongoing development efforts on
+%\dword{protodune}, has motivated the adopted solution described later in this chapter. 
 
-\subsection{Requirements and Specifications}
-\label{sec:fd-daq:specifications}
+%\subsection{Requirements and Specifications}
+%\label{sec:fd-daq:specifications}
 %\fixme{single-phase module}
 
-Within %the 
-this adopted solution, the \dword{daq}-level requirements are
+The \dword{daq}-level requirements are
 imposed to ensure that the 
 system %is capable of 
 can record all necessary information for offline 
 analysis of data that is associated with on- and off-beam physics events, as directed
 by the \dword{dune} physics mission, and with minimal compromise to
 \dword{dune}'s physics sensitivity.
+
+The bulk of processing and buffering of raw detector data is
+done underground, in the front-end part of the system, in order to
+minimize data traffic to surface. Power, cooling, and space
+constraints in the CUC are limited to 450 kW total for all four FD
+modules, and 52 racks.
 
 %\fixme{The following are notes that need integration.}
 %  \item Front-end Buffer subsystem shall provide sufficient continuous storage of the full detector data flow to allow for the delay needed by the Data Selection subsystem to form a trigger decision, for the resulting trigger command to be executed by the \dword{daqbes} and for the selected data to be received by the back-end.
@@ -455,7 +482,7 @@ Table~\ref{tab:sp-daq:parameters} summarizes %all
 the important parameters
 driving the \dword{daq} design. These parameters set the scale of
 data buffering, processing, and transferring resources which must be
-built into the design of each \dword{fd} \dword{module}. %\fixme{This sentence simply repeats the table title. A little more discussion of the trends revealed in the table would help here, but obviously, that must wait for the values.}
+built into the design of each \dword{fd} module. %\fixme{This sentence simply repeats the table title. A little more discussion of the trends revealed in the table would help here, but obviously, that must wait for the values.}
 \fixme{Table should use standard latex for numbers and units. Anne}
 %\metainfo{Include a table which lists all important parameters driving
 %  the design.  Sampling rate and resolution, channel count}
@@ -483,7 +510,8 @@ Full size of TPC Extended Event Record & 85 TB\\  \colhline
 \label{sec:sp-daq:interfaces}
 
 The \dword{daq} system scope begins at the optical fibers streaming raw digital data from the detector active components
-(TPC and PDS), and ends at a wide area network (WAN) interface that
+(TPC and PDS), and is thus electically decoupled from the detector
+cryostat, and ends at a wide area network (WAN) interface that
 distributes the data from on site at \surf to offline centers off
 site. The \dword{daq} also provides common computing and network services for
 other \dword{dune} systems, although slow control and safety functions
