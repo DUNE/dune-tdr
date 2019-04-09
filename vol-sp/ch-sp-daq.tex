@@ -118,43 +118,43 @@ event-building and post-event-building processing, lives on surface. Data select
 data reduction, triggering, and filtering, spans both underground and
 above-ground physical spaces. 
 
-\begin{dunefigure}{fig:daq-conceptual-overview}{\dword{daq} Design Overview}
+\begin{dunefigure}{fig:daq-designoverview}{\dword{daq} Design Overview}
   \includegraphics[width=0.8\textwidth]{daq-overview.pdf}
 \end{dunefigure}
+
+
+\subsection{Requirements and Specifications}
+\label{sec:fd-daq:requirements}
 
 The \dword{dune} \dword{fd} \dword{daq} system is designed to meet the
 \dword{dune} top-level as well as \dword{daq}-level requirements
 summarized in Table~\ref{tab:specs:SP-DAQ}, following also the key
-specifications provided in Table~\ref{tab:specs:SP-DAQ} 
-and described in Section~\ref{sec:fd-daq:specifications}. 
-
-\subsection{Requirements}
-\label{sec:fd-daq:requirements}
+specifications provided in the same table.
 
 The DUNE Far Detector has three main physics drivers: neutrino \dword{cpv} and related
 long baseline oscillation studies using the high intensity beam provided
 by \fnal, off-beam measurements of atmospheric neutrinos and searches
 for rare processes such baryon-number-violating decays,
-and detection of \dfirst{snb} occurring within our galaxy.
+and detection of \dfirst{snb} occurring within our galaxy. The
+\dword{dune} \dword{fd} \dword{daq} system must facilitate data
+readout for delivering on these main physics drivers.
 
 The \dword{dune} \dword{fd} modules employ two
 active detector components: \dfirst{tpc} and \dfirst{pds}. The two components access the physics %each 
 by sensing and collecting signals associated with very different 
 sensing time scales.
-Ionization charge measurement by the \dword{tpc} of any ionizing particle requires a
-nominal recording of data over a time window of
-\SIrange{5}{10}{\milli\second},
-%in order 
-to collect information from the full detector volume. 
+Ionization charge measurement by the \dword{tpc} requires a
+nominal recording of data over a time window of order 
+\SIrange{1}{10}{\milli\second}. 
 This time scale is determined by the ionization electron drift speed in
 \lar and the detector dimension along the drift direction.
-The \dword{pds} measures argon scintillation light emission, which
-occurs and is detected over a timescale of a multiple nanoseconds for
+On the other hand, the \dword{pds} measures argon scintillation light emission, which
+occurs and is detected over a timescale of multiple nanoseconds for
 any given event and/or subsequent subevent process. 
  
 Much of the \dword{daq} design incorporates experience from earlier
-\dword{lartpc} experiments like ICARUS, \microboone, and
-\dword{protodune}, and other long-baseline experiments like T2K, \nova,
+\dword{lartpc} experiments including ICARUS, \microboone, and
+\dword{protodune}, and other long-baseline neutrino experiments including T2K, \nova,
 and MINOS. 
 Unlike these past neutrino experiments, that either observe a
 high occupancy of neutrino events or  can trigger on neutrino beam
@@ -199,7 +199,7 @@ The decision to record all data that is not so categorized must be
 promptly executed while that data is still retained in buffers.
 An extensive R\&D program informed by several years of \microboone data
 and \dword{daq} developments, as well as ongoing development efforts on
-\dword{protodune}, has led to a solution. %the adopted solution described later in this chapter. 
+\dword{protodune}, has motivated the adopted solution described later in this chapter. 
 
 \subsection{Requirements and Specifications}
 \label{sec:fd-daq:specifications}
@@ -453,7 +453,9 @@ furthermore facilitate online monitoring of the detector and  of itself. %the \d
 
 Table~\ref{tab:sp-daq:parameters} summarizes %all 
 the important parameters
-driving the \dword{daq} design.\fixme{This sentence simply repeats the table title. A little more discussion of the trends revealed in the table would help here, but obviously, that must wait for the values.}
+driving the \dword{daq} design. These parameters set the scale of
+data buffering, processing, and transferring resources which must be
+built into the design of each \dword{fd} \dword{module}. %\fixme{This sentence simply repeats the table title. A little more discussion of the trends revealed in the table would help here, but obviously, that must wait for the values.}
 \fixme{Table should use standard latex for numbers and units. Anne}
 %\metainfo{Include a table which lists all important parameters driving
 %  the design.  Sampling rate and resolution, channel count}
@@ -470,9 +472,10 @@ TPC Induction Channel Count per Subdetector & 1,600\\ \colhline
 PDS Channel Count per Module & TBD\\ \colhline
 TPC \dword{adc} Sampling Rate & 2 MHz\\ \colhline
 TPC \dword{adc} Dynamic Rate& 12 bits\\ \colhline
-Readout Record Window & 5.4 ms\\  \colhline
-Supernova Burst Readout Record Window &  100 s\\  \colhline
-Full size of Readout Record & 6.22 GB\\  \colhline
+Localized Event Record Window & 5.4 ms\\  \colhline
+Extended Event Record Window &  100 s\\  \colhline
+Full size of TPC Localized Event Record & 6.22 GB\\  \colhline
+Full size of TPC Extended Event Record & 85 TB\\  \colhline
 \end{dunetable}
 
 
