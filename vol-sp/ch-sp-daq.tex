@@ -127,8 +127,18 @@ above-ground physical spaces.
 
 The \dword{dune} \dword{fd} \dword{daq} system is designed to meet the
 \dword{dune} top-level as well as \dword{daq}-level requirements
-summarized in Table~\ref{tab:specs:SP-DAQ}, following the 
-specifications provided in the same table.
+summarized in Table~\ref{tab:specs:SP-DAQ}. The \dword{daq}-level requirements are
+imposed to ensure that the 
+system %is capable of 
+can record all necessary information for offline 
+analysis of data that is associated with on- and off-beam physics events, as directed
+by the \dword{dune} physics mission, and with minimal compromise to
+\dword{dune}'s physics sensitivity. The requirements must be met by following the 
+specifications provided in the same table. Those specifications are
+associated with trigger functionality, readout considerations,
+and operations considerations, and are motivated in the following subsections.
+
+\subsubsection{How Physics Drives DAQ Design}
 
 The DUNE Far Detector has three main physics drivers: neutrino \dword{cpv} and related
 long baseline oscillation studies using the high intensity beam provided
@@ -137,6 +147,40 @@ for rare processes such baryon-number-violating decays,
 and detection of \dfirst{snb} occurring within our galaxy. The
 \dword{dune} \dword{fd} \dword{daq} system must facilitate data
 readout for delivering on these main physics drivers.
+
+The \dword{dune} \dword{fd} modules employ two
+active detector components: \dfirst{tpc} and \dfirst{pds}. The two components access the physics %each 
+by sensing and collecting signals associated with very different 
+sensing time scales.
+Ionization charge measurement by the \dword{tpc} for any given
+localized activity in the detector requires a
+nominal recording of data over a time window of order 
+\SIrange{1}{10}{\milli\second}. 
+This time scale is determined by the ionization electron drift speed in
+\lar and the detector dimension along the drift direction.
+On the other hand, the \dword{pds} measures argon scintillation light emission, which
+occurs and is detected over a timescale of multiple nanoseconds for
+any given event and/or subsequent subevent process. 
+ 
+
+Self-triggering on \dword{snb} activity is a unique challenge for the
+DUNE FD, and an aspect of the design which has never been demonstrated
+in a LArTPC. The challenge with \dword{snb} triggering is two-fold. 
+First, the activity of the individual \dword{snb} neutrino interactions
+is expected to be of relatively low energy ($\SIrange{10}{30}{MeV}$),
+often indistinguishable from radiological background activity in the
+detector.  Triggering on an ensemble of \bigo{100} events expected on
+average in the case of a galactic supernova burst is therefore
+advantageous; however, since this ensemble of events is expected to occur sparsely over the
+entire detector and over an extended period of \bigo{10}\si{s},
+sufficient buffering capability must be designed into the system. 
+Furthermore, to assure high efficiency in collecting \dword{snb} interactions
+that individually are below individual interaction activity threshold, data from
+all channels will be recorded over an extended and contiguous period of
+time \bigo{100}\si{s} around every \dword{snb} trigger.
+
+
+\subsubsection{Design Practicalities}
 
 The DAQ is designed as a single, scalable system which can service
 all FD modules. It is also designed on the principle that the system should be
@@ -155,20 +199,7 @@ requirements necessitate large buffering in the upstream DAQ and low fake
 supernova burst trigger rates. Finally, the difficult-to-access
 location requires that the DAQ operates with high reliability and fully remote operation.
 
-The \dword{dune} \dword{fd} modules employ two
-active detector components: \dfirst{tpc} and \dfirst{pds}. The two components access the physics %each 
-by sensing and collecting signals associated with very different 
-sensing time scales.
-Ionization charge measurement by the \dword{tpc} for any given
-localized activity in the detector requires a
-nominal recording of data over a time window of order 
-\SIrange{1}{10}{\milli\second}. 
-This time scale is determined by the ionization electron drift speed in
-\lar and the detector dimension along the drift direction.
-On the other hand, the \dword{pds} measures argon scintillation light emission, which
-occurs and is detected over a timescale of multiple nanoseconds for
-any given event and/or subsequent subevent process. 
- 
+
 %Much of the \dword{daq} design incorporates experience from earlier
 %\dword{lartpc} experiments including ICARUS, \microboone, and
 %\dword{protodune}, and other long-baseline neutrino experiments including T2K, \nova,
@@ -193,22 +224,6 @@ any given event and/or subsequent subevent process.
 %straightforward and data-driven manner soon after the corresponding data
 %is acquired from the detector electronics and enters the \dword{daq} buffers.
 
-Self-triggering on \dword{snb} activity is a unique challenge for the
-DUNE FD, and an aspect of the design which has never been demonstrated
-in a LArTPC. The challenge with \dword{snb} triggering is two-fold. 
-First, the activity of the individual \dword{snb} neutrino interactions
-is expected to be of relatively low energy ($\SIrange{10}{30}{MeV}$),
-often indistinguishable from radiological background activity in the
-detector.  Triggering on an ensemble of \bigo{100} events expected on
-average in the case of a galactic supernova burst is therefore
-advantageous; however, since this ensemble of events is expected to occur sparsely over the
-entire detector and over an extended period of \bigo{10}\si{s},
-sufficient buffering capability must be designed into the system. 
-Furthermore, to assure high efficiency in collecting \dword{snb} interactions
-that individually are below individual interaction activity threshold, data from
-all channels will be recorded over an extended and contiguous period of
-time \bigo{100}\si{s} around every \dword{snb} trigger.
-
 %Whether it is to capture localized high-energy activity or the extended,
 %sparse \dword{snb} activity, or indeed unexpected activity of yet unknown
 %origin, the data-driven trigger decisions must be performed by consuming
@@ -227,13 +242,6 @@ time \bigo{100}\si{s} around every \dword{snb} trigger.
 %\label{sec:fd-daq:specifications}
 %\fixme{single-phase module}
 
-The \dword{daq}-level requirements are
-imposed to ensure that the 
-system %is capable of 
-can record all necessary information for offline 
-analysis of data that is associated with on- and off-beam physics events, as directed
-by the \dword{dune} physics mission, and with minimal compromise to
-\dword{dune}'s physics sensitivity.
 
 The bulk of processing and buffering of raw detector data is
 done underground, in the front-end part of the system, in order to
@@ -252,10 +260,6 @@ modules, and 52 racks.
 
 %\metainfo{One sentence introducing the contents of this section.}
 
-To ensure the \dword{fd}-level requirements %above 
-are met, several key specifications must be defined for the \dword{daq}
-design, associated with trigger functionality, readout considerations,
-and operations considerations.  These are listed in Table~\ref{tab:specs:SP-DAQ}.
 
 \input{generated/req-longtable-SP-DAQ} 
 
