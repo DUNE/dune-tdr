@@ -523,62 +523,31 @@ This is further described in Section~\ref{sec:daq:partition-lifetime}.
 \label{sec:daq:design-ipc}
 \fixme{module-generic}
 
-The \dword{daq} must transfer data between external sources and elements inside the \dword{daq}. 
-These data are characterized using a variety of schema, latency, and throughput. 
-The system that provides for such transfers is generally termed \dfirst{ipc}.
-An \dword{ipc} system consists of the following elements:
-a set of message types, their data formats and schema,
-a high-level application protocol that governs the exchange of its messages,
-a set of supported message transport mechanisms, and
-behavioral expectations for the participants in the message exchange. 
+The DUNE FD DAQ is an asynchronous, distributed data processing system. 
+As such, it consists of loosely connected elements.
+The elements or ``nodes'' are connected through forms of \dfirst{ipc}.
+Connections include:
 
+\begin{itemize}
+\item CCM elements sending control and configuration messages to all DAQ nodes and receiving from them messages containing monitoring information.  (Section~\ref{sec:fd-daq:design-run-control})
+\item Passing trigger information through the Data Selection system (Section~\ref{sec:sp-daq:design-selection-algs})
+\item Query based readout of upstream DAQ buffers. (Section~\ref{sec:daq:design-readout})
+\item Delivery of trigger commands to the back-end and distributed back-end processing prior to writing final output. (Section~\ref{sec:fd-daq:design-backend})
+\end{itemize}
 
-For the most part, the \dword{fd} \dword{daq} will require that supported transport mechanisms be \textit{reliable}, where 
-reliable means that when one endpoint sends a message,
-% that it shall be received by 
-the other endpoint shall receive it even in the case of temporary loss of network connectivity or %possibly 
-temporary termination of the receiving endpoint.
-The acceptable duration the broken connectivity is chosen based on the particular protocol in use.
-Related to reliability, an \dword{ipc}  system may also provide behavior such as the \dword{daqdispre} function described in Section~\ref{sec:fd-daq:design-run-control}.
+The solutions for each form of IPC are currently being evaluated. 
+Certain general requirements apply.
+For the most part, they must support transport mechanisms that are \textit{reliable} and \textit{robust}. 
+Reliable that messages sent must be received fully unless critical failures of endpoints or the transport link occurs.  Robust means that some classes of failures (temporary network congestion or temporary endpoint failure) that might otherwise interrupt communications may be overcome.
+The acceptable duration of failure is chosen based on the particular protocol in use.
+Related to reliability, the \dword{ipc}  system used by CCM will provide \dword{daqdispre} functionality as described in Section~\ref{sec:fd-daq:design-run-control}.
 
-By design, \dword{ipc} is a system that interconnects diverse components and thus can encompass substantial complexity. 
-%In order 
-To manage complexity and for practical reasons, the overall \dword{ipc} system is segmented into a number of \dword{ipc} domains. 
-In fact, 
-\fixme{are we trying to say ``This accommodates certain... that may require their own...? anne}
-certain \dword{daq} subsystems may require their own unique \dword{ipc} implementation.
-The \dword{daq} consortium will develop a single inter-domain \dword{ipc} system %will be developed 
-for the \dword{fd} \dword{daq} 
-%This system will 
-to provide a global \textit{lingua franca} communication between the domains. 
-Some domains will also use this \dword{ipc} for internal communications. 
-We will also develop a proxy service component %will be developed
- to translate between the \textit{lingua franca} \dword{ipc} and any domain that utilizes a unique \dword{ipc} system.
+The ZeroMQ~\cite{zeromq} smart network socket library is being evaluated for providing a basis for IPC covering CCM, Data Selection and readout queries.  
+Section~\ref{sec:fd-daq:validation} contains description of some initial validation of this approach by adding a self-triggering feature to ProtoDUNE-SP which is close to what will be required for the DUNE FD DAQ.  Also described initial prototyping efforts based on ZeroMQ of core elements required for the IPC to support CCM and readout queries.
 
-The \textit{lingua franca} \dword{ipc} will be chosen after identifying options and evaluating them in terms of their features, performance, documentation and development simplicity. 
-The selected \dword{ipc} should also provide %have an expectation of
- long-term and broad open source community support. 
-The current candidate for a basis of the \textit{lingua franca} \dword{ipc} is ZeroMQ\footnote{The reference for ZeroMQ, Zgossip, and Zyre is \url{http://zguide.zeromq.org/}.},
-which CERN~\cite{Dworak:2012mf} evaluated positively. 
-ZeroMQ provides a well established, high-performance library. 
-%It has been positively evaluated by 
-It provides the basic building blocks for an \dword{ipc} system in the form of high-level socket objects implementing a variety of socket patterns including publish/subscribe, exclusive pair, request/reply, and others. 
-Messages may %be transported across 
-traverse thread-safe queues, Unix domain, and network sockets. This greatly assists in developing elastic applications that can scale from multi-threaded, multi-process and multi-computer contexts merely by changing configuration. 
-The ZeroMQ ecosystem includes higher-level libraries providing for such important features as distributed discovery and presence (Zyre) as well as distributed configuration databases (Zgossip). 
-Finally, it provides securely authenticated and authorized connections through elliptic curve public key encryption, which will be useful for protecting some key communication against inadvertent connections. \fixme{``key communication'' = communication of the encryption key or = critical communication? anne}
+The artDAQ system~\cite{artdaq} utilizes IPC for connecting its various elements.  It is full featured and well tested in production settings including in ProtoDUNE-SP.  It is a natural choice for providing a basis for the DAQ back-end.  It will also be considered for providing a basis for the Data Selection system.  Upstream DAQ readout queries may also be implemented in terms of artDAQ elements.
 
-One example of a subsystem likely to utilize the \textit{lingua franca} \dword{ipc} directly is the hierarchical trigger processing system provided by \dword{daqdsn} (Section~\ref{sec:sp-daq:design-selection-algs}).
-An example of a domain-specific \dword{ipc} is that used by \dword{artdaq} that will be the heart of the \dword{daqbes} %as 
-described in Section~\ref{sec:fd-daq:design-backend}.
-The \dword{daq} will also interconnect with external domains. 
-For example, a two-way exchange of information will exist between \dword{daq} and \dword{cisc}, as described in Section~\ref{sec:sp-daq:interfaces-cisc}.  
-
-The \dword{daqccm} subsystem (Section~\ref{sec:daq:design:ccm:control}) must communicate with all \dword{daq} domains and in some cases directly to domain components. It is therefore % and so is 
-also expected to use the \textit{lingua franca} \dword{ipc}. 
-As described in that section, some of its functionality, particularly that of discovery, presence and zero-downtime reconfiguration, places requirements on the \dword{ipc}.
-
-\fixme{need references fo zeroMQ, zgossip zyre, artdaq. email to bv, gk sent}
+Additional R\&D and validation are needed to determine an optimal solution for each IPC domain.  This optimization process will take into account requirements unique to DUNE FD (minimal downtime, data rates, variation in detector modules, long term use, available expertise, flexibility for future developmental improvements, etc).
 
 \subsection{Control, Configuration, and Monitoring}
 \label{sec:fd-daq:design-run-control}
@@ -592,10 +561,9 @@ As described in that section, some of its functionality, particularly that of di
 %   Describe how RC will configure partitioning, initiate reconfiguration, handle ``run'' changes, node discovery, configuration, logging, startup, shutdown and failures are handled. Describe how RC will support detector electronics configuration.}
 
 The \dfirst{daqccm} subsystem, illustrated in Figure~\ref{fig:daq-ccm-subsys}, encompasses, as its name suggests, the software needed to control, configure, and monitor the rest of the \dword{daq}, as well as itself. 
-It provides a center for the highly distributed \dword{daq} components, allowing them to be treated and managed as a coherent system. 
-The \dword{daqccm} scope is high level in the sense that it does not directly handle the selection or transport of primary detector data but rather it handles (via \dword{ipc}, see Section~\ref{sec:daq:design-ipc}) the subsystem components that provide these functions.
+It provides a center for the highly distributed \dword{daq} components, allowing them to be treated and managed as a single, coherent system. 
 Figure~\ref{fig:daq-conceptual-overview} shows the central role of the \dword{daqccm} within the complete \dword{daq} system.
-The following sections describe the \dword{daqccm} subsystems. 
+The following sections describe each of the three \dword{daqccm} subsystems. 
 
 \begin{dunefigure}{fig:daq-ccm-subsys}{Main interaction among the three \dword{daqccm} subsystems.}
   \includegraphics[width=0.8\textwidth]{daq-ccm-subsys.pdf}
@@ -619,17 +587,16 @@ The segmentation applies to the portion of detector electronics that provides in
 The largest partition %would be 
 is that of one \dword{detmodule}. 
 The functional blocks in the figure represent one or more semi-autonomous agents, each with defined roles, capabilities, and access. 
-Although drawn as single blocks, they are each implemented as multiple peer agents to assure redundancy and fail-over. 
+Although drawn as single blocks, they typically are implemented as multiple peer agents to assure redundancy and fail-over. 
 The blocks at partition scope are first described.
 
 \begin{itemize}
 \item Partition naming service provides \dword{daqdispre} for the components of a \dword{daqpart}. 
   That is, it allows a component to be made aware  of the creation and continued operation of other components (discovery) or that other components have recently become unresponsive (presence). 
-  This service may be provided via distributed \dword{ipc} mechanism or by an explicit, centralized (but redundant) service.
 
 \item Run control provides a central director;  its creation is the first step in initiating a \dword{daqpart}. 
   The \dword{rc} accepts, interprets, and validates input commands that may come either from a human via a user interface, or from other blocks. 
-  The commands describe a desired state of the aggregate of all components that comprise the \dword{daqpart}. 
+  The commands describe a desired state of the \dword{daqpart}. 
   \dword{rc} may query other blocks to validate commands and then execute the commands by allocating processes through process management. 
   Once successfully allocated, their lifetimes are managed by \dword{rc}. 
   Throughout its lifetime, \dword{rc} may reconfigure an existing process, destroy it, or allocate additional processes. 
@@ -682,10 +649,9 @@ Additional UI elements will be developed as described in sections~\ref{sec:daq:d
 \label{sec:daq:design:ccm:configuration}
 
 The \dword{daq} configuration subsystem provides persistent data storage for all historic, current, and future configuration information applicable to the \dword{daq}.
-Further, it will provides a singular (but redundant) service for the allocation of unique and monotonically increasing \dwords{daqrunnum}.
-The configuration data stores are operated in an insert-only mode. 
-They do not support updating nor deleting previous records.
-Configuration subsystem  shall support storing the following types of information:
+It provides a singular point (via high-availability, redundant services) for the allocation of unique and monotonically increasing \dwords{daqrunnum}.
+The configuration data stores operate in an insert-only mode with no update nor deletion of records so as to keep a complete record of configuration actions.
+The configuration subsystem supports the following types of information:
 
 \begin{itemize}
 
@@ -703,53 +669,39 @@ Configuration subsystem  shall support storing the following types of informatio
 \end{itemize}
 
 
-All storage provided by the configuration subsystem must provide assurances availability and integrity. 
-This includes redundant storage hardware elements to allow for fail-over as well as copies made and stored off-site and with a mechanism for their restoration if catastrophic data loss occurs.
-Certain configuration stores must assure additional requirements such as those on \dword{daqrunnum} allocation mentioned above.
-
-Access to the configuration store by a client application should be through a generalized intermediate layer and not via a mechanism that ties the client application to the particular storage software technology and performance.
-
-Configuration editors and generators will be developed to produce and store data structures that are too complex for manual construction. 
-They enable expert operators to construct wholly novel configuration and produce variants based on existing structures.
+Access to configuration information is via a service that hides the choice of storage technology from any client queries.
+This interface will also be used by configuration editors utilized by human operators as well as any  generators employed by expert systems.
 
 \subsubsection{Monitoring}
 \label{sec:daq:design:ccm:monitoring}
 
 The \dword{daq} monitoring subsystem will help both humans and expert systems in detecting, diagnosing, and correcting anomalous activity, observing intended operation, and providing a historical record.
 This subsystem will accept required information produced by any \dword{daq} component (here called status).
-Status shall be stored for not less than what is required for the corresponding detector data to be validated in an initial offline data quality validation procedure.
-Status must be in a form that humans can understand with only minimal processing and delay. 
-The definition of promptness requires further study to identify the required latency. This is expected to vary depending on the type of status and its purpose.  
-The monitoring store will allow status to be retrieved based on when it was produced and the logical and physical addresses associated with its producer.
-In addition, views will be produced that can display ``live'' status as it arrives via direct feeds from individual components.
 
 The precise implementation of the production, acceptance, store, post-processing, querying, and visualization of monitored status requires additional work. 
-However, the selected \textit{linuga franca} IPC system described in Section~\ref{sec:daq:design-ipc} will be used to deliver status information to the monitoring subsystem. 
-Where this may conflict with a native IPC used by any subsystem, a proxy will be supplied. 
-
-In general, the publish-subscribe (PUB/SUB) network communication pattern will be used to deliver status. 
-The monitoring system may be further divided into a number high-level IPC protocols with message specified by their type, format and schema.
-These are categorized as
-
+However, a publish-subscribe (PUB/SUB) network communication pattern is expected to be adopted for transport of monitoring messages. 
+This will decouple production and consumption and facilitate development of a variety of status viewers, expert systems, debugging tools, etc. 
+The types of messages include but are not limited to the following:
 
 \begin{itemize}
-\item Common portion of messages include message type and instance identifier (count), a PUB/SUB topic, sender, the associated detector data time the recent host computer time.  Specific protocols extend this basis by providing additional payload to their messages, as described in the following items.
+\item Common to all will be a ``header'' holding a message type indicator, a sender address and the associated detector data time and the recent host computer time.
  
-\item Logging messages add a an integer determining subjective importance (e.g., enumerating categories like debug, info, warning, error, fatal) and a succinct, human-readable information string explaining what led to the occurrence.
+\item Logging messages add an importance label (e.g., debug, info, warning, error) and a succinct, human-readable information string providing an explanation of what occurred.
   
-\item Metrics provide structured data carrying specific information about predefined aspects of the sender. 
-  This is similar to logging, but the messages support automated consumption by expert systems.  
+\item Metrics will provide structured data carrying specific information about predefined aspects of the sender. 
+  This is similar to logging, but the messages support automated consumption and reaction by expert systems.  
 
-\item Quality messages summarize information derived from the detector data (e.g., waveforms) or its metadata (e.g., timestamps, error codes) while that data is ``in flight'' through the \dword{daq}.
+\item Quality messages summarize information derived from the detector data (e.g., from waveforms) or its metadata (e.g., timestamps, error codes) while that data is ``in flight'' through the \dword{daq}.
 
 \end{itemize}
 
-Some status feeds accepted by the monitoring subsystem may be processed so that only the resulting data is sent to permanent storage. 
-In particular, the quality stream data rate may be prohibitive of long term storage in forms that meet the query requirements given earlier. 
-This stream may be summarized into histograms or other statistical representations that will be saved.
-Such high rate streams may be then discarded or saved in some other form for archive purposes.
+In general, the DAQ will retain all status records at least long enough to allow for any offline data quality validation procedures to be performed. 
+However, some status feeds may be processed prior to storage if their raw form requires prohibitive amount of storage. 
+In particular, the quality stream data rate may be too substantial for long term storage. 
+Such streams will be summarized into histograms or other statistical representations prior to storing for longer term use.
 
-In addition to this \dword{daq} \dword{daqccm} monitoring subsystem, a separate system must be used to monitor the quality of the detector data content itself.  See Section~\ref{sec:fd-daq:design-data-quality} for the description of this data quality monitoring system.
+In addition to this \dword{daq} \dword{daqccm} monitoring subsystem, a separate system must be used to monitor in depth the quality of the detector data content itself. 
+See Section~\ref{sec:fd-daq:design-data-quality} for the description of this data quality monitoring system.
 
 \subsubsection{Partition Lifetime}
 \label{sec:daq:partition-lifetime}
@@ -831,7 +783,7 @@ If the partition remains it is reconfigured and thus begins a new run number as 
 
 
 \subsection{Detector Readout}
-\label{sec:daq:design-readout}
+\label{sec:daq:design-readout}w
 %\fixme{module-generic}
 
 The readout provides the first link in the data flow chain of the \dword{daq} system.
@@ -1381,6 +1333,7 @@ Differential delays between these two paths are resolved by a second pair of fib
 
 
 \section{Design Validation and Development Plans}
+\label{sec:fd-daq:validation}
 
 \subsection{Design Validation and Development at \dword{protodune}}
 
