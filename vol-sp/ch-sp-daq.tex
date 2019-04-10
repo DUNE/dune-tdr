@@ -202,11 +202,20 @@ requirements necessitate large buffering in the upstream DAQ and low fake
 supernova burst trigger rates. Finally, the difficult-to-access
 location requires that the DAQ operates with high reliability and fully remote operation.
 
-The bulk of processing and buffering of raw detector data is
-done underground, in the front-end part of the system, in order to
-minimize data traffic to surface. Power, cooling, and space
-constraints in the CUC are limited to 450 kW total for all four FD
-modules, and 52 racks.
+Given operational considerations, and in particular based
+on the need to minimize \dword{snb} dead time, partitioning the \dword{daq} system allows 
+a significant portion of the detector to remain physics-operational
+even if a fault interrupts data collection in
+some part of the detector. 
+This partitionable operation mode also
+permits detector development and specialized runs (e.g.,~calibrations)
+to run in parallel with normal physics data taking, for small subsets
+of the detector.
+
+Furthermore, to ensure minimal impact to overall detector live-time, the \dword{daq} system must be fully configurable,
+controllable, and operable from remote locations, with
+authentication implemented to allow exclusive control. It must %should
+furthermore facilitate online monitoring of the detector and of itself. %the \dword{daq} system in itself.
 
 With respect to trigger functionality, physics sensitivity is ensured
 by implementing a continuous storage element in the data flow
@@ -227,8 +236,9 @@ specification of less than one second. This remains to be validated
 with simulation, to ensure that high coverage (greater than 90\%) for galactic \dwords{snb} is achieved by the \dword{snb} trigger.
 
 The \dword{daq} must record all non-\dword{snb} unbiased data that span the maximum drift time window for any non-\dword{snb} trigger. 
-This time span is to be configurable at run start and
-should range between 20 microseconds and 30 milliseconds. For \dword{snb} triggers, the \dword{daq} must record unbiased data spanning up to 100 seconds.
+This time span is to be configurable at run start, is nominally
+of the order of the TPC drift time, and 
+should be configurable within a range between 20 microseconds and 30 milliseconds. For \dword{snb} triggers, the \dword{daq} must record unbiased data spanning up to 100 seconds.
 %is to be recorded. 
 The \dword{daq} system should be able to %capable of
 apply lossless compression to these records, as well as
@@ -237,7 +247,7 @@ filter them %in order
 to remove unnecessary data regions
 in an intelligent way.
 
-A programmable trigger priority scheme will ensure %be provided, and
+A programmable trigger priority scheme ensures %be provided, and
 %implemented in a way 
 that the readout for the main physics triggers
 are never or rarely inhibited so as %, in order 
@@ -257,20 +267,12 @@ prompt module-wide readout.
 Some trigger information will be indirectly propagated between \dwords{detmodule} in order to facilitate a higher-efficiency \dword{snb} triggering than would be possible at the module level alone.
 This multi-level scheme provides necessary flexibility for the
 implementation and scalability of the \dword{daq} system. 
- 
 
-Regarding operational considerations, in particular, minimizing \dword{snb} deadtime, partitioning the \dword{daq} system allows 
-a significant portion of the detector to remain physics-operational
-even if a fault interrupts data collection in
-some part. 
-This partitionable operation mode also
-permits detector development and specialized runs (e.g.,~calibrations)
-to run in parallel with normal physics data taking.
-
-Finally, to ensure minimal impact to overall detector live-time, the \dword{daq} system must be fully configurable,
-controllable, and operable from remote locations, with
-authentication implemented to allow exclusive control. It must %should
-furthermore facilitate online monitoring of the detector and of itself. %the \dword{daq} system in itself.
+The bulk of processing and buffering of raw detector data is
+done underground, in the front-end part of the system, in order to
+minimize data traffic to surface. Power, cooling, and space
+constraints in the CUC are limited to 450 kW total for all four FD
+modules, and 52 racks.
 
 \subsection{Summary of Key Parameters}
 \label{sec:sp-daq:parameters}
