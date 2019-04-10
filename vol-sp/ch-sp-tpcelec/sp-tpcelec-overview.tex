@@ -1,6 +1,20 @@
 \section{System Overview}
 \label{sec:fdsp-tpcelec-overview}
 
+The TPC electronics encompass the hardware systems necessary to 
+amplify, digitize, and transmit the \dword{tpc} ionization charge 
+signals out of the \dword{dune} \dword{sp} \dword{detmodule}. This 
+includes the cryogenic front-end electronics (amplifiers, digitizers, 
+digital controllers), power and data cabling and their cryostat 
+feedthroughs, external (non-cryogenic) digital control electronics and 
+power supplies, in addition to the system providing the bias voltage
+to the \dwords{apa}.  The TPC electronics as presented here does not 
+include the \dwords{apa}, the electronics associated with the detection 
+and recording of \dword{lar} scintillation photons, nor the \dword{daq} 
+computing systems needed to capture and record these data.
+
+\fixme{move Figure 4.1 at the beginning of the chapter ?}
+
 The main difference between the \dword{dune} \dword{sp} \dword{detmodule} 
 and previous experiments or prototypes using \dword{lar} technology is
 that for the first time all the signal processing for the readout of the
@@ -68,8 +82,8 @@ Chapter~\ref{ch:sp-execsum}, and assuming full transparency during the
 electron transport through the grid plane and the two planes of induction
 wires, as discussed in Chapter~\ref{ch:fdsp-apa}. The larger of the two numbers 
 is for \dwords{mip} close to the collection plane, and the smaller
-takes into account the charge recombination effects caused by impurities for 
-tracks close to the cathode plane. 
+takes into account the electron captuer by electronegative impurities during the electron
+drift tracks close to the cathode plane. 
 
 The \dword{dune} \dword{sp} \dword{tpc} is a unit-gain device where the 
 electrical signal is produced by the drift of the charges near the wires, 
@@ -80,8 +94,8 @@ ionization and signal multiplication. The signal induced in the \dword{dune}
 electrons drift toward the wires, and positive when they drift away from
 the wires. On the collection wires signals are unipolar (negative).
 The signal duration is of the order of microseconds, and tends to be narrower
-for the collection plane due to the increase of the \efield and
-therefore of the electron velocities. Due to the lack of amplification of 
+for the collection plane due to the enhancement of the weighting field for
+the collection wires. Due to the lack of amplification of 
 electrons inside \dword{lar}, low noise  is
 essential for the \dword{ce} to reliably extract the ionization electron signal from both the 
 collection and induction wire planes in a \dword{sp} \dword{lartpc}. 
@@ -135,7 +149,7 @@ Decreasing the noise level also increases the reach of low-energy
 physics measurements like those associated with stellar core-collapse \dword{snb} neutrinos. Finally, a low noise level opens up the possibility of using 
 $\mathrm{{}^{39}Ar}$ beta decays to calibrate the \dword{dune}
 \dword{spmod}~\cite{MICROBOONE-NOTE-1050-PUB}.
-The noise level has also affects %consequences on 
+The noise level also affects %consequences on 
 the bandwidth requirements
 for the \dword{daq} system, %that are 
 discussed in Chapter~\ref{ch:sp-daq}; 
@@ -154,8 +168,8 @@ serial links. The \dword{ce} signal processing is implemented in \dfirsts{asic}
 using \dword{cmos} technology.  The \dword{ce} is continuously 
 read out, resulting in a digitized \dword{adc} sample from each \dword{apa} 
 channel (wire). The \dwords{asic} used for the readout of the \num{2560}
-wires of each \dword{apa} are mounted on \dfirsts{femb}, that are connected to
-\dwords{wib} located the outside of the cryostat via a \dword{ce} signal 
+wires of each \dword{apa} are mounted on \dfirsts{femb}. These are connected to
+\dwords{wib} located outside of the cryostat via the \dword{ce} signal 
 cable flange located at the \dword{ce} \fdth at the top of the cryostat.
 The \dwords{wib} are installed, together with \dword{ptc} that distribute
 the power and the clock and control signals, in a \dword{wiec} that is
@@ -214,14 +228,12 @@ This value is chosen to match a \dword{fe} shaping time of \SI{1}{\micro\second}
 
 \item SP-FD-20:  The \dword{adc} must digitize the charge deposited on the wires 
 with 12~bits of precision.  The lower end of the \dword{adc} dynamic 
-range is driven by the requirement that the digitization %does 
-not 
-contribute to the total electronics noise. The upper end %of the \dword{adc} dynamic range 
-is defined by SP-FD-14. %the previous requirement for the signal saturation level. 
-Combining this %those two 
-with SP-FD-2 %requirements with the requirement for 
-on the total electronics noise 
+range is driven by the requirement that the digitization not contribute 
+to the total electronics noise, as defined by requirement SP-FD-25. The upper end
+is defined by SP-FD-14. Combining this with SP-FD-2 on the total electronics noise 
 results in the need for 12~bits digitization. 
+
+\fixme{Reorder requirements so that SP-FD-25 comes before SP-FD-20}
 
 \item SP-FD-21:   The power dissipated by the electronics located in the \dword{lar} must
 be less than \SI{50}{mW/channel}. Lower power dissipation is desirable because 
@@ -395,6 +407,8 @@ Power and timing backplane (\dword{ptb}) & \num{1} per \dword{apa} & \num{2560} 
 \end{dunetable}
 
 %The 
+The electronics located inside the cryostat cannot be replaced or repaired after the
+cryostat has been filled with \dword{lar}.
 Successful operation of the readout electronics in \dword{lar} for the 
 \dunelifetime %lifetime of the  (dunelifetime has ``years'' not ``year'')
 of \dword{dune} operation %experiment forces 
@@ -450,6 +464,9 @@ the \dword{pdsp} \dword{tpc} readout was to validate the concept
 and the design of the integrated \dword{apa}+\dword{ce} readout 
 and measure the performance of the \dword{ce} system with components 
 as close as possible to those in the final \dword{dune} \dword{tpc} readout.
+
+\fixme{move the next three paragraphs after the discussion of the detector
+performance}
 
 Each of the six \dword{pdsp} \dword{apa}+\dword{ce}
 readout units consists of 2,560 sense wires, of which 960 are \SI{6}{m} 
