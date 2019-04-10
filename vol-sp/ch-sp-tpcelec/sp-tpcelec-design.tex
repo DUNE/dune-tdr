@@ -79,13 +79,22 @@ detector components, are discussed in Section~\ref{sec:fdsp-tpcelec-interfaces}.
 \subsection{Grounding and Shielding}
 \label{sec:fdsp-tpcelec-design-grounding}
 
-The overall approach to minimize the system noise in \dword{dune}
-relies on avoiding noise induced by penetrations in the cryostat
-and from the readout electronics located outside the cryostat.
-It also requires that currents caused by any external apparatus or 
-machinery be prevented from coming in through ground loops, and that the
-detector be shielded by a Faraday cage. This approach is discussed 
-in detail in~\cite{radekaNoise}. 
+The overall approach to minimizing the system noise in \dword{dune} 
+relies on enclosing the sensitive wire planes in a nearly hermetic 
+Faraday cage and then carefully controlling currents flowing into or 
+out of that protected volume through the unavoidable penetrations 
+needed to build a working detector. Done carefully, this can result 
+in avoiding all unwanted disturbances that result in detector noise. 
+Such disturbances could either be induced on the signal wires by 
+changing currents flowing inside the cryostat or even on the cryostat 
+walls as, for instance, a temperature sensing circuit that acts as a 
+receiving antenna on the outside of the cryostat and a transmitting 
+antenna on the interior of the cryostat. In addition, unwanted signals 
+might be injected into the electronics either in the cold or just 
+outside the cryostat by direct conduction along unavoidable power 
+or signal connections to other devices. This approach to minimizing
+the detector noise by using appropriate grounding and shielding procedures
+is discussed in detail in~\cite{radekaNoise}.
 
 As discussed in \ref{sec:fdsp-tpcelec-overview-pdune}
 the initial results from the online monitoring and the
@@ -1113,7 +1122,7 @@ motherboard and five pairs connected to the mezzanine containing
 the \dword{fpga}. Two pairs of wires (one for the motherboard,
 and one for the mezzanine) %are used to 
 provide a very low
-current to the bias line of the \dword{lv} converters 
+current to the bias line of the \dword{lv} regulators 
 (\SI{0.01}{A} at \SI{5}{V}). Six pairs of wires at %provide 
 various voltages %that are used to 
 provide power through the
@@ -1131,15 +1140,15 @@ to at most seven, simply by removing the pair
 reserved for sending pulses to the \dword{femb} and %by
 %having a single line 
 providing power to the bias
-line of the \dword{lv} converters using a single line, 
+line of the \dword{lv} regulators using a single line, 
 because all the \dwords{asic} will probably fit on a single board.  
 %In the case that the \dword{cryo} is used the reduction
 %could be even larger, 
 Use of the \dword{cryo} would allow an even larger reduction, %as 
 since the \dword{femb} may not need \dword{lv} regulators. 
 
-
-The bias voltages are applied to the $X$-, $U$-, and $G$-plane 
+The cable plant for one \dword{apa} in the \dword{lar} includes
+also the cables that provides the bias voltages applied to the $X$-, $U$-, and $G$-plane 
 wire layers, three \dword{fc} terminations, and an electron diverter, 
 as shown in Figure~\ref{fig:CR-board}. The voltages are supplied 
 through eight \dword{shv} connectors mounted on the signal flange. 
@@ -1550,7 +1559,7 @@ Commercial ADC & Complete & None \\ \colhline
 \dword{femb} & Advanced & Experience with multiple prototypes, final design will follow the \dword{asic} selection \\ \colhline
 Cold cables & Very advanced & Minor modifications, additional vendor qualification \\ \colhline
 Cryostat penetrations & Advanced & Add \dword{ce} flange for bottom \dword{apa} \\ \colhline
-\dword{wiec} & Very advanced & Add HEPA filter and hardware interlock system \\ \colhline
+\dword{wiec} & Very advanced & Add air filters and hardware interlock system \\ \colhline
 \dword{wib} & Advanced & Update design to use cheaper FPGA, modify \dword{femb} power \\ \colhline
 \dword{ptc} & Very advanced & Add interface to interlock system \\ \colhline
 Power supplies & Very advanced & Investigate possible additional vendors, rack arrangement \\ \colhline
@@ -1696,8 +1705,9 @@ gained with commissioning and operation of \dword{pdsp}. The
 cold signal cables will be modified to reduce the number of
 connections and to address the issues observed with the connector
 on the \dword{femb}. The design of the \dword{wiec} needs to
-be modified to include \dword{hepa} filters to minimize the possible
-damage from dust during the lifetime of the experiment at \dword{surf}.
+be modified to include air filters to minimize the possible
+damage from dust and/or chemical residues from  explosives 
+during the lifetime of the experiment at \dword{surf}.
 The \dword{ptc} is going to be modified to add an interface to
 the hardware interlocks of the detector safety system. For
 cables and fibers on the top of the cryostat the only work that
