@@ -139,15 +139,17 @@ activity trigger candidates as needed to achieve >90\% galactic
 supernova burst trigger coverage. The galactic coverage is defined as
 supernova burst trigger efficiency weighted supernova burst probability.
 
-The average rate of localized triggers is limited to 1 Hz, otherwise
-more than xx PB of data would be generated per year. This is because each localized
-trigger prompts 5.4~ms of losslessly compressed data from
+By offline considerations, the average rate of localized triggers is limited to 0.1 Hz, otherwise
+more than 30 PB of data (uncompressed) would be generated per year. This is because each localized
+trigger prompts 5.4~ms of losslessly compressed TPC data plus PDS data from
 the entire module to be read out as part of the event record. The average rate
 of extended triggers is limited to 1 per month, per similar
-considerations. Extended triggers prompt 100 seconds of lesslessly
+considerations; extended triggers prompt 100 seconds of losslessly
 compressed data from the entire module to be read out as part of the
 event record. The capability of recording data losslessly is built
-into the design as a conservative measure. 
+into the design as a conservative measure. Expected
+data rates from physics signals of interest, which fit the 30 PB and
+trigger rate requirements, are summarized in Table~\ref{}
 
 \begin{dunefigure}{fig:daq-rates}{Expected physics-related activity
     rates in a single DUNE FD module. A 100 MeV deposited energy
@@ -162,6 +164,14 @@ into the design as a conservative measure.
 }
   \includegraphics[width=0.8\textwidth]{daq-rates.png}
 \end{dunefigure}
+
+\begin{dunetable}{|p{0.7\textwidth}|p{0.2\textwidth}|}{tab:sp-daq:rates}{Summary
+    of expected data rates. The rates assume no compression, and a
+    single 10 kton module.}
+ & \\
+ & \\
+ & \\
+\end{dunetable}
 
 Self-triggering on \dword{snb} activity is a unique challenge for the
 DUNE FD, and an aspect of the design which has never been demonstrated
@@ -306,24 +316,19 @@ Full size of TPC Extended Event Record & 85 TB\\  \colhline
 \label{sec:sp-daq:interfaces}
 
 The \dword{daq} system scope begins at the optical fibers streaming raw digital data from the detector active components
-(TPC and PDS), and is thus electically decoupled from the detector
-cryostat, and ends at a wide area network (WAN) interface that
+(TPC and PDS), and ends at a wide area network (WAN) interface that
 distributes the data from on site at \surf to offline centers off
 site. The \dword{daq} also provides common computing and network services for
 other \dword{dune} systems, although slow control and safety functions
-fall outside \dword{daq} scope. 
+fall outside \dword{daq} scope.
 
 Consequently, the \dword{dune} \dword{fd} \dword{daq} system interfaces with the TPC \dword{ce}, \dword{pds}
 readout, computing, \dword{cisc}, and calibration systems of the %\dword{dune}
 \dword{fd}, as well as with facilities and underground installation. The
- interface agreements
-are summarized in Table~\ref{tab:sp-daq:interfaces}. 
-\fixme{active}
-
- 
-The system
-interfaces are described in the following subsections; those %. Interfaces 
-with facilities and underground installation are described in Section~\ref{sec:sp-daq:production}.
+ interface agreements with the \dword{fd} systems 
+are summarized in Table~\ref{tab:sp-daq:interfaces}, and described
+briefly in the following subsections. Interface agreements with
+facilities and underground installation are described in Section~\ref{sec:sp-daq:production}.
 
 
 \begin{dunetable}
@@ -347,7 +352,8 @@ Timing & \citedocdb{11224} \\ \colhline
 The \dword{daq} and TPC \dword{ce} interface is described in
 \citedocdb{6742}. The physical interface is at the \dword{cuc}, where optical links from the \dwords{wib} transfer
 the raw TPC data to the \dword{daq} \dword{fe} readout (\dword{felix}; see
-Section~\ref{??}). Ten \SI{10}{Gbps} links are expected per \dword{apa}, and have
+Section~\ref{??}). This ensures the \dword{daq} is electically decoupled from the detector
+cryostat. Ten \SI{10}{Gbps} links are expected per \dword{apa}, and have
 been specified as 300m OM4 multi-mode fibers from \dword{sfp}+ at the \dword{wib} to
 \dword{minipod} on \dword{felix}. The data format has been specified to use no
 compression and custom communication protocol.
@@ -359,7 +365,8 @@ The \dword{daq} and \dword{pds} readout interface is described in
 be of the form of 150  \SI{10}{Gbps} OM4 fibers from one FD module. 
 This
 is similar to the interface to the TPC \dword{ce}, except the overall
-data volume is lower by an order of magnitude.
+data volume is lower by an order of magnitude. The data format has been specified to use
+compression (zero supression) and custom communication protocol.
 %\metainfo{Data reception physical and logical, configuration information delivery.}
 
 \subsection{Computing}
@@ -419,21 +426,10 @@ Accuracy of timestamps delivered to  detector endpoints will be $\pm$\SI{500}{\n
 
 \section{Data Acquisition System Design}
 \label{sec:fd-daq:design}
-% \fixme{module-generic}
 
-% \metainfo{One sentence to introduce the section. 
-%   Listing the subsections and describing which are generic and which
-%   are X-phase specific.}
-
-This section %describes the \dword{daq} design. It 
-begins with a conceptual overview of the \dword{daq} design followed by %sections giving the design of the \dword{daq} 
-brief descriptions of the subsystem designs. 
-%The \dword{ipc} and \dword{daqccm} subsystems are described first.
-%Then the \dword{fe} data receiver and data handling and processing subsystems are covered.
-%Then, the subsystems for data selection and the \dword{daq} back-end are described. Finally, the timing subsystem is presented. The section finishes with plans for design validation and development.
-%The following descriptions of the design are brief. 
-More details are provided as technical notes as listed in Table~\ref{tab:sp-daq:tech-notes}.
-\fixme{Anne doesn't think the previous commented out sentences are necessary. }
+This section begins with an overview of the \dword{daq} design followed by %sections giving the design of the \dword{daq} 
+brief descriptions of the subsystem designs. More details are provided
+as technical notes as listed in Table~\ref{tab:sp-daq:tech-notes}. 
 
 \begin{dunetable}{|p{0.7\textwidth}|p{0.2\textwidth}|}{tab:sp-daq:tech-notes}{Summary of %relevant and 
 detailed \dword{daq} technical notes.}
@@ -450,34 +446,32 @@ detailed \dword{daq} technical notes.}
 \end{dunetable}
 
 
-
 \subsection{Overview}
 \label{sec:fd-daq:design-overview}
-%\fixme{module-generic}
 
+The entire DAQ is composed of xx distinct subsystems: front-end readout, data selection
+(Low-Level, Module-Level, and High-Level Data Selection, and External
+Trigger Module), back-end DAQ, timing subsystem, and control,
+configration, and monitoring (CCM). The physical location
+of the DAQ subsystems, with the exception of CCM, is specified in
+Fig.~\ref{xx}; CCM is not explicitly shown in the figure, but it permeates
+throughout the entire DAQ. Data flows through the DAQ from the
+front-end to the back-end of the system and to offline. The majority
+of raw data processing and buffering is performed underground, in the
+front-end, thus minimizing data bandwidth to the surface. A hierarchical data selection decision 
+process, which spans both underground and above-ground spaces, consumes minimally-processed information from the front-end, and
+constructs module-level trigger decisions. Upon such decision, a data
+flow orchestrator process is activated as part of the back-end system
+to retrieve data to be built as part of an event record. At event
+building stage, optional down-select of the data is possible via the
+high-level filter, prior to shipping the data to offline.
 
-% \metainfo{This is the \textbf{only} place to describe the conceptual
-%   overview. 
-%   Do \textbf{not} repeat this info in sections below. 
-%   \textbf{Do} use \textbf{module-neutral} terms.
-%   \textbf{Do} describe major interface between each subsystem (the edges between the circles in Fig~\ref{fig:daq-conceptual-overview}).
-%   \textbf{Do} mention that concrete systems span portions of the
-%   conceptual subsystems and how the following subsections are defined
-%   along these concrete deliverable lines.}
+Figure~{xx} provides the specifics of the implementation of the
+system. Each subsystem (front-end, back-end, data selection, CCM, ...)
+is described in further detail in the following subsections.
 
-Figure~\ref{fig:daq-conceptual-overview}  illustrates  the high-level conceptual elements that make up \dword{dune} \dword{fd} \dword{daq}. 
-It applies to all \dword{fd} modules. 
-The box %in the illustration indicates 
-encompasses the overall conceptual scope of the \dword{daq}.
-Input data are received from detector electronics and buffered. 
-At the same time, a substantial portion of the data stream is also immediately sent into trigger processing. 
-The \dword{daq} identifies and summarizes activity until a trigger decision is made. 
-This decision culminates in a trigger command that carries a summary of the decision and addressing information sufficient to locate select data in the buffer.
-\fixme{the selected data?}
-%The command is executed by querying the buffer, aggregating returned data and writing out file which they become custody of the DUNE offline.
-To execute the command, the \dword{daq} queries the buffer, aggregates returned data, and writes out a file that then becomes the custody of offline computing.
-These loosely connected conceptual units are then orchestrated by unifying conceptual units that provide for control, configuration and monitoring.
-\fixme{prev sentence needs clarification. anne}
+An alternate view of the system, in terms of functionality, is
+provided in Fig.~\ref{xx}.
 
 \begin{dunefigure}{fig:daq-conceptual-overview}{\dword{daq} Conceptual
     Subsystem Overview}
@@ -513,11 +507,6 @@ validate detector electronics and hardware during installation and commissioning
 Partitions may operate wholly independently from one another, or be loosely coupled through trigger commands.  
 %More description of the nature of partitions may be found 
 This is further described in Section~\ref{sec:daq:partition-lifetime}.
-
-
-
-\metainfo{For the remaining design sections: do not include directly validation info but rather place this information in Section~\ref{sec:sp-daq:design-validation} and make references.}
-  
 
 
 
