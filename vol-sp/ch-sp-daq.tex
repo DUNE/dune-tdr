@@ -86,7 +86,8 @@ high-level filtering, prior to shipping the data to offline.  The
 specifics of design implementation and data flow are described in Section~\ref{sec:fd-daq:design}.
 
 \begin{dunefigure}{fig:fd-daq:layout}{\dword{daq} design physical
-    layout focusing on a single \SI{10}{\kilo\tonne} module.
+    layout focusing on a single \SI{10}{\kilo\tonne} module. Not shown
+    in this figure are the system control paths. 
   }
   \includegraphics[width=0.8\textwidth]{daq-layout.pdf}
 \end{dunefigure}
@@ -214,7 +215,7 @@ time, including cosmic coincidence; 5.4 ms readout \\\colhline
 Cosmics and atmospheric neutrinos & 10 PB & 5.4 ms readout \\\colhline
 Radiological backgrounds & $<1$ PB & $<1$ per month fake rate for SNB
 trigger\\\colhline
-Front-end calibration & 200 TB & \\\colhline
+Cold Electronics calibration & 200 TB & \\\colhline
 Radioactive source calibration & 100 TB & $<10$ Hz source rate; single
 APA readout; 5.4 ms readout \\\colhline
 Laser calibration & 200 TB & 10$^6$ total laser pulses; half the
@@ -256,8 +257,8 @@ operations. At the same time, it is designed to preserve the possibility of addi
 as required. The bulk of processing and buffering of raw detector data is
 done underground, in the front-end part of the system (see Figure~\ref{fig:fd-daq:layout}), in order to
 minimize data traffic to surface. Power, cooling, and space
-constraints in the CUC are limited to 450 kW total for all four FD
-modules, and 52 racks.
+constraints in the CUC are limited to 600 kW total and 52 racks for all four FD
+modules.
 
 There are three key challenges for the DUNE FD DAQ system: 
 \begin{itemize}
@@ -501,10 +502,10 @@ to offline; and CCM extends throughout the entire physical layout of the
 system. 
 
 The overall system functionality is illustrated conceptually in
-Figure~\ref{fig:daq-conceptual-overview}, and Figure~{fig:daq-design}
+Figure~\ref{fig:daq-conceptual-overview}, while Figure~{fig:daq-design}
 summarizes the design implementation of the 
 DAQ system. Front-end readout is carried out by custom data receiver and
-processing FPGA/CPU hardware which is hosted in O(100) servers in the CUC. A
+co-processing FPGA/CPU hardware, all of which is hosted in O(100) servers in the CUC. A
 corresponding number of servers is responsible for the execution of
 additional CPU-based low-level processing of trigger primitives
 generated in the front-end readout for the purposes of data selection; the collective
@@ -516,13 +517,13 @@ interfaces to a second server which is responsible for receiving and
 propagating cross-module and external trigger and timing
 information. The module level trigger considers trigger candidates and
 external trigger inputs in issuing a trigger command to the back-end DAQ
-subsystem. The back-end DAQ subsystem is hosted in O(10) servers
-responsible for event building, and dedicated storage for built
-events. Upon receiving a trigger command, the back-end DAQ queries
+subsystem. The back-end DAQ subsystem is hosted in O(10) servers and
+facilitates event building and buffering for built
+events; upon receiving a trigger command, the back-end DAQ queries
 data from the front-end readout buffers and builds that into ``event
-records'', which are stored as files on non-volatile storage. Event records can be optionally processed in a high-level
-filter/data reduction stage, which is part of data selection, for
-further down-selection, prior to becoming custody of DUNE offline. Pervasively, the  \dfirst{daqccm}subsystem provides the central orchestration (Section~\ref{sec:fd-daq:design-run-control}), the \dfirst{ipc} subsystem provides overall communication (Section~\ref{sec:daq:design-ipc}), and the \dfirst{daqtss} provides synchronization (Section~\ref{sec:sp-daq:design-timing}).
+records'', which are temporarily held as files on non-volatile storage. Event records can be optionally processed in a high-level
+filter/data reduction stage, which is part of overall data selection, for
+further down-selection, prior to becoming custody of the DUNE offline system. Pervasively, the  \dfirst{daqccm}subsystem provides the central orchestration (Section~\ref{sec:fd-daq:design-run-control}), the \dfirst{ipc} subsystem provides overall communication (Section~\ref{sec:daq:design-ipc}), and the \dfirst{daqtss} provides synchronization (Section~\ref{sec:sp-daq:design-timing}).
 
 \begin{dunefigure}{fig:daq-conceptual-overview}{\dword{daq} Conceptual
    Overview of DAQ System Functionality}
@@ -534,11 +535,12 @@ further down-selection, prior to becoming custody of DUNE offline. Pervasively, 
 \end{dunefigure}
 
 Key to the implementation of the DAQ design is the requirement that
-the system is partitionable. As a result, the system can operate in
-the form of multiple independent DAQ instances, each independently
-mapped across all subsystems and uniquely mapped among subsystem components. 
-More specifically, any given partition may span the entire %up to one
-\dword{detmodule} or some subset of it. This ensures continual readout of the
+the system is partitionable. Specifically, the system can operate in
+the form of multiple independent DAQ instances, each 
+executed across all DAQ subsystems and uniquely mapped among subsystem components. 
+More specifically, a given partition may span the entire %up to one
+\dword{detmodule} or some subset of it; its extent is configurable at
+run start. This ensures continual readout of the
 majority of the detector in normal physics data-taking run mode, while
 enabling simultaneous calibration or test runs of small portion(s) of the
 detector without interruption of normal data-taking. 
