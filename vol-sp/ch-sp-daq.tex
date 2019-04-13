@@ -92,7 +92,7 @@ specifications provided in the same table. Those specifications are
 associated with trigger functionality, readout considerations,
 and operations considerations, and are motivated further in the following subsections.
 
-\subsubsection{How Physics Drives DAQ Design}
+\subsubsection{How DUNE's Physics Mission Drives the DAQ Design}
 
 The DUNE Far Detector has three main physics drivers: neutrino \dword{cpv} and related
 long baseline oscillation studies using the high intensity beam provided
@@ -100,10 +100,18 @@ by \fnal, off-beam measurements of atmospheric neutrinos and searches
 for rare processes such baryon-number-violating decays,
 and detection of \dfirst{snb} occurring within our galaxy. The
 \dword{dune} \dword{fd} \dword{daq} system must facilitate data
-readout for delivering on these main physics drivers.
+readout for delivering on these main physics drivers, while keeping
+within physical (space, power) and resource constraints for
+the system. In particular the off-beam measurements require the
+continuous readout of the detector, and the lack of external triggers for such
+events requires real-time or online data processing, and
+self-triggering capabilities. Since the
+continuous data rate of the far detector module reaches multiple
+terabytes per second, significant data buffering and processing
+resources are needed as part of the design.
 
 The \dword{dune} \dword{fd} modules employ two
-active detector components: \dfirst{tpc} and \dfirst{pds}. The two components access the physics %each 
+active detector components from which the the DAQ system must acquire data: \dfirst{tpc} and \dfirst{pds}. The two components access the physics %each 
 by sensing and collecting signals associated with very different 
 sensing time scales.
 Ionization charge measurement by the \dword{tpc} for any given
@@ -113,21 +121,31 @@ nominal recording of data over a time window of order
 This time scale is determined by the ionization electron drift speed in
 \lar and the detector dimension along the drift direction.
 On the other hand, the \dword{pds} measures argon scintillation light emission, which
-occurs and is detected over a timescale of multiple nanoseconds for
-any given event and/or subsequent subevent process. 
+occurs and is detected over a timescale of multiple nanoseconds to
+microseconds for
+any given event and/or subsequent subevent process. Unlike the TPC,
+the PDS data is zero-suppressed in
+the PDS electronics; therefore the total raw data volume received by
+the DAQ system is be dominated by
+the TPC data, which is sent out as a continuous stream.
  
-Figure xx provides the expected activity rates in a single far detector module.
-At low energy, activity is dominated by radiological backgrounds, and
+Figure \ref{fig:daq-rates} provides the expected activity rates in a
+single far detector module as a function of true energy associated
+with given types of signal.
+At low energy, activity is dominated by radiological backgrounds
+intrinsic to the detector, and
 low-energy solar neutrino interactions. Supernova burst neutrinos are
 expected in the 10-30 MeV range, while at higher energies (generally
 above 100 MeV), rates are dominated by cosmic rays, beam neutrino interactions,
 and atmospheric neutrino interactions. With the exception of supernova
 burst neutrinos, the activity associated with any of these physics
-signals is rather localized in space and time. Supernova burst
-neutrinos on the other hand are expected to arrive as multiple
-localized activity signals which extend over the entirety of the
-detector and over multiple seconds. This necessitates two types of
-triggers: a localized high energy activity trigger, prompting an event record readout for
+signals is localized in space and particularly in time. Supernova burst
+neutrinos on the other hand are characteristically different, as they arrive as multiple
+signals of localized activity that extensd over the entirety of the
+detector and over multiple seconds. 
+
+This necessitates a data selections strategy which handles two
+distinct cases: a localized high energy activity trigger, prompting an event record readout for
 activity associated with a minimum of 100 MeV of deposited energy; and an extended
 low-energy activity trigger, prompting an event record readout when
 multiple localized low energy activity candidates with a minimum of
@@ -140,7 +158,8 @@ supernova burst trigger coverage. The galactic coverage is defined as
 supernova burst trigger efficiency weighted supernova burst probability.
 
 By offline considerations, the average rate of localized triggers is limited to 0.1 Hz, otherwise
-more than 30 PB of data (uncompressed) would be generated per year. This is because each localized
+more than 30 PB of data (uncompressed) would be generated per
+year. This assumes (conservatively) that each localized
 trigger prompts 5.4~ms of losslessly compressed TPC data plus PDS data from
 the entire module to be read out as part of the event record. The average rate
 of extended triggers is limited to 1 per month, per similar
@@ -149,7 +168,7 @@ compressed data from the entire module to be read out as part of the
 event record. The capability of recording data losslessly is built
 into the design as a conservative measure. Expected
 data rates from physics signals of interest, which fit the 30 PB and
-trigger rate requirements, are summarized in Table~\ref{}
+trigger rate requirements, are summarized in Table~\ref{tab:sp-daq:rates}.
 
 \begin{dunefigure}{fig:daq-rates}{Expected physics-related activity
     rates in a single DUNE FD module. A 100 MeV deposited energy
@@ -165,12 +184,24 @@ trigger rate requirements, are summarized in Table~\ref{}
   \includegraphics[width=0.8\textwidth]{daq-rates.png}
 \end{dunefigure}
 
-\begin{dunetable}{|p{0.7\textwidth}|p{0.2\textwidth}|}{tab:sp-daq:rates}{Summary
+\begin{dunetable}{|p{0.3\textwidth}|p{0.2\textwidth}|p{0.4\textwidth}|}{tab:sp-daq:rates}{Summary
     of expected data rates. The rates assume no compression, and a
     single 10 kton module.}
- & \\
- & \\
- & \\
+Source  & Annual Data Volume & Assumptions \\
+Beam interactions & 27 TB & 10 MeV threshold in coincidence with beam
+time, including cosmic coincidence; 5.4 ms readout \\
+Cosmics and atmospheric neutrinos & 10 PB & 5.4 ms readout \\
+Radiological backgrounds & $<1$ PB & $<1$ per month fake rate for SNB
+trigger\\
+Front-end calibration & 200 TB & \\
+Radioactive source calibration & 100 TB & $<10$ Hz source rate; single
+APA readout; 5.4 ms readout \\
+Laser calibration & 200 TB & 10$^6$ total laser pulses; half the
+TPC channels illuminated per pulse; lossy
+compression (zero-suppression) on all channels\\
+Random triggers & 60 TB & 45 per day\\
+Trigger primitives & $<2$ TB & Dominated by $^{39}$Ar; collection
+channels only; 6 bytes per primitive \\
 \end{dunetable}
 
 Self-triggering on \dword{snb} activity is a unique challenge for the
