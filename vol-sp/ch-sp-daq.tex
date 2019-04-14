@@ -788,54 +788,27 @@ to global coincidence trigger recipients such as  \dword{snews}.
 \end{dunefigure}
 
 
-
---
-
-From intro figure: Localized activity
+The first stage of DUNE FD operations will have two general classes of trigger
+decisions that are categorized in terms of the distribution of activity
+in time and space from which they are derived: 
+\begin{itemize}
+\item Localized activity
     with a 100 MeV deposited energy
     threshold generates localized high energy trigger candidates for
     the module level trigger; any such candidate can be accepted as a localized high energy trigger.
-    Localized activity with a 10 MeV deposited energy threshold
+\item    Localized activity with a 10 MeV deposited energy threshold
     generates localized low energy trigger candidates for the module
     level trigger; those are used as input to an extended low energy trigger
     for supernova neutrino bursts. Each trigger type prompts readout
     of the entire detector but over significantly different time
     ranges: localized triggers prompt readout of 5.4 ms event records; extended
     triggers prompt readout 100 s event records. 
-
-The first stage of DUNE FD operations will have two general classes of trigger
-decisions that are categorized in terms of the distribution of activity
-in time and space from which they are derived:
-\begin{itemize}
-\item Localized activity triggers are low-latency triggers intended to
-  initiate the readout of high-energy events (depositing $>$100~MeV of
-  visible energy). 
-  They may also initiate the readout of low-energy events (e.g., from
-  solar neutrino interactions).
-  Data from all channels of the detector module and for a period
-  spanning two drift times around the time of the localized activity
-  trigger will be read out.\footnote{Strictly, all channels in the \dword{daq} partition.}
-\item Extended activity triggers are high-latency
-  (but no more than 10 seconds) triggers intended to initiate readout of
-  activity associated with \dword{snb}. 
-  Noticeable \dword{snb} activity is expected to span many tens of
-  seconds and be comprised of a few thousand individual supernova
-  neutrino interactions (eg in the case of a galactic \dword{snb}) which
-  are spaced throughout the detector module and peaking over a time
-  period of approximately ten seconds.
-  When a module asserts an \dword{snb} trigger it is sent to the
-  \dword{etl} and passed to other modules. 
-  Regardless of its origin, a detector module will read out data which
-  arrived \snbpretime prior to the trigger time and will read out a
-  total of \snbtime data. 
-  This data will be readout from all detector module electronics
-  channels in both the PDS and TPC systems. 
-  After sufficient confirmation of quality the \dword{snb} trigger will
-  also be sent to global coincidence trigger recipients such as
-  \dword{snews}.
 \end{itemize}
 
-To facilitate partitioning, the \dword{daqdsn} subsystem must also be
+To facilitate partitioning, the \dword{daqdsn} subsystem will be
+able to be instantiated multiple times, and multiple instances will be
+able to operate in parallel. Within any
+given partition, the \dword{daqdsn} subsystem will also be
 informed and aware of current detector configuration and conditions and
 apply certain masks and mapping on subdetectors or their fragments in
 its decision making. This information is delivered to the
@@ -851,8 +824,6 @@ record ``space'', the \dword{daqdsn} system must also time-order and
 prioritize trigger decisions. The details for forming this
 command are described next and the operation of the \dword{daqbes} is
 described in Section~\ref{sec:fd-daq:design-backend}.
-
-
 
 \subsubsection{Low Level Trigger: Trigger Primitive Generation}
 \label{sec:sp-daq:design-trigger-primitives}
