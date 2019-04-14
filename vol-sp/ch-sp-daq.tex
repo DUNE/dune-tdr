@@ -574,13 +574,22 @@ interfacing with the \dword{daq} switched network. In the case of the
 TPC, 75 RU are each responsible for the readout of raw data from two
 APAs. In the case of the PDS, 6-8 RU are each responsible for the
 readout of raw data from a collection of PDS subdetectors, where each
-collection corresponds to an optically isolated region in the detector. Each unit encompasses four functional blocks:
+collection corresponds to an optically isolated region in the
+detector. 
+Each RU encompasses a commercial off-the-shelf server that hosts a
+collection of custom hardware, 
+firmware, and software that collectively form four functional blocks:
 
 \begin{enumerate}
-\item Data reception: Facilitated by an FPGA-based PCIe board
-\item Network based I/O
-\item Data processing: Facilitated in FPGA and CPU
-\item Temporary data storage
+\item Data reception, facilitated by a FELIX card in the host server
+\item Network based I/O, facilitated by a commercial off-the-shelf network card
+\item Data processing, facilitated by FPGA resources on the FELIX
+  card and/or on-host CPU resources, or, in the case of the TPC RU only,
+  additional FPGA resources in the form of two dedicated co-processing
+  boards (interfacing directly with the FELIX card)
+\item Temporary data storage, facilitated by host RAM and SSD, or, in
+  the case of the TPC RU only, RAM
+  and SSD available on the co-processing boards
 \end{enumerate}
 
 Each of these blocks is described below.  In addition, and like all other \dword{daq} subsystems, the readout participates in the common software framework for control, configuration, and monitoring as described in Section~\ref{sec:fd-daq:design-run-control}.
@@ -591,7 +600,7 @@ The physical interface between the detector electronics and the \dword{daq} to t
 The number of links per \dword{dune} module varies from approximately 1000 to 2000, depending on the detector technology adopted.
 
 To minimize the space and power consumption footprint of the \dword{daq}, 10-20 links are aggregated into \dword{felix} boards hosted in commercial, off-the-shelf computers.
-\dword{felix} is an \dword{fpga}-based PCIe board developed initially for ATLAS and now proposed or already used in several experiments, including \dword{protodune}. 
+\dword{felix} is a \dword{fpga}-based PCIe board developed initially for ATLAS and now proposed or already used in several experiments, including \dword{protodune}. 
 Existing firmware has been adopted and is being adapted to ensure
 decoding and format checking of incoming data and then to marshal the
 data to other blocks of the readout subsystem.
@@ -677,82 +686,6 @@ If expected noise levels are achieved, this compression would provide a factor o
 Effort is currently underway to understand the costs and technology involved in exploiting this benefit.
 
 
-% \ifdp
-% \subsubsection{DP data ingest via UDP}
-% \label{sec:dp-daq:design-udp-ingest}
-% \fixme{dual-phase module, move to DP \dword{daq} chapter eventually}
-% \metainfo{This is a DP section and will be only in the DP volume. 
-%   It should describe the ``Bump On Wire'' from the IDR unless we can
-%   come up with any new/better ideas.}
-% \metainfo{Include full hardware scope starting at fibers from CE and
-%   ending at the output of trigger processors and the interface between
-%   buffer and the Data Selector.
-%   Describe the per-APA multiplicity of computers, CPU cores, host
-%   system RAM, host system storage,  \dword{felix}  boards, DPM components (RAM,
-%   SSD). 
-%   Include thermal estimates itemized by components.}  
-% \fi
-
-% \subsection{Front-end Data Handling and Processing}
-% \label{sec:sp-daq:design-fe-processing}
-
-% \metainfo{This section describes four functional blocks: (1) 10s RAM buffer (minimum), (2) non-volatile SNB buffer for 30s of data once per month (minimum), (3) hardware for the production of trigger primitive including any data formatting and DPS filtering and (4) compression of selected data.  Note, actual algorithms for trigger primitives are described in Section~\ref{sec:sp-daq:design-selection-algs}.}
-
-% \metainfo{One or two sentences that positions the two processing
-%   patterns (FEDHP either before or after  \dword{felix} ) in this section as options. 
-%   Say that the ``FPGA before  \dword{felix} '' option is used for ``baseline costing''.}
-
-% \metainfo{Include a table with one row for each known compression factor: \dword{protodune} RCE and  \dword{felix} , MicroBooNE before and after noise filter (see docdb), 35t, \dword{protodune} data after \dword{adc} stuck code mitigation or avoidance, simulations.  One column of this table shall give a brief comment of how it applies to \dword{dune} including any caveats or reasons for over/under estimation.}
-
-% % \subsubsection{ \dword{felix} +FPGA}
-% \subsubsection{Upstream FPGA and Firmware}
-% \label{sec:sp-daq:design-felix-fpga}
-% \fixme{single-phase module}
-
-% \metainfo{Include full hardware scope starting at fibers from CE and
-%   ending at the output of trigger processors and the interface between
-%   buffer and the Data Selector.
-%   Describe the per-APA multiplicity of computers, CPU cores, host
-%   system RAM, host system storage,  \dword{felix}  boards, DPM components (RAM,
-%   SSD). 
-%   Include thermal estimates itemized by components.}
-
-% % \subsubsection{ \dword{felix} +CPU}
-% \subsubsection{Downstream CPU and Software}
-% \label{sec:sp-daq:design-felix-cpu}
-% \fixme{single-phase module}
-
-% \metainfo{Include full hardware scope starting at fibers from CE and
-%   ending at the output of trigger processors and the interface between
-%   buffer and the Data Selector. 
-%   Describe the per-APA multiplicity of computers, CPU cores, host
-%   system RAM, SSD and  \dword{felix}  boards. 
-%   Include thermal estimates itemized by components.}
-
-
-% \subsubsection{Photon Detection System Interface}
-
-% \metainfo{Some motivations for using light to trigger. 
-%   (1) want to understand PDS so want to trigger on just the PDS. 
-%   (2) background to SNB for which PDS trigger primitives may eliminate. 
-%   (3) possibly must rely on light only for SNB triggering, eg if noise is out of control. 
-%   Some to all of these should be included.}
-
-% \metainfo{Possibly want to \SI{1}{\micro\second} packet for every time a 1-PE threshold is crossed. 
-%   PDS is still understanding what they may send. 
-%   \dword{daq} needs to be in control of the trigger forming.}
-
-% \ifdp
-% \subsubsection{DP TPC FE issues}
-
-% \fixme{dual-phase module}
-
-% \metainfo{This is similar to SP except for the need to decompress before any trigger primitive processing.  Decompression can potentially happen on  \dword{felix}  FPGA or on CPU.  There shall be a table or description of the amount of processing required.}
-
-% \subsubsection{DP SP Issues}
-% \fixme{dual-phase module}
-% \fi
-
 \subsection{Data Selection}
 \label{sec:sp-daq:design-selection-algs}
 %\fixme{single-phase module}
@@ -768,6 +701,7 @@ Effort is currently underway to understand the costs and technology involved in 
 %%is to be recorded. 
 
 %The data-driven trigger decision will be facilitated within the data selection subsystem, which will be an online, primarily software-based system, implemented accross multiple levels of data selection for both TPC and PDS readout. 
+
 %The \dword{daqdsn} subsystem, an online, primarily software-based system implemented accross multiple levels of data selection for both TPC and PDS readout, will facilitate the data-driven trigger decision. 
 %Information from the
 %lower \dword{daqdsn} levels is aggregated and correlated at the
@@ -778,15 +712,18 @@ Effort is currently underway to understand the costs and technology involved in 
 %implementation and scalability of the \dword{daq} system. 
 
 
-
-The \dfirst{daqdss} is responsible for immediate and continuous processing of a substantial fraction of the entire input data stream. 
+The \dfirst{daqdsn} subsystem is a hierarchical, online, primarily
+software-based system. It is responsible for immediate and continuous processing of a substantial fraction of the entire input data stream. 
 This includes data from TPC and PDS subdetectors.
-From that input, the \dword{daqdss} must form a \dword{trigdecision},
+From that input, as well as external inputs provided, for example, by
+the accelerator or detector calibration systems, the \dword{daqdss} must form a \dword{trigdecision},
 which in turn produces a \dword{trigcommand}.
 This command summarizes the observed activity that led to the decision
 and provides addresses (in space and time) of the data in the \dword{fe} buffers that capture information about the activity.
 This command is sent to and then consumed and executed by the \dword{daqbes} as described in Section~\ref{sec:fd-daq:design-backend}. 
-It is also propagated to the \dword{etl} which may distribute it to other \dwords{detmodule} for consideration.
+It is also propagated to the \dword{etl} and from there it may be
+distribute it to other \dwords{detmodule} or other detector systems
+(e.g. calibration) for consideration.
 
 The pipelines of processing required for \dword{daqdsn} may execute in
 various stages and forms using different firmware and software
@@ -798,9 +735,11 @@ flexibility in defining whether each element of a pipeline executes on
 \dword{fpga}, CPU, GPU, or in principle, some other future hardware
 architecture. 
 
-The \dword{daqdss} must select data associated with beam interactions,
-calibration signals, atmospheric neutrinos, rare baryon-number-violating events, and cosmic ray events that deposit visible energy in excess of 100 MeV, with high efficiency (targeted at $>$99\%). 
-It must also select data associated with potential galactic \dfirst{snb}, indicating that the \dword{daqdsn} subsystem must be able to self-trigger on galactic \dword{snb} with galactic coverage\footnote{Galactic coverage is defined as efficiency-weighted probability of galactic \dword{snb}.} of $>$95\% efficiency.
+The \dword{daqdss} must select data associated with calibration
+signals, as well as beam interactions,
+atmospheric neutrinos, rare baryon-number-violating events, and cosmic
+ray events that deposit localized visible energy in excess of 100 MeV, with high efficiency ($>$99\%). 
+It must also select data associated with potential galactic \dwords{snb}, with galactic coverage\footnote{Galactic coverage is defined as efficiency-weighted probability of galactic \dword{snb}.} of $>$90\% efficiency.
 To meet the requirement that the \dword{dune} \dword{fd} maintain a
 $<$\SI{30}{\peta\byte/\year} to permanent storage, the \dword{daqdss}
 subsystem must make \dword{daqdsn} decisions in a way that allows the \dword{daq} 
@@ -809,21 +748,60 @@ without jeopardizing the above efficiencies.
 
 The \dword{daqdss} subsystem design follows a hierarchical structure, where low-level
 decisions are fed forward into higher-level ones until a  module-level trigger is activated. The hierarchy
-is illustrated in Figure~\ref{fig:daq:data-selection}. The structure
+is illustrated in Figure~\ref{fig:daq:data-selection-hierarchy}. 
+At the lowest level, trigger
+primitives are formed on a per-channel basis, and represent, for the
+baseline design, a ``hit on
+a wire/channel'' activity summary. Trigger primitives are aggregated
+into Trigger Candidates, which represent ``clusters of hits''. Trigger
+Candidates are subsequently used to inform a module-level trigger decision, which
+generates a Trigger Command; this takes the form of either a localized high energy
+trigger or an extended SNB trigger, and each prompts readout of an
+event record. Post-event-building, further data selection is carried
+out in the form of down-selection of event records, through a high
+level filter. 
+
+The subsystem structure is illustrated in
+Figure~\ref{fig:daq:data-selection}. The structure
 has three levels of \dword{daqdsn}: (1) low level trigger, which may consist of
 \dword{trigprimitive} generation and subsequent
-\dword{trigcandidate} generation; (2) module level trigger; and (3) \dword{hlt}. Each is trigger level described in subsequent
-sections. An additional subsystem component is the external trigger,
+\dword{trigcandidate} generation; (2) module level trigger; and (3)
+\dword{hlt}. Each trigger level is described in subsequent
+sections. An additional subsystem component is the external trigger module,
 which serves as a common interface for the
 module level trigger of each of the FD \dwords{detmodule} and between
-the module level trigger and other systems (e.g.,~calibration, beam
-timing signals) within a single \dword{detmodule}.
+the module level trigger and other systems (e.g.,~calibration,
+accelerator and timing system) within a single
+\dword{detmodule}. After sufficient confirmation of quality the
+\dword{etl} also sends \dword{snb} triggers
+to global coincidence trigger recipients such as  \dword{snews}.
+
+\begin{dunefigure}{fig:daq:data-selection-hierarchy}{Data Selection
+    strategy and hierarchy: TPC based.}
+  \includegraphics[width=0.8\textwidth]{DS_hierarchy.png}
+\end{dunefigure}
 
 \begin{dunefigure}{fig:daq:data-selection}{Block diagram of \dword{dune} \dword{daq}
     \dword{daqdsn} subsystem, illustrating hierarchical structure of
     subsystem design.}
   \includegraphics[width=0.8\textwidth]{DUNE_TDR_SP_DAQ_DS_Figure.pdf}
 \end{dunefigure}
+
+
+
+--
+
+From intro figure: Localized activity
+    with a 100 MeV deposited energy
+    threshold generates localized high energy trigger candidates for
+    the module level trigger; any such candidate can be accepted as a localized high energy trigger.
+    Localized activity with a 10 MeV deposited energy threshold
+    generates localized low energy trigger candidates for the module
+    level trigger; those are used as input to an extended low energy trigger
+    for supernova neutrino bursts. Each trigger type prompts readout
+    of the entire detector but over significantly different time
+    ranges: localized triggers prompt readout of 5.4 ms event records; extended
+    triggers prompt readout 100 s event records. 
 
 The first stage of DUNE FD operations will have two general classes of trigger
 decisions that are categorized in terms of the distribution of activity
@@ -874,17 +852,7 @@ prioritize trigger decisions. The details for forming this
 command are described next and the operation of the \dword{daqbes} is
 described in Section~\ref{sec:fd-daq:design-backend}.
 
-From intro figure: Localized activity
-    with a 100 MeV deposited energy
-    threshold generates localized high energy trigger candidates for
-    the module level trigger; any such candidate can be accepted as a localized high energy trigger.
-    Localized activity with a 10 MeV deposited energy threshold
-    generates localized low energy trigger candidates for the module
-    level trigger; those are used as input to an extended low energy trigger
-    for supernova neutrino bursts. Each trigger type prompts readout
-    of the entire detector but over significantly different time
-    ranges: localized triggers prompt readout of 5.4 ms event records; extended
-    triggers prompt readout 100 s event records. 
+
 
 \subsubsection{Low Level Trigger: Trigger Primitive Generation}
 \label{sec:sp-daq:design-trigger-primitives}
