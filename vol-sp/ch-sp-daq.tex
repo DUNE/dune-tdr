@@ -1382,24 +1382,57 @@ Differential delays between these two paths are resolved by a second pair of fib
 \section{Design Validation and Development Plans}
 \label{sec:fd-daq:validation}
 
-\subsection{Design Validation and Development at \dword{protodune}}
+The following strategy will be followed in order to validate and
+develop the \dword{dune} \dword{fd} \dword{daq} design:
+\begin{itemize}
+\item Use of \dword{protodune} as a design demonstration and
+  development platform. 
+\item Use of vertical slice teststands for further development and testing of
+  individual \dword{daq} subsystems and for key aspects of the
+  overall \dword{daq}
+\item Use of horizontal slice tests to demonstrate scaling the design
+  where the multiplicity of components in subsystem layers is important.
+\item Use of \dword{fd} MonteCarlo simulations and emulations in order
+  to augment actual hardware demonstrations at \dword{protodune} and teststands.
+\item Benefit from developments and measurements from other ongoing
+  LArTPC experiments, including MicroBooNE, SBND, and ICARUS.
+\end{itemize}
+
+This strategy reflects the current \dword{daq} project schedule, which
+comprises several phases, including an intense development phase
+running through 2020 that culminates in an engineering design
+review (EDR) in Q1 of 2021. At this milestone, the system design will be
+finalized and shown to be capable of meeting the requirements of the
+final \dword{daq} system. After the development phase, a
+pre-production phase will begin and will end with a production readiness
+review (PRR). By then, final designs of all components
+will be complete.
+
+The following subsections summarize past, ongoing, and planned
+development and validation studies and identify how anticipated outcomes
+will be used to finalize the \dword{daq} design.
+
+\subsection{Design Validation and Development at \dword{protodune} and
+Other Experiments}
 
 \label{sec:fd-daq:protodune}
-\metainfo{Here we write what similarities and differences there are between \dword{protodune} and \dword{dune} \dword{daq} designs.}
+\metainfo{Here we describe protodune, write what similarities and
+  differences there are between \dword{protodune} and \dword{dune}
+  \dword{daq} designs. Mention other related efforts at other experiments.}
 
 The \dword{fd} \dword{daq} consortium constructed and operated the \dword{daq} system for
 \dword{protodune}, which included %facilitated two incarnations of 
 two \dword{daq} readout 
 architectures, one based on \dword{felix}, develped by ATLAS \cite{xx}, and the other on \dword{rce}, developed at
 SLAC \cite{xx}. \dword{daq} design and construction for
-\dword{protodune} began in Q3 of 2016, and the system was operational at the start of the beam data run %when \dword{protodune} beam running began 
+\dword{protodune} began in Q3 of 2016, and the system became operational at the start of the beam data run %when \dword{protodune} beam running began 
 in Q4 of 2018. The detector is
 continuing to run as of the writing of this document, recording cosmic
 ray activity, and %facilitating 
 providing further input for \dword{daq} development toward
 \dword{dune}. 
 
-Figure~\ref{xx} depicts the \dword{protodune} \dword{daq} system.  The \dword{daq} is split %among %two readout architecture implementations, one involving 
+Figure~\ref{fig:daq-protodune} depicts the \dword{protodune} \dword{daq} system.  The \dword{daq} is split %among %two readout architecture implementations, one involving 
 between the  \dword{felix}  and \dword{rce} implementations. The two architectures share the same back-end and
 timing and trigger systems. 
 Neither of these tested % readout 
@@ -1420,25 +1453,43 @@ resources. In that sense,\dword{protodune} has provided demonstration of the
  \dword{felix}  platform as \dword{fe} readout data receiver, and
 demonstration of \dword{fpga}-based data reduction for TPC.
 
-Besides overall readout architecture, %there are two additional key differences between 
+\fixme{Placeholder. Should show felix and rce architectures}
+\begin{dunefigure}{fig:daq-protodune}{The \dword{protodune} \dword{daq} system.}
+%  \includegraphics[width=0.8\textwidth]{daq-protodune.pdf}
+\end{dunefigure}
+
+Besides overall readout architecture,
 the \dword{protodune} and
-\dword{dune} \dwords{daq} exhibit two key differences. %, namely that (1) 
+\dword{dune} \dwords{daq} exhibit two key differences. 
 First, the \dword{protodune} \dword{daq} is externally
-triggered (and at a trigger rate %which is more than 
+triggered (and at a trigger rate 
 over an order of
-magnitude higher than that anticipated for \dword{dune}). Because of this, 
-%and therefore 
-the% current 
+magnitude higher than that anticipated for \dword{dune}). Because of
+this, the
 \dword{protodune} \dword{daq} 
 does not facilitate online data
-processing from the TPC or \dword{pd} systems for self-triggering. % and (2) 
+processing from the TPC or \dword{pd} systems for self-triggering. 
 Second, the \dword{protodune} 
-system sits at the surface with a much higher %and therefore the 
-data occupancy %is much higher
-due to cosmic ray activity. % in the detector. 
-%Key difference (1) must be overcome to demonstrate data selection capability for the DUNE \dword{daq} design, and this is a main component of future \dword{daq} development plans, described in Sec.~\ref{xx}.
+system sits at the surface with a much higher
+data occupancy 
+due to cosmic ray activity.
 Overcoming the first key difference to demonstrate \dword{daqdsn} capability for the \dword{fd} \dword{daq} design is a main component of future \dword{daq} development plans, described in Section~\ref{xx}.
 
+Continuous self-tirggering of the detector is also new with respect to
+other ongoing or planned near-term LArTPC experiments, including
+MicroBooNE, SBND, and ICARUS. Both MicroBooNE and ICARUS have demonstrated
+self-triggering in coincidence with external gates, which effectively
+limits both data and trigger rates, and is not a viable solution for
+DUNE's off-beam physics program, as it would effectively limit
+exposure and therefore physics sensitivity. On the other hand, ICARUS
+has ...
+MicroBooNE has demonstrated successful continuous readout of a LArTPC,
+via use of dynamic and fixed-baseline zero-supression implemented in
+firmware for both TPC and PDS readout. SBND, which utilizes the same readout
+system as MicroBooNE, will investigate trigger primitive generation
+and self-triggering based on TPC information in the timescale of 2021-2023.
+
+\fixme{Add references.}
 
 \subsubsection{ProtoDUNE Outcomes}
 
@@ -1450,172 +1501,46 @@ demonstrations for \dword{dune} \dword{daq}, in particular data flow
 architecture, run configuration and control, and back-end
 functionality. % In the following subsection we discuss important lessons learned.
 
-Besides demonstrating end-to-end data flow and \dword{fe} readout functionality
-explicitly for  \dword{felix}, possibly the most important outcome has been the delineation of
-interfaces, i.e., understanding the exact \dword{daq} scope and the interfaces to TPC, \dword{pds}, and offline. The use of commercial off-the-shelf solutions
-where possible, and leverage of professional support from CERN IT 
-substantially expedited the development and success of the project, as
-did the strong on-site presence during early installation and
-commissioning. 
-
-The use of multiple clock frequencies for different
-detector subsystems, on the other hand, was found to be too cumbersome, and 
-a central timing interface document for the \dword{dune}
-\dword{fd} \citedocdb{} formalizes the decision %therefore the desire
-to use a single clock frequency for all \dword{detmodule} subdetectors.
-Largely due to limited
-availability of hardware and experts, the hardware integration tests prior to
-installation and commissioning %were found
- proved insufficient. %, and were primarily a consequence of ; 
-These will be %for \dword{dune} those are to be 
-carefully planned out for the early stages of \dword{fd} \dword{daq} development and
-pre-production, and we will work %and also 
-to proliferate the subsystem expertise across
-the consortium. 
-
-Finally, % in the case of 
-despite the simplicity of the \dword{protodune} trigger 
-relative to the \dword{dune}'s data-driven \dword{daqdsn} scheme, % it was found that 
-the system required more commissioning time, and  
-%This has been built into 
-the \dword{dune} project schedule gives it more time. 
-
-%More specific outcomes, per \dword{protodune} subsystem, are outlined below.
-Outcomes specific to \dword{protodune} subsystems are outlined below.
-
-For the \dword{rce} TPC readout implementation, \dword{protodune} demonstrated that 
-%it was found that 
-a full
-working vertical slice of the system is essential, and that
-development and debugging should not be limited to simulation and
-remote system operations (as often time differences are an
-issue). 
-\fixme{what needs to be added? anne}
-Hardware failure recovery requires more efficient handling %should be handled more efficiently
-than straight hardware reboots, along with %and %this should be augmented with 
-additional
-hardware monitoring and debugging functionality that integrates with
-run control. Similar findings emerged from the  \dword{felix} TPC readout implementation
-% had similar findings 
-with respect to debugging hardware issues from the \dword{daq} upstream end. %It was
-Also,  %found that 
-more project-specific firmware expertise than available was needed.
-
-\dword{protodune} showed that the back-end subsystem was %found to be 
-too monolithic. Future incarnations of
-this subsystem need to more loosely couple the hardware configuration
-and readout processes, and provide  %should be more loosely coupled in , with 
-flexibility to bring these processes up or down 
-independently and without faulting the system. It is important to develop better bookkeeping of 
-the configurations used and of the bookkeeping definitions, %should be developed 
-as well, in advance of %both 
-commissioning and operations. This should also
-extend to software package releases and data format versioning. The horizontal
-scaling capability of the design (from originally four to sixteen envisioned event
-builder machines) was crucial for achieving desired performance, and 
-%maintaining this same capability 
-is part of the DUNE \dword{daq} philosophy.
-
-%More specifically in the case of run control, the resource utilization
-%prompts reconsideration of what might be the right rool for Run
-The \dword{protodune} run control resource utilization
-prompts reconsideration of the right tool for the \dword{dune} \dword{fd} run control. This should happen early in
-the design stage to allow sufficient development and maturity of the
-design. At the same time a development environment %should be provided, 
-distinct from production is required for the %necessary
-development and optimization of run control during commissioning %in a way that it doesn't 
-so as to avoid inhibiting other commisioning tasks. Better slow
-control integration, % and 
-fewer rudimentary alarms, %along with 
-better
-metric monitoring (in part facilitated by a more appropriate run
-control tool), and a better user interface %user friendliness 
-are also %deemed 
-desirable for the \dword{fd}. %DUNE. 
-
-%A major finding regarding Run Control was the need for a partitioning
-%and resource management scheme which should be designed a priori with careful
-%consideration of possible run modes during commisisoning as well as
-%during operations. The DUNE FD \dword{daq} partitioning scheme is described in
-%Sec.~xx.
-Importantly, the \dword{protodune} run control demonstrated the need for a priori design of a 
-partitioning and resource management scheme with careful
-consideration of the possible run modes during both commissioning and operations. This scheme is described in Section~xx.
-
-%In the case of O
-For online monitoring, the monitoring tool response times are a
-concern for scaling to DUNE. %, and this necessitates an evaluation plan of future envisioned tools with simulations. 
-This requires an evaluation plan that incorporates simulations to select the proper tools that will allow
-%Online Monitoring tools for DUNE will require 
-integration with \dword{cisc} monitoring and run control
-states,  and closer collaboration with nearline developers. It will be
-important to define ownership and resource responsibilities within the
-\dword{daq} consortium on this
-subsystem early during the DUNE project.
-
-Other outcomes include established needs for 
+More specifically, \dword{protodune} has demonstrated 
 \begin{itemize}
-\item on-site
-subsystem experts; 
-\item support from computing professionals
-for systems administration; 
-\item well defined and frozen interfaces;
-a formalized data model agreed upon by both system experts and the wider
-collaboration, including data record format and metadata format, which can facilitate both commissioning and operation
-data analysis; 
-\item standardization of remote \dword{daq} operation solutions;
-\item better control room tools; additional \dword{daq} infrasturcture (disk
-space, CPUs) to support installation and commissioning of other DUNE
-FD systems; and 
-\item good
-installation practices.
+\item Front-end Readout: successful
+front-end readout hardware and data flow functionality for the readout
+of two out of the six APAs employed in protoDUNE. This was achieved
+with two TPC RU's, without co-processor boards, and only one APA read
+out per FELIX board. The \dword{dune} DAQ design will ultimately
+accommodate readout of two APAs per FELIX board. In addition to data
+flow functionality, ProtoDUNE Front-end readout also demonstrates interface to
+front-end electronics, and scalability to DUNE. It also supports
+host server requirements and specifications. Finally, it serves as
+platform for further development involving co-processor implementation
+and data selection aspects.
+\item Back-end DAQ: successful back-end DAQ implementation, including event builder
+  farm, CCM machines, and disk buffering. This has allowed the
+  development and exercising of system partitioning, and provides a
+  basis for scalability to DUNE. The protoDUNE back-end also serves as
+  a platform for further system development, in particular in the
+  areas of CCM, IPC and data flow (orchestrator).
+\item Data Selection/Timing: successful operation of the timing
+  distribution system, and external trigger distribution to the
+  front-end readout. Although protoDUNE was externally triggered, the
+  system serves
 \end{itemize}
 
-%In summary, \dword{protodune} has been a successful platform for \dword{daq} 
-%development and design for the \dword{dune} \dword{fd}. Most
-%critically, it demonstrated that the eventual design must 
+Besides demonstrating end-to-end data flow, an important outcome of
+protodune daq has been the delineation of
+interfaces, i.e.~understanding the exact \dword{daq} scope and the interfaces to TPC, \dword{pds}, and offline. The use of commercial off-the-shelf solutions
+where possible, and leverage of professional support from CERN IT 
+substantially expedited the development and success of the project, as
+did the strong on-site presence of experts from within the consortium during early installation and
+commissioning. 
 
-%\item accommodate changes in the overall system and provide more
-%flexibility and granularity.
-%\item \dword{dune}: input to DFO is the trigger command, providing all space/time addressing required to identify the data to collect.  Information about the trigger decision itself is also included, but the DFO merely passes this through to output.  The addressing contains all information needed for the DFO to act.
-%\item \dword{dune}: The EB updates DFO about the resources (buffers) it has available.
-%\end{itemize}
-
+Outcomes specific to \dword{protodune} subsystems are discussed in
+detail in \[talk from review\].
 
 \subsubsection{Planned Development at \dword{protodune}}
 \label{sec:sp-daq:design-validation}
-\fixme{single-phase module}
 
-The \dword{dune} \dword{fd} \dword{daq} design will be validated and developed using the following strategy:
-\begin{itemize}
-\item Use \dword{protodune} as a design demonstration platform. 
-\item Use vertical slice teststands for further development and testing of
-  individual \dword{daq} subsystems and for key aspects of the
-  overall \dword{daq}
-\item Use horizontal slice tests to demonstrate scaling the design where the multiplicity of components in layers is important.
-\item Use \dword{fd} MonteCarlo simulations and studies to augment
-  demonstrations using \dword{protodune} and the testing at vertical slice teststands.
-\item Cross-check against developments and measurements from other ongoing
-  LArTPC experiments.
-\end{itemize}
-
-This strategy reflects the current \dword{daq} project schedule, which
-comprises several phases, including an intense development phase
-running through 2020 that culminates in an engineering design
-review (EDR) in Q4 of 2020. At this milestone, the system design will be
-finalized and shown to be capable of meeting the requirements of the
-final \dword{daq} system. After the development phase, a
-pre-production phase begins and will end with a production readiness
-review (PRR). By then, final designs of all components
-will be complete.
-
-The following subsections summarize past, ongoing, and planned
-development and validation studies and identifies how anticipated outcomes
-will be used to finalize the \dword{daq} design.
-%  Put each validation study (performed or future) in a subsubsection
- % and describe either \textbf{how it justifies a decision} or
- % \textbf{how its outcome will be used to make a decision in the
-  %  future}.}
+\fixme{this section and onward still needs work}
 
 \subsubsubsection{Ongoing  \dword{felix}  Throughput Demonstration at \dword{protodune}}
 \label{sec:sp-daq:validation-pdune-felix}
@@ -1722,7 +1647,7 @@ This will require development of the following elements:
 
 
 
-\subsubsubsection{Validation of High Level Trigger in Software}
+\subsubsubsection{Validation of High Level Filter in Software}
 
 
 \subsubsubsection{Prototype Inter-process Communication System}
@@ -1826,31 +1751,31 @@ Other than these dedicated vertical slice teststands, a number of
 \dword{daq} development kits will be available for other detector and
 calibration consortia to support 
 their own development, production, and quality assurance programs. The \dword{daq} 
-kit will also form the basis for testing at the ITF beginning in 2022. This will
-also allow validating the detector and \dword{daq} interfaces. %A
-%single \dword{daq} kit will be capable of handling data from a single APA. 
+kit will also form the basis for testing at APA Construction sites beginning in 2020. 
 
 \section{Production, Assembly, Installation and Integration}
 \label{sec:sp-daq:production}
 
 (Not finished.)
 
+\subsection{Production and Assembly}
 \metainfo{Describe how hardware, firmware and software will produced. }
 
-\metainfo{Describe how we get stuff in place underground (and in the
-  ITF), how we will put it all together and make sure it works. 
+\subsubsection{Computing Hardware}
+
+\subsubsection{Custom Hardware Fabrication}
+
+\subsubsection{Software and Firmware Development}
+\metainfo{Processes and practices.}
+
+\subsection{Installation and Integration}
+\fixme{Alec}
+
+\metainfo{Describe how we get stuff in place underground, how we will put it all together and make sure it works. 
   What can we do to minimize the effort needed underground both in
   terms of physical work but also in working out the bugs both in
   individual processes and in emergent behavior of the system as a
   whole?}
-
-\subsection{Computing Hardware}
-
-\subsection{Custom Hardware Fabrication}
-
-\subsection{Software and Firmware Development}
-\metainfo{Processes and practices.}
-
 
 \section{Organization and Project Management}
 
