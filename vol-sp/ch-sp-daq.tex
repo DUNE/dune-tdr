@@ -205,7 +205,7 @@ trigger rate requirements, are summarized in Table~\ref{tab:sp-daq:rates}.
 
 \begin{dunetable}
 [Expected DAQ Yearly Data Rates]
-{lrl}
+{p{0.3\textwidth}p{0.2\textwidth}p{0.5\textwidth}}
 {tab:sp-daq:rates}{Summary
     of expected data rates. The rates assume no compression, and are
     given for a single \SI{10}{\kilo\tonne} module.}
@@ -339,15 +339,15 @@ built into the design of each \dword{fd} module.
 {Summary of important parameters driving the \dword{daq} design.}
 Parameter & Value \\ \toprowrule
 TPC Channel Count per Module & 284,000\\ \colhline
-TPC Collection Channel Count per Subdetector & 960\\ \colhline
-TPC Induction Channel Count per Subdetector & 1,600\\ \colhline
+TPC Collection Channel Count per Subdetector (APA) & 960\\ \colhline
+TPC Induction Channel Count per Subdetector (APA) & 1,600\\ \colhline
 PDS Channel Count per Module & TBD\\ \colhline
 TPC \dword{adc} Sampling Rate & 2 MHz\\ \colhline
 TPC \dword{adc} Dynamic Rate& 12 bits\\ \colhline
 Localized Event Record Window & 5.4 ms\\  \colhline
 Extended Event Record Window &  100 s\\  \colhline
-Full size of TPC Localized Event Record & 6.22 GB\\  \colhline
-Full size of TPC Extended Event Record & 85 TB\\  \colhline
+Full size of TPC Localized Event Record per Module & 6.22 GB \\  \colhline
+Full size of TPC Extended Event Record per Module & 115 TB\\  \colhline
 \end{dunetable}
 
 
@@ -380,7 +380,7 @@ TPC CE & & \citedocdb{6742}{v6}\\ \colhline
 PDS & &  \citedocdb{6727}{v2} \\ \colhline
 Integration Facility & & \citedocdb{7042}{v0} \\
 Facilities &&  \citedocdb{6988}{v1} \\ \colhline
-CISC & \citedocdb{6790}{v1} \\ \colhline
+CISC & & \citedocdb{6790}{v1} \\ \colhline
 Calibration & & \citedocdb{7069} \\ \colhline
 Computing &&  \citedocdb{7123} \\ \colhline
 Timing &&  \citedocdb{11224} \\ \colhline
@@ -467,8 +467,9 @@ Accuracy of timestamps delivered to  detector endpoints will be $\pm$\SI{500}{\n
 \label{sec:fd-daq:design}
 
 This section begins with an overview of the \dword{daq} design followed by %sections giving the design of the \dword{daq} 
-brief descriptions of the subsystem designs. More details are provided
-as technical notes as listed in Table~\ref{tab:sp-daq:tech-notes}. 
+brief descriptions of the subsystem design implementation specific. The
+implementation details are evolving rapidly; as such, more information
+is provided in technical notes as listed in Table~\ref{tab:sp-daq:tech-notes}. 
 
 \begin{dunetable}{p{0.7\textwidth}p{0.2\textwidth}}{tab:sp-daq:tech-notes}{Summary of %relevant and 
 detailed \dword{daq} technical notes.}
@@ -489,25 +490,26 @@ detailed \dword{daq} technical notes.}
 \subsection{Overview}
 \label{sec:fd-daq:design-overview}
 
-The entire DAQ is composed of six distinct subsystems: (1) front-end
+The  DAQ system is composed of six distinct subsystems: (1) front-end
 readout, (2) data selection, (3) back-end DAQ, (4)
 inter-process communication (IPC), (5) control,
-configration, and monitoring (CCM), and (5) timing distribution. The physical location
+configration, and monitoring (CCM), and (6) timing and
+synchronization. Each of these subsystems is described in further
+detail in the following subsections. The physical extent
 of the DAQ subsystems, with the exception of the IPC and CCM,
 can be specified in reference to Fig.~\ref{fig:fd-daq:layout}: the
 front-end readout and timing distribution live underground in the CUC; data selection occupies
 both underground and above-ground spaces; back-end DAQ is above-ground
 and includes event building and buffering before distribution of data
-to offline; and CCM extends throughout the entire physical layout of the
-system. 
+to offline; and IPC and CCM extends throughout the entire physical layout of the
+system, supported on a private network throughout the DAQ system.. 
 
 The overall system functionality is illustrated conceptually in
-Figure~\ref{fig:daq-conceptual-overview}, while Figure~{fig:daq-design}
-summarizes the design implementation of the 
-DAQ system. Front-end readout is carried out by custom data receiver and
+Figure~\ref{fig:daq-conceptual-overview}, while Figure~\ref{fig:daq-design}
+specifies the implementation. Front-end readout is carried out by custom data receiver and
 co-processing FPGA/CPU hardware, all of which is hosted in O(100) servers in the CUC. A
-corresponding number of servers is responsible for the execution of
-additional CPU-based low-level processing of trigger primitives
+similar number of additional servers is responsible for the execution of
+additional software-based low-level processing of trigger primitives
 generated in the front-end readout for the purposes of data selection; the collective
 low-level information (trigger primitives and trigger candidates
 constructed from trigger primitives) is propagated to a central server responsible
@@ -517,20 +519,22 @@ interfaces to a second server which is responsible for receiving and
 propagating cross-module and external trigger and timing
 information. The module level trigger considers trigger candidates and
 external trigger inputs in issuing a trigger command to the back-end DAQ
-subsystem. The back-end DAQ subsystem is hosted in O(10) servers and
-facilitates event building and buffering for built
-events; upon receiving a trigger command, the back-end DAQ queries
-data from the front-end readout buffers and builds that into ``event
-records'', which are temporarily held as files on non-volatile storage. Event records can be optionally processed in a high-level
+subsystem. The back-end DAQ subsystem 
+facilitates event building in O(10) servers and buffering for built
+events on non-volatile storage; upon receiving a trigger command, the back-end DAQ queries
+data from the front-end readout buffers and builds that into an ``event
+record'', which is temporarily stored as (a number of) files. Event records can be optionally processed in a high-level
 filter/data reduction stage, which is part of overall data selection, for
-further down-selection, prior to becoming custody of the DUNE offline system. Pervasively, the  \dfirst{daqccm}subsystem provides the central orchestration (Section~\ref{sec:fd-daq:design-run-control}), the \dfirst{ipc} subsystem provides overall communication (Section~\ref{sec:daq:design-ipc}), and the \dfirst{daqtss} provides synchronization (Section~\ref{sec:sp-daq:design-timing}).
+further down-selection, prior to becoming custody of the DUNE offline
+system. Pervasively, the  \dfirst{daqccm} subsystem provides the central orchestration (Section~\ref{sec:fd-daq:design-run-control}), the \dfirst{ipc} subsystem provides overall communication (Section~\ref{sec:daq:design-ipc}), and the \dfirst{daqtss} provides synchronization (Section~\ref{sec:sp-daq:design-timing}).
 
 \begin{dunefigure}{fig:daq-conceptual-overview}{\dword{daq} Conceptual
-   Overview of DAQ System Functionality}
+   Overview of DAQ System Functionality for a single 10 kton module}
   \includegraphics[width=0.8\textwidth]{daq-toplevel-conceptual.pdf}
 \end{dunefigure}
 
-\begin{dunefigure}{fig:daq-design}{\dword{daq} DAQ Design Implementation}
+\begin{dunefigure}{fig:daq-design}{\dword{daq} DAQ Design
+    Implementation for a single 10 kton module}
   \includegraphics[width=0.8\textwidth]{daq-overview.pdf}
 \end{dunefigure}
 
@@ -546,27 +550,36 @@ enabling simultaneous calibration or test runs of small portion(s) of the
 detector without interruption of normal data-taking. 
 Partitioning is further described in Section~\ref{sec:daq:partition-lifetime}.
 
-\subsection{Detector Readout}
+\subsection{Front-end Readout}
 \label{sec:daq:design-readout}w
 %\fixme{module-generic}
 
-The readout provides the first link in the data flow chain of the \dword{daq} system.
-It provides the input to which the data from detector electronics flow.
-It implements a receiver, buffer, and a portion of the trigger concepts illustrated in Figure~\ref{fig:daq-conceptual-overview}.
-It is physically connected to the detector electronics via optical fiber and buffers and serves data to other \dword{daq} subsystems, namely the \dword{daqdsn} and the event builder as detailed in Figure~\ref{fig:daq:readout}.
+Front-end readout provides the first link in the data flow chain of
+the \dword{daq} system and is where raw data from detector electronics
+is received by the DAQ.
+It implements a receiver, buffer, and a portion of low-level data
+selection (trigger primitive generation) as detailed in Figure~\ref{fig:daq:readout}.
+It is physically connected to the detector electronics via optical fiber(s) and buffers and serves data to other \dword{daq} subsystems, namely the \dword{daqdsn} and the event builder
 
 \fixme{It would be nice to redraw this using \dword{dune} colors.}
 
-\begin{dunefigure}{fig:daq:readout}{\dword{dune} \dword{daq} readout system and its connections.}
+\begin{dunefigure}{fig:daq:readout}{\dword{dune} \dword{daq} front-end
+    readout subsystem and its connections.}
   \includegraphics[width=0.8\textwidth]{daq-readout.png}
 \end{dunefigure}
 
-The readout system comprises many similar \dword{daqrou}, each connected to a subset of electronics from a detector module and interfacing with the \dword{daq} switched network.  Each unit encompasses four functional blocks:
+The readout system comprises many similar \dword{daqrou}, each
+connected to a subset of electronics from a detector module and
+interfacing with the \dword{daq} switched network. In the case of the
+TPC, 75 RU are each responsible for the readout of raw data from two
+APAs. In the case of the PDS, 6-8 RU are each responsible for the
+readout of raw data from a collection of PDS subdetectors, where each
+collection corresponds to an optically isolated region in the detector. Each unit encompasses four functional blocks:
 
 \begin{enumerate}
-\item Data reception
+\item Data reception: Facilitated by an FPGA-based PCIe board
 \item Network based I/O
-\item Data processing
+\item Data processing: Facilitated in FPGA and CPU
 \item Temporary data storage
 \end{enumerate}
 
@@ -575,62 +588,92 @@ Each of these blocks is described below.  In addition, and like all other \dword
 \subsubsection{Data reception}
 
 The physical interface between the detector electronics and the \dword{daq} to transmit data consists of 10 Gbps point-to-point serial optical links, running a simple (e.g., 8/10 bit encoded) protocol. 
-The number of links per \dword{dune} module varies from approximately 1000 to 2000, depending on the detector technologies adopted.
+The number of links per \dword{dune} module varies from approximately 1000 to 2000, depending on the detector technology adopted.
 
 To minimize the space and power consumption footprint of the \dword{daq}, 10-20 links are aggregated into \dword{felix} boards hosted in commercial, off-the-shelf computers.
 \dword{felix} is an \dword{fpga}-based PCIe board developed initially for ATLAS and now proposed or already used in several experiments, including \dword{protodune}. 
-Existing firmware will be adopted and adapted to ensure decoding and format checking of incoming data and then to marshal the data to other blocks of the readout subsystem.
+Existing firmware has been adopted and is being adapted to ensure
+decoding and format checking of incoming data and then to marshal the
+data to other blocks of the readout subsystem.
 
 \subsubsection{Network based I/O}
 
-The readout system provides access to the \dword{daqdsn} and \dword{daqbes} through a commercial, off-the-shelf switched network as illustrated in Figure~\ref{fig:daq:readout}).
+The readout subsystem provides access to the \dword{daqdsn} and \dword{daqbes} through a commercial, off-the-shelf switched network as illustrated in Figure~\ref{fig:daq:readout}).
 The network communication protocol is as described in Section~\ref{sec:daq:design-ipc}.
 The network I/O is handled by the \dwords{daqrou} via software; dedicated hardware or firmware development is not required.
 
 \subsubsection{Data processing}
 
-The data processing functional block identifies active areas in the detector (in the TPC and photon detection systems) as a function of time.
+The data processing functional block resides either on the FELIX board FPGA, or on
+an additional, dedicated co-processor providing additional FPGA
+processing resources, or both. Data processing can also be carried out in the host
+server processor. This functional block is ultimately
+responsible for identifying regions of interest in the
+detector (in the TPC or PDS) as a function of time.
 
-As a preliminary step, data may be pre-processed, i.e., organized however best suits subsequent data analysis. This implies reorganizing data into different streams, applying noise filtering algorithms, and compressing or zero-suppressing data.
+As a preliminary step, data is pre-processed, i.e., organized in a way
+that better suits subsequent data analysis. This implies, e.g.~reorganizing
+data into different streams (collection plane vs. induction plane(s),
+or re-arranging time and channel order and aggregating samples into frames), applying noise filtering algorithms, and compressing or zero-suppressing data.
 
-The readout system summarizes the identified detector activity (``hit finding'') on a per-channel basis into information packets called \dwords{trigprimitive}.  These are forwarded to the \dword{daqdsn} system which makes correlations and decides whether and which data is to be saved.
+The readout system summarizes the identified regions of interest
+on a per-channel basis into information packets
+called \dwords{trigprimitive}.  These are forwarded to the
+\dword{daqdsn} system which makes correlations and ultimately decides whether and which data is to be saved.
 
-This functional block may be implemented onto FPGAs, GPUs, CPUs, or a mixture of these elements.
-Deciding on the implementation is premature at this stage; this is one of the main topics to explore and develop in the readout area.
+This functional block may be implemented onto FPGAs, GPUs, CPUs, or a
+combination of these elements. Deciding on the implementation is
+premature at this stage; this is one of the main topics to explore and
+develop in the readout area. The DAQ design can facilitate either FPGA or
+CPU implementation interchangeably, which provides flexibility and
+adaptability to whatever the processing needs may ultimately be,
+depending, for example, on noise levels in the detector.
 
 \subsubsection{Buffering}
 
-In \dword{dune}, the readout system is in charge of buffering all detector data until the \dword{daqdss} has formed a trigger decision (Section~\ref{sec:sp-daq:design-selection-algs}) and until the \dword{daqbes} (Section~\ref{sec:fd-daq:design-backend}) may have sufficient time to request and receive that selected data. 
-In addition, a small portion of the data must be buffered for much longer to absorb the strongly punctuated bottlenecks that form when the \dword{daqdss} observes a potential \dword{snb}.
-There are two rather different time scales and data throughput metrics which must dictate the technology and the scaling required for the temporary storage providing the buffering.
-As described in Section~\ref{sec:sp-daq:design-selection-algs} these are due to localized and extended activity.
+In \dword{dune}, the readout system is in charge of buffering all
+detector data until the \dword{daqdss} has formed a trigger decision
+(Section~\ref{sec:sp-daq:design-selection-algs}) and until subsequently the
+\dword{daqbes} (Section~\ref{sec:fd-daq:design-backend}) has requested and received that selected data. 
+In addition, in the case of a \dword{snb} trigger, data received after
+the issuing of the trigger must be buffered for much longer to absorb the
+strongly punctuated bottlenecks that are expected to form downstream in that case.
+%There are two rather different time scales and data throughput metrics which must dictate the technology and the scaling required for the temporary storage providing the buffering.
+%As described in Section~\ref{sec:sp-daq:design-selection-algs} these are due to localized and extended activity.
 
 The buffering time required to select data containing localized activity is dominated by processing speed, pipeline depths and network latency. 
 Some studies must still be performed but initial estimates indicate that the time buffering time required is should not exceed a maximum of approximately one second. 
-The amount of data that must copied from buffering in order to capture the localized activity is expected to be one or two TPC drift times (5-10\si{\milli\second}), depending on detector technology).
-As the full stream of data must constantly be buffered, a RAM technology is selected based on providing sufficient throughput, endurance, and capacity.
+The duration of data that must be copied from buffering in order to
+capture the localized activity corresponds to 5.4\si{\milli\second}.
+As the full stream of data must constantly be buffered, a RAM
+technology is selected based on providing sufficient throughput,
+endurance, and capacity. 
 
 The extended activity (e.g., due to a potential \dword{snb}) presents a far more challenging set of buffering requirements.  
-Extended activity that is below triggering threshold may exist for as much as \snbpretime prior to it increasing in rate such that the trigger criteria may be satisfied. 
-This below threshold activity may be extracted using more sophisticated and processing intensive algorithms if the data can be recorded. 
-A second challenge in recording data containing extended activity is that all channels must be recorded for as much as \snbtime around its trigger time.
-This can require extracting as much as \spsnbsize.
-It is not cost effective to design the \dword{daq} with a full path to final output that can accept this rate pulse.
-Thus, bottlenecks must be allowed and additional buffering provided to catch the temporary backlog the pulse will produce.
+Low-energy activity that is associated with a \dword{snb} trigger
+decision may exist for as much as \snbpretime prior to the issuing of \dword{snb}
+trigger (trigger time).
+%This below threshold activity may be extracted using more sophisticated and processing intensive algorithms if the data can be recorded. 
+A second challenge in recording data containing extended activity is
+that all channels must be recorded for 100 seconds around its trigger
+time, and requires extracting as much as 115 TB from the TPC readout.
+It is not cost effective to design the \dword{daq} to accept this rate
+pulse in real time. Thus, additional buffering is provided to catch
+the temporary backlog of data that the \dword{snb} trigger will produce.
 
 The technology and scale of this additional buffering must satisfy several requirements. 
-It must accept the full data rate of the detector (as much as \SI{2}{\tera\byte/\second}). 
+It must accept the full data rate of the detector module (as much as \SI{2}{\tera\byte/\second}). 
 The data must then reside on nonvolatile media. 
 The media must have sufficient capacity and allow for sufficient extraction throughput so that it is vanishing unlikely to be allowed to become too occupied to accept another pulse of data. 
-For planning purposes it is assumed that, on average, a \dword{snb} trigger condition will be satisfied once per month. 
-Statistically, this may fluctuate to twice per day only about once every decade.
-Given this, and costs, clearly the  best technology is %the use of 
+Assuming that, on average, a \dword{snb} trigger condition will be
+satisfied once per month, the most optimal technology is %the use of 
 solid-state devices, which at the scale required to provide suitable input bandwidth, can provide a capacity to write the data from several extended activity triggers.
 Providing only a modest overhead to normal operations, this data can be extracted from such storage from the \dword{daq} in under a day.
 
 For both types of activity, the buffering requirements may be reduced by employing lossless compression to the data prior to it entering the buffer.
-This can be expected to provide at least a factor of two reduction in buffer input rate. 
-If expected noise levels are achieved this compression would provide a factor of four to ten, depending on the detector module technology.
+A factor of at least two in reduction in buffer input rate is
+expected, based on MicroBooNE and protoDUNE experience. 
+If expected noise levels are achieved, this compression would provide a factor of four to ten, depending on the detector module technology.
 Effort is currently underway to understand the costs and technology involved in exploiting this benefit.
 
 
