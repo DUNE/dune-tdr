@@ -1,6 +1,9 @@
 \chapter{Data Acquisition}
 \label{ch:sp-daq}
 
+\fixme{Fix SI units throughout, and remove a lot of the dword
+  references (looks distracting). Georgia}
+
 \section{Introduction}
 \label{sec:fd-daq:introduction}
 
@@ -84,6 +87,9 @@ to retrieve data to be built as part of an event record. At event
 building stage, optional down-selection of the data is possible via
 high-level filtering, prior to shipping the data to offline.  The
 specifics of design implementation and data flow are described in Section~\ref{sec:fd-daq:design}.
+
+\fixme{Figure should perhaps be modified to indicate low level data
+  selection. Some rewording on boxes is also neeeded to match subsystem definitions. Georgia}
 
 \begin{dunefigure}{fig:fd-daq:layout}{\dword{daq} design physical
     layout focusing on a single \SI{10}{\kilo\tonne} module. Not shown
@@ -208,7 +214,8 @@ trigger rate requirements, are summarized in Table~\ref{tab:sp-daq:rates}.
 {p{0.25\textwidth}p{0.1\textwidth}p{0.5\textwidth}}
 {tab:sp-daq:rates}{Summary
     of expected data rates. The rates assume no compression, and are
-    given for a single \SI{10}{\kilo\tonne} module.}
+    given for a single \SI{10}{\kilo\tonne} module. Trigger primitives
+  are not kept permanently; they are temporarily stored for 1-2 months.}
 Source  & Annual Data Volume & Assumptions \\\toprowrule
 Beam interactions & 27 TB & 10 MeV threshold in coincidence with beam
 time, including cosmic coincidence; 5.4 ms readout \\\colhline
@@ -222,8 +229,8 @@ Laser calibration & 200 TB & 10$^6$ total laser pulses; half the
 TPC channels illuminated per pulse; lossy
 compression (zero-suppression) on all channels\\\colhline
 Random triggers & 60 TB & 45 per day\\\colhline
-Trigger primitives & $<2$ TB & Dominated by $^{39}$Ar; collection
-channels only; 6 bytes per primitive \\\colhline
+Trigger primitives & $13$ PB & Dominated by $^{39}$Ar (50~kHz per APA face); collection
+channels only; 20 bytes per trigger primitive \\\colhline
 \end{dunetable}
 
 Self-triggering on \dword{snb} activity is a unique challenge for the
@@ -552,7 +559,7 @@ detector without interruption of normal data-taking.
 Partitioning is further described in Section~\ref{sec:daq:partition-lifetime}.
 
 \subsection{Front-end Readout}
-\label{sec:daq:design-readout}w
+\label{sec:daq:design-readout}
 %\fixme{module-generic}
 
 Front-end readout provides the first link in the data flow chain of
@@ -568,6 +575,9 @@ It is physically connected to the detector electronics via optical fiber(s) and 
     readout subsystem and its connections.}
   \includegraphics[width=0.8\textwidth]{daq-readout.png}
 \end{dunefigure}
+
+\fixme{Would be useful to add a figure showing functional blocks and
+  implementation. Georgia}
 
 The readout system comprises many similar \dword{daqrou}, each
 connected to a subset of electronics from a detector module and
@@ -686,10 +696,9 @@ expected, based on MicroBooNE and protoDUNE experience.
 If expected noise levels are achieved, this compression would provide a factor of four to ten, depending on the detector module technology.
 Effort is currently underway to understand the costs and technology involved in exploiting this benefit.
 
-
 \subsection{Data Selection}
 \label{sec:sp-daq:design-selection-algs}
-%\fixme{single-phase module}
+
 %\fixme{There are many studies which could go into this section. Some of this may very likely be moved into one or more tech notes and referenced.}
 
 
@@ -954,7 +963,7 @@ DUNE can be provided promptly enough so that the corresponding data
 still resides in the front-end buffers, they may also be considered.
 
 
-\subsubsection{High Level Trigger}
+\subsubsection{High Level Filter}
 \label{sec:fd-daq:design-data-reduction}
 
 The last processing stage in the \dword{daqdsn} subsystem is the
@@ -993,6 +1002,7 @@ validated with initial data analysis after
 first DUNE \dword{fd} operation. Planned 
 development efforts will also be carried out to determine the scale of
 processing required by the \dword{fd}.
+
 
 \subsection{Back-end System}
 \label{sec:fd-daq:design-backend}
@@ -1412,8 +1422,7 @@ The following subsections summarize past, ongoing, and planned
 development and validation studies and identify how anticipated outcomes
 will be used to finalize the \dword{daq} design.
 
-\subsection{Design Validation and Development at \dword{protodune} and
-Other Experiments}
+\subsection{Design Validation and Development}
 
 \label{sec:fd-daq:protodune}
 \metainfo{Here we describe protodune, write what similarities and
@@ -1535,121 +1544,199 @@ did the strong on-site presence of experts from within the consortium during ear
 commissioning. 
 
 Outcomes specific to \dword{protodune} subsystems are discussed in
-detail in \[talk from review\].
+greater detail in \[talk from review\].
 
-\subsubsection{Planned Development at \dword{protodune}}
+\subsubsection{Ongoing Developments}
 \label{sec:sp-daq:design-validation}
 
-\fixme{this section and onward still needs work}
+%\fixme{this section and onward still needs work}
 
-\subsubsubsection{Ongoing  \dword{felix}  Throughput Demonstration at \dword{protodune}}
-\label{sec:sp-daq:validation-pdune-felix}
-%\fixme{single-phase module}
-
-%\metainfo{Describe how the  \dword{felix}  \dword{daq} at \dword{protodune} demonstrates a
- %  \dword{felix} +CPU approach. 
- % Describe the elements that are same or similar (full-rate to host
- % RAM buffer) and different (higher-rate but external trigger).}
-
-The  \dword{felix}  \dword{daq} at \dword{protodune} partly demonstrates the front-end readout scheme for
-the PDS system, as well as the  \dword{felix} +CPU readout approach for the
-TPC. The elements of the \dword{protodune}  \dword{felix}  \dword{daq}, which are the
-same in \dword{dune}, have already demonstrated the
-reception of raw data at full rate from a single \dword{apa} to a 
- \dword{felix}  card and  \dword{felix}  host RAM buffer; upon receiving an external trigger, the
-data is propagated to the back-end system. The back-end system
-operates similarly to \dword{dune} itself. What differs in the final \dword{dune}
-implementation is that neither in the host CPU or
-GPU, nor in the added \dword{fpga} functionality does data processing  trigger primitive  generation and subsequent processing
-of \dwords{trigprimitive} through the \dword{daqdsn} system. Another
-significant difference is the much higher rate of data propagation from the
-host RAM to the back-end system in \dword{protodune} than anticipated for the \dword{fd}. Future development
-will concentrate on data processing and \dword{daqdsn}.  This is described in more detail in Section~\ref{sec:sp-daq:validation-pd-demonstrator}.
-
-\subsubsubsection{Ongoing RCE Throughput Demonstration at \dword{protodune}}
-\label{sec:sp-daq:validation-pdune-rce}
-%\fixme{single-phase module}
-
-The RCE \dword{daq} in \dword{protodune} demonstrates part of the readout scheme for
-the  \dword{felix} +FPGA readout approach for the TPC. In particular, it
-shows that real-time TPC data processing for lossy
-and lossless compression can be facilitated in FPGA, achieving
-compression factors consistent with those expected based on observed
-\dword{protodune} noise levels. In the future, the system will be used
-to demonstrate how \dwords{trigprimitive} are generated in FPGA as
-described in Section~\ref{sec:sp-daq:validation-pd-demonstrator}.
-
-\subsubsubsection{Validation of Trigger Primitives in Software}
-\label{sec:sp-daq:validation-software-trigger-primitives}
-%\fixme{single-phase module}
-
-Generating \dwords{trigprimitive} in CPU or GPU software has not
-yet been demonstrated \textit{in situ} in \dword{protodune}, but it has been
-demonstrated in simulations, using real data from \dword{protodune}, on a
-server with specs similar to those 
-of the  \dword{felix}  host server at \dword{protodune}.
-
-The algorithm is described in detail in \cite{docid-11236}; a Monte Carlo test has demonstrated the algorithm can do real-time processing of one APAs worth
-of collection wire data. This test was performed on a Xeon Gold 6140
-system, where four (4) threads (cores) were sufficient to keep
-up with the detector data rate. The algorithm begins with pedestal removal by
-finding the mean of any given wire waveform baseline using a frugal
-streaming approach. A look-ahead approach was used to stop
-updating the pedestal when it became clear that a potential signal
-had been found. Noise filtering in the form of a 7-tap low-pass FIR
-filter will be applied as an intermediate step
-between pedestal subtraction and hit finding. The hit finding
-algorithm is a simple threshold-discriminator. Using Monte Carlo, a hit
-threshold of 10 \dword{adc} counts, corresponding to 1\/4 MIP for deposits originating at the cathode, yields hit primitives dominated by
-$^{39}$Ar and maintains 100\% efficiency to MIP hits. This is robust against noise level 
-increases of 50\% above the default \dword{dune} Monte Carlo settings \cite{docid-11275}. 
-
-Tests of \dword{trigprimitive} generation on very early \dword{protodune} data have also been
-performed. Because of its surface
-location and the known noisy channels included in this study,
-\dword{protodune} \dword{trigprimitive} generation rates level off to a floor rate higher than a threshold
-of approximately 16 \dword{adc} counts. Although the total rates are much higher than
-anticipated for DUNE, the algorithm performance is promising and should improve as \dword{protodune} continues
-to run and improve its noise understanding.
-
-\subsubsubsection{Validation of Trigger Primitives in Firmware}
-\label{sec:sp-daq:validation-firmware-trigger-primitives}
-%\fixme{single-phase module}
-
-While \dword{trigprimitive} generation in firmware has not yet been
-demonstrated in the RCE system in \dword{protodune}, candidate
-algorithms are being developed and will be deployed in an \dword{fpga}
-for both \dword{protodune} and other demonstrators. 
-
-On the other hand, \microboone has been able to
-successfully implement dynamic baseline estimates and subtraction
-for region-of-interest hit finding in an \dword{fpga} \cite{NNN18}.
-%\metainfo{Succinctly describe algorithm, include physics and computing
-%  performance numbers.}
-
-\subsubsubsection{Validation of Hierarchical Trigger Layers}
-
-As described in Section~\ref{sec:sp-daq:design-selection-algs}, the \dfirst{daqdss} is structured as a layered hierarchy. 
-It must take in constant, high-rate data and output a minuscule rate that provides summary of activity in the data (trigger commands).
-To do this, it is structured in layers (primitive, candidate, command) and each layer requires certain multiplicity that spans multiple host computers communicating over the local high-speed but commodity network. 
-The algorithms, host computer multiplicity, the \dfirst{ipc} system and its network traffic must be demonstrated at scale.
-This will require development of the following elements:
-
+Subsystem development is ongoing at ProtoDUNE at the time of the
+writing of this document. A detailed schedule for 2019 is available
+in \[referencedocdb\]. Major development plan milestones are:
 \begin{itemize}
-\item A model of \dword{trigprimitive} rates and will be developed that is parameterized by signal, background and noise.  This model will be informed by \dword{protodune} and simulation studies.  The model will include the data density per unit of front-end computing as informed by the \dword{trigprimitive} validation work described above.
-\item Likewise an initial model of trigger candidate rates will be developed and concurrently prototype trigger candidate algorithms will be developed and applied to \dwords{trigprimitive} produced by their validation work (again, described above).
-\item Trigger candidate message schema and IPC application-level protocol (described more below) for their transfer will be developed.
-\item Validation will involve implementing these models, prototype algorithms, schema, etc,  initially at a small-scale on a single high-core computer and using throttled localhost connectivity.
-\item The full-scope system will require \bigo{100} host computers, but contiguous branches of the hierarchy can and will be fully tested with \bigo{20} host computers. 
-  These hosts will support 10 Gbps networking (actual or throttled) to match the expected networking. 
-  In some cases higher bandwidth connectivity may be investigated if bottlenecks are discovered. 
+\item optimization and tuning of the Front-end readout
+\item optimization and tuning of the artdaq based dataflow software
+\item enhancement of monitoring and troubleshooting capabilities
+\item introduction of CPU-based hit finding (necessary for PDS readout)
+\item introduction of FPGA-based hit finding (for TPC readout)
+\item implementation of online software data selection beyond trigger
+primitive stage (introduction of trigger candidate generation, and
+trigger command generation), and tests on well identified interaction
+topologies (e.g. long horizontal tracks, or Michel electrons from muon decay)
+\item integration of online triger command and modified data flow to event
+builder to facilitate self-triggering of detector
+\item implementation of extended fpga based front-end functionality
+(e.g. compression)
+\item prototyping of fake SNB data flow in front-end and back-end
 \end{itemize}
 
+Below, we focus on ongoing developments related to
+data selection, which is a key challenge for DUNE and new with respect
+to ProtoDUNE (and other existing or planned LArTPC detectors), as well
+as IPC and CCM.
 
+During early stages of design, significant effort has been dedicated on trigger primitive generation
+through MonteCarlo simulations. Specifically, charge collection efficiency and fake rates
+due to noise and radiologicals have been studied as a function of
+hitthreshold with MonteCarlo, demonstrating that requirements can be
+met, given sufficiently low electronics noise levels and radiological
+signal \[ref\]. Ongoing efforts within DUNE's Radiologicals Task force
+aim to validate or provide more accurate background predictions, upon
+which this performance will be validated. In addition, offline emulations
+of CPU trigger primitive generation on CPU (4 cores) have been carried
+out, demonstrating the ability of software algorithms in CPU to keep
+up with expected raw data rates, as shown in Figure~\ref{xx}. 
+Following the commissioning of ProtoDUNE, full-stream, single-APA,
+online trigger primitive generation on CPU (10 cores) was successfully
+demonstrated at ProtoDUNE. Trigger primitive rates were measured at
+ProtoDUNE in situ. Effort on understanding and removing contribution
+from cosmics/cosmogenics and (known) noisy channels is ongoing. 
 
-\subsubsubsection{Validation of High Level Filter in Software}
+Trigger candidate generation, building on trigger primitives and defined
+as two consecutive trigger primitives in both channel and time space,
+with a minimum hit threshold, have also been studied with MonteCarlo
+simulations. Trigger candidates with sufficient energy can be accepted
+to generate corresponding Trigger Commands for localized high energy
+activity, such as for beam, atmospheric neutrinos, baryon number
+violating signatures, and cosmics. Simulation studies demonstrate that
+this scheme meets efficiency requirements for localized high energy
+triggers, as shown in Figure~\ref{xx}. Specifically,
+simulations demonstrate that $>99$\% efficiency is achievable for
+$>100$ MeV visible energy, and that the effective threshold for
+localized triggers for the system is at $\sim$10 MeV. 
 
+Low-energy trigger candidates furthermore can serve as input to the
+SNB trigger. Simulation demonstrates that the trigger candidate
+efficiency for any individual SN neutrino interaction is on the order
+of 20-30\%. Simulations have further demonstrated that a
+multiplicity-based SNB trigger decision which integrates low-energy
+trigger candidates over an up to 10 seconds
+integration window yields high ($>90$\%) galactic coverage while
+keeping fake SNB trigger rates to one per month, per system
+requirements. An energy-weighted multiplicity count scheme could be
+applied to further increase efficiency and minimize background.
+The dominant contributor to fake SNB triggers is
+radiological backgrounds from neutrons, followed by Radon. It is
+crucial to continue working closely with the Radiological Task force
+to validate radiological simulation assumptions.
 
+Given that simulation studies support requirements and rate
+assumptions, the protoDUNE demonstration of ability to keep up with
+rates from 1/25$^{th}$ the size of a single DUNE FD SP module, for trigger
+rates up to 40 Hz and 3 ms readout window 
+allows confident scaling of the protoDUNE back-end DAQ subsystem to
+that of DUNE.
+
+\fixme{Add HLT simulations}
+
+% \subsubsubsection{Ongoing  \dword{felix}  Throughput Demonstration at \dword{protodune}}
+% \label{sec:sp-daq:validation-pdune-felix}
+% %\fixme{single-phase module}
+
+% %\metainfo{Describe how the  \dword{felix}  \dword{daq} at \dword{protodune} demonstrates a
+%  %  \dword{felix} +CPU approach. 
+%  % Describe the elements that are same or similar (full-rate to host
+%  % RAM buffer) and different (higher-rate but external trigger).}
+
+% The  \dword{felix}  \dword{daq} at \dword{protodune} partly demonstrates the front-end readout scheme for
+% the PDS system, as well as the  \dword{felix} +CPU readout approach for the
+% TPC. The elements of the \dword{protodune}  \dword{felix}  \dword{daq}, which are the
+% same in \dword{dune}, have already demonstrated the
+% reception of raw data at full rate from a single \dword{apa} to a 
+%  \dword{felix}  card and  \dword{felix}  host RAM buffer; upon receiving an external trigger, the
+% data is propagated to the back-end system. The back-end system
+% operates similarly to \dword{dune} itself. What differs in the final \dword{dune}
+% implementation is that neither in the host CPU or
+% GPU, nor in the added \dword{fpga} functionality does data processing  trigger primitive  generation and subsequent processing
+% of \dwords{trigprimitive} through the \dword{daqdsn} system. Another
+% significant difference is the much higher rate of data propagation from the
+% host RAM to the back-end system in \dword{protodune} than anticipated for the \dword{fd}. Future development
+% will concentrate on data processing and \dword{daqdsn}.  This is described in more detail in Section~\ref{sec:sp-daq:validation-pd-demonstrator}.
+
+% \subsubsubsection{Ongoing RCE Throughput Demonstration at \dword{protodune}}
+% \label{sec:sp-daq:validation-pdune-rce}
+% %\fixme{single-phase module}
+
+% The RCE \dword{daq} in \dword{protodune} demonstrates part of the readout scheme for
+% the  \dword{felix} +FPGA readout approach for the TPC. In particular, it
+% shows that real-time TPC data processing for lossy
+% and lossless compression can be facilitated in FPGA, achieving
+% compression factors consistent with those expected based on observed
+% \dword{protodune} noise levels. In the future, the system will be used
+% to demonstrate how \dwords{trigprimitive} are generated in FPGA as
+% described in Section~\ref{sec:sp-daq:validation-pd-demonstrator}.
+
+% \subsubsubsection{Validation of Trigger Primitives in Software}
+% \label{sec:sp-daq:validation-software-trigger-primitives}
+% %\fixme{single-phase module}
+
+% Generating \dwords{trigprimitive} in CPU or GPU software has not
+% yet been demonstrated \textit{in situ} in \dword{protodune}, but it has been
+% demonstrated in simulations, using real data from \dword{protodune}, on a
+% server with specs similar to those 
+% of the  \dword{felix}  host server at \dword{protodune}.
+
+% The algorithm is described in detail in \cite{docid-11236}; a Monte Carlo test has demonstrated the algorithm can do real-time processing of one APAs worth
+% of collection wire data. This test was performed on a Xeon Gold 6140
+% system, where four (4) threads (cores) were sufficient to keep
+% up with the detector data rate. The algorithm begins with pedestal removal by
+% finding the mean of any given wire waveform baseline using a frugal
+% streaming approach. A look-ahead approach was used to stop
+% updating the pedestal when it became clear that a potential signal
+% had been found. Noise filtering in the form of a 7-tap low-pass FIR
+% filter will be applied as an intermediate step
+% between pedestal subtraction and hit finding. The hit finding
+% algorithm is a simple threshold-discriminator. Using Monte Carlo, a hit
+% threshold of 10 \dword{adc} counts, corresponding to 1\/4 MIP for deposits originating at the cathode, yields hit primitives dominated by
+% $^{39}$Ar and maintains 100\% efficiency to MIP hits. This is robust against noise level 
+% increases of 50\% above the default \dword{dune} Monte Carlo settings \cite{docid-11275}. 
+
+% Tests of \dword{trigprimitive} generation on very early \dword{protodune} data have also been
+% performed. Because of its surface
+% location and the known noisy channels included in this study,
+% \dword{protodune} \dword{trigprimitive} generation rates level off to a floor rate higher than a threshold
+% of approximately 16 \dword{adc} counts. Although the total rates are much higher than
+% anticipated for DUNE, the algorithm performance is promising and should improve as \dword{protodune} continues
+% to run and improve its noise understanding.
+
+% \subsubsubsection{Validation of Trigger Primitives in Firmware}
+% \label{sec:sp-daq:validation-firmware-trigger-primitives}
+% %\fixme{single-phase module}
+
+% While \dword{trigprimitive} generation in firmware has not yet been
+% demonstrated in the RCE system in \dword{protodune}, candidate
+% algorithms are being developed and will be deployed in an \dword{fpga}
+% for both \dword{protodune} and other demonstrators. 
+
+% On the other hand, \microboone has been able to
+% successfully implement dynamic baseline estimates and subtraction
+% for region-of-interest hit finding in an \dword{fpga} \cite{NNN18}.
+% %\metainfo{Succinctly describe algorithm, include physics and computing
+% %  performance numbers.}
+
+% \subsubsubsection{Validation of Hierarchical Trigger Layers}
+
+% As described in Section~\ref{sec:sp-daq:design-selection-algs}, the \dfirst{daqdss} is structured as a layered hierarchy. 
+% It must take in constant, high-rate data and output a minuscule rate that provides summary of activity in the data (trigger commands).
+% To do this, it is structured in layers (primitive, candidate, command) and each layer requires certain multiplicity that spans multiple host computers communicating over the local high-speed but commodity network. 
+% The algorithms, host computer multiplicity, the \dfirst{ipc} system and its network traffic must be demonstrated at scale.
+% This will require development of the following elements:
+
+% \begin{itemize}
+% \item A model of \dword{trigprimitive} rates and will be developed that is parameterized by signal, background and noise.  This model will be informed by \dword{protodune} and simulation studies.  The model will include the data density per unit of front-end computing as informed by the \dword{trigprimitive} validation work described above.
+% \item Likewise an initial model of trigger candidate rates will be developed and concurrently prototype trigger candidate algorithms will be developed and applied to \dwords{trigprimitive} produced by their validation work (again, described above).
+% \item Trigger candidate message schema and IPC application-level protocol (described more below) for their transfer will be developed.
+% \item Validation will involve implementing these models, prototype algorithms, schema, etc,  initially at a small-scale on a single high-core computer and using throttled localhost connectivity.
+% \item The full-scope system will require \bigo{100} host computers, but contiguous branches of the hierarchy can and will be fully tested with \bigo{20} host computers. 
+%   These hosts will support 10 Gbps networking (actual or throttled) to match the expected networking. 
+%   In some cases higher bandwidth connectivity may be investigated if bottlenecks are discovered. 
+% \end{itemize}
+
+% \subsubsubsection{Validation of High Level Filter in Software}
+
+\fixme{The following needs to be integrated in text above, with
+  comparable level of detail}
 \subsubsubsection{Prototype Inter-process Communication System}
 \label{sec:fd-daq:validation-demonstrators}
 \fixme{module-generic}
@@ -1697,60 +1784,59 @@ Given reasonably linear scaling as well as benchmarks preformed on faster networ
 The ZeroMQ-based prototype software will continue to be developed with the goal to understand how to manage software and configuration complexity and to participate in the other demonstrators described in this section. 
 
 
-\subsubsection{Future \dword{protodune} \dword{daq} Demonstrator}
-\label{sec:sp-daq:validation-pd-demonstrator}
+% \subsubsection{Future \dword{protodune} \dword{daq} Demonstrator}
+% \label{sec:sp-daq:validation-pd-demonstrator}
 
-A demonstration of the \dword{daq} system design based in \dword{protodune} is
-planned for 2020. The key components are the front-end readout, timing
-system, and \dword{daqdsn} systems. A full vertical slice through the
-timing and readout system will be constructed, with
-TPC and PDS detectors, as well as calibration systems. Although a full-scale
-demonstration of the \dword{daqdsn} system cannot be achieved with
-\dword{protodune}, the basic infrastructure will be demonstrated and
-used to self-trigger \dword{protodune}.
+% A demonstration of the \dword{daq} system design based in \dword{protodune} is
+% planned for 2020. The key components are the front-end readout, timing
+% system, and \dword{daqdsn} systems. A full vertical slice through the
+% timing and readout system will be constructed, with
+% TPC and PDS detectors, as well as calibration systems. Although a full-scale
+% demonstration of the \dword{daqdsn} system cannot be achieved with
+% \dword{protodune}, the basic infrastructure will be demonstrated and
+% used to self-trigger \dword{protodune}.
 
-The high-level goals will be to demonstrate and validate
-integration of \dword{fe} with TPC and PDS electronics, 
-data throughput for a single \dword{fe} instance 
-readout data processing for a single \dword{fe} instance 
-\dword{trigprimitive} generation for a single front-end instance 
-distribution of timing and control signals to detector \dwords{fe} 
-data selection infrastructure and self-triggering  and 
-integration with calibration systems.
+% The high-level goals will be to demonstrate and validate
+% integration of \dword{fe} with TPC and PDS electronics, 
+% data throughput for a single \dword{fe} instance 
+% readout data processing for a single \dword{fe} instance 
+% \dword{trigprimitive} generation for a single front-end instance 
+% distribution of timing and control signals to detector \dwords{fe} 
+% data selection infrastructure and self-triggering  and 
+% integration with calibration systems.
 
-The components used in the \dword{protodune}
-demonstrator will be assembled in 2019, and their operation will
-be verified in standalone tests. For \dword{fpga} processing, the
-initial version of firmware will be demonstrated in \dword{fpga} development
-cards, and an integration test will be conducted in 2019 with a
-prototype \dword{fpga} processing module and the  \dword{felix} \dword{fe}.
+% The components used in the \dword{protodune}
+% demonstrator will be assembled in 2019, and their operation will
+% be verified in standalone tests. For \dword{fpga} processing, the
+% initial version of firmware will be demonstrated in \dword{fpga} development
+% cards, and an integration test will be conducted in 2019 with a
+% prototype \dword{fpga} processing module and the  \dword{felix} \dword{fe}.
 
 
-\subsection{Vertical Slice Teststands}
+\subsection{Additional Teststands}
 \label{sec:sp-daq:validation-demonstrators}
 %\fixme{single-phase module}
 %\metainfo{Describe VST demonstrators and why we must build them.}
 
-A number of vertical slice teststands will be built to allow
+Concurrently with protodune operation and development, a number of
+``vertical slice'' teststands will be built to allow 
 development and testing of individual parts of the \dword{daq} system
-as well as testing of key aspects of the design and overall scalability. At minimum, the following teststands
-will be constructed:
-\begin{itemize}
-\item \Dword{daqdsn}: List aims. One option is to construct a
-  full-scale \dword{daqdsn} system using fake data 
-sources, which could be simulated or real (pre-recorded)
-\dword{protodune} data,
-or both, subject to available resources. Another option is to identify
-likely failure points and/or bottlenecks and perform
-small-scale tests that stress the critical parts of the corresponding
-infrastructrure. The criteria for those tests will be defined beforehand.
-\item Back-end system: List aims. (Not finished)
-\end{itemize}
+as well as testing of key aspects of the design and overall
+scalability. A data selection subsystem vertical slice teststand will be
+constructed and operated on fake-generated data, to assist in the
+development of data selection, exercise the system for a variety of
+configurations, perform small-scale tests that stress the critical
+parts of the corresponding infrastructure, 
+and identify likely failure points and/or bottlenecks. The subsystem
+will also be deployed and exercised on existing HPC clusters of
+comparable resources and specifications as planned for the final
+production system for ``horizontal slice'' tests of similar nature. The
+back-end DAQ subsystem will be developed and tested in a similar way.
 
-Other than these dedicated vertical slice teststands, a number of
-\dword{daq} development kits will be available for other detector and
-calibration consortia to support 
-their own development, production, and quality assurance programs. The \dword{daq} 
+In addition to dedicated vertical and horizontal slice teststands, a number of
+\dword{daq} development kits will be available for the consortium for
+specific component testing, as well as to other detector and
+calibration consortia to support their own development, production, and quality assurance programs. The \dword{daq} 
 kit will also form the basis for testing at APA Construction sites beginning in 2020. 
 
 \section{Production, Assembly, Installation and Integration}
