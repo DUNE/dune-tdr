@@ -13,16 +13,15 @@ include the \dwords{apa}, the electronics associated with the detection
 and recording of \dword{lar} scintillation photons, nor the \dword{daq} 
 computing systems needed to capture and record these data.
 
-\fixme{move Figure 4.1 at the beginning of the chapter ?}
-
 The main difference between the \dword{dune} \dword{sp} \dword{detmodule} 
 and previous experiments or prototypes using \dword{lar} technology is
 that for the first time all the signal processing for the readout of the
 wires of the \dwords{apa} takes place inside the \dword{lar}, in boards that 
-are directly mounted on the \dword{apa}. Accordingly, the \dword{tpc} readout
-electronics are referred to as the \dword{ce}. This approach to the \dword{tpc}
+are directly mounted on the \dword{apa}. This approach to the \dword{tpc}
 readout has been tested for the first time in the \dword{pdsp} prototype,
-and is also being adopted by the \dword{sbnd} experiment.
+and is also being adopted by the \dword{sbnd} experiment. Sometimes, the 
+\dword{tpc} readout components immersed in the \dword{lar} are referred 
+to as the \dword{ce}. 
 
 The electronics are mounted inside the \dword{lar} to exploit the fact that 
 charge carrier mobility in silicon is higher, and thermal fluctuations are lower,  
@@ -38,22 +37,18 @@ and minimizes the number of cables coming out of it.
 As the full \dword{tpc} electronics chain for the \dword{spmod} includes 
 many components on the warm side of the cryostat as well, the \dword{dune} 
 consortium designated to develop this system is formally called 
-the \dword{dune} \dword{sp} \dword{tpc} electronics consortium, but 
-sometimes referred to as the \dword{ce} consortium.
+the \dword{dune} \dword{sp} \dword{tpc} electronics consortium.
 
-This section starts with a review of the considerations that
+This overview section starts with a review of the considerations that
 have led to the proposed design for the \dword{dune} \dword{sp} detector, 
-then discusses how the detector requirements follow 
-from the physics goals of the experiment.
-Later we demonstrate how early data from \dword{pdsp} 
-validates the design and 
-discuss how the lessons learned from the construction,
-integration, installation, and commissioning of \dword{pdsp} have 
-informed the design changes that we are planning for the \dword{dune}
-\dword{spmod}.
-
-The reader will find a detailed description of all the \dword{ce} detector 
-components in Section \ref{sec:fdsp-tpcelec-design}, followed by discussions 
+then discusses how the detector requirements follow from the physics goals 
+of the experiment. The reader will find a detailed description of all the 
+\dword{tpc} electronics detector components in Section \ref{sec:fdsp-tpcelec-design},
+including a discussion of how the lessons learned from the construction,
+integration, installation and commissioning of \dword{pdsp} have informed
+the design of the \dword{dune} \dword{sp} module and how the early data
+from \dword{pdsp} validate this design. The description of the detector
+design is then followed by discussions 
 of the \dword{qa} program and the plans for production and assembly, 
 and for integration, installation and commissioning, in 
 Sections~\ref{sec:fdsp-tpcelec-qa}--\ref{sec:fdsp-tpcelec-integration}. 
@@ -62,7 +57,7 @@ detector components provided by other consortia, with \dword{tc}, and with the p
 Sections~\ref{sec:fdsp-tpcelec-safety}--\ref{sec:fdsp-tpcelec-management} 
 conclude the chapter with plans for addressing safety issues and risks during the
 construction, installation, and operation of the detector, and 
-an outline of the organization of the \dword{ce} consortium, 
+an outline of the organization of the \dword{tpc} electronics consortium, 
 with a timeline for the \dword{detmodule} construction and an estimate
 of the resources required.
 
@@ -70,19 +65,14 @@ of the resources required.
 \subsection{Introduction}
 \label{sec:fdsp-tpcelec-overview-intro}
 
-\fixme{Marco: the following assumes that in the executive summary chapter we have
-one section that describes the signal formation in the TPC. That section
-should be based on Bruce Baller's summary paper (arXiv:1703.0424), with
-numbers tailored to the DUNE-SP case.}
-
 In the \dword{dune} \dword{spmod} a \dword{mip} deposits on average between
 \SI{20}{k}{e$^-$} and \SI{30}{k}{e$^-$} on each collection wire, assuming a drift \efield
 of \spmaxfield and an electron lifetime of \SI{6}{ms}, as discussed in
-Chapter~\ref{ch:sp-execsum}, and assuming full transparency during the 
+Chapter~\ref{ch:fdsp-execsum}, and assuming full transparency during the 
 electron transport through the grid plane and the two planes of induction
 wires, as discussed in Chapter~\ref{ch:fdsp-apa}. The larger of the two numbers 
 is for \dwords{mip} close to the collection plane, and the smaller
-takes into account the electron captuer by electronegative impurities during the electron
+takes into account the electron capture by electronegative impurities during the electron
 drift tracks close to the cathode plane. 
 
 The \dword{dune} \dword{sp} \dword{tpc} is a unit-gain device where the 
@@ -95,108 +85,99 @@ electrons drift toward the wires, and positive when they drift away from
 the wires. On the collection wires signals are unipolar (negative).
 The signal duration is of the order of microseconds, and tends to be narrower
 for the collection plane due to the enhancement of the weighting field for
-the collection wires. Due to the lack of amplification of 
-electrons inside \dword{lar}, low noise  is
-essential for the \dword{ce} to reliably extract the ionization electron signal from both the 
-collection and induction wire planes in a \dword{sp} \dword{lartpc}. 
+the collection wires. Due to the lack of amplification of electrons inside 
+\dword{lar}, low noise is essential for the \dword{ce} to reliably extract the 
+ionization electron signal from both the collection and induction wire planes 
+in a \dword{sp} \dword{lartpc}. 
 
-The reduction in noise level obtained with the \dword{fe} electronics at \dword{lar} temperature greatly 
-extends the reach of the \dword{dune} physics program. %Decreasing the noise level 
-It allows measurement of smaller charge deposits, which mitigates against the risk of %a source of risk mitigation in case the desired 
-inability to reach the desired drift field %cannot be reached 
-or %the 
-a lower electron lifetime %in the detector is less 
-than desired (due to %the 
-electronegative impurities). % in the detector). 
+The reduction in noise level obtained with the \dword{fe} electronics at 
+\dword{lar} temperature greatly extends the reach of the \dword{dune} 
+physics program. It allows measurement of smaller charge deposits, which 
+mitigates against the risk of inability to reach the desired drift field 
+or a lower electron lifetime than desired due to electronegative impurities.
 For example, given an electron lifetime of \SI{3}{ms} and a drift \efield
 of \SI{0.25}{kV/cm}, the charge deposited in the collection wires from a 
 \dword{mip} close to the cathode plane is reduced to \SI{10}{k}{e$^-$}.
 The exact requirement of the minimal \dword{s/n} required for pattern
-recognition depends on the tracking algorithms and %on 
-the offline signal processing.
-Initial studies for \dword{dune} indicated %that 
-a required minimal \dword{s/n} of \num{9} 
-on both the collection and induction wires. % would be necessary. 
-The 
-\dword{sbnd} experiment prefers a minimal \dword{s/n} of \num{12} for the
-collection wires and of \num{5} for the induction wires~\cite{bib:sbnddoc1921}, taking into account
-the difference between the signal amplitude in the two cases and considering %also 
-the gain coming from fitting the bipolar shape of the signal on the
-induction wires. 
-%For the design of the signal processing hardware for the wires of the \dword{dune} \dword{spmod} we are setting a requirement of a total noise of less than 1000 e$^-$ consistent with having a \dword{s/n} of at least 10 on the collection wires 
-For the signal processing hardware for the \dword{spmod} wires we require 
-a total \dword{enc} of less than 1000 e$^-$, consistent with a \dword{s/n}
-of at least 10 on the collection wires, 
-even in the pessimistic case  where the electron lifetime and the \efield just meet the required design values discussed in Chapter~\ref{ch:sp-hv}.
+recognition depends on the tracking algorithms and the offline signal 
+processing. For the design of the \dword{tpc} electronics we use the
+minimal requirement of a total \dword{enc} of less than 1000 e$^-$, consistent 
+with a \dword{s/n} of at least 10 on the collection wires, even in the
+pessimistic case where the electron lifetime and the \efield just meet 
+the required design values discussed in Chapter~\ref{ch:sp-hv}. Considering
+the difference in signal amplitudes between collection and induction wires
+and the bipolar shape of the signal on the latter, this requirement corresponds 
+to a \dword{s/n} of at least 5 on the induction wires. This asymmetric requirement 
+for the minimal \dword{s/n} on the collection and induction wires has already been 
+adopted by the \dword{sbnd} experiment~\cite{bib:sbnddoc1921}.
 
 The goal is to keep the total noise level as low as possible. For example, an 
 increase in the \dword{s/n} above 15 allows the observation of MeV-scale photons, 
 as recently demonstrated by \dword{argoneut}~\cite{Acciarri:2018myr}. This enables  
-reconstruction of both photons released during de-excitation of the nucleus and %of 
-part
-of the energy transferred to final-state neutrons. Low noise is also crucial
-for the baseline oscillation analysis described in Chapter 5 of Volume~\volnumberphysics{} of this
-\dword{tdr}, \voltitlephysics{}. %the Physics part of  (Volume 2 Chapter 5). 
-The event classification is based
-on %using 
-a \dword{cvn} that %uses as 
-inputs three images
-of the neutrino interactions, one for each of the three readout views, using the
-reconstructed hits on the individual wire planes. This approach relies
-%on the low noise levels expected for \dword{dune}.
-on  low noise levels.
-Decreasing the noise level also increases the reach of low-energy 
-physics measurements like those associated with stellar core-collapse \dword{snb} neutrinos. Finally, a low noise level opens up the possibility of using 
-$\mathrm{{}^{39}Ar}$ beta decays to calibrate the \dword{dune}
-\dword{spmod}~\cite{MICROBOONE-NOTE-1050-PUB}.
-The noise level also affects %consequences on 
-the bandwidth requirements
-for the \dword{daq} system, %that are 
-discussed in Chapter~\ref{ch:sp-daq}; 
+reconstruction of both photons released during de-excitation of the nucleus and 
+part of the energy transferred to final-state neutrons. Low noise is also crucial
+for the baseline oscillation analysis described in Chapter 5 of Volume~\volnumberphysics{} 
+of this \dword{tdr}, \voltitlephysics{}. The event classification is based
+on a \dword{cvn} that uses as inputs three images of the neutrino interactions, 
+one for each of the three readout views, using the reconstructed hits on the 
+individual wire planes. This approach relies on low noise levels. Decreasing 
+the noise level also increases the reach of low-energy physics measurements 
+like those associated with stellar core-collapse \dword{snb} neutrinos. 
+Finally, a low noise level opens up the possibility of using $\mathrm{{}^{39}Ar}$ 
+beta decays to calibrate the \dword{dune} \dword{spmod}~\cite{MICROBOONE-NOTE-1050-PUB}.
+Instead of zero suppression, the \dword{dune} \dword{daq} system uses lossless 
+data compression, as discussed in Section~\ref{sec:fd-daq:requirements}, that
+becomes more efficient as the noise level is reduced. Therefore, the noise level 
+also affects the bandwidth requirements for the \dword{daq} system,
+discussed in Chapter~\ref{ch:sp-daq};
 these bandwidth requirements can be a limiting factor for low-energy
 physics signals, particularly those of astrophysical origin.
 
+\begin{dunefigure}
+[The baseline architecture for the TPC electronics.]
+{fig:ce-scheme}
+{The baseline architecture for the \dword{tpc} electronics. The basic unit is the
+128-channel \dword{femb}. The scheme includes also the
+\dwords{sipm} used for the readout of the \dwords{pd}.}
+\includegraphics[width=0.99\linewidth]{sp-tpcelec-schematic-v3.pdf}
+\end{dunefigure}
+
 To retain maximum flexibility in optimizing reconstruction algorithms after 
-the \dword{dune} data is collected, the \dword{spmod} electronics are designed 
+the \dword{dune} data is collected, the \dword{tpc} electronics are designed 
 to produce a digital record representing the waveform of the current produced 
-by charge collection and induction on the anode wires.  Each anode wire signal is 
+by charge collection and induction on the anode wires. Each anode wire signal is 
 input to a charge-sensitive amplifier, followed by a pulse-shaping circuit and 
-an \dword{adc}.  To minimize the number of cables and cryostat penetrations, 
+an \dword{adc}. To minimize the number of cables and cryostat penetrations, 
 the \dwords{adc} as well as the amplifier/shapers are located in the \dword{lar}, 
 and digitized data from many wires merge onto a much smaller set of high-speed 
-serial links. The \dword{ce} signal processing is implemented in \dfirsts{asic}
-using \dword{cmos} technology.  The \dword{ce} is continuously 
-read out, resulting in a digitized \dword{adc} sample from each \dword{apa} 
-channel (wire). The \dwords{asic} used for the readout of the \num{2560}
-wires of each \dword{apa} are mounted on \dfirsts{femb}. These are connected to
-\dwords{wib} located outside of the cryostat via the \dword{ce} signal 
+serial links. The \dword{tpc} signal processing is implemented in \dfirsts{asic}
+using \dword{cmos} technology. The \dword{tpc} is continuously read out, resulting 
+in a digitized \dword{adc} sample from each \dword{apa} channel (wire). The 
+\dwords{asic} used for the readout of the \num{2560} wires of each \dword{apa} 
+are mounted on \dfirsts{femb}, as shown in Figure~\ref{fig:ce-scheme}. These are
+connected to \dwords{wib} located outside of the cryostat via the \dword{ce} signal 
 cable flange located at the \dword{ce} \fdth at the top of the cryostat.
 The \dwords{wib} are installed, together with \dword{ptc} that distribute
 the power and the clock and control signals, in a \dword{wiec} that is
 mounted on the signal flange. From the \dwords{wib} the data is sent to 
 the \dword{daq} back-end on an optical fiber network as discussed in 
-Chapter~\ref{ch:sp-daq}. See Figure~\ref{fig:ce-scheme} for an illustration of
-the \dword{ce} system architecture that is briefly summarized above; the \dword{ce}
-system architecture is described in more detail in
-Section~\ref{sec:fdsp-tpcelec-design-femb}.
+Chapter~\ref{ch:sp-daq}. 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% anne to here 2/9
-\subsection{Requirements}
+\subsection{Requirements and Specification}
 \label{sec:fdsp-tpcelec-overview-requirements}
-\fixme{Specifications? (anne)}
 
-%In addition to the noise requirement (less than \num{1000}\,$e^{-}$), several 
-%additional requirements determine most of the other important \dword{dune} \dword{spmod}
-%electronics requirements. 
-A number of specifications are imposed on the \dword{ce} in addition to the noise requirement (\dword{enc}~$<\SI{1000}{e^-}$). 
-Some of them, labeled as SP-FD in Table~\ref{tab:specs:SP-ELEC},
-are derived from \dword{dune}'s overall physics goals. % of the experiment. 
-The rest, labeled
-as SP-TPC, are engineering specifications derived from the design choices for the \dword{ce}. % that
-%are discussed later in this Chapter, in Section~\ref{sec:fdsp-tpcelec-design}.
-%It should be 
-Note that requirements SP-FD-01, SP-FD-03, SP-FD-04, and SP-FD-05 do not 
-apply to the \dword{ce}. %on other detector components. % other than the \dword{ce} ones.
+A number of specifications are imposed on the \dword{tpc} electronics in addition to the 
+noise requirement (\dword{enc}~$<\SI{1000}{e^-}$). Some of them, labeled as 
+SP-FD in Table~\ref{tab:specs:SP-ELEC}, are derived from \dword{dune}'s 
+overall physics goals. The rest, labeled as SP-TPC, are engineering specifications 
+derived from the design choices for the \dword{ce}. Note that requirements 
+SP-FD-01, SP-FD-03, SP-FD-04, and SP-FD-05 do not apply to the \dword{tpc} electronics. 
+
+\fixme{Marco: the LBNC and every reader complain about the presence of
+requirements SP-FD-01, SP-FD-03, SP-FD-04, and SP-FD-05.}
+
+\fixme{Marco: requested text change in DocDB-11074 affecting requirements SP-FD-03 
+and SP-FD-28}.
 
 \pagebreak
 \input{generated/req-longtable-SP-ELEC}
@@ -206,105 +187,95 @@ apply to the \dword{ce}. %on other detector components. % other than the \dword{
 to match the time required for the drifting charges to travel from one plane of anode
 wires to the next, which corresponds to the typical duration of the signal observed
 on the wires. The planes of anode wires are separated by \SI{4.75}{mm} 
-(see Chapter~\ref{ch:fdsp-apa}), and the drift velocity for
-the \efield{}s considered for \dword{dune} is in the range
-\SIrange{1.25}{1.5}{mm/$\mu$s}. %Having a peaking time of the \dword{fe}
-A \dword{fe} peaking time  similar to the typical signal duration improves the detector's two-track resolution.  
-%of the detector.}
+(see Chapter~\ref{ch:fdsp-apa}), and the drift velocity for the \efield{}s 
+considered for \dword{dune} is in the range \SIrange{1.25}{1.5}{mm/$\mu$s}. 
+A \dword{fe} peaking time  similar to the typical signal duration improves the 
+detector's two-track resolution.  
 
 \item SP-FD-14: The system must have a linear response up to an impulse input of 
 at least \num{500000}\,$e^{-}$.  This corresponds roughly to the largest 
-ionization signals expected. 
-These occur in events where multiple protons are produced 
+ionization signals expected. These occur in events where multiple protons are produced 
 in the primary event vertex, in particular, when the trajectories of one 
-or more of %those particles 
-the protons are parallel to the wire, %causing the charge 
-%over a long path length to be collected within a short time.
+or more of the protons are parallel to the wire, 
 leading to collection of charge over a long path length within a short time.
 
 \item SP-FD-19:  The \dword{adc} sampling frequency must be \SI{{\sim}2}{MHz},
 This value is chosen to match a \dword{fe} shaping time of \SI{1}{\micro\second} 
 (approximate Nyquist condition) while minimizing the data rate.
 
-\item SP-FD-20:  The \dword{adc} must digitize the charge deposited on the wires 
+\item SP-FD-20: The \dword{adc} must digitize the charge deposited on the wires 
 with 12~bits of precision.  The lower end of the \dword{adc} dynamic 
 range is driven by the requirement that the digitization not contribute 
 to the total electronics noise, as defined by requirement SP-FD-25. The upper end
-is defined by SP-FD-14. Combining this with SP-FD-2 on the total electronics noise 
+is defined by SP-FD-14. Combining this with SP-FD-02 on the total electronics noise 
 results in the need for 12~bits digitization. 
 
-\fixme{Reorder requirements so that SP-FD-25 comes before SP-FD-20}
-
-\item SP-FD-21:   The power dissipated by the electronics located in the \dword{lar} must
-be less than \SI{50}{mW/channel}. Lower power dissipation is desirable because 
-the mass of the power cables scales with  power. 
- Ongoing studies 
-focus on whether the amount of power dissipated by the electronics 
-should be minimized further 
- because of potential complications from 
-argon boiling. %; in principle, this should not be a problem because the 
-%\dword{ce} boxes housing the \dwords{femb} are designed to channel 
-%bubbles to the \dword{apa} frames. A test stand is being prepared
-%at \dword{bnl} to measure the power density required to generate
-%bubbles inside \dword{lar} at a depth corresponding
-%to that of the \dwords{femb} mounted on the bottom \dword{apa}.
+\item SP-FD-21: Preliminary studies indicate that the power dissipated by the 
+electronics located in the \dword{lar} should be less than \SI{50}{mW/channel}. 
+Lower power dissipation is desirable because the mass of the power cables scales 
+with power. Ongoing studies focus on whether the amount of power dissipated by 
+the electronics should be minimized further because of potential complications from 
+argon boiling. 
 
 \item SP-FD-25: 
-%All 
 The components of the readout chain, including the \dword{adc}
 and the bias voltage supplies, together must not contribute significantly to
-the overall noise. % of the readout chain. 
-%In the case of the \dword{adc} this requirement depends on the gain of the \dword{fe} and
-%for each gain setting it translates into requirements on
-%the \dword{adc} parameters, including non-linearity and noise.}
-The \dword{adc} specifications for non-linearity and noise will depend on the gain of the \dword{fe}.
+the overall noise. The \dword{adc} specifications for non-linearity and 
+noise will depend on the gain of the \dword{fe}.
 
-
-
-\item SP-FD-28: The fraction of non-functioning channels over %the 
-\dword{dune}'s nominal  \dunelifetime
-lifetime %of the \dword{dune} experiment should not
-must not exceed 1\%. Ongoing studies %Studies are ongoing to 
-will quantify the effect of failures
+\item SP-FD-28: The fraction of non-functioning channels over 
+\dword{dune}'s nominal \dunelifetime lifetime must not exceed 1\%. 
+Ongoing studies will quantify the effect of failures
 in the \dword{tpc} and electronics, including
 single wire failures, and failures of groups of
 \num{16}, \num{64}, or \num{128} channels.
 
 \item SP-ELEC-1: The \dword{fe} must have an adjustable baseline such that a single
-amplifier can process both the
-bipolar signal from the induction wires and the mostly unipolar signal 
-from the collection wires. % can be processed with a single amplifier.
+amplifier can process both the bipolar signal from the induction wires and the mostly 
+unipolar signal from the collection wires. 
 
-\item SP-ELEC-2: The readout electronics for the \dword{apa} wires must be organized
+\item SP-ELEC-2: The \dword{fe} must have a gain such that allows using the entire
+voltage range provided by the chosen chip fabrication technology and operating
+voltage without saturation for physics signals up to those specified in
+SP-FD-14. Multiple gain settings could be made available to allow for optimization
+of the detector performance.
+
+\item SP-ELEC-3: The dispersion of the sampling times on the different wires of
+all the \dwords{apa} in one \dword{dune} \dword{sp} detector module should
+be less than \SI{50}{ns}. This value is much smaller than the 
+time difference between to subsequent samples on the same wire
+as defined by the sampling frequency (SP-FD-19) such that it gives
+a negligible contribution to the single hit resolution (assuming
+a drift velocity of \SI{1.6}{mm/$\mu$s} the requirement of \SI{50}{ns}
+corresponds to a contribution to the single hit resolution of \SI{80}{$\mu$m}).
+
+\item SP-ELEC-4: The readout electronics for the \dword{apa} wires must be organized
 into \dwords{femb} containing 128 channels. This number is a sub-multiple
-of the number of wires on an \dword{apa} and is %also 
-determined
+of the number of wires on an \dword{apa} and is determined
 by geometrical considerations, e.g., the number, size, and form
-factor of the \dword{cr} boards introduced in Section~\ref{sec:fdsp-tpcelec-design-bias}. %{sec:crboards}.
+factor of the \dword{cr} boards introduced in Section~\ref{sec:fdsp-tpcelec-design-bias}.
 
-
-\item SP-ELEC-3: The data from the \dwords{femb} must be transmitted to the
-\dwords{wib} on a maximum of four links per board, to minimize
+\item SP-ELEC-5: The data from the \dwords{femb} must be transmitted to the
+\dwords{wib} on a maximum of four links per board, each with a maximum
+speed of \SI{1.28}{Gbps}, to minimize
 the number of connections on the cryostat penetrations. This 
 requires data transmission at high speeds, which 
 increases the power consumption inside the \dword{lar}.
 A reduction in the number of links per \dword{femb} to two
-will be investigated.
+(with a link speed of \SI{2.56}{Gbps}) will be investigated.
 
-\item SP-ELEC-4: Each \dword{wib} must read out four \dwords{femb}. This number
-is chosen to %a 
-balance %between 
-the complexity of the boards, the mechanics
+\item SP-ELEC-6: Each \dword{wib} must read out four \dwords{femb}. This number
+is chosen to balance the complexity of the boards, the mechanics
 of the \dword{wiec} that houses the \dwords{wib}, and the 
 required processing power in the \dword{fpga} inside the
 \dword{wib}.
 
-\item SP-ELEC-5: Each \dword{wib} must transmit data to the \dword{daq}
+\item SP-ELEC-7: Each \dword{wib} must transmit data to the \dword{daq}
 backend on optical links at a speed of $\sim\,\SI{10}{Gbps}$. This speed 
 is a compromise between the cost of optical transmitters and
 receivers and the complexity of the readout fiber plant.
 
-\item SP-ELEC-6: All the cables required to provide the low-voltage power
+\item SP-ELEC-8: All the cables required to provide the low-voltage power
 and the control and readout for the \dwords{femb} mounted on
 the bottom \dword{apa}, plus the bias voltage cables for
 the same \dword{apa}, must fit inside two conduits with a
@@ -316,9 +287,8 @@ the \dword{apa}, as discussed in Section~\ref{sec:fdsp-tpcelec-interfaces-apa}.
 \subsection{Design}
 \label{sec:fdsp-tpcelec-overview-design}
 
-The baseline design of the \dword{ce} detector components is
-based on the specifications %requirements 
-presented in Section~\ref{sec:fdsp-tpcelec-overview-requirements}. 
+The baseline design of the \dword{tpc} electronics detector components is
+based on the specifications presented in Section~\ref{sec:fdsp-tpcelec-overview-requirements}. 
 Each individual \dword{apa} has \num{2560} channels read out by \num{20} 
 \dfirsts{femb}, with each \dshort{femb} enabling digitized wire readout 
 from \num{128} channels. One cable bundle connects each \dshort{femb} to
@@ -337,14 +307,15 @@ flange on the top of each \fdth services the \dword{pds} cables associated
 with the \dword{apa} pair. Low voltage power supplies and bias voltage
 power supplies are located on the top of the cryostat. 
 
+\fixme{In the drawing "20 CE modules" should be replaced (twice) with
+"20 FEMBs".}
+
 \begin{dunefigure}
 [Connections between the signal flanges and \dword{apa}]
 {fig:connections}
 {Connections between the signal flanges and \dword{apa}. The lower 
 \dword{apa} shares the photon detector flange with the 
-upper \dword{apa} but has a separate TPC readout flange. 
-A \textit{\dword{ce} module} consists of all \dword{ce} 
-associated with \num{128} channels of digitized readout.}
+upper \dword{apa} but has a separate TPC readout flange.}
 \includegraphics[width=0.7\textwidth]{sp-tpcelec-DUNE-FD-APA-readout-scheme-v1.pdf}
 \end{dunefigure}
 
@@ -359,9 +330,7 @@ operating at \SI{{\sim}2}{MHz}; and}
 (referred to as \dword{coldata}).}
 \end{itemize}
 
-%The complete list of 
-The \dword{ce} components %of the  
-required for one \dword{apa} are: 
+The \dword{tpc} electronics detector components required for one \dword{apa} are: 
 \begin{itemize}
 \item{\dwords{femb}, on which the \dwords{asic} are mounted, and 
 which are installed on the \dword{apa}s;}
@@ -406,398 +375,30 @@ Power and timing card (\dword{ptc}) & \num{1} per \dword{apa} & \num{2560} \\ \c
 Power and timing backplane (\dword{ptb}) & \num{1} per \dword{apa} & \num{2560} \\ \colhline
 \end{dunetable}
 
-%The 
 The electronics located inside the cryostat cannot be replaced or repaired after the
-cryostat has been filled with \dword{lar}.
-Successful operation of the readout electronics in \dword{lar} for the 
-\dunelifetime %lifetime of the  (dunelifetime has ``years'' not ``year'')
-of \dword{dune} operation %experiment forces 
-imposes technological choices %that have to be implemented in the design of 
-for the \dword{spmod} \dwords{asic},  % planned for the \dword{spmod}. It also imposes 
+cryostat has been filled with \dword{lar}. Successful operation of the readout electronics 
+in \dword{lar} for the \dunelifetime of \dword{dune} operation imposes technological 
+choices for the \dword{spmod} \dwords{asic}, 
 and specific constraints on commercial components that are installed
 inside the \dword{lar}. While the higher charge carrier 
 mobility~\cite{Hairapetian1989} at \dword{lar} temperature than at room
 temperature is central to improving the performance of the  \dword{ce}, it also leads
-to the hot-carrier effect~\cite{Hot-electron}. 
+to the hot-carrier effect~\cite{Hot-electron}, that limits the lifetime of \dwords{asic}.
+Another drawback of integrated circuits operated at \dword{lar} temperature
+is that the spread of the transistor properties becomes larger, making it
+more difficult to rely on transistor matching for circuit design.
 
 In n-type \dword{cmos} transistors, the carriers (electrons)
 can acquire enough kinetic energy to ionize silicon in the active channel. This
 charge can become trapped and lead to effects (including threshold shifts)
 similar to those caused by radiation damage, i.e., can cause \dword{cmos}
 circuits to age much more quickly at \dword{lar} temperature, 
-reducing performance and potentially causing failure. To mitigate this effect,
+reducing performance and potentially causing failure. To mitigate the hot carrier effect,
 the maximum \efield in transistor channels must be lower than 
 that which could be used reliably at room temperature. The reduction of
 the maximum \efield is achieved by operating the \dwords{asic} at a
-reduced bias voltage and by increasing by 50\% the length 
+reduced bias voltage and by increasing by $\sim$50\% the length 
 of the transistors' channels. We must carefully test any commercial 
 circuits used in the \dword{lar} to ensure they will perform well for 
 the expected experiment lifetime. Reliability studies for \dword{fe} 
 electronics designs under consideration are discussed in Section~\ref{sec:fdsp-tpcelec-qa-reliability}.
-
-\fixme{Marco: in a future version we should add a reference to the BNL measurements
-on the 180 nm transistors and the FNAL measurements on 65 nm transistors that indicate
-that we need the increase of 50\% in the channel length.}
-
-Custom \dwords{asic} for \dword{lartpc} readout have been under development for many years, and
-\dword{larasic} prototypes have been used in previous \dwords{lartpc}, 
-including the \dword{35t}, \dword{microboone}, and \dword{pdsp}. \dword{pdsp} is the first
-experiment for which the charge digitization %of the charge 
-and the data serialization
-have been performed inside the \dword{lar}, using the P1-\dword{adc} \dword{asic} 
-developed at \dword{bnl}. % and 
-It also used a \dword{fpga} for control and data serialization since \dword{coldata} was
-still under development. %Further developments of \dwords{asic} for the \dword{dune} \dword{spmod} are discussed later in 
-Section~\ref{sec:fdsp-tpcelec-design-femb} discusses further \dword{asic} developments for the \dword{spmod}.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{ProtoDUNE-SP Results}
-\label{sec:fdsp-tpcelec-overview-pdune}
-
-The \dword{pdsp}% \dword{protodune}-\dword{sp} 
-detector, described 
-in Chapter~\ref{ch:sp-execsum}, is a 700~ton fiducial volume 
-\dword{lartpc} with 15,360 sense wires. 
-The system was deployed in a beamline at the CERN Neutrino Platform 
-in 2018 and continues to take cosmic event data into 2019. The goal of 
-the \dword{pdsp} \dword{tpc} readout was to validate the concept 
-and the design of the integrated \dword{apa}+\dword{ce} readout 
-and measure the performance of the \dword{ce} system with components 
-as close as possible to those in the final \dword{dune} \dword{tpc} readout.
-
-\fixme{move the next three paragraphs after the discussion of the detector
-performance}
-
-Each of the six \dword{pdsp} \dword{apa}+\dword{ce}
-readout units consists of 2,560 sense wires, of which 960 are \SI{6}{m} 
-long collection wires and 1,600 are \SI{7.4}{m} long induction wires. 
-Five of the six \dword{apa}s were tested in a full-scale cold box in 
-cold gaseous nitrogen (GN$_2$) with a complete \dword{ce} readout system,  
-identical to the one %on the detector, 
-deployed in \dword{pdsp}, before installation in the cryostat,
-while the sixth %one
- was installed without first going through the cold
-box testing. Figure~\ref{fig:apa2-cycle} shows the measured noise, in 
-electrons, for the collection (X) plane and the two induction (V, U) 
-planes as well as the \dword{femb} temperature in the cold box as a 
-function of the cold cycle time. At a stable temperature of 
-\SI{160}{K} the \dword{enc} for all three wire planes is less than 500~e$^-$.
-
-\begin{dunefigure}
-	[\dword{pdsp} APA \#2 \dword{enc} levels measured in GN$_2$ in the CERN cold box]
-{fig:apa2-cycle}
-{Left $y$ axis: Noise (in electrons) for U, V, and X (red, blue, and green 
-curves) sense wire planes as a function of time (hours) for the APA \#2 cold 
-cycle in GN$_2$ in the CERN cold box; right $y$ axis: temperature 
-(orange curve) measured at the level of the \dword{fe} electronics.}
-\includegraphics[width=0.95\linewidth]{sp-tpcelec-apa2.png}
-\end{dunefigure}
-After the cryostat was filled with \dword{lar} and the drift and wire 
-bias voltages were set to their nominal values (defined in Chapter~\ref{ch:sp-execsum}), 
-99.7\% of the \dword{tpc} readout channels were live.
-There is a total of 42 channels that are not responsive. Of these:
-\begin{itemize}
-\item{14 channels were identified based on tests performed prior
-to the insertion of the \dword{apa} into the cryostat as having
-no capacitive load on the \dword{fe} electronics, suggesting an open 
-connection somewhere upstream  of the \dword{ce} system;}
-\item{24 additional channels showed the same problem after the
-cryostat was filled with \dword{lar} (three of these, all on the
-first APA were already observed during testing in the cold box);}
-\item{in four cases the \dword{fe} electronics is dead: two of these
-channels appeared in tests performed after the cathode high
-voltage was raised to \SI{120}{KV}, and two more
-appeared when the high voltage reached \SI{180}{KV}.}
-\end{itemize}
-
-No further loss of readout channels has occurred since 
-the end of September 2018.
-With the detector operating under nominal %operating 
-conditions, the \dword{enc}
-measured by the online monitoring program was approximately $\SI{550}{e^-}$ 
-on the collection wires and approximately $\SI{650}{e^-i}$ on the induction
-wires, averaged over all operational channels. The noise increased %s
-relative to the tests performed inside the cold box due to the 
-larger dielectric constant of \dword{lar} relative to GN$_2$. 
-These noise measurements  %in the two conditions 
-are consistent with the 
-ratio of the corresponding capacitances of the \dword{apa} wires. 
-Figure~\ref{fig:apa3-noise} 
-shows the \dword{enc} (in electrons) for all channels of one %of the 
-\dword{apa}+\dword{ce} readout unit. %s. 
-The collection channels with \dword{enc} larger than \SI{1500}{e$^-$} had a problem %are caused by a problem
- in the P1-\dword{adc} 
-\dword{asic};  %used in \dword{protodune}-\dword{sp},
-this problem had already
-been identified %at the time of testing the components 
-prior to their
-installation on the \dwords{femb}. The channels on all three planes 
-with \dword{enc} smaller than \SI{300}{e$^-$} have an open connection somewhere in 
-front of the \dword{ce} system. Figure~\ref{fig:ENC-all} summarizes
-\dword{enc} levels in the entire \dword{pdsp} detector both before and
-after the application of a simple common-mode filter similar
-to the one used in \dword{microboone}~\cite{Acciarri:2017sde};
-an improvement of roughly 100~e$^-$ is seen on all planes. % after the common-mode filter is applied.
-
-\begin{dunefigure}
-[TPC ENC levels measured at \dword{pdsp} after \lar fill]
-{fig:apa3-noise}
-{\dword{enc} (in electrons) for all U, V, and X (red, blue, and green curves) sense 
-wire planes for one \dword{pdsp} \dword{apa} %with the detector in 
-under nominal operating 
-conditions.}
-\includegraphics[width=0.9\linewidth]{sp-tpcelec-apa3-enc.pdf}
-\end{dunefigure}
-
-\begin{dunefigure}
-[\dword{tpc} \dword{enc} levels for all channels of the \dword{pdsp} detector]
-{fig:ENC-all}
-{\dword{enc} levels (in electrons) for all channels of the \dword{pdsp} detector, both
-before and after the application of a simple common-mode filter.}
-\includegraphics[width=0.99\linewidth]{sp-tpcelec-ENC-Combined.pdf}
-\end{dunefigure}
-
-The overall performance of the \dword{ce} system in 
-\dword{pdsp} satisfies the 
-\dword{ce} noise specification %requirements 
-for the \dword{spmod} %\dword{fd} 
-listed in Section~\ref{sec:fdsp-tpcelec-overview-requirements}. 
-%Another demonstration of the performance achieved
-%and of the progress made since previous detectors based on the
-%\dword{lartpc} technology is given by 
-%
-A comparison of the raw data from 
-a \dword{pdsp} event (Figure~\ref{fig:pdsp-display}) to 
-that from a \dword{microboone} event (Figure~\ref{fig:microboone-display}~\cite{Acciarri:2017sde}) demonstrates the improvements achieved in \dwords{lartpc} performance. 
-The \dword{pdsp} event was collected very early in the data taking
-period when the charge collection efficiency was still limited
-by the amount of impurities in the \dword{lar}; it shows very little
-noise and appears to be of the same quality as the \dword{microboone}
-event display after offline noise removal. 
-% This clearly demonstrates %shows -- repetitive (anne)
-%that significant progress has been made 
-%significant progress in the overall system
-%design,  % based on the lessons learned from previous experiments
-%using the \dword{lartpc} technology, 
-%resulting in immediate collection of high quality
-%data with very little noise. % immediately after the beginning of data taking.
-
-\fixme{Marco: make sure that the event display is before removal of
-common mode noise.}
-
-\begin{dunefigure}
-[Raw data from a \dword{pdsp} event]
-{fig:pdsp-display}
-{Display of the charge deposited on the collection wires ($x$-axis) as
-a function of the drift time ($y$-axis) for a \dword{pdsp} event 
-that includes two electromagnetic showers and a four-prong interaction.
-The color associated with each time sample on the \dword{apa}
-wires gives a measurement of the charge measured by the \dword{ce}
-readout, increasing from the smallest values (blue) to the largest
-ones (red).}
-\includegraphics[width=1.0\linewidth]{sp-tpcelec-4prongdisplay.png}
-\end{dunefigure}
-
-\begin{dunefigure}
-[Raw data from a \dword{microboone} event]
-{fig:microboone-display}
-{\dword{microboone} \twod event display of the V plane from run 3493 
-event 41075 showing the raw signal (a) before and (b) after offline 
-noise filtering. A clean event signature is recovered once all the 
-identified noise sources are subtracted~\cite{Acciarri:2017sde}.}
-\includegraphics[width=0.9\linewidth]{sp-tpcelec-microBoone_display.pdf}
-\end{dunefigure}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{ProtoDUNE-SP Lessons Learned}
-\label{sec:fdsp-tpcelec-overview-lessons}
-
-As discussed in Section~\ref{sec:fdsp-tpcelec-overview-pdune}, the initial 
-data from \dword{pdsp} show that the \dword{spmod} can meet the noise specification. 
-The experience with the \dword{ce} in \dword{pdsp} nonetheless motivates 
-several improvements to the \dword{ce} system design. 
-A complete list of the lessons learned from the construction, testing, integration,
-installation, commissioning of the \dword{ce} detector components
-is available~\cite{bib:docdb12367}. This reference also discusses
-the plans and timeline for addressing the issues observed in \dword{pdsp}. 
-This \dword{tdr} section and the following cover only the main issues 
-and the plans for their resolution and for implementation in the \dword{spmod}. 
-
-During the commissioning of \dword{pdsp}, violations of the
-grounding rules described in Section~\ref{sec:fdsp-tpcelec-design-grounding}
-have been observed with one of the readout
-boards for the \dword{pds}, and with the cameras immersed
-inside the \lar. The power supply used to provide the \dword{hv} to the 
-drift chamber cathode has also been observed
-to cause noise inside the detector and has been replaced.
-The overall success of \dword{pdsp} owes much to the fact that the
-grounding rules were properly implemented
-and that any violation was discovered and addressed during
-the commissioning.
-
-The main problem with the \dword{pdsp} \dword{ce} readout is in the
-P1-\dword{adc} \dword{asic}. This problem was observed as early as 2017 
-while these \dwords{asic} were being tested prior to their installation
-on the \dwords{femb}. The ``domino'' architecture~\cite{dominoADC} used in this design relies on
-excellent transistor matching, which unfortunately 
-is worse at \dword{lar} temperature. In \dword{pdsp} this problem
-results a fraction of the readout channels having a fixed value for some of
-the \dword{adc} bits, independent of the input voltage. About 10\%
-of the channels having this problem need to be masked from analysis, 
-resulting in a loss of efficiency for \dword{pdsp}, 
-while in a majority of cases an approximated value for the charge can
-be obtained via interpolation. 
-
-To resolve this problem, a  \dword{bnl}-\dword{fermilab}-\dword{lbnl} collaboration 
-is developing a new \dword{adc} \dword{asic} (called the 
-\dword{coldadc} \dword{asic}), and first
-prototypes are planned to be characterized in February 2019.
-Section~\ref{sec:fdsp-tpcelec-design-femb-adc} presents a detailed design.  In parallel, two
-alternatives are being considered. %for  \dword{dune}. 
-First, the \dword{sbnd} 
-collaboration has found %demonstrated that there is also 
-a \dword{cots} 
-solution for the analog-to-digital conversion, based on the Analog 
-Devices~\cite{AnalogDevices} AD7274~\cite{AD7274} \dword{adc}, that meets 
-the \dword{dune} specifications %requirements 
-and that could be used in the \dword{spmod} in %the
-case  the custom \dword{asic} is not %developments were not successfully
-completed in time. % for the detector construction. 
-This \dword{cots}
-solution is not the baseline approach for \dword{dune} since it
-requires one chip for each readout channel (i.e., a total
-of \num{384000} chips), which would increase the cost %cause significant cost increases
-and may
-require a very extensive \dword{qc} program. The qualification
-of this \dword{cots} \dword{adc} for use in \dword{dune} is described
-in Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cots}. 
-The second alternative is a single \num{64}-channel \dword{asic}, referred to as a \dword{cryo},
-that consolidates the \dword{fe}, the analog-to-digital conversion, and the
-data serialization functions %alities 
-in a single chip. %This  development 
-It has also reached the prototype stage with \dword{asic} %that are planned to be 
-characterization planned in February 2019. %More details about this solution are discussed in 
-Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cryo} provides details.
-
-Initial analysis of the \dword{pdsp} data has uncovered a new problem with \dword{larasic} 
-that occurs when $>$\SI{50}{fC} is collected over a period of \SIrange{10}{50}{$\mu$s}, 
-when the baseline configuration of the amplifier for the collection wires is used. 
-The feedback mechanism of the \dword{fe} amplifier stops working for several 
-hundred $\mu$s. During this period, the readout does not function and signals 
-following the large charge deposited can be completely lost. A ledge is observed 
-in the output of the \dword{fe} amplifier, followed by a slow decay 
-and a sudden turn-on of the amplifier.
-Figure~\ref{fig:pdsp-ledge} shows an example of this behavior.
-
-\begin{dunefigure}
-[Pulse shape on a \dword{pdsp} wire showing the ledge effect]
-{fig:pdsp-ledge}
-{Waveform of an event showing the ledge following a large charge 
-deposition, then a discharge and a final jump to the normal baseline.}
-\includegraphics[width=1.0\linewidth]{sp-tpcelec-ledge.png}
-\end{dunefigure}
-
-This problem has been reproduced in the laboratory and is being actively 
-studied. It affects all versions of \dword{larasic} fabricated after 
-the one used for the \dword{microboone} experiment. The problem occurs 
-when the threshold on the injected charge is small and therefore affects
-with larger probability the collection wires, where the \SI{200}{mV} baseline 
-is used, compared to the induction wires, that have a \SI{900}{mV} baseline.
-After the problem and this difference between the two baselines were 
-observed, the decision was taken to operate the \dword{ce} in \dword{pdsp} 
-using the \SI{900}{mV} baseline also for the collection wires, sacrificing
-the dynamic range. Data from the wires where the problem occurs can
-be masked in analysis, resulting in a loss of efficiency. It should be
-noted that the problem occurs more often in \dword{pdsp} %compared to
-%\dword{dune} 
-than is expected in the \dword{fd}  \dword{spmod} due to the presence of cosmic rays traveling parallel
-to the \dword{apa} wires. % in the first case. 
-The problem %cannot be discounted for \dword{dune}, however, since it 
-could, however, affect the \dword{spmod}'s ability to detect
-electromagnetic showers -- one of the main physics signals.
-%The plan and the timeline for addressing this issue in a new \dword{larasic} prototype
-%of  are going to be discussed in 
-Section~\ref{sec:fdsp-tpcelec-design-femb-fe} discusses the plans and timeline for addressing this issue in a new \dword{larasic} prototype.
-
-\begin{dunefigure}
-[Image of a connector for the cold cables lifted from the \dword{femb}]
-{fig:pdsp-femb-connector}
-{Image of a connector for the cold readout and signal cables lifted from
-the \dword{femb} due to the presence of excess epoxy on the 
-connection between the cold cables and the printed circuit board
-that acts as the ``male'' part of the connector.}
-\includegraphics[width=1.0\linewidth]{sp-tpcelec-femb-problem.png}
-\end{dunefigure}
-
-\begin{comment}During the integration of the \dwords{femb} onto the \dword{apa}s 
-and the cold tests that preceded the \dwords{apa} installation
-inside the \dword{pdsp} cryostat a problem occurred %was observed 
-on the 
-connection between the cold readout and control cables and the
-\dwords{femb}. In multiple cases the connector %is 
-detached from
-the \dword{femb} causing a loss of communication. 
-\end{comment}
-During the integration of the \dwords{femb} onto the \dword{apa}s 
-and the cold tests that preceded the \dword{apa} installation
-inside the \dword{pdsp} cryostat,  multiple connectors  
-detached from
-the \dword{femb}, causing a loss of communication.  
-%For \dword{pdsp} w
-We replaced the \dwords{femb} %This problem was fixed for 
-on all the \dword{apa}s that had been tested in the cold box. % by replacing the \dword{femb}. 
-One additional \dword{femb} was 
-replaced on the \dword{apa} that had been installed without undergoing 
-the test in the cold box. This %problem 
-detachment may also be the cause
-of the loss of the external clock signal on one of the \dwords{femb}
-that was observed after cooldown. % of the detector. 
-%
-The problem 
-with the connector has been traced to a mechanical interference between 
-the \dword{pcb} of the \dword{femb} and the epoxy deposited as a protective measure on the small printed circuit
-board to which the cold cables are soldered and which forms the 
-male part of the connector. The height of the epoxy can cause 
-the female part of the connector to lift from the \dword{pcb},
-as shown in 
-Figure~\ref{fig:pdsp-femb-connector}. %This problem is being 
-%addressed by a redesign of the connection between the \dword{femb}
-%and the cold cables, as discussed in 
-Section~\ref{sec:fdsp-tpcelec-design-femb} discusses the redesign of the connection to address the problem.
-
-\begin{dunefigure}
-[Spectrum of the noise on the \dword{pdsp} \dword{apa} wires before and after noise filtering]
-{fig:pdsp-noise}
-{Spectrum of the noise on the different \dword{pdsp} \dword{apa} wire planes before
-(left) and after (right) applying a simple common-mode filter.}
-\includegraphics[width=0.49\linewidth]{sp-tpcelec-avgFFT-WithoutFilt.pdf}
-\includegraphics[width=0.49\linewidth]{sp-tpcelec-avgFFT-WithFilt.pdf}
-\end{dunefigure}
-
-Analysis of the \dword{pdsp} data is just starting, as of February 2019, and 
-we will learn more about the detector and how its different components interact
-from this data. The level of noise mentioned in Section~\ref{sec:fdsp-tpcelec-overview-pdune}
-(approximately $\SI{550}{e^-}$ on the collection wires,
-and approximately $\SI{650}{e^-}$ on the induction wires) 
-was measured with raw data, without any
-filtering or selection applied to the pulses on the \dword{apa}
-wires. A simple common-mode filter can significantly reduce the 
-noise, particularly at low frequencies, as shown in Figure~\ref{fig:pdsp-noise},  
-a comparison of the noise spectrum on the three planes of the \dword{apa} 
-before and after the filtering. The spectrum prior to the filtering shows 
-a significant increase at frequencies $<$\SI{60}{kHz} that in \dword{microboone} 
-had been associated with the low-voltage regulators that are installed
-on the \dwords{femb}~\cite{Acciarri:2017sde}. This contribution to the noise 
-has actually been significantly reduced compared to initial observations at 
-\dword{microboone} thanks to RC filters that have been added
-on the \dword{pdsp} \dwords{femb}. Further work is required to
-understand why these RC filters do not suppress completely this
-specific noise source, as indicated by tests performed in other setups.
-The noise spectrum prior to the filtering also shows spikes at multiple 
-discrete frequencies, and in some cases the noise sources have been 
-identified (for example, cameras' operation inside the cryostat
-contributes to the peaks at \num{310} and \SI{630}{KHz};
-malfunctioning bias voltage supplies also contribute to the noise). We 
-expect that further data analysis and tests with \dword{pdsp} 
-will result in improvements to the \dword{ce} design that 
-already demonstrates excellent performance.
