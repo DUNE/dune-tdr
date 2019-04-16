@@ -831,76 +831,169 @@ of $\sim\SI{330}{e^-}$ with \SI{1}{$\mu$s} peaking time.}
 \subsubsubsection{CRYO Option}
 \label{sec:fdsp-tpcelec-design-femb-alt-cryo}
 
-The \dword{slac} \dword{cryo} \dword{asic} differs from the baseline 
-three-chip design by combining the functions of an analog 
-preamplifier, \dword{adc}, and data serialization along with %and 
-transmission 
-for \num{64}~wire channels into a single chip. It is based on a design 
-developed for the \dword{nexo} experiment~\cite{nEXO} and differs from 
-it only in the design of the preamplifier, which is modified for the 
-higher capacitance of the \dword{dune} \dword{spmod} wires compared 
-to the small pads of \dword{nexo}. The \dwords{femb} constructed using 
-this chip would use only two \dwords{asic}, compared to the \num{18} 
-(eight~\dword{fe}, eight~\dword{adc} and two~\dword{coldata}) needed 
-in the baseline design. This drastic reduction in part count may 
-significantly improve \dword{femb} reliability, reduce power, and reduce 
-costs related to production and testing. 
 
-Figure~\ref{fig:cryo-architecture} shows the overall architecture of 
-the \dword{cryo} \dword{asic}, which is implemented in 
-\SI{130}{nm} \dword{cmos}. It comprises two identical \num{32}-channel 
-blocks. The current signal from each wire is amplified using a preamplifier 
-with pole zero cancellation and an anti-alias fifth-order Bessel filter. 
-Provisions are also made for injection of test pulses. Gain and peaking 
-time are adjustable to values similar to those of the baseline design.
+%%%%%%%%%%%%%%%%%%%%
+%%%%% OLD TEXT %%%%%
+%%%%%%%%%%%%%%%%%%%%
+%
+%The \dword{slac} \dword{cryo} \dword{asic} differs from the baseline 
+%three-chip design by combining the functions of an analog 
+%preamplifier, \dword{adc}, and data serialization along with %and 
+%transmission 
+%for \num{64}~wire channels into a single chip. It is based on a design 
+%developed for the \dword{nexo} experiment~\cite{nEXO} and differs from 
+%it only in the design of the preamplifier, which is modified for the 
+%higher capacitance of the \dword{dune} \dword{spmod} wires compared 
+%to the small pads of \dword{nexo}. The \dwords{femb} constructed using 
+%this chip would use only two \dwords{asic}, compared to the \num{18} 
+%(eight~\dword{fe}, eight~\dword{adc} and two~\dword{coldata}) needed 
+%in the baseline design. This drastic reduction in part count may 
+%significantly improve \dword{femb} reliability, reduce power, and reduce 
+%costs related to production and testing. 
+%
+%Figure~\ref{fig:cryo-architecture} shows the overall architecture of 
+%the \dword{cryo} \dword{asic}, which is implemented in 
+%\SI{130}{nm} \dword{cmos}. It comprises two identical \num{32}-channel 
+%blocks. The current signal from each wire is amplified using a preamplifier 
+%with pole zero cancellation and an anti-alias fifth-order Bessel filter. 
+%Provisions are also made for injection of test pulses. Gain and peaking 
+%time are adjustable to values similar to those of the baseline design.
+%
+%\begin{dunefigure}
+%[Overall architecture of the CRYO \dword{asic}.]
+%{fig:cryo-architecture}
+%{Overall architecture of the \dword{cryo} \dword{asic}.}
+%\includegraphics[width=0.8\textwidth]{sp-tpcelec-cryo-schematic.png}
+%\end{dunefigure}
+%
+%The \dword{adc} uses \SI{8}{MHz} \dword{sar}, so four input channels are 
+%multiplexed onto a single \dword{adc}. The data serialization and transmission 
+%block uses a custom 12b/14b encoder, so \num{32} channels of \num{12}-bit, 
+%\SI{{\sim}2}{MHz} data can be transmitted with a digital bandwidth of 
+%only \SI{896}{Mbps}, which is significantly lower %less 
+%than the required bandwidth 
+%of the baseline, which is \SI{1.28}{Gbps}.
+%
+%One key concern with mixed signal \dwords{asic} is the possibility of 
+%interference from the digital side causing noise on the very sensitive 
+%preamplifier. To avoid this interference, the \dword{cryo} design 
+%uses well established techniques for isolating the substrate; these are 
+%described in the literature~\cite{yeh} and %that 
+%have been successfully 
+%used in previous \dwords{asic}.
+%
+%The infrastructure requirements for a \dword{cryo} \dword{asic}-based 
+%system are similar to those of the baseline option. However, in most 
+%cases, somewhat fewer resources are needed.
+%\begin{itemize}
+%\item{A single voltage is needed for the power supply. This is used to 
+%generate two supply voltages using internal voltage regulators.}
+%\item{The warm interface is different. \dword{cryo} operates with
+%a \SI{56}{MHz} clock, does not require a fast command, and uses
+%the \dword{saci}~\cite{SACI} protocol for configuration rather than \dword{i2c}.}
+%\end{itemize}
+%
+%The first iteration of the \dword{cryo} \dword{asic} design was 
+%submitted to MOSIS~\footnote{MOSIS\texttrademark{}, \url{https://www.mosis.com/}.} for fabrication in November 2018.  
+%The first prototypes were delivered at the end of January 2019. Simulation-based 
+%studies have already been performed; at \SI{0.8}{\micro\second} peaking 
+%time and an input capacitance of \SI{200}{pF} (similar to that expected 
+%in the \dword{spmod}), the noise level is approximately 
+%\num{500}\,e$^-$, similar to that expected with the 
+%baseline \dword{fe} and \dword{adc} \dword{asic} design in \dword{lar} 
+%with the same input capacitance.  The prototypes will first be tested in an existing 
+%test stand at \dword{slac}. Subsequent tests are planned for a small test 
+%\dword{tpc} at \dword{fermilab} and on an \dword{apa} in the \dword{pdsp} 
+%cold box; these test facilities are described in 
+%Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
+
+
+%%%%%%%%%%%%%%%%%%%%
+%%%%% NEW TEXT %%%%%
+%%%%%%%%%%%%%%%%%%%%
+
+The \dword{slac} \dword{cryo} \dword{asic} differs from the baseline three-chip design by combining the functions of an analog preamplifier, \dword{adc}, and data serialization along with transmission for 64 wire channels into a single chip. It is based on a design developed for the \dword{nexo} experiment~\cite{nEXO} and differs from it only in the design of the preamplifier, which is modified for the higher capacitance of the \dword{dune} \dword{spmod} wires compared to the small pads of \dword{nexo}. The \dwords{femb} constructed using this chip would use only two \dwords{asic}, compared to the 18 (eight \dword{fe}, eight \dword{adc} and two \dword{coldata}) needed in the baseline design. This drastic reduction in part count may significantly improve \dword{femb} reliability, reduce power (\SI{40}{mW} per channel), and reduce costs related to production and testing.
+
+Figure~\ref{fig:cryo-schematic} shows the overall architecture of the \dword{cryo} \dword{asic}, which is implemented in 130 nm \dword{cmos}. It comprises two identical 32-channel blocks (banks) and a common section providing biasing voltages and currents plus the controls signals, the clocks generation and the configuration of the registers.
 
 \begin{dunefigure}
-[Overall architecture of the CRYO \dword{asic}.]
-{fig:cryo-architecture}
+[Overall architecture of the \dword{cryo} \dword{asic}.]
+{fig:cryo-schematic}
 {Overall architecture of the \dword{cryo} \dword{asic}.}
-\includegraphics[width=0.8\textwidth]{sp-tpcelec-cryo-schematic.png}
+\includegraphics[width=0.9\textwidth]{sp-tpcelec-cryo-schematic.png}
 \end{dunefigure}
 
-The \dword{adc} uses \SI{8}{MHz} \dword{sar}, so four input channels are 
-multiplexed onto a single \dword{adc}. The data serialization and transmission 
-block uses a custom 12b/14b encoder, so \num{32} channels of \num{12}-bit, 
-\SI{{\sim}2}{MHz} data can be transmitted with a digital bandwidth of 
-only \SI{896}{Mbps}, which is significantly lower %less 
-than the required bandwidth 
-of the baseline, which is \SI{1.28}{Gbps}.
+The current signal from each wire is amplified using a preamplifier with pole zero cancellation~\cite{DeGeronimo:2011zz} and an anti-alias fifth-order Bessel filter (Fig.\ref{fig:cryo-FE}). Provisions are also made for injection of test pulses. Gain and peaking time are adjustable to values similar to those of the baseline design. 
 
-One key concern with mixed signal \dwords{asic} is the possibility of 
-interference from the digital side causing noise on the very sensitive 
-preamplifier. To avoid this interference, the \dword{cryo} design 
-uses well established techniques for isolating the substrate; these are 
-described in the literature~\cite{yeh} and %that 
-have been successfully 
-used in previous \dwords{asic}.
+\begin{dunefigure}
+[\dword{cryo} front-end section architecture and typical front-end response.]
+{fig:cryo-FE}
+{\dword{cryo} front-end section architecture (left); typical response of the \dword{cryo} front-end (right).}
+\includegraphics[width=.54\textwidth]{sp-tpcelec-cryo-feschematic.png}
+\includegraphics[width=.45\textwidth]{sp-tpcelec-cryo-filter.png}
+\end{dunefigure}
 
-The infrastructure requirements for a \dword{cryo} \dword{asic}-based 
-system are similar to those of the baseline option. However, in most 
-cases, somewhat fewer resources are needed.
+The four programmable gain settings 6X, 3X, 1.5X, and 1X correspond to full scale signals of 320x$\SI{103}{e^{-}}$, 640x$\SI{103}{e^{-}}$, 1280x$\SI{103}{e^{-}}$, and 1920x$\SI{103}{e^{-}}$. A filter with a Bessel shape has been chosen because of its flat group delay characteristic which minimize waveform distortion as well as providing noise shaping performance similar to more classic semi-gaussian shaper implementations. The four programmable peaking times of the filter range from $\SI{0.6}{{\mu}s}$, $\SI{1.2}{{\mu}s}$, $\SI{2.4}{{\mu}s}$, and $\SI{3.6}{{\mu}s}$, corresponding to filter bandwidths equivalent to the ones used in the baseline solution. Similarly to the baseline design the channel provides the possibility to set the baseline for operation with either the collection or the induction wires. Baseline level can be set and trimmed independently in each single channel. Channel outputs can be connected one-at-a-time to an analog monitor to probe the analog signal.
+
+Four input channels are multiplexed onto a single fully differential 12 bit \SI{8}{MSPS} \dword{adc}. Signals from the four channels are concurrently sampled onto a Sample and Hold stage. An \dword{adc} driver after the multiplexer performs the single-ended to differential conversion. The \dword{adc} has a SAR architecture (Figure~\ref{fig:cryo-ADC}) with a split cap DAC based on VCM switching~\cite{5482529}, and has the option to be calibrated for offset compensation.
+
+\begin{dunefigure}
+[\dword{cryo} \dword{adc} architecture.]
+{fig:cryo-ADC}
+{\dword{cryo} \dword{adc} architecture.}
+\includegraphics[width=.75\textwidth]{sp-tpcelec-cryo-adcschematic.png}
+\end{dunefigure}
+
+External signals can be routed to the input of each single \dword{adc} allowing standalone characterization.
+
+The data serialization and transmission block uses a custom 12b/14b encoder, so 32 channels of 12-bit, \SI{2}{MSPS} data can be transmitted with a digital bandwidth of only \SI{896}{Mbps}, which is significantly lower than the required bandwidth of the baseline, which is \SI{1.28}{Gbps}.
+
+One key concern with mixed signal \dwords{asic} is the possibility of interference from the digital side causing noise on the very sensitive preamplifier. To avoid this interference, the \dword{cryo} design uses well established techniques for isolating the substrate; these are described in the literature~\cite{yeh} and have been successfully used in previous \dwords{asic}. Furthermore power domains of the various sections of the \dwords{asic} are isolated using multiple internal Low Drop-Out regulators (LDOs).
+
+For reliability purposes the analog section of the \dword{asic} using thick oxide devices is biased at 2V (20\% less than nominal voltage) and does not use minimum length devices. The digital section of the \dword{asic} uses instead core devices biased at 1V (again 20\% less than nominal voltage).
+
+The infrastructure requirements for a \dword{cryo} \dword{asic}-based system are similar to those of the baseline option.  However, in most cases, somewhat fewer resources are needed; for instance:
 \begin{itemize}
-\item{A single voltage is needed for the power supply. This is used to 
-generate two supply voltages using internal voltage regulators.}
-\item{The warm interface is different. \dword{cryo} operates with
-a \SI{56}{MHz} clock, does not require a fast command, and uses
-the \dword{saci}~\cite{SACI} protocol for configuration rather than \dword{i2c}.}
+\item A single voltage is needed for the power supply. This is used to generate the two supply voltages using internal voltage regulators.
+\item The warm interface is different. \dword{cryo} operates in synchronous with a \SI{56}{MHz} clock, does not require a fast command, and uses the SACI~\cite{SACI} protocol for configuration rather than \dword{i2c}.
 \end{itemize}
 
-The first iteration of the \dword{cryo} \dword{asic} design was 
-submitted to MOSIS~\footnote{MOSIS\texttrademark{}, \url{https://www.mosis.com/}.} for fabrication in November 2018.  
-The first prototypes were delivered at the end of January 2019. Simulation-based 
-studies have already been performed; at \SI{0.8}{\micro\second} peaking 
-time and an input capacitance of \SI{200}{pF} (similar to that expected 
-in the \dword{spmod}), the noise level is approximately 
-\num{500}\,e$^-$, similar to that expected with the 
-baseline \dword{fe} and \dword{adc} \dword{asic} design in \dword{lar} 
-with the same input capacitance.  The prototypes will first be tested in an existing 
-test stand at \dword{slac}. Subsequent tests are planned for a small test 
-\dword{tpc} at \dword{fermilab} and on an \dword{apa} in the \dword{pdsp} 
-cold box; these test facilities are described in 
-Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
+Simulation-based studies have been performed; at $\SI{1.2}{{\mu}s}$ peaking time and an input capacitance of \SI{220}{pF} (similar to that expected in the SP module), the noise level is approximately $\SI{500}{e^{-}}$, similar to that expected with the baseline \dword{fe} and \dword{adc} \dword{asic} design in LAr with the same input capacitance.
+
+The first iteration of the \dword{cryo} \dword{asic} design (see Figure~\ref{fig:cryo-photos}) was submitted to MOSIS for fabrication in November 2018. The first prototypes were delivered at the end of January 2019.
+
+\begin{dunefigure}
+[Photos of \dword{cryo} \dword{asic} prototype.]
+{fig:cryo-photos}
+{Photo of the prototype cold board (left); zoomed-in photo of \dword{cryo} \dwords{asic} (right).}
+\includegraphics[width=.3\textwidth]{sp-tpcelec-cryo-coldboard.png}
+\hspace{1cm}
+\includegraphics[width=.4075\textwidth]{sp-tpcelec-cryo-cryophoto.png}
+\end{dunefigure}
+
+The prototypes are under test in an existing test stand at \dword{slac} and a cryostat developed at Michigan State University. Subsequent tests are planned for a small test TPC at Fermilab and on an APA in the \dword{pdsp} cold box; these test facilities are described in Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
+
+The first prototype of the \dword{asic} is functional at both room temperature and liquid nitrogen temperature. In particular all the key blocks have been verified. Configuration of all the 64 channel registers (13 bits each) and the 17 (16-bit) global registers has been verified. Optimization of the register values at room temperature and cold is ongoing. Initialization procedures for the \dword{asic} power up have been established. Operation of the on chip LDOs has been verified and expected supply levels are stable across temperature. Injected pulses on the frontend channels are visible on the analog monitor (Figure~\ref{fig:cryo-FEresponse}) as well as they are digitized with the internal \dwords{adc}.
+
+\begin{dunefigure}
+[\dword{cryo} \dword{asic} front-end response at liquid nitrogen temperature.]
+{fig:cryo-FEresponse}
+{\dword{cryo} \dword{asic} front-end response at liquid nitrogen temperature, presented at the analog monitor and acquired with an external \SI{50}{MSPS} \dword{adc}.}
+\includegraphics[width=.65\textwidth]{sp-tpcelec-cryo-pulses.png}
+\end{dunefigure}
+
+Encoded data are transmitted and correctly decoded in the external FPGA. Figure~\ref{fig:cryo-analogmon} shows an example of a pulse injected in a channel visible on both the analog monitor as well as in the data acquired by the \dword{asic}. Data are acquired at liquid nitrogen temperature at the nominal $\sim$\SI{2}{MSPS} rate.
+
+\begin{dunefigure}
+[Example of a pulse injected in a \dword{cryo} \dword{asic} channel]
+{fig:cryo-analogmon}
+{Example of a pulse injected in a \dword{cryo} \dword{asic} channel, visible on both the analog monitor and in the output data.}
+\includegraphics[width=.99\textwidth]{sp-tpcelec-cryo-analogmonitor.png}
+\end{dunefigure}
+
+From the functional point of view, a single unexpected behavior has been identified in the digital multiplexer that is used at the input of the encoders. The latches at the input of the multiplexer show poor driving capability resulting in a presence of a ghost from a previously multiplexed channel. The effect is not present on the first 12 channels of each block which show expected behavior. The effect has been understood replicated in simulation and a trivial fix has been implemented for the next version of the \dword{asic}.
+
+Performance characterization will begin as soon as the optimal bias configuration of the various block is completed. 
 
 %%%%%%%%%%%%%%%%%%
 \subsubsection{Procedure and Timeline for \dword{asic} Selection}
