@@ -1577,6 +1577,34 @@ data selection, which is a key challenge for DUNE and new with respect
 to ProtoDUNE (and other existing or planned LArTPC detectors), as well
 as IPC and CCM.
 
+\begin{dunefigure}{fig:daq-cpu-hf-speed}{CPU core-time required to find primitives in simulated signal and noise data.  10 CPU cores are required to keep up with live ProtoDUNE data while performing both data reformatting and trigger primitive selection.}
+  \includegraphics[width=0.7\textwidth,clip,trim=4cm 16cm 4cm 2cm]{daq-primitive-cpu-speed.pdf}
+\end{dunefigure}
+
+\begin{dunefigure}{fig:daq-hitfinder}{Illustration of the trigger primitives found by the CPU algorithm in one nominal readout of one APA in ProtoDUNE-SP data.  Although the data was ultimately recorded due to trigger, the algorithm ran in full-stream mode.}
+    \includegraphics[width=0.45\textwidth]{daq-hitfinder-waveforms.png}%
+    \includegraphics[width=0.45\textwidth]{daq-hitfinder-primitives.png}
+\end{dunefigure}
+
+\begin{dunefigure}{fig:daq-tp-rates}{Trigger primitive rates in ProtoDUNE-SP as a function of threshold in four categories: all data (top left),  after removal of particularly noisy channels (top right), with HV off so no contribution to signal (bottom left) and HV off and noisy channels excluded (bottom right).}
+  \begin{minipage}[b]{0.5\linewidth}
+    \begin{center}
+      \includegraphics[page=1,width=0.8\textwidth,clip,trim=4cm 16cm 4cm 2cm]{daq-primitive-rates-thresholds.pdf}
+
+      \includegraphics[page=2,width=0.8\textwidth,clip,trim=4cm 16cm 4cm 2cm]{daq-primitive-rates-thresholds.pdf}
+    \end{center}
+  \end{minipage}%
+  \begin{minipage}[b]{0.5\linewidth}
+    \begin{center}
+      \includegraphics[page=3,width=0.8\textwidth,clip,trim=4cm 16cm 4cm 2cm]{daq-primitive-rates-thresholds.pdf}
+
+      \includegraphics[page=4,width=0.8\textwidth,clip,trim=4cm 16cm 4cm 2cm]{daq-primitive-rates-thresholds.pdf}
+    \end{center}
+  \end{minipage}
+
+\end{dunefigure}
+
+
 During early stages of design, significant effort has been dedicated on trigger primitive generation
 through MonteCarlo simulations. Specifically, charge collection efficiency and fake rates
 due to noise and radiologicals have been studied as a function of
@@ -1587,12 +1615,19 @@ aim to validate or provide more accurate background predictions, upon
 which this performance will be validated. In addition, offline emulations
 of CPU trigger primitive generation on CPU (4 cores) have been carried
 out, demonstrating the ability of software algorithms in CPU to keep
-up with expected raw data rates, as shown in Figure~\ref{xx}. 
+up with expected raw data rates, as shown in Figure~\ref{fig:daq-cpu-hf-cpeed}. 
 Following the commissioning of ProtoDUNE, full-stream, single-APA,
-online trigger primitive generation on CPU (10 cores) was successfully
+online data reformatting and trigger primitive generation on CPU (10 cores) was successfully
 demonstrated at ProtoDUNE. Trigger primitive rates were measured at
 ProtoDUNE in situ. Effort on understanding and removing contribution
-from cosmics/cosmogenics and (known) noisy channels is ongoing. 
+from cosmics/cosmogenics and (known) noisy channels is ongoing.
+These results are summarized in Figure~\ref{fig:daq-tp-rates}
+
+\begin{dunefigure}{fig:daq-tc-eff}{Efficiency for forming trigger candidates as a function of visible energy with online trigger candidate algorithm (blue) and offline algorithm (red).}
+  \includegraphics[width=0.7\textwidth]{daq-tc-eff.png}
+\end{dunefigure}
+
+\fixme{TC efficiency figure is a place holder until we get it remade as a better looking PDF.}
 
 Trigger candidate generation, building on trigger primitives and defined
 as two consecutive trigger primitives in both channel and time space,
@@ -1602,7 +1637,7 @@ to generate corresponding Trigger Commands for localized high energy
 activity, such as for beam, atmospheric neutrinos, baryon number
 violating signatures, and cosmics. Simulation studies demonstrate that
 this scheme meets efficiency requirements for localized high energy
-triggers, as shown in Figure~\ref{xx}. Specifically,
+triggers, as shown in Figure~\ref{fig:daq-tc-eff}. Specifically,
 simulations demonstrate that $>99$\% efficiency is achievable for
 $>100$ MeV visible energy, and that the effective threshold for
 localized triggers for the system is at $\sim$10 MeV. 
