@@ -148,7 +148,9 @@ localized activity in the detector requires a
 nominal recording of data over a time window of order 
 \SIrange{1}{10}{\milli\second}. 
 This time scale is determined by the ionization electron drift speed in
-\lar and the detector dimension along the drift direction.
+\lar and the detector dimension along the drift direction, and is
+nominally set to 5.4~ms, corresponding to 2.4$\times$2.25 ms. The
+latter (2.25 ms) assummes DUNE's nominal drift electric field of xx.
 On the other hand, the \dword{pds} measures argon scintillation light emission, which
 occurs and is detected over a timescale of multiple nanoseconds to
 microseconds for
@@ -472,10 +474,11 @@ The \dword{daq} and calibration interface is described in
 \citedocdb{7069}. Two calibration systems are envisioned for the
 %\dword{dune} 
 \dword{fd}: a laser calibration system and a neutron
-generator. Calibration pulses can be issued either by the \dword{daq} or by
-the calibration systems themselves;  %, and those 
-the latter are to be distributed through the
+generator. Calibration pulses will be issued by the calibration
+systems themselves, upon receipt of time stamps from the DAQ system;  %, and those 
+the latter will be issued by the data selection system and distributed through the
 \dword{daq} timing system.
+
 
 \subsection{Timing Subystem}
 
@@ -503,6 +506,7 @@ detailed \dword{daq} technical notes.}
   \dword{dune} \dword{fd} Data Volumes & \citedocdb{9240}\\ \colhline
   The \dword{daq} for the \dword{dune} prototype at CERN &
   \citedocdb{8708}\\ \colhline
+  High Level ProtoDUNE tests & \citedocdb{14062} \\ \colhline
   A System for Communication Between \dword{daq} Elements & \citedocdb{10482}\\\colhline
   Data Selection for \dword{dune} Beam and Atmospheric Events & \citedocdb{11215}\\\colhline
   Data orchestrator and event building for \dword{dune} \dword{fd} \dword{daq} & t.b.d. \\\colhline
@@ -696,16 +700,19 @@ decision may exist for as much as \snbpretime prior to the issuing of \dword{snb
 trigger (trigger time).
 %This below threshold activity may be extracted using more sophisticated and processing intensive algorithms if the data can be recorded. 
 A second challenge in recording data containing extended activity is
-that all channels must be recorded for 100 seconds around its trigger
+that all channels must be recorded for 100 seconds around the trigger
 time, and requires extracting as much as 115 TB from the TPC readout.
-It is not cost effective to design the \dword{daq} to accept this rate
-pulse in real time. Thus, additional buffering is provided to catch
+It is not cost effective to design the \dword{daq} to extract such
+extended data record (100-second-long waveform from each TPC channel
+and corresponding-in-time PDS information) in an online fashion. Thus, additional buffering is provided to catch
 the temporary backlog of data that an extended trigger will produce.
 
 The technology and scale of this additional buffering must satisfy several requirements. 
 It must accept the full data rate of the detector module (as much as \SI{2}{\tera\byte/\second}). 
 The data must then reside on nonvolatile media. 
-The media must have sufficient capacity and allow for sufficient extraction throughput so that it is vanishing unlikely to be allowed to become too occupied to accept another pulse of data. 
+The media must have sufficient capacity and allow for sufficient
+extraction throughput so that it is vanishingly unlikely to be allowed
+to become too occupied to accept another extended data record. 
 Assuming that, on average, a \dword{snb} trigger condition will be
 satisfied once per month, the most optimal technology is %the use of 
 solid-state devices, which at the scale required to provide suitable input bandwidth, can provide a capacity to write the data from several extended activity triggers.
@@ -720,8 +727,12 @@ Effort is currently underway to understand the costs and technology involved in 
 \subsection{Data Selection}
 \label{sec:sp-daq:design-selection-algs}
 
-%\fixme{There are many studies which could go into this section. Some of this may very likely be moved into one or more tech notes and referenced.}
 
+%\fixme{There are many studies which could go into this section. Some of this may very likely be moved into one or more tech notes and referenced.}
+\fixme{We
+have a viable algorithm for generating TP and high-energy TCs, and
+demonstrations of efficiency for SN bursts that meet the requirements. Be as explicit as possible on what the existing plans are, and discuss
+alternatives either as risk mitigation or opportunities.}
 
 %The \dword{daq} must record all non-\dword{snb} unbiased\footnote{In the case of PDS readout, the PDS system only reads out biased
 %  information; here it is implied that no additional bias is introduced by the DAQ.} data that span the maximum drift time window for any non-\dword{snb} trigger. 
