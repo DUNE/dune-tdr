@@ -448,13 +448,23 @@ in Section~\ref{sec:fdsp-tpcelec-overview-remaining}.
 \label{sec:fdsp-tpcelec-design-femb-adc}
 
 \dword{coldadc} is a low-noise \dword{adc} \dword{asic} designed to digitize
-\num{16} input channels at a rate of \SI{2}{MHz}. It is implemented in the \dword{tsmc}
+\num{16} input channels at a rate of $\sim\SI{2}{MHz}$, as required for the
+\dword{dune} \dword{spmod}. \dword{coldadc} was designed to operate with 
+an external \SI{64}{MHz} clock and an external digitization signal at
+\SI{2}{MHz}.The \SI{2}{MHz} signal is aligned on the rising edge of one of
+the \SI{64}{MHz} transitions, as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-coldata}.
+In the \dword{dune} \dword{spmod} the external clock operates at \SI{62.5}{MHz}
+clock as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-coldata}. 
+For the remainder of this section we assume for simplicity that the main clock is 
+running at \SI{64}{MHz}. \dword{coldadc} is implemented in the \dword{tsmc}
 \SI{65}{nm} \dword{cmos} technology and has been designed by a team of engineers
 from \dword{lbnl}, \dword{bnl}, and \dword{fnal}.  The \dword{asic} uses a conservative,
 industry-standard design including digital calibration.  Each \dword{coldadc}
 receives \num{16} voltage outputs from a single \dword{larasic} chip.  The voltages
 are buffered, multiplexed by \num{8}, and input to two \num{15}-stage pipelined \dwords{adc}
-operating at \SI{16}{MHz}.  The \dword{adc} uses the well-known pipelined architecture
+operating at \SI{16}{MHz}. The \SI{16}{MHz} clock is generated internally in
+\dword{coldadc} and share its' rising edge with the \SI{2}{MHz} clock. 
+The \dword{adc} uses the well-known pipelined architecture
 with redundancy~\cite{PipelinedADC}.  Digital logic is used to correct non-linearity
 introduced by non-ideal amplifier gain and offsets in each pipeline
 stage~\cite{CalibrationCorrection}, and an automatic calibration procedure is
@@ -783,13 +793,16 @@ the \dword{mosi} line, bits from the other end of the shift register are shifted
 out on the \dword{miso} line. It is thus only possible to read \dword{larasic} 
 configuration registers while writing new configuration data.
 
-In addition to the configuration commands, \dword{coldata} %also 
+In addition to the configuration commands, \dword{coldata} 
 receives a master clock and a fast command signal on a \dword{lv} 
 differential pair from
 the \dword{wib}. Currently the master clock is \SI{64}{MHz}, but it will be
 changed to \SI{62.5}{MHz} to simplify the overall \dword{fd} \dword{spmod} 
-synchronization. The clock used for sampling the \dword{adc} is created inside
-\dword{coldata} by dividing the master clock by \num{32}. Both the master clock and
+synchronization, as already discussed in the case of \dword{coldadc}. The clock 
+used for sampling the \dword{adc} is created inside
+\dword{coldata} by dividing the master clock by \num{32}. The relative phase
+of the \num{2} and the \SI{64}{MHz} clocks is set by an appropriate fast
+command sent from the \dword{wib}.  Both the master clock and
 the \dword{adc} sampling clocks are passed from \dword{coldata} to the four
 \dword{coldadc} chips that it controls. Depending on the master clock frequency
 the \dword{adc} will convert input data every \num{500} or \SI{512}{ns}, 
@@ -850,7 +863,9 @@ character (K28.1) will be sent between each ``Frame-15.'' A series of 8b/10b
 command characters (K28.5) is sent at the end of each frame of \num{12}-bit or 
 \num{14}-bit data to ensure synchronization of the high-speed links.
 
-The serializers and output drivers use clocks derived from a micro-electromechanical
+The serializers and output drivers operate asynchronously in a separate clock domain that
+is not related to the use the master clock signal received from the \dword{wib}. Instead
+they use clocks derived from a \SI{40}{MHz} micro-electromechanical
 system oscillator on the \dword{femb}. A single \dword{pll} generates a 
 \SI{1.28}{GHz} clock for both serializers and output drivers. The \num{10}-bit
 serializers are implemented using two \num{5}:\num{1} multiplexers (clocked at \SI{128}{MHz}) 
@@ -878,6 +893,17 @@ were included in the first partial prototype (CDP1)
 test chip that was produced in Fall 2017 and shown to work as designed.  
 The pre-emphasis circuit has been added to the current mode driver, which 
 was verified in CDP1 and can be disabled if desired. 
+
+A conservative estimation of the power consumption of \dword{coldata},
+that is dominated by the power required for the \dword{lvds} transmitters
+and receivers, amounts to \SI{195}{mW} for each \num{64}-channel \dword{asic}.
+
+The design of the first complete prototype of \dword{coldata} has been
+submitted for fabrication at the end of April 2019, and the first chips
+are expected back from the foundry at the end of July. Based on past 
+experience with the verification of the CDP1 prototype we expect to 
+validate the design and proceed to the construction of complete \dword{dune}
+\dwords{femb} in the early Fall of 2019.
 
 \begin{dunefigure}
 [\dword{coldata} output simulated eye diagram]
