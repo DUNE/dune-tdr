@@ -30,7 +30,7 @@ HEP experiments across the world.
 
 The system is designed %so that it 
 to service all \dword{fd}
-\dword{detmodule} designs indistinguishably. % different \dwords{detmodule}. 
+\dword{detmodule} designs interchangeably. % different \dwords{detmodule}. 
 %The descriptions for those parts of the system are reproduced verbatim in some sections of this chapter as found in the TDR volume for each \dword{detmodule}.
 %A small part 
 However, some aspects of the \dword{daq} design are tailored to meet
@@ -40,7 +40,7 @@ these sections are %identified
 identifiable by their use of module-specific terms. In general, the
 DAQ services each \dword{fd}
 \dword{detmodule} independently, but cross-module communication is
-facilitated at the trigger level.
+implemented at the trigger level.
 
 The chapter begins with an overview of the \dword{daq} design,
 including requirements that the design must meet, and specification of
@@ -68,19 +68,19 @@ servicing a single \dword{fd}
 \dword{detmodule} is
 provided in Fig.~\ref{fig:fd-daq:layout}. The system is
 physically located at the \dword{fd} site, and it is split between the
-4850 ft level and the ground level at SURF. Specifically, it occupies space and
+4850 ft level and the surface level at SURF. Specifically, the DAQ occupies space and
 power both in the central utility cavern (CUC) and the on-surface DAQ
 room.  The front-end part of the system, which is responsible for
 raw detector data reception and pre-processing, lives
 underground in the CUC, while the back-end part of the system, which is responsible for
 event-building as well as run control and monitoring, lives on the
-surface. Data flows through the DAQ from the
-front-end to the back-end of the system and to offline. The majority
+surface. Data flows through the DAQ from 
+upstream to the back-end of the system and then to offline. The majority
 of raw data processing and buffering is performed underground, in the
 front-end part of the system, thus minimizing data bandwidth to the surface. A
 hierarchical data selection subsystem consumes minimally-processed
 information from the front-end readout, and
-constructs module-level trigger decisions. Upon such decision, a data
+constructs module-level trigger decisions. Upon such a decision, a data
 flow orchestrator process is activated as part of the back-end part of
 the system
 to retrieve data to be built as part of an event record. At event
@@ -110,7 +110,7 @@ specifics of design implementation and data flow are described in Section~\ref{s
 
 The \dword{dune} \dword{fd} \dword{daq} system is designed to meet the
 \dword{dune} top-level as well as \dword{daq}-level requirements
-summarized in Table~\ref{tab:specs:SP-DAQ}. The \dword{daq}-level requirements are
+summarized in Table~\ref{tab:spec:SP-DAQ}. The \dword{daq}-level requirements are
 imposed to ensure that the 
 system %is capable of 
 can record all necessary information for offline 
@@ -156,7 +156,7 @@ any given event and/or subsequent subevent process. Unlike the TPC,
 the PDS data is zero-suppressed in
 the PDS electronics (see Chapter~\ref{}); therefore the total raw data volume received by
 the DAQ system is be dominated by
-the TPC data, which is sent out as a continuous stream.
+the TPC data, which is sent out from the front-end electronics as a continuous stream.
  
 Figure \ref{fig:daq-rates} provides the expected activity rates in a
 single far detector module as a function of true energy associated
@@ -170,7 +170,7 @@ and atmospheric neutrino interactions. With the exception of supernova
 burst neutrinos, the activity associated with any of these physics
 signals is localized in space and particularly in time. Supernova burst
 neutrinos on the other hand are characteristically different, as they arrive as multiple
-signals of localized activity that extensd over the entirety of the
+signals of localized activity that extends over the entirety of the
 detector and over multiple seconds. 
 
 The nature and rates of these signatures necessitates a data selection strategy which handles two
@@ -188,18 +188,26 @@ system is required to yield >99\% efficiency for localized high-
 energy activity triggers, and sufficient efficiency for low-energy
 activity trigger candidates as needed to achieve >90\% galactic
 supernova burst trigger coverage. The galactic coverage is defined as
-supernova burst trigger efficiency weighted supernova burst probability.
+the supernova burst trigger efficiency, weighted by the probability of
+a galactic supernova burst (which is galactic distance-dependent).
 
-By offline considerations, the steady state rate of localized triggers
-from the entire far detector is limited to 0.1 Hz, otherwise
+By offline considerations, the DAQ is limited to sending no more than
+30 PB per year to offline. As such, the steady state rate of localized triggers
+from the entire far detector (including all four modules) is
+effectively limited to less than 0.1 Hz, otherwise
 more than 30 PB of data (uncompressed) would be generated per
-year. This assumes (conservatively) that each localized
+year. This assumes (conservatively) that each
 trigger prompts 5.4~ms of losslessly compressed TPC data plus PDS data from
-the entire module to be read out as part of the event record. The average rate
-of extended triggers is limited to 1 per month, per similar
-considerations; this assumes that an extended trigger prompts 100 s of losslessly
+the entire module to be read out as part of the event record. This is
+referred to as a localized trigger. The average rate
+of supernova burst trigger rate is limited to 1 per month, per similar
+considerations; this assumes that a supernova burst trigger prompts 100 s of losslessly
 compressed data from the entire module to be read out as part of the
-event record. The capability of recording data losslessly is built
+event record. The one (1) extended trigger per month would amount to a
+7\% addition to the total data volume generated by a 0.1 Hz localized
+trigger rate.
+
+The capability of recording data losslessly is built
 into the design as a conservative measure; a particular concern is
 charge collection efficiency in the case of zero
 suppression. MicroBooNE is currently investigating the impact of zero
@@ -244,16 +252,19 @@ DUNE FD, and an aspect of the design which has never been demonstrated
 in a LArTPC. The challenge with \dword{snb} triggering is two-fold. 
 First, the activity of the individual \dword{snb} neutrino interactions
 is expected to be of relatively low energy ($\SIrange{10}{30}{MeV}$),
-often indistinguishable from radiological background activity in the
+sometimes indistinguishable from pile-up of radiological background activity in the
 detector.  Triggering on an ensemble of \bigo{100} events expected on
 average in the case of a galactic supernova burst is therefore
 advantageous; however, since this ensemble of events is expected to occur sparsely over the
 entire detector and over an extended period of \bigo{10}\si{s},
 sufficient buffering capability must be designed into the system. 
-Furthermore, to assure high efficiency in collecting \dword{snb} interactions
-that individually are below individual interaction activity threshold, data from
+Furthermore, to ensure high efficiency in collecting \dword{snb} interactions
+that, individually, are below interaction activity threshold, data from
 all channels will be recorded over an extended and contiguous period of
 time \bigo{100}\si{s} around every \dword{snb} trigger.
+
+\fixme{The table should have a different title: Maybe Requirements and
+  Specifications Relevant to the DUNE FD DAQ System. Georgia}
 
 \input{generated/req-longtable-SP-DAQ} 
 
@@ -297,7 +308,7 @@ The implementation of a continuous storage element in the data flow
 architecture allows for the formation and capture of delayed, data-driven
 trigger decisions with minimal loss of physics information. The
 specification for this look-back buffer is set in consultation with
-physics groups. It is driven primarily by the need to record up to ten
+physics groups. The buffer size is driven primarily by the need to record up to ten
 seconds of unbiased data preceding a \dword{snb} (with the
 neutronization time taken as the time of the burst), and it is
 specified to be greater than four seconds. This four-second
@@ -328,7 +339,7 @@ location requires that the DAQ operates with high reliability and fully remote o
 
 Furthermore, to ensure minimal impact to overall detector live-time, the \dword{daq} system is fully configurable,
 controllable, and operable from remote locations, with
-authentication implemented to allow exclusive control. It 
+authentication implemented to allow exclusive control. The DAQ  
 furthermore facilitates online monitoring of the detector and of
 itself. %the \dword{daq} system in itself.
 
@@ -378,7 +389,7 @@ Consequently, the \dword{dune} \dword{fd} \dword{daq} system interfaces with the
 readout, computing, \dword{cisc}, and calibration systems of the %\dword{dune}
 \dword{fd}, as well as with facilities and underground installation. The
  interface agreements with the \dword{fd} systems 
-are summarized in Table~\ref{tab:sp-daq:interfaces}, and described
+are listed in Table~\ref{tab:sp-daq:interfaces}, and described
 briefly in the following subsections. Interface agreements with
 facilities and underground installation are described in Section~\ref{sec:sp-daq:production}.
 
@@ -408,8 +419,9 @@ the raw TPC data to the \dword{daq} \dword{fe} readout (\dword{felix}; see
 Section~\ref{??}). This ensures the \dword{daq} is electically decoupled from the detector
 cryostat. Ten \SI{10}{Gbps} links are expected per \dword{apa}, and have
 been specified as 300m OM4 multi-mode fibers from \dword{sfp}+ at the \dword{wib} to
-\dword{minipod} on \dword{felix}. The data format has been specified to use no
-compression and custom communication protocol.
+\dword{minipod} on \dword{felix}. The data format has been specified
+to use a custom communication protocol and no
+compression.
 
 \subsection{PDS Readout}
 
@@ -419,7 +431,7 @@ be of the form of 150  \SI{10}{Gbps} OM4 fibers from one FD module.
 This
 is similar to the interface to the TPC \dword{ce}, except the overall
 data volume is lower by an order of magnitude. The data format has been specified to use
-compression (zero supression) and custom communication protocol.
+compression (zero supression) and a custom communication protocol.
 %\metainfo{Data reception physical and logical, configuration information delivery.}
 
 \subsection{Computing}
@@ -649,13 +661,14 @@ on a per-channel basis into information packets
 called \dwords{trigprimitive}.  These are forwarded to the
 \dword{daqdsn} system which makes correlations and ultimately decides whether and which data is to be saved.
 
-This functional block may be implemented onto FPGAs, GPUs, CPUs, or a
-combination of these elements. Deciding on the implementation is
-premature at this stage; this is one of the main topics to explore and
-develop in the readout area. The DAQ design can facilitate either FPGA or
-CPU implementation interchangeably, which provides flexibility and
-adaptability to whatever the processing needs may ultimately be,
-depending, for example, on noise levels in the detector.
+This functional block may be implemented via FPGA, GPU, CPU, or a
+combination of these elements. Deciding on the exact implementation is
+premature at this stage; this is one of the main topics to explore
+within upstream DAQ and Data Selection. The DAQ design includes both FPGA and
+CPU elements in the upstream DAQ, which provides the needed
+flexibility and 
+adaptability to meet the ultimate processing needs of the detector;
+those will depend, for example, on noise levels in the detector.
 
 \subsubsection{Buffering}
 
