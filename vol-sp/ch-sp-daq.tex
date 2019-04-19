@@ -1078,20 +1078,15 @@ The final output files shall use data schema and file formats as described in Se
 \subsubsection{Data Quality Monitoring}
 \label{sec:fd-daq:design-data-quality}
 
-Section~\ref{sec:daq:design:ccm:monitoring} described a monitoring system for the \dword{daqccm} subsystems. 
+Section~\ref{sec:daq:design:ccm:monitoring} describes a monitoring system for the \dword{daqccm} subsystems. 
 Monitoring the quality of the information held in the detector data itself is critical to promptly responding to unexpected conditions and maximizing the quality of acquired data. 
-A \dword{daq} \dfirst{dqm} system will be developed to provide functionality for the infrastructure, visualization and algorithms required to continuously process a subset of the detector data so that prompt summaries may be provided for human consumption.
+A \dword{daq} \dfirst{dqm} 
+will be developed (including necessary infrastructure, visualization,
+and algorithms), which will process a subset of detector data in order
+to provide prompt feedback to the detector operators. 
 This system will be designed to allow it to evolve as the detector and its data is understood during commissioning and early operation and to cope with any evolution of detector conditions.
-Many software modules will be developed offline, so the \dword{dqm} subsystem will facilitate their reuse when applied to samples of detector data.
-
-
-\subsubsection{Data Model}
-\label{sec:fd-daq:design-data-model}
-\fixme{module-generic}
-
-\metainfo{Describe the data model. 
-  This isn't a strict schema just things like how various parts of the
-  detector readout map to files, etc.}
+It is likely that many of the software modules developed by the
+offline effort will be reused in the DQM.
 
 \subsubsection{Output Buffer}
 
@@ -1099,12 +1094,20 @@ Many software modules will be developed offline, so the \dword{dqm} subsystem wi
 
 The output buffer system is a hardware resource provided by \dword{daq} and used offline by \dword{dune}. 
 It has two primary purposes. 
-First, it decouples producing content in operating \dword{daq} from transferring that content from the far site to archive storage units and offline processing. 
+First, the buffer decouples the production of event data from the transfer of that data from the far site to archival storage.
 Second, it provides local storage sufficient for uninterrupted \dword{daq} operation in the unlikely event that the connection between the \dword{fd} and the Internet is lost. 
 Based on very unusual losses of connectivity at major laboratories as well as \dword{fd} sites of other long-baseline neutrino experiments, the output buffer must provide enough storage capacity to retain one week of output given nominal data production. 
 The maximum data production rate for the \dword{fd} is set at \SI{30}{\peta\byte/\year}. 
 Thus, the output storage buffer must have a capacity of approximately \SI{0.5}{\peta\byte} to service the entire \dword{fd}.
 \fixme{How to reference the 30PB/yr requirement?}
+
+\subsubsection{Data Model}
+\label{sec:fd-daq:design-data-model}
+\fixme{Add reference to live document. Georgia}
+
+\metainfo{Describe the data model. 
+  This isn't a strict schema just things like how various parts of the
+  detector readout map to files, etc.}
 
 
 \subsection{Inter-process Communication}
