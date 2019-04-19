@@ -197,7 +197,7 @@ from the entire far detector (including all four modules) is
 effectively limited to less than 0.1 Hz, otherwise
 more than 30 PB of data (uncompressed) would be generated per
 year. This assumes (conservatively) that each
-trigger prompts 5.4~ms of losslessly compressed TPC data plus PDS data from
+trigger prompts 5.4\si{\milli\second} of losslessly compressed TPC data plus PDS data from
 the entire module to be read out as part of the event record. This is
 referred to as a localized trigger. The average rate
 of supernova burst trigger rate is limited to 1 per month, per similar
@@ -232,13 +232,13 @@ trigger rate requirements, are summarized in Table~\ref{tab:sp-daq:rates}.
   are not kept permanently; they are temporarily stored for 1-2 months.}
 Source  & Annual Data Volume & Assumptions \\\toprowrule
 Beam interactions & 27 TB & 10 MeV threshold in coincidence with beam
-time, including cosmic coincidence; 5.4 ms readout \\\colhline
-Cosmics and atmospheric neutrinos & 10 PB & 5.4 ms readout \\\colhline
+time, including cosmic coincidence; 5.4\si{\milli\second} readout \\\colhline
+Cosmics and atmospheric neutrinos & 10 PB & 5.4\si{\milli\second} readout \\\colhline
 Radiological backgrounds & $<1$ PB & $<1$ per month fake rate for SNB
 trigger\\\colhline
 Cold Electronics calibration & 200 TB & \\\colhline
 Radioactive source calibration & 100 TB & $<10$ Hz source rate; single
-APA readout; 5.4 ms readout \\\colhline
+APA readout; 5.4\si{\milli\second} readout \\\colhline
 Laser calibration & 200 TB & 10$^6$ total laser pulses; half the
 TPC channels illuminated per pulse; lossy
 compression (zero-suppression) on all channels\\\colhline
@@ -368,7 +368,7 @@ TPC Induction Channel Count per Subdetector (APA) & 1,600\\ \colhline
 PDS Channel Count per Module & TBD\\ \colhline
 TPC \dword{adc} Sampling Rate & 2 MHz\\ \colhline
 TPC \dword{adc} Dynamic Rate& 12 bits\\ \colhline
-Localized Event Record Window & 5.4 ms\\  \colhline
+Localized Event Record Window & 5.4\si{\milli\second}\\  \colhline
 Extended Event Record Window &  100 s\\  \colhline
 Full size of TPC Localized Event Record per Module & 6.22 GB \\  \colhline
 Full size of TPC Extended Event Record per Module & 115 TB\\  \colhline
@@ -674,23 +674,23 @@ those will depend, for example, on noise levels in the detector.
 
 In \dword{dune}, the readout system is in charge of buffering all
 detector data until the \dword{daqdss} has formed a trigger decision
-(Section~\ref{sec:sp-daq:design-selection-algs}) and until subsequently the
+(Section~\ref{sec:sp-daq:design-selection-algs}) and until the
 \dword{daqbes} (Section~\ref{sec:fd-daq:design-backend}) has requested and received that selected data. 
 In addition, in the case of a \dword{snb} trigger, data received after
-the issuing of the trigger must be buffered for much longer to absorb the
-strongly punctuated bottlenecks that are expected to form downstream in that case.
-%There are two rather different time scales and data throughput metrics which must dictate the technology and the scaling required for the temporary storage providing the buffering.
-%As described in Section~\ref{sec:sp-daq:design-selection-algs} these are due to localized and extended activity.
+the issuing of the trigger must be buffered for a longer period to
+avoid loss of data due to any possible downstream
+bottlenecks. Localized and extended trigger activity are associated
+with two rather different time scales and data throughput metrics, and
+those collectively dictate the temporary storage technology and scale. 
 
-The buffering time required to select data containing localized activity is dominated by processing speed, pipeline depths and network latency. 
-Some studies must still be performed but initial estimates indicate that the time buffering time required is should not exceed a maximum of approximately one second. 
-The duration of data that must be copied from buffering in order to
-capture the localized activity corresponds to 5.4\si{\milli\second}.
-As the full stream of data must constantly be buffered, a RAM
+The buffering time required to select data associated with a localized
+trigger is dominated by processing speed, pipeline depths and network latency. Some studies must still be performed but initial estimates indicate that the time buffering time required should not exceed approximately one second. 
+A  5.4\si{\milli\second} block of data must be copied from the buffer
+in order to fully capture interesting localized activity. As the full stream of data must constantly be buffered, a RAM
 technology is selected based on providing sufficient throughput,
 endurance, and capacity. 
 
-The extended activity (e.g., due to a potential \dword{snb}) presents a far more challenging set of buffering requirements.  
+Extended triggers present a far more challenging set of buffering requirements.  
 Low-energy activity that is associated with a \dword{snb} trigger
 decision may exist for as much as \snbpretime prior to the issuing of \dword{snb}
 trigger (trigger time).
@@ -700,7 +700,7 @@ that all channels must be recorded for 100 seconds around its trigger
 time, and requires extracting as much as 115 TB from the TPC readout.
 It is not cost effective to design the \dword{daq} to accept this rate
 pulse in real time. Thus, additional buffering is provided to catch
-the temporary backlog of data that the \dword{snb} trigger will produce.
+the temporary backlog of data that an extended trigger will produce.
 
 The technology and scale of this additional buffering must satisfy several requirements. 
 It must accept the full data rate of the detector module (as much as \SI{2}{\tera\byte/\second}). 
@@ -712,7 +712,7 @@ solid-state devices, which at the scale required to provide suitable input bandw
 Providing only a modest overhead to normal operations, this data can be extracted from such storage from the \dword{daq} in under a day.
 
 For both types of activity, the buffering requirements may be reduced by employing lossless compression to the data prior to it entering the buffer.
-A factor of at least two in reduction in buffer input rate is
+A factor of at least two reduction in buffer input rate is
 expected, based on MicroBooNE and protoDUNE experience. 
 If expected noise levels are achieved, this compression would provide a factor of four to ten, depending on the detector module technology.
 Effort is currently underway to understand the costs and technology involved in exploiting this benefit.
@@ -771,7 +771,7 @@ signals, as well as beam interactions,
 atmospheric neutrinos, rare baryon-number-violating events, and cosmic
 ray events that deposit localized visible energy in excess of 100 MeV, with high efficiency ($>$99\%). 
 It must also select data associated with potential galactic \dwords{snb}, with galactic coverage\footnote{Galactic coverage is defined as efficiency-weighted probability of galactic \dword{snb}.} of $>$90\% efficiency.
-To meet the requirement that the \dword{dune} \dword{fd} maintain a
+To meet the requirement that the \dword{dune} \dword{fd} maintain
 $<$\SI{30}{\peta\byte/\year} to permanent storage, the \dword{daqdss}
 subsystem must make \dword{daqdsn} decisions in a way that allows the \dword{daq} 
 system to reduce its input data by almost four orders of magnitude
@@ -834,7 +834,7 @@ in time and space from which they are derived:
     level trigger; those are used as input to an extended low energy trigger
     for supernova neutrino bursts. Each trigger type prompts readout
     of the entire detector but over significantly different time
-    ranges: localized triggers prompt readout of 5.4 ms event records; extended
+    ranges: localized triggers prompt readout of 5.4\si{\milli\second} event records; extended
     triggers prompt readout 100 s event records. 
 \end{itemize}
 
@@ -957,7 +957,7 @@ that were used to form it.
 The decision also provides direction as to what set of detector components
 are to be read out and over what time period.
 As described at the start of this section, localized activity will lead
-to the readout of the entire detector module for a period equal to \SI{5.4}{ms}.  Extended activity triggers (\dword{snb}) will
+to the readout of the entire detector module for a period equal to 5.4\si{\milli\second}.  Extended activity triggers (\dword{snb}) will
 direct the readout of much longer period of \SI{100}{s}.
 
 The module level trigger will send its produced trigger commands to the
@@ -979,7 +979,7 @@ such as \dword{snews}.
 In addition to accepting cross-module triggers via the external trigger
 logic unit, the module level trigger also takes inputs from out-of-band sources such as
 needed for beam, calibration or random triggering. 
-If meaningful sources of triggering information that is external to
+If meaningful sources of triggering information that are external to
 DUNE can be provided promptly enough so that the corresponding data
 still resides in the front-end buffers, they may also be considered.
 
@@ -1006,7 +1006,7 @@ More specifically, the \dword{hlt} may further reduce the rate of data saved to 
 applying refined selection criteria which may otherwise be prohibitive
 to apply to the pre-trigger data stream.  For example, instrumentally-generated signals (e.g.~correlated noise)
 may produce trigger candidates that can not be rejected by the module
-level trigger and if left unmitigated may lead to an undesired high
+level trigger and if left unmitigated may lead to an undesirably high
 output data rate. 
 Post processing the triggered data may allow reducing this unwanted
 contamination.
@@ -1029,15 +1029,17 @@ processing required by the \dword{fd}.
 \label{sec:fd-daq:design-backend}
 \fixme{module-generic}
 
-The \dfirst{daqbes} encompasses the output concept and interfaces to the buffer and trigger concepts shown in Figure~\ref{fig:daq-conceptual-overview}. 
+The functionality of the \dfirst{daqbes} is represented by the Output circle in Figure~\ref{fig:daq-conceptual-overview}. 
 It accepts trigger commands produced by the \dfirst{daqdss} as described in Section~\ref{sec:sp-daq:design-selection-algs}. 
-It queries the front-end buffer interfaces and accepts returned data as described in Section~\ref{sec:daq:design-readout}. 
-Finally, it records trigger commands and the corresponding data to the output storage buffer, from which the data is transferred to the custody of DUNE offline.
+It queries the upstream DAQ buffers and accepts returned data as described in Section~\ref{sec:daq:design-readout}. 
+Finally, it records trigger commands and the corresponding data in the
+form of ``event records'' to the output storage buffer, from which the data is transferred to offline.
 
 \subsubsection{Dataflow Orchestration}
 
-To minimize data extraction latency, the \dword{daqbes} must not serially execute trigger commands to completion. 
-This asynchronous execution governed by the \dword{daqdfo} and operates as illustrated in Figure~\ref{fig:daq:backend} and as discussed here:
+To minimize data extraction latency, the \dword{daqbes} must execute
+trigger commands to completion in an asynchronous way (not serially). 
+This asynchronous execution is governed by the \dword{daqdfo} and operates as illustrated in Figure~\ref{fig:daq:backend} and as discussed here:
 
 \begin{dunefigure}{fig:daq:backend}{Illustration of \dword{dune} \dword{daq} back-end operation.}
   \includegraphics[width=0.8\textwidth]{daq-backend.pdf}
