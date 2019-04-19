@@ -1049,8 +1049,12 @@ This asynchronous execution is governed by the \dword{daqdfo} and operates as il
 \item \dword{daqdfo} accepts a time ordered stream of \dwords{trigcommand} and dispatches each for execution possibly by first splitting up each command into one or more contiguous segments.
 \item Each segment will then be dispatched to an \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution.
 \item Execution entails interpreting the trigger command segment and querying the appropriate \dword{fe} buffer interfaces to request data from the period of time. 
-\item Requests and their replies may be sent synchronously, and replies are expected even if data has already been purged from the \dword{fe} buffer.
-\item The data received may then undergo processing and aggregation until finally it is saved to one or more files on the output storage system before custody is transferred offline.
+\item Requests and their replies may be sent synchronously, and
+  replies are expected even if data has already been purged from the
+  \dword{fe} buffer. (In that case, an error message would be sent out.)
+\item The data received may then undergo processing and aggregation
+  until finally it is saved to one or more files on the output storage
+  system before it is transferred offline.
 \end{itemize}
 %\fixme{Add time order requirement on DS above}
 %\fixme{Add return-empty-response requirement to buffer above}
@@ -1063,7 +1067,8 @@ This asynchronous execution is governed by the \dword{daqdfo} and operates as il
 %\metainfo{Explain art\dword{daq}, handling of trigger commands by asynchronous, parallel queries to front end Data Selector (but take care not to duplicate between here and in the overview).}
 
 The \dword{daq} back-end subsystem will provide the instances of the \dfirst{eb}.
-As described above, each will request selected data from the appropriate \dfirst{daqfbi} as addressed by a consumed trigger command segment. 
+As described above, each EB instance will request selected data from
+the appropriate \dfirst{daqfbi}, as addressed by a received trigger command. 
 An \dword{eb} will aggregate the selected data and potentially apply processing and reduction (Section~\ref{sec:fd-daq:design-data-reduction}) as well as monitor its quality while in flight.
 Finally it will record the resulting data to the output storage system.
 The final output files shall use data schema and file formats as described in Section~\ref{sec:fd-daq:design-data-model}.
