@@ -1,7 +1,6 @@
 \section{System Design}
 \label{sec:fdsp-tpcelec-design}
 
-\begin{comment}
 In order to achieve the lowest possible overall noise in the readout of 
 the \dword{apa} wire planes, all possible sources of noise need to be kept to a
 minimum. This requires not only minimizing the noise sources in each
@@ -27,53 +26,20 @@ cold cables, and the cables trays. Then in
 the infrastructure on the top of the cryostat, including the
 feedthroughs, the \dwords{wiec}, the timing distribution and
 synchronization system, and the services that provide the low
-voltage power and the bias voltage to the \dword{tpc} electronics. Finally,
-we conclude in~\ref{sec:fdsp-tpcelec-overview-remaining}
+voltage power and the bias voltage to the \dword{tpc} electronics. 
+The design presented here is very similar to the one used for
+\dword{pdsp}. The results obtained with this detector are 
+discussed in Section~\ref{sec:fdsp-tpcelec-overview-pdune}.
+Then in \ref{sec:fdsp-tpcelec-overview-lessons} we discuss
+how the lessons learned from the construction, installation,
+commissioning. and operation are informing the final design
+of the \dword{dune} \dword{sp} detector module and later in
+\ref{sec:fdsp-tpcelec-overview-remaining} we conclude
 with a discussion of the design maturity and of
 the remaining prototype activities that are required prior to
 the beginning of he detector construction. Other aspects of
 the system design, pertaining to the grounding of other 
 detector components, are discussed in Section~\ref{sec:fdsp-tpcelec-interfaces}.
-\end{comment}
-
-To minimize the overall noise of the readout of the \dword{apa}
-wire planes, all possible sources of electroni noise need to be kept to a
-minimum.  This includes noise associated with components in the readout chain
-of the \dword{apa} wires, such as \dword{fe} amplifier noise, and from other
-aspects of the system, such as the channeling of noise inside the cryostat
-through ground connections and through the readout chain of other detector
-components, like the \dword{pds}, the \dword{hvs}, or the cryogenic
-instrumentation. 
-
-This section describes the overall
-system design of the \dword{tpc} electronics.
-
-%\fixme{do we need the rest of the next pgraph? Nora wanted!}
-\begin{comment}
-, starting in
-\ref{sec:fdsp-tpcelec-design-grounding} with a description of the
-grounding and shielding scheme adopted in the \dword{dune} \dword{spmod}
-to minimize the overall noise in the detector, followed in
-\ref{sec:fdsp-tpcelec-design-bias} by a discussion of the bias
-voltage distribution system. Later, we describe in 
-\ref{sec:fdsp-tpcelec-design-femb} the \dwords{femb}, including
-the design of the \dwords{asic} that are being considered for
-use in \dword{dune}. In~\ref{sec:fdsp-tpcelec-design-infrastructure}
-we discuss the infrastructure for the \dword{ce} inside the cryostat,
-that includes the cold boxes that shield the \dwords{femb}, the
-cold cables, and the cables trays. Then in
-\ref{sec:fdsp-tpcelec-design-ft}-\ref{sec:fdsp-tpcelec-design-timing} we discuss 
-the infrastructure on the top of the cryostat, including the
-feedthroughs, the \dwords{wiec}, the timing distribution and
-synchronization system, and the services that provide the low
-	voltage power and the bias voltage to the \dword{tpc} electronics. Finally,
-we conclude in~\ref{sec:fdsp-tpcelec-overview-remaining}
-with a discussion of the design maturity and of
-the remaining prototype activities that are required prior to
-the beginning of he detector construction. Other aspects of
-the system design, pertaining to the grounding of other 
-detector components, are discussed in Section~\ref{sec:fdsp-tpcelec-interfaces}.
-\end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Grounding and Shielding}
@@ -94,11 +60,33 @@ might be injected into the electronics either in the cold or just
 outside the cryostat by direct conduction along unavoidable power 
 or signal connections to other devices. This approach to minimizing
 the detector noise by using appropriate grounding and shielding procedures
-is discussed in detail in~\cite{radekaNoise}.
+is discussed in detail in~\cite{radekaNoise}. In the specific case
+of the \dword{dune} \dword{spmod} this approach results in the 
+following set of requirements that need to be respected during the
+design and the construction of the detector:
+\begin{itemize}
+\item{The \dword{apa} frame shall be connected to the common of
+all the \dword{fe} \dwords{asic};}
+\item{All electronical connections (low voltage power, bias voltage,
+clock, control, and data readout) from one \dwords{apa} shall lead to a 
+single \dword{sft};}
+\item{All \dwords{apa} shall be insulated from each other;}
+\item{The common of the \dword{fe} \dword{asic} and the rest of the 
+\dword{tpc} readout electronics should be connected to
+the common plane of the \dword{femb};}
+\item{The return leads of the \dword{apa} power line and any shield
+for the clock. control. and data readout shall be connecdted
+to the common plane of the \dword{femb} at one end and
+to the flange of the \dword{sft} at the other hand; this shall be 
+the only connection of the \dword{apa} frame to the cyostat;}
+\item{The mechanicel suspension from the frame of the \dword{apa}
+to the cryostat should be insulated.}
+\end{itemize}
 
-As discussed in \ref{sec:fdsp-tpcelec-overview-pdune}
+These requirements have been used already for the construction
+of the \dword{pdsp} prototype. As discussed in \ref{sec:fdsp-tpcelec-overview-pdune},
 the initial results from the online monitoring and the
-analysis of the \dword{pdsp} indicate that the system
+analysis of \dword{pdsp} indicate that the system
 noise requirements for the \dword{dune} \dword{spmod}
 can be met.
 
@@ -138,6 +126,10 @@ shown in Figure~\ref{fig:connections}, and to the \dword{pcb}
 shield layer on the \dwords{pd}. The cable shields have no 
 electrical connection to the \dword{apa} frame or the \dword{tpc}
 electronics.
+
+Further aspects of the \dword{dune} grounding scheme are 
+discussed in Section~5.6 of Volume~\volnumbertc of this \dword{tdr},
+\voltitletc, and in~\cite{DUNE:GroundingRules}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Distribution of Bias Voltages}
@@ -220,7 +212,7 @@ communication \dwords{asic} (see Figure~\ref{fig:ce-scheme}).
 The \dword{femb} also contains regulators that produce the voltages 
 required by the \dwords{asic} and filter those voltages, and 
 a micro-electromechanical system oscillator that provides
-a reference to the \dword{coldata} \dword{pll}. The \dword{larasic} 
+a \SI{40}{MHz} reference to the \dword{coldata} \dword{pll}. The \dword{larasic} 
 inputs are protected by an external series inductor and two 
 diodes as well as the internal diode protection in the chip.
 
@@ -352,7 +344,8 @@ programmable to allow different gain and peaking time settings.}
 
 Each \dword{fe} \dword{asic} channel has a dual-stage charge amplifier 
 and a \num{5}$^{th}$ order semi-Gaussian shaper as an anti-aliasing 
-filter for the \dword{tpc} signals. It has programmable gain 
+filter for the \dword{tpc} signals, optimized for loads in the range 
+\SIrange{170}{210}{pF}, that is the capacitance of the \dword{apa} wires. It has programmable gain 
 selectable, at the \dword{asic} level, from one of \num{4.7}, \num{7.8}, \num{14}, or \SI{25}{mV/fC}
 (corresponding to full-scale charge of \num{1.9e6}, \num{1.1e6}, \num{625e3}, 
 and \SI{350e3}{$e^-$}), programmable peaking time selectable from one of 
@@ -379,7 +372,7 @@ chip-to-chip variation in the calibration capacitor are typically
 less than \num{1}\%. The variations of the calibration capacitors
 could be characterized prior to the beginning of \dword{dune}
 data taking, using the \dword{qc} process, discussed in
-Section~\ref{sec:fdsp-tpcelec-integration-qc}.
+Section~\ref{sec:fdsp-tpcelec-production-qc}.
 
 Shared among the \num{16} channels in the \dword{fe} \dword{asic} are 
 the digital interface, programming registers, a temperature monitor, 
@@ -1559,12 +1552,10 @@ Section~\ref{sec:fdsp-tpcelec-overview-requirements}. This requires
 that the \dword{tpc} electronics be synchronized to a level of a few ns, which is
 much smaller than the time difference between two charge samples.
 This level of synchronization between the sampling time of different
-\dwords{femb} contributes negligibly %gives a negligible contribution 
-to the expected
-resolution % of the measurement 
+\dwords{femb} contributes negligibly to the expected resolution % 
 of the reconstructed space points measurement,
 both in the \dword{apa} plane and along the drift distance.
-The timing distribution and synchronization system for the %\dword{dune} 
+The timing distribution and synchronization system for the 
 \dword{spmod} is described in Section~\ref{sec:sp-daq:design-timing}.
 Each \dword{wiec} has a bidirectional optical connection with the
 timing system in the \dword{ptc}. Inside the \dword{ptc} the optical
@@ -1572,54 +1563,49 @@ signal from the timing system is converted, as discussed in the previous
 section, to an electrical signal and distributed via the backplane to
 the \dwords{wib} that constitute an endpoint for the timing distribution
 system. Each \dword{wib} contains a standalone jitter-reducing \dword{pll} 
-that %is used to 
-forwards the clock to all the \dwords{femb}. The
+that forwards the clock to all the \dwords{femb}. The
 \dword{fpga} contained inside the \dword{wib} implements the 
-protocol~\cite{bib:docdb1651,bib:docdb11233}% that is needed 
-for aligning
+protocol~\cite{bib:docdb1651,bib:docdb11233} for aligning
 the phase of the clock at the endpoint of the distribution tree.
 
 The timing distribution and synchronization system ensures that
-all the \dwords{wib} are synchronized to within $\sim\SI{3}{ns}$. %For
-The synchronization of the \dword{pdsp} \dwords{femb} relies on
-the fact that all the cables connecting the \dwords{wib} to the
+all the \dwords{wib} are synchronized to within $\sim\SI{3}{ns}$. 
+One possible way of synchronizing the \dwords{femb} is the one
+that was used in \dword{pdsp}, which relies on the fact that 
+that all the cables connecting the \dwords{wib} to the
 \dwords{femb} have approximately the same length (a length 
 difference of \SI{0.5}{m} corresponds to a difference in the
-sampling time of \SI{2.5}{ns}). We could use the same approach %could also be used 
-for the \dword{dune} \dword{spmod}, correcting %inside the \dword{fpga} of the \dword{wib} 
-for the top-bottom \dword{apa} cable length difference (corresponding to $\sim\,\SI{65}{ns}$) %in length between the cables for top and bottom \dword{apa}s
-inside the \dword{fpga} of the \dword{wib}.  
-%that corresponds to approximately \SI{30}{ns}. 
-%This time difference could be measured for a sample of short and long cables 
-We could measure the time difference for a sample of short and long cables prior to the installation of the \dwords{femb} on
-the \dwords{apa}. %Using the cable lengths, 
-Synchronizing the \dword{ce} with the \dword{pds} requires one (or two)
+sampling time of \SI{2.5}{ns}). The same approach could be used
+for the \dword{dune} \dword{spmod}, correcting for the top-bottom 
+\dword{apa} cable length difference (corresponding to $\sim\,\SI{65}{ns}$) 
+inside the \dword{fpga} of the \dword{wib}. The exact correction
+factor could be obtained by measuring the time propagation 
+difference for a sample of short and long cables prior to the 
+installation of the \dwords{femb} on the \dwords{apa}. 
+Synchronizing the \dword{ce} with the \dword{pds} requires one
 additional time constants that correspond to the transit 
 time of the Fast Command sent from the \dword{wib} to
 \dword{coldata} and from there to the \dword{coldadc},
 which includes the propagation time along the cables
 (\SI{45}{ns} for the \SI{9}{m} long cables to the top \dword{apa}s
 and \SI{110}{ns} for the \SI{22}{m} long cables to the bottom \dword{apa}s) 
-plus the propagation time inside
-the \dwords{asic}. This overall time constant  %that is ... below 
-can be obtained offline
-from the data, but it represents at most a correction
-of $\mathcal{O}(\SI{150}{\mu m})$ on the position of
-a track along the drift distance.
-We will implement a timer inside the \dword{wib}'s \dword{fpga} 
-and measure the transit time of a command
+plus the propagation time inside the \dwords{asic}. This overall 
+time constant can be obtained offline from the data, but it represents 
+at most a correction of $\mathcal{O}(\SI{150}{\mu m})$ on the 
+position of a track along the drift distance.
+Instead of relying on cable measurements we are also considering
+the addition of a timer inside the \dword{wib}'s \dword{fpga},
+to measure the transit time of a command
 sent to the \dword{femb} and its corresponding return
 message. This study will help us understand whether the 
 relative phases of the \dword{femb}and the \dword{wib} 
 can be aligned more precisely.
 
-%It should be noted that 
-The communication between the
-\dword{wib} and the \dword{daq} backend is asynchronous
-and %that 
-the \num{64}-bit time-stamp is inserted in the data frame
-in the \dword{wib}'s \dword{fpga}. %inside the \dword{wib}. 
-%In the case of 
+The communication between the \dword{wib} and the \dword{daq} 
+backend is asynchronous and the \num{64}-bit time-stamp, that
+is used to indicate the time at which the signal waveform was
+sample~~\ref{sec:sp-daq:design-timing}, is inserted in the data frame
+in the \dword{wib}'s \dword{fpga}. 
 For the three-\dwords{asic} solution, the communication
 from the \dword{femb} to the \dword{wib} is also
 asynchronous and a \num{8}-bit time stamp is sent to
@@ -1630,19 +1616,17 @@ This \num{8}-bit time stamp is used only to ensure
 that the \dword{femb} and the \dword{wib} are
 still in sync. 
 
-%One major difference between 
-In contrast to the three-\dwords{asic} solution, %and 
-in the \dword{cryo}-based \dwords{femb} solution %that
+In contrast to the three-\dwords{asic} solution, 
+in the \dword{cryo}-based \dwords{femb} solution 
 the communication between the \dword{femb} and 
 \dword{wib} is entirely synchronous, using a \SI{56}{MHz} 
 clock. In order to properly align the phase of the
 \dword{adc} sampling for the top and bottom \dword{apa}s,
 appropriate delays must be added to the sampling
-command in the \dword{wib}'s \dword{fpga}. % inside the \dword{wib}.
-%The considerations made above on the overall alignmentof 
+command in the \dword{wib}'s \dword{fpga}. 
 The requirements listed above for synchronizing 
 the \dword{ce} relative to the \dword{pds} remain
-valid for this case. %also for the case of the \dword{cryo}-based \dwords{femb}.
+valid for this case. 
 
 \fixme{Marco: we need to write something about the compatibility
 of CRYO that uses a 56 MHz clock with the planned
@@ -2144,25 +2128,25 @@ development of \dword{coldata} and of a completely new \dword{adc} is more invol
 
 \begin{dunetable}
 [Status of the design of the different CE detector components]
-{p{0.20\textwidth}p{0.15\textwidth}p{0.40\textwidth}p{0.15\textwidth}}
+{p{0.27\textwidth}p{0.15\textwidth}p{0.50\textwidth}}
 {tab:SPCE:designstatus}
 {Status of the design of the different CE detector components and expected
 amount of engineering and prototyping required prior to construction.}
-Component & Status & Expected work & Required resources\\ \toprowrule
-\dword{larasic} & Advanced & Fix issues observed in \dword{pdsp}, port differential output from \dword{coldadc} design & 1 FTE \\ \colhline
-Commercial ADC & Complete & None & None \\ \colhline
-\dword{coldadc} & \multicolumn{2}{l}{See text for details} & 2 FTE \\ \colhline
-\dword{coldata} & \multicolumn{2}{l}{See text for details} & 1 FTE \\ \colhline
-\dword{cryo} & \multicolumn{2}{l}{See text for details} & 0.8 FTE \\ \colhline
-\dword{femb} & Advanced & Experience with multiple prototypes, final design will follow the \dword{asic} selection & 1 FTE \\ \colhline
-Cold cables & Very advanced & Minor modifications, additional vendor qualification & 0.5 FTE \\ \colhline
-Cryostat penetrations & Advanced & Add \dword{ce} flange for bottom \dword{apa} & 0.5 FTE \\ \colhline
-\dword{wiec} & Very advanced & Add air filters and hardware interlock system & 0.4 FTE \\ \colhline
-\dword{wib} & Advanced & Update design to use cheaper FPGA, modify \dword{femb} power, new firmware & 3 FTE  \\ \colhline
-\dword{ptc} & Very advanced & Add interface to interlock system & 0.5 FTE \\ \colhline
-Power supplies & Very advanced & Investigate possible additional vendors, rack arrangement & 0.2 FTE \\ \colhline
-Warm cables & Very advanced & Finalize cable layout, identify vendors & 0.2 FTE \\ \colhline
-Readout and control fiber plant & Very advanced & Finalize plant layout & 0.1 FTE \\ \colhline
+Component & Status & Expected work \\ \toprowrule
+\dword{larasic} & Advanced & Fix issues observed in \dword{pdsp}, port differential output from \dword{coldadc} design \\ \colhline
+Commercial ADC & Complete & None \\ \colhline
+\dword{coldadc} & \multicolumn{2}{l}{See text for details} \\ \colhline
+\dword{coldata} & \multicolumn{2}{l}{See text for details} \\ \colhline
+\dword{cryo} & \multicolumn{2}{l}{See text for details} \\ \colhline
+\dword{femb} & Advanced & Experience with multiple prototypes, final design will follow the \dword{asic} selection \\ \colhline
+Cold cables & Very advanced & Minor modifications, additional vendor qualification \\ \colhline
+Cryostat penetrations & Advanced & Add \dword{ce} flange for bottom \dword{apa} \\ \colhline
+\dword{wiec} & Very advanced & Add air filters and hardware interlock system \\ \colhline
+\dword{wib} & Advanced & Update design to use cheaper FPGA, modify \dword{femb} power, new firmware \\ \colhline
+\dword{ptc} & Very advanced & Add interface to interlock system \\ \colhline
+Power supplies & Very advanced & Investigate possible additional vendors, rack arrangement \\ \colhline
+Warm cables & Very advanced & Finalize cable layout, identify vendors \\ \colhline
+Readout and control fiber plant & Very advanced & Finalize plant layout \\ \colhline
 \end{dunetable}
 
 The area that requires most work is that of the \dword{asic}s that are mounted
