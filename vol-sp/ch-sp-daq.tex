@@ -1096,10 +1096,12 @@ The output buffer system is a hardware resource provided by \dword{daq} and used
 It has two primary purposes. 
 First, the buffer decouples the production of event data from the transfer of that data from the far site to archival storage.
 Second, it provides local storage sufficient for uninterrupted \dword{daq} operation in the unlikely event that the connection between the \dword{fd} and the Internet is lost. 
-Based on very unusual losses of connectivity at major laboratories as well as \dword{fd} sites of other long-baseline neutrino experiments, the output buffer must provide enough storage capacity to retain one week of output given nominal data production. 
-The maximum data production rate for the \dword{fd} is set at \SI{30}{\peta\byte/\year}. 
-Thus, the output storage buffer must have a capacity of approximately \SI{0.5}{\peta\byte} to service the entire \dword{fd}.
-\fixme{How to reference the 30PB/yr requirement?}
+A capacity of approximately \SI{0.5}{\peta\byte} is envisioned,
+sufficient to service the entire \dword{fd}. This corresponds to one
+week's worth of data at nominal data rates. Based on prior experience
+of the consortium with unusual losses of 
+connectivity at other far detector experiment sites, this is a
+conservative storage capacity value.
 
 \subsubsection{Data Model}
 \label{sec:fd-daq:design-data-model}
@@ -1355,6 +1357,10 @@ In the odd case that the \dword{rc} aborts without cleanly terminating the parti
 \subsubsection{Self-healing}
 \label{sec:daq:self-healing}
 
+We are attempting to design a system such that when an error state
+occurs, the system will attempt an automatic recovery to minimize data
+loss.
+
 The above zero-downtime reconfiguration mechanism is intentional and typically driven by human action or automated run sequencing algorithms. 
 Similarly, the partition will be \textit{self-healing} in the face of unexpected failures that render peers unresponsive or when unexpected information content is received by partition components.  
 Extending the metaphor, self-healing involves these phases: \textit{detection} of an injury to the partition, \textit{diagnosis} of the scope of the injury, and \textit{intervention} that executes an action on the partition.
@@ -1381,11 +1387,13 @@ If the partition remains it is reconfigured and thus begins a new run number as 
 %\fixme{Is it indeed still single-phase specific?}
 %\metainfo{Hardware, consumers, links.}
 
-All components of the \dword{fd} use clocks derived from a single \dfirst{gps} disciplined source, and all module components are synchronized to a \SI{62.5}{MHz} clock. 
+All components of the \dword{fd} use clocks derived from a single
+\dfirst{gps} disciplined source, and all module components are
+synchronized to a common \SI{62.5}{MHz} clock. 
 To make full use of the information from the \dword{pds}, the common clock must be aligned within a single detector %unit 
 module with an accuracy of \bigo{\SI{1}{\nano\second}}. 
 For a common trigger for a \dword{snb} between modules, the timing must have an accuracy of \bigo{\SI{1}{\milli\second}}.
-However, a still tighter constraint is the need to calibrate the common clock to universal time derived from \dword{gps} so the \dword{daqdsn} algorithm can be adjusted inside an accelerator spill, which again requires an absolute accuracy of \bigo{\SI{1}{\micro\second}}.
+However, a tighter constraint is the need to calibrate the common clock to universal time derived from \dword{gps} so the \dword{daqdsn} algorithm can be adjusted inside an accelerator spill, which again requires an absolute accuracy of \bigo{\SI{1}{\micro\second}}.
 
 The \dword{dune} \dword{fd} uses a version of the \dword{protodune} timing
 system, where a design principle is to transmit synchronization messages over
@@ -1406,7 +1414,7 @@ Central to the timing system are four types of signals:
 
 The timing system synchronization codes are distributed to the \dword{daq} readout components in the \dfirst{cuc} and the readout components on the cryostat via single mode fibers and passive splitters/combiners.
 All custom electronic components of the timing system are contained in two \dword{utca} shelves; at any time, one is active while the other serves as a hot spare.
-The \SI{10}{MHz} reference clock and the \dword{pps} signal are received through a single-width advanced mezzanine card (\dword{amc}) at the center of the \dword{utca} shelf.
+The \SI{10}{MHz} reference clock and the \dword{pps} signal are received through a single-width \dword{amc} at the center of the \dword{utca} shelf.
 This master timing \dword{amc} is a custom board and produces the timing system signals, encoding them onto a serial data stream.
 This serial data stream is distributed over a backplane to a number of fanout \dwords{amc}.
 The fanout \dword{amc} is an off-the-self board with two custom \dwords{fmc}.
@@ -1522,8 +1530,8 @@ MicroBooNE, SBND, and ICARUS. Both MicroBooNE and ICARUS have demonstrated
 self-triggering in coincidence with external gates, which effectively
 limits both data and trigger rates, and is not a viable solution for
 DUNE's off-beam physics program, as it would effectively limit
-exposure and therefore physics sensitivity. On the other hand, ICARUS
-has ...
+exposure and therefore physics sensitivity. %On the other hand, ICARUS
+%has ...
 MicroBooNE has demonstrated successful continuous readout of a LArTPC,
 via use of dynamic and fixed-baseline zero-supression implemented in
 firmware for both TPC and PDS readout. SBND, which utilizes the same readout
@@ -1534,9 +1542,7 @@ and self-triggering based on TPC information in the timescale of 2021-2023.
 
 \subsection{ProtoDUNE Outcomes}
 
-Despite its %being a 
-variant design %and 
-with more limited scope, the %already
+Despite being designed for a much more limited scope than DUNE, the %already
 successful operation of the \dword{protodune} \dword{daq} has provided several key
 demonstrations for \dword{dune} \dword{daq}, in particular data flow
 architecture, run configuration and control, and back-end
@@ -1641,7 +1647,7 @@ through MonteCarlo simulations. Specifically, charge collection efficiency and f
 due to noise and radiologicals have been studied as a function of
 hitthreshold with MonteCarlo, demonstrating that requirements can be
 met, given sufficiently low electronics noise levels and radiological
-signal \[ref\]. Ongoing efforts within DUNE's Radiologicals Task force
+rates \[ref\]. Ongoing efforts within DUNE's Radiologicals Task force
 aim to validate or provide more accurate background predictions, upon
 which this performance will be validated. In addition, offline emulations
 of CPU trigger primitive generation on CPU (4 cores) have been carried
