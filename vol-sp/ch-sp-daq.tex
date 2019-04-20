@@ -1,8 +1,8 @@
 \chapter{Data Acquisition}
 \label{ch:sp-daq}
 
-\fixme{Fix SI units throughout, and remove a lot of the dword
-  references (looks distracting). Georgia}
+\fixme{Fix SI units throughout, and use consistent dword
+  references. Brett}
 
 \section{Introduction}
 \label{sec:fd-daq:introduction}
@@ -42,19 +42,21 @@ DAQ services each \dword{fd}
 \dword{detmodule} independently, but cross-module communication is
 implemented at the trigger level.
 
-The chapter begins with an overview of the \dword{daq} design,
+The chapter begins with an overview of the \dword{daq} design (Section~\ref{sec:fd-daq:overview}),
 including requirements that the design must meet, and specification of
 interfaces between the \dword{daq}  and other \dword{dune} \dword{fd} systems. 
 Subsequently, Section~\ref{sec:fd-daq:design}, which comprises the
 bulk of this chapter, describes the design of the \dword{fd}
 \dword{daq} in greater detail.
-Section~\ref{sec:fd-daq:protodune} describes design validation efforts
+Section~\ref{sec:fd-daq:validation} describes design validation efforts
 to date, and future design development and validation plans. At the
 center of these efforts is the 
-\dword{protodune} \dword{daq} system, which has served as a demonstrator of several
+\dword{protodune} \dword{daq} system (described in Section~\ref{sec:fd-daq:protodune}), which has served as a demonstrator of several
 key aspects of the  \dword{dune}  \dword{daq}  design, and continues to serve as a
-platform for further design development and validation. 
-Finally, the chapter finishes with two sections providing details on
+platform for further design development and validation toward the
+DUNE DAQ design. 
+Finally, the chapter finishes with two sections
+(Sections~\ref{sec:sp-daq:production} and \ref{sec:sp-daq:organization}) providing details on
 the management of the
 \dword{daq} project, including schedule to completion of the design, 
 production, and installation of the system, as well as cost, resources, and
@@ -101,7 +103,7 @@ specifics of design implementation and data flow are described in Section~\ref{s
     is the Infrastructure Software subsystem, which includes Inter-process
     Communication, Databases, etc.
   }
-  \includegraphics[width=0.8\textwidth]{daq-layout-2.pdf}
+  \includegraphics[width=0.8\textwidth,trim=3cm 3cm 3cm 6cm]{daq-layout-2.pdf}
 \end{dunefigure}
 
 
@@ -222,7 +224,7 @@ trigger rate requirements, are summarized in Table~\ref{tab:sp-daq:rates}.
 \begin{dunefigure}{fig:daq-rates}{Expected physics-related activity
     rates in a single \SI{10}{\kilo\tonne} module. \label{sec:fd-daq:rates}
 }
-  \includegraphics[width=0.8\textwidth,clip,trim=6cm 6cm 10cm 2cm]{daq-event-type-rates-vs-energy.pdf}
+  \includegraphics[width=0.7\textwidth,clip,trim=6cm 6cm 10cm 2cm]{daq-event-type-rates-vs-energy.pdf}
 \end{dunefigure}
 
 \begin{dunetable}
@@ -364,20 +366,26 @@ built into the design of each \dword{fd} module.
 {tab:sp-daq:parameters}
 {Summary of important parameters driving the \dword{daq} design.}
 Parameter & Value \\ \toprowrule
-TPC Channel Count per Module & 284,000\\ \colhline
+TPC Channel Count per Module & 384,000\\ \colhline
 TPC Collection Channel Count per Subdetector (APA) & 960\\ \colhline
 TPC Induction Channel Count per Subdetector (APA) & 1,600\\ \colhline
 PDS Channel Count per Module & TBD\\ \colhline
+PDS Channel Count per Subdetector & TBD\\ \colhline
 TPC \dword{adc} Sampling Rate & 2 MHz\\ \colhline
-TPC \dword{adc} Dynamic Rate& 12 bits\\ \colhline
+TPC \dword{adc} Dynamic Range& 12 bits\\ \colhline
+PDS \dword{adc} Sampling Rate & TBD \\ \colhline
+PDS \dword{adc} Dynamic Range & TBD \\ \colhline
+PDS \dword{adc} Readout Length & TBD \\ \colhline
 Localized Event Record Window & 5.4\si{\milli\second}\\  \colhline
 Extended Event Record Window &  100 s\\  \colhline
 Full size of TPC Localized Event Record per Module & 6.22 GB \\  \colhline
 Full size of TPC Extended Event Record per Module & 115 TB\\  \colhline
+Full size of PDS Localized Event Record per Module & TBD \\  \colhline
+Full size of PDS Extended Event Record per Module & TBD \\  \colhline
 \end{dunetable}
 
 
-\section{Interfaces}
+\subsection{Interfaces}
 \label{sec:sp-daq:interfaces}
 
 The \dword{daq} system scope begins at the optical fibers streaming raw digital data from the detector active components
@@ -413,9 +421,8 @@ Computing &&  \citedocdb{7123} \\ \colhline
 Timing &&  \citedocdb{11224} \\ \colhline
 \end{dunetable}
 
-\subsection{TPC Cold Electronics}
-
-The \dword{daq} and TPC \dword{ce} interface is described in
+\begin{description}
+\item[TPC Cold Electronics] The \dword{daq} and TPC \dword{ce} interface is described in
 \citedocdb{6742}. The physical interface is at the \dword{cuc}, where optical links from the \dwords{wib} transfer
 the raw TPC data to the \dword{daq} \dword{fe} readout (\dword{felix}; see
 Section~\ref{??}). This ensures the \dword{daq} is electically decoupled from the detector
@@ -425,9 +432,7 @@ been specified as 300m OM4 multi-mode fibers from \dword{sfp}+ at the \dword{wib
 to use a custom communication protocol and no
 compression.
 
-\subsection{PDS Readout}
-
-The \dword{daq} and \dword{pds} readout interface is described in
+\item[PDS Readout] The \dword{daq} and \dword{pds} readout interface is described in
 \citedocdb{6727}. It is anticipated to
 be of the form of 150  \SI{10}{Gbps} OM4 fibers from one FD module. 
 This
@@ -436,9 +441,7 @@ data volume is lower by an order of magnitude. The data format has been specifie
 compression (zero supression) and a custom communication protocol.
 %\metainfo{Data reception physical and logical, configuration information delivery.}
 
-\subsection{Computing}
-
-The \dword{daq} and computing interface is described in \citedocdb{7123}.
+\item[Computing] The \dword{daq} and computing interface is described in \citedocdb{7123}.
 \metainfo{Buffer disk.  Agreement on system administration support and computer
   procurement, ssh gateways, non data networks.  Address reference how
   the data model described above is acceptable.}
@@ -459,18 +462,13 @@ format definition and data access libraries, as well as real-time data
 quality monitoring software. The former is specified in the form of a 
 data model documented in \citedocdb{??}.
 
-\subsection{CISC}
-
-\label{sec:sp-daq:interfaces-cisc}
-The \dword{daq} and \dword{cisc} interface is described in
+\item[CISC] The \dword{daq} and \dword{cisc} interface is described in
 \citedocdb{6790}. The \dword{daq} provides a network in the \dword{cuc} for \dword{cisc},  operation information and hardware
 monitoring information to \dword{cisc}, and power distribution and
 rack status units in \dword{daq} racks. The information from \dword{cisc}
 feeds back into the \dword{daq} for run control operations.
 
-\subsection{Calibration}
-
-The \dword{daq} and calibration interface is described in
+\item[Calibration] The \dword{daq} and calibration interface is described in
 \citedocdb{7069}. Two calibration systems are envisioned for the
 %\dword{dune} 
 \dword{fd}: a laser calibration system and a neutron
@@ -480,40 +478,42 @@ the latter will be issued by the data selection system and distributed through t
 \dword{daq} timing system.
 
 
-\subsection{Timing and Synchronization Subystem}
-
-%Because 
-The timing system of the \dword{dune} \dword{fd} connects with
+\item[Timing and Synchronizationm] The timing system of the
+  \dword{dune} \dword{fd} connects with 
 almost all detector systems and with the calibration system and has a uniform interface to each of
-them.
+them. 
 A single interface document,
 \citedocdb{11224}, describes all these timing interfaces. 
 
 Accuracy of timestamps delivered to  detector endpoints will be $\pm$\SI{500}{\nano\second} with respect to UTC.  Synchronization between any two endpoints in the detector will be better than \SI{10}{\nano\second} on average.   Between detector modules, synchronization will be better than \SI{25}{\nano\second} on average.  The timing system will also provide a synchronized clock source by which DAQ computer system clocks may be synchronized using standard network time protocols.  System clocks are expected to be synchronized to within a \si{\milli\second} using NTP and \si{\micro\second} using PTP standards. 
-
+\end{description}
 
 \section{Data Acquisition System Design}
 \label{sec:fd-daq:design}
 
-This section begins with an overview of the \dword{daq} design followed by %sections giving the design of the \dword{daq} 
-brief descriptions of the subsystem design implementation specific. The
+This section begins with an overview of the \dword{daq}
+design followed by %sections giving the design of the \dword{daq}  
+descriptions of the subsystem designs and implementation specifics. The
 implementation details are evolving rapidly; as such, more information
 is provided in technical notes as listed in Table~\ref{tab:sp-daq:tech-notes}. 
 
 \begin{dunetable}{p{0.7\textwidth}p{0.2\textwidth}}{tab:sp-daq:tech-notes}{Summary of %relevant and 
-detailed \dword{daq} technical notes.}
+detailed \dword{daq} technical notes on DUNE DAQ subsystem design.}
   Title & Reference \\ \toprowrule
   \dword{dune} \dword{fd} Data Volumes & \citedocdb{9240}\\ \colhline
   The \dword{daq} for the \dword{dune} prototype at CERN &
   \citedocdb{8708}\\ \colhline
-  High Level ProtoDUNE tests & \citedocdb{14062} \\ \colhline
-  A System for Communication Between \dword{daq} Elements & \citedocdb{10482}\\\colhline
+ A System for Communication Between \dword{daq} Elements & \citedocdb{10482}\\\colhline
   Data Selection for \dword{dune} Beam and Atmospheric Events & \citedocdb{11215}\\\colhline
-  Data orchestrator and event building for \dword{dune} \dword{fd} \dword{daq} & t.b.d. \\\colhline
+  Data orchestrator and event building for \dword{dune} \dword{fd}
+  \dword{daq} & t.b.d. \\\colhline
+ML-based Data Selecion for DUNE Far Detector & \citedocdb{11311} \\\colhline
+ High Level ProtoDUNE tests & \citedocdb{14062} \\ \colhline
   \dword{dune} Run Control, Configuration \& Monitoring (CCM) & t.b.d. \\\colhline
   \dword{dune} \dword{daq} Readout & t.b.d. \\\colhline
   DUNE FD Timing and Synchronization System & \citedocdb{11233} \\\colhline
-  What are the DUNE FD \dword{daq} Bottlenecks? & \citedocdb{11461} \\\colhline
+  What are the DUNE FD \dword{daq} Bottlenecks? & \citedocdb{11461}
+  \\\colhline
 \end{dunetable}
 
 
@@ -528,7 +528,7 @@ the first five of the DAQ subsystems
 can be specified in reference to Fig.~\ref{fig:fd-daq:layout}: the
 Upstream DAQ and Timing and Synchronization live underground in the CUC; Data Selection occupies
 both underground and above-ground spaces; Back-end DAQ is above-ground
-and includes data flow orchestration, event building and buffering before distribution of data
+and includes data flow orchestration, event building and buffering, before distribution of data
 to offline; and CCM extends throughout the entire physical layout of the
 system, supported on a private network throughout the DAQ system. Each of these subsystems is described in further
 detail in the following subsections.  Inter-process Communication (IPC) is an
@@ -582,7 +582,7 @@ enabling simultaneous calibration or test runs of small portion(s) of the
 detector without interruption of normal data-taking. 
 Partitioning is further described in Section~\ref{sec:daq:partition-lifetime}.
 
-\subsection{Front-end Readout}
+\subsection{Upstream DAQ}
 \label{sec:daq:design-readout}
 %\fixme{module-generic}
 
@@ -1057,7 +1057,7 @@ development efforts will also be carried out to determine the scale of
 processing required by the \dword{fd}.
 
 
-\subsection{Back-end System}
+\subsection{Back-end DAQ}
 \label{sec:fd-daq:design-backend}
 \fixme{module-generic}
 
@@ -1413,7 +1413,7 @@ If the partition remains it is reconfigured and thus begins a new run number as 
 
 
 
-\subsection{Timing Distribution and Synchronization}
+\subsection{Timing and Synchronization}
 \label{sec:sp-daq:design-timing}
 %\fixme{single-phase module}
 %\fixme{Is it indeed still single-phase specific?}
@@ -1973,6 +1973,7 @@ kit will also form the basis for testing at APA Construction sites beginning in 
   whole?}
 
 \section{Organization and Project Management}
+\label{sec:sp-daq:organization}
 
 \subsection{Consortium Organization}
 
