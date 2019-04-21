@@ -1890,45 +1890,15 @@ that of DUNE.
 
 \subsubsection{Prototype Inter-process Communication System}
 
-A prototype \dfirst{ipc} system is currently under development. 
-Some of the goals of this prototype are:
+A prototype of the \dword{ipc} mechanism described in Section~\ref{sec:daq:design-ipc} is currently under development and testing at \dword{protodune}.  Goals of this prototype include evaluating throughput and rate limitations, understanding message schema and application level protocols, prototyping CCM functionality including \dword{daqdispre}, investigating scaling and software complexity management as well as providing functional support for other tests of the DUNE FD DAQ design at \dword{protodune}.
 
-\begin{itemize}
-\item Evaluate raw data throughput, particularly via inter-thread communication transport.
-\item Evaluate packet rate limitations, particularly those relevant to the hierarchical trigger layers of the \dword{daqdsn} system described in Section~\ref{sec:sp-daq:design-selection-algs}.
-\item Understand the required message schema and protocols.
-\item Prototype high-level functionality described in Section~\ref{sec:daq:design-ipc} such as zero-downtime reconfiguration, self healing and the patterns required \dword{daqccm} as described in Section~\ref{sec:fd-daq:design-run-control}.
-\item Investigate scaling in terms of performance and software complexity management.
-\item Provide functional support for the vertical and horizontal slice tests described above.
-\end{itemize}
+Initial offline prototype tests have demonstrated ZeroMQ inter-thread transport is more than sufficient for use in the highest rate \dword{daq} context (input to \dword{trigprimitive} production).
+Tests with small packets have demonstrated ZeroMQ's ability to handle the high packet rate of \dword{trigprimitive} or trigger candidate data over all three of the ZeroMQ transport mechanisms that are being considered for use (inter-thread, inter-process and network).  
 
-The prototype software development follows some design principles:
+ZeroMQ IPC has been successfully exercised at \dword{protodune} as part of a practical solution to transfer the full stream of trigger primitives out of one process and in to another. 
+This tests the eventual leg between producers of trigger primitives and their consumers (trigger candidate processors). 
+The merging of multiple, asynchronous trigger primitive streams into a single ordered stream which is properly prepared for input to trigger candidate processing has been developed and tested offline.  Performance testing and integration into the self-triggering prototype at \dword{protodune} is in progress.
 
-\begin{itemize}
-\item The \dword{daq} is modeled as a cyclic, data flow graph.
-\item Graph nodes in the graph perform transformations and may consume data input from and produce data output to other nodes.
-\item Graph edges connect nodes through ports associated with a network socket.
-\item Graph construction emerges by initiating connections locally.
-\item Executable processes provide one or more nodes that operate asynchronously from one-another governed only by the flow of messages across their shared edges.
-\item Construction of nodes in executable processes and larger graph construction is dynamic governed by initial user configuration and later by messages flowing in the graph itself.
-\end{itemize}
-
-The prototype development is based on the well-established, high-quality free software from the ZeroMQ group.
-Some of the reasons for selecting their technology include:
-\begin{itemize}
-\item ZeroMQ software follows a well layered set of software libraries that emphasize portability, high performance, fault tolerance, minimal software dependency and long-lived use and support.
-\item A wide variety of language bindings exist, importantly C/C++ for high performance and Python for fast development are two of the best supported.
-\item ZeroMQ abstracts functionality in important ways such as concrete implementation of high level communication patterns (eg, pub/sub) and high-level independence from low-level transport mechanism (three are supported: inter-thread queues, inter-process Unix-domain sockets and inter-computer network sockets). 
-\item It supports a truly decentralized system design (this is the ``Zero'' in ``ZeroMQ'') critical to satisfying the requirements on robustness.  In particular the ZeroMQ project Zyre provides a distributed, low-latency \dword{daqdispre} system.
-\item ZeroMQ has been evaluated favorably CERN~\cite{Dworak:2012mf} and has been used in various \dword{daq} contexts in other experiments.
-\end{itemize}
-
-Initial prototype tests have demonstrated that the raw data throughput of ZeroMQ inter-thread transport is sufficient for use in even the highest rate \dword{daq} context (input to \dword{trigprimitive} production).
-Rate tests of small packets have been performed to gauge ZeroMQ ability to handle high packet rate \dword{trigprimitive} or trigger candidate data. 
-These tests have so far been performed merely on Gbps networks. 
-Given reasonably linear scaling as well as benchmarks preformed on faster networks by others, ZeroMQ will perform adequately for DUNE FD \dword{daq} purposes.
-
-The ZeroMQ-based prototype software will continue to be developed with the goal to understand how to manage software and configuration complexity and to participate in the other demonstrators described in this section. 
 
 
 % \subsubsection{Future \dword{protodune} \dword{daq} Demonstrator}
