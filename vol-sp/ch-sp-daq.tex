@@ -1641,11 +1641,13 @@ Gbps optical point-to-point links into commercial host memory and,
 from there, to store, dispatch or process the data as convenient via
 software. 
 
-In ProtoDUNE, a single APA’s FELIX readout consists of two servers,
-with a point-to-point 100 Gbps network connection. The FELIX I/O card
-interfaces with its host PC through 16-lane PCIe Gen3. It transfers
-the incoming WIB data directly into the host PC’s memory using
-continuous DMA transfer. The FELIX host PC runs a software process,
+In ProtoDUNE, a single APA,  FELIX-based readout consists of two servers,
+with a point-to-point 100 Gbps network connection.
+The FELIX I/O card
+interfaces with its host PC through 16-lane PCIe Gen3 (theoretical bandwidth of \SI{16}{GB/s}).
+It transfers
+the incoming WIB data directly into the host PC memory using
+continuous DMA transfer. The FELIX host PC runs a software process
 which publishes the data to any client subscribing to it, based on
 link identifiers. The clients of this application are the FELIX
 BoardReader processes, which are part of the artdaq framework. In
@@ -1653,7 +1655,7 @@ order to sustain the data rate, modest modifications of the firmware
 (increased block size and chunk merging) and software (scatter-gather
 publisher) were carried out specifically for ProtoDUNE: each FELIX
 host receives and publishes data at ~75 Gbps. The BoardReader hosts
-are equipped with embedded Intel QuickAssist (QAT) \cite{xx} technology for
+are equipped with embedded Intel QuickAssist (QAT) \cite{qat} technology for
 hardware accelerated data compression. The ProtoDUNE implementation of
 the FELIX front-end readout is
 shown in Figure~\ref{fig:sp-daq:felix-pd-impl}.
@@ -1669,6 +1671,7 @@ trigger candidates generation on the FELIX host.
 
 \begin{dunefigure}{fig:sp-daq:felix-pd-impl}{The topology of the FELIX based
     upstream DAQ of ProtoDUNE. The FELIX host servers are publishing the data from the WIBs over 100Gb network interfaces. The BoardReader hosts are carrying out trigger matching, data compression and forwarding of fragments to the event builder.}
+  \fixme{need a figure, check the recent FELIX/protodune paper}
 %  \includegraphics[width=0.7\textwidth]{}
 \end{dunefigure}
 
