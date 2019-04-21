@@ -103,7 +103,7 @@ specifics of design implementation and data flow are described in Section~\ref{s
     is the Infrastructure Software subsystem, which includes Inter-process
     Communication, Databases, etc.
   }
-  \includegraphics[width=0.8\textwidth,trim=3cm 3cm 3cm 6cm]{daq-layout-2.pdf}
+  \includegraphics[width=0.8\textwidth,trim=5cm 4cm 5cm 4cm]{daq-layout-2.pdf}
 \end{dunefigure}
 
 
@@ -521,27 +521,28 @@ ML-based Data Selecion for DUNE Far Detector & \citedocdb{11311} \\\colhline
 \label{sec:fd-daq:design-overview}
 
 The  DAQ system is composed of six distinct subsystems: (1) Upstream
-DAQ, (2) Data Selection, (3) Back-end DAQ, (4) Control,
-Configration, and Monitoring (CCM), (5) Timing and
-Synchronization, and (6) Infrastructure Software. The physical extent
+DAQ (Section~\ref{sec:daq:design-upstream}), (2) Data Selection
+(Section~\ref{sec:sp-daq:design-data-selection}), (3) Back-end DAQ (Section~\ref{sec:fd-daq:design-backend}), (4) Control,
+Configration, and Monitoring (CCM) (Section~\ref{sec:fd-daq:design-run-control}), (5) Timing and
+Synchronization (Section~\ref{sec:sp-daq:design-timing}), and (6) Infrastructure Software. The physical extent
 the first five of the DAQ subsystems
-can be specified in reference to Fig.~\ref{fig:fd-daq:layout}: the
+can be specified in reference to Figure~\ref{fig:fd-daq:layout}: the
 Upstream DAQ and Timing and Synchronization live underground in the CUC; Data Selection occupies
 both underground and above-ground spaces; Back-end DAQ is above-ground
 and includes data flow orchestration, event building and buffering, before distribution of data
 to offline; and CCM extends throughout the entire physical layout of the
 system, supported on a private network throughout the DAQ system. Each of these subsystems is described in further
-detail in the following subsections.  Inter-process Communication (IPC) is an
-additional, central componet to the FD DAQ, which spans across multiple
-subsystems, as part of the Infrastructure Software subsystem, together
-with databases, etc. IPC is described below in a separate subsection.
+detail in the following subsections. To first order, the DAQ system
+is implemented as an online data processing and data flow system. As
+such, Inter-process Communication (IPC) (Section~\ref{sec:daq:design-ipc}) is an
+additional, central component to the FD DAQ, which spans across multiple
+subsystems, as do other Infrastructure Software components, e.g.~databases. Due
+to its central role, IPC is described below in a separate subsection.
 
-The overall system functionality is illustrated conceptually in
-Figure~\ref{fig:daq-conceptual-overview}, while Figure~\ref{fig:daq-design}
-specifies the implementation. Front-end readout is carried out by custom data receiver and
+Front-end readout is carried out by the Upstream DAQ, using custom data receiver and
 co-processing FPGA/CPU hardware, all of which is hosted in O(100) servers in the CUC. A
-similar number of additional servers is responsible for the execution of
-additional software-based low-level processing of trigger primitives
+similar number of additional servers is responsible for the execution
+of subsequent software-based low-level processing of trigger primitives
 generated in the front-end readout for the purposes of data selection; the collective
 low-level information (trigger primitives and trigger candidates
 constructed from trigger primitives) is propagated to a central server responsible
@@ -551,14 +552,21 @@ interfaces to a second server which is responsible for receiving and
 propagating cross-module and external trigger and timing
 information. The module level trigger considers trigger candidates and
 external trigger inputs in issuing a trigger command to the back-end DAQ
-subsystem. The back-end DAQ subsystem 
+subsystem. The Back-end DAQ subsystem 
 facilitates event building in O(10) servers and buffering for built
 events on non-volatile storage; upon receiving a trigger command, the back-end DAQ queries
-data from the front-end readout buffers and builds that into an ``event
+data from the upstream DAQ buffers and builds that into an ``event
 record'', which is temporarily stored as (a number of) files. Event records can be optionally processed in a high-level
-filter/data reduction stage, which is part of overall data selection, for
-further down-selection, prior to becoming custody of the DUNE offline
-system. Pervasively, the  \dfirst{daqccm} subsystem provides the central orchestration (Section~\ref{sec:fd-daq:design-run-control}), the \dfirst{ipc} subsystem provides overall communication (Section~\ref{sec:daq:design-ipc}), and the \dfirst{daqtss} provides synchronization (Section~\ref{sec:sp-daq:design-timing}).
+filter/data reduction stage, which is part of overall data selection,
+ prior to event records being shipped to DUNE offline. Pervasively,
+ the  \dfirst{daqccm} subsystem provides the central orchestration
+ (Section~\ref{sec:fd-daq:design-run-control}), \dfirst{ipc} provides
+ overall communication (Section~\ref{sec:daq:design-ipc}), and the
+ \dfirst{daqtss} provides synchronization
+ (Section~\ref{sec:sp-daq:design-timing}). Figure~\ref{fig:daq-conceptual-overview}
+ provides a conceptual illustration of the overal DAQ system
+ functionality, while Figure~\ref{fig:daq-design}
+specifies the design implementation. 
 
 \begin{dunefigure}{fig:daq-conceptual-overview}{\dword{daq} Conceptual
    Overview of DAQ System Functionality for a single 10 kton module}
@@ -583,17 +591,17 @@ detector without interruption of normal data-taking.
 Partitioning is further described in Section~\ref{sec:daq:partition-lifetime}.
 
 \subsection{Upstream DAQ}
-\label{sec:daq:design-readout}
+\label{sec:daq:design-upstream}
 %\fixme{module-generic}
 
-Front-end readout provides the first link in the data flow chain of
+The Upstream DAQ provides the first link in the data flow chain of
 the \dword{daq} system and is where raw data from detector electronics
 is received by the DAQ.
 It implements a receiver, buffer, and a portion of low-level data
 selection (trigger primitive generation) as detailed in Figure~\ref{fig:daq:readout}.
-It is physically connected to the detector electronics via optical fiber(s) and buffers and serves data to other \dword{daq} subsystems, namely the \dword{daqdsn} and the event builder
-
-\fixme{It would be nice to redraw this using \dword{dune} colors.}
+It is physically connected to the detector electronics via optical
+fiber(s) and buffers and serves data to other \dword{daq} subsystems,
+namely the \dword{daqdsn} and the back-end DAQ.
 
 \begin{dunefigure}{fig:daq:readout}{\dword{dune} \dword{daq} front-end
     readout subsystem and its connections.}
@@ -603,10 +611,10 @@ It is physically connected to the detector electronics via optical fiber(s) and 
 \fixme{Would be useful to add a figure showing functional blocks and
   implementation. Georgia}
 
-The readout system comprises many similar \dword{daqrou}, each
+The upstream DAQ system comprises many similar \dword{daqrou}, each
 connected to a subset of electronics from a detector module and
 interfacing with the \dword{daq} switched network. In the case of the
-TPC, 75 RU are each responsible for the readout of raw data from two
+TPC, 75 functionally identical RU are each responsible for the readout of raw data from two
 APAs. In the case of the PDS, 6-8 RU are each responsible for the
 readout of raw data from a collection of PDS subdetectors, where each
 collection corresponds to an optically isolated region in the
@@ -616,21 +624,22 @@ collection of custom hardware,
 firmware, and software that collectively form four functional blocks:
 
 \begin{enumerate}
-\item Data reception, facilitated by a FELIX card in the host server
-\item Network based I/O, facilitated by a commercial off-the-shelf network card
-\item Data processing, facilitated by FPGA resources on the FELIX
+\item Data reception (Section~\ref{sec:fd-daq:upstream-receiver}), facilitated by a FELIX card in the host server
+\item Network based I/O (Section~\ref{sec:fd-daq:upstream-io}), facilitated by a commercial off-the-shelf network card
+\item Data processing (Section~\ref{sec:fd-daq:upstream-proc}), facilitated by FPGA resources on the FELIX
   card and/or on-host CPU resources, or, in the case of the TPC RU only,
   additional FPGA resources in the form of two dedicated co-processing
   boards (interfacing directly with the FELIX card)
-\item Temporary data storage, facilitated by host RAM and SSD, or, in
+\item Buffering (Section~\ref{sec:fd-daq:upstream-buf}), facilitated by host RAM and SSD, or, in
   the case of the TPC RU only, RAM
   and SSD available on the co-processing boards
 \end{enumerate}
 
-Each of these blocks is described below.  In addition, and like all other \dword{daq} subsystems, the readout participates in the common software framework for control, configuration, and monitoring as described in Section~\ref{sec:fd-daq:design-run-control}.
+Each of these blocks is described below.  In addition, and like all
+other \dword{daq} subsystems, the upstream DAQ makes use of the common software framework for control, configuration, and monitoring as described in Section~\ref{sec:fd-daq:design-run-control}.
 
 \subsubsection{Data reception}
-
+\label{sec:fd-daq:upstream-receiver}
 The physical interface between the detector electronics and the \dword{daq} to transmit data consists of 10 Gbps point-to-point serial optical links, running a simple (e.g., 8/10 bit encoded) protocol. 
 The number of links per \dword{dune} module varies from approximately 1000 to 2000, depending on the detector technology adopted.
 
@@ -641,12 +650,14 @@ decoding and format checking of incoming data and then to marshal the
 data to other blocks of the readout subsystem.
 
 \subsubsection{Network based I/O}
+\label{sec:fd-daq:upstream-io}
 
 The readout subsystem provides access to the \dword{daqdsn} and \dword{daqbes} through a commercial, off-the-shelf switched network as illustrated in Figure~\ref{fig:daq:readout}).
 The network communication protocol is as described in Section~\ref{sec:daq:design-ipc}.
 The network I/O is handled by the \dwords{daqrou} via software; dedicated hardware or firmware development is not required.
 
 \subsubsection{Data processing}
+\label{sec:fd-daq:upstream-proc}
 
 The data processing functional block resides either on the FELIX board FPGA, or on
 an additional, dedicated co-processor providing additional FPGA
@@ -675,6 +686,7 @@ adaptability to meet the ultimate processing needs of the detector;
 those will depend, for example, on noise levels in the detector.
 
 \subsubsection{Buffering}
+\label{sec:fd-daq:upstream-buf}
 
 In \dword{dune}, the readout system is in charge of buffering all
 detector data until the \dword{daqdss} has formed a trigger decision
@@ -728,14 +740,14 @@ If expected noise levels are achieved, this compression would provide a factor o
 Effort is currently underway to understand the costs and technology involved in exploiting this benefit.
 
 \subsection{Data Selection}
-\label{sec:sp-daq:design-selection-algs}
+\label{sec:sp-daq:design-data-selection}
 
 
 %\fixme{There are many studies which could go into this section. Some of this may very likely be moved into one or more tech notes and referenced.}
-\fixme{We
-have a viable algorithm for generating TP and high-energy TCs, and
-demonstrations of efficiency for SN bursts that meet the requirements. Be as explicit as possible on what the existing plans are, and discuss
-alternatives either as risk mitigation or opportunities.}
+%\fixme{We
+%have a viable algorithm for generating TP and high-energy TCs, and
+%demonstrations of efficiency for SN bursts that meet the requirements. Be as explicit as possible on what the existing plans are, and discuss
+%alternatives either as risk mitigation or opportunities.}
 
 %The \dword{daq} must record all non-\dword{snb} unbiased\footnote{In the case of PDS readout, the PDS system only reads out biased
 %  information; here it is implied that no additional bias is introduced by the DAQ.} data that span the maximum drift time window for any non-\dword{snb} trigger. 
@@ -764,34 +776,18 @@ From that input, as well as external inputs provided, for example, by
 the accelerator or detector calibration systems, the \dword{daqdss} must form a \dword{trigdecision},
 which in turn produces a \dword{trigcommand}.
 This command summarizes the observed activity that led to the decision
-and provides addresses (in space and time) of the data in the \dword{fe} buffers that capture information about the activity.
+and provides addresses (in channel-time space) of the data in the
+upstream DAQ buffers that capture information about the activity.
 This command is sent to and then consumed and executed by the \dword{daqbes} as described in Section~\ref{sec:fd-daq:design-backend}. 
 It is also propagated to the \dword{etl} and from there it may be
-distribute it to other \dwords{detmodule} or other detector systems
+distributed to other \dwords{detmodule} or other detector systems
 (e.g. calibration) for consideration.
-
-The pipelines of processing required for \dword{daqdsn} may execute in
-various stages and forms using different firmware and software
-implementations. 
-Development is actively ongoing to demonstrate
-viability and compare performance of different implementations. In satisfying
-the philosophy and strategies of the \dword{daq} design, there is built-in
-flexibility in defining whether each element of a pipeline executes on
-\dword{fpga}, CPU, GPU, or, in principle, some other future hardware
-architecture. A purely CPU implementation of data selection is a viable
-solution which has been the subject of successful, ongoing demonstration
-tests at ProtoDUNE, and is therefore the default implementation,
-scheme. An FPGA implementation of the lowest level of data selection
-(specifically, trigger primitive generation), 
-however, is possible within the upstream DAQ design, and offers an
-opportunity to reduce CPU costs as well as costs associated with power
-consumption during detector operations. 
 
 The \dword{daqdss} must select data associated with calibration
 signals, as well as beam interactions,
 atmospheric neutrinos, rare baryon-number-violating events, and cosmic
-ray events that deposit localized visible energy in excess of 100 MeV, with high efficiency ($>$99\%). 
-It must also select data associated with potential galactic \dwords{snb}, with galactic coverage\footnote{Galactic coverage is defined as efficiency-weighted probability of galactic \dword{snb}.} of $>$90\% efficiency.
+ray events that deposit visible energy in excess of 100 MeV with high efficiency ($>$99\%). 
+It must also select data associated with potential galactic \dwords{snb}, with galactic coverage\footnote{Galactic coverage is defined as efficiency-weighted probability of galactic \dword{snb}.} of $>$90\%.
 To meet the requirement that the \dword{dune} \dword{fd} maintain
 $<$\SI{30}{\peta\byte/\year} to permanent storage, the \dword{daqdss}
 subsystem must make \dword{daqdsn} decisions in a way that allows the \dword{daq} 
@@ -821,8 +817,8 @@ Figure~\ref{fig:daq:data-selection}. The structure
 has three levels of \dword{daqdsn}: (1) low level trigger, which may consist of
 \dword{trigprimitive} generation and subsequent
 \dword{trigcandidate} generation; (2) module level trigger; and (3)
-\dword{hlt}. Each trigger level is described in subsequent
-sections. An additional subsystem component is the external trigger module,
+high level filter. Each trigger level is described in subsequent
+sections. An additional subsystem component is the external trigger interface,
 which serves as a common interface for the
 module level trigger of each of the FD \dwords{detmodule} and between
 the module level trigger and other systems (e.g.,~calibration,
@@ -843,7 +839,6 @@ to global coincidence trigger recipients such as  \dword{snews}.
     subsystem design, and subsystem functionality.}
   \includegraphics[width=0.95\textwidth]{DS_summary_2.pdf}
 \end{dunefigure}
-
 
 The first stage of DUNE FD operations will have two general classes of trigger
 decisions that are categorized in terms of the distribution of activity
@@ -886,6 +881,25 @@ prioritize trigger decisions. The details for forming this
 command are described next and the operation of the \dword{daqbes} is
 described in Section~\ref{sec:fd-daq:design-backend}.
 
+Viable algorithms for the low level trigger already exist, as do
+algorithms for a module level supernova burst trigger, and it has
+been demonstrated offline that the efficiency for SNBs meets the DUNE
+requirements \cite{xx}. On the other hand, the pipelines of processing required
+for \dword{daqdsn} may execute in various stages and forms using different firmware and software
+implementations. Development is actively ongoing to demonstrate
+and compare performance of different implementations. In satisfying
+the philosophy and strategies of the \dword{daq} design, there is built-in
+flexibility in defining whether each element of a pipeline executes on
+\dword{fpga}, CPU, GPU, or, in principle, some other future hardware
+architecture. A purely CPU implementation of data selection is a viable
+solution which has been the subject of successful, ongoing demonstration
+tests at ProtoDUNE, and is therefore the default implementation
+scheme. An FPGA implementation of the lowest level of data selection
+(specifically, trigger primitive generation), 
+however, is possible within the upstream DAQ design, and offers an
+opportunity to reduce CPU costs as well as costs associated with power
+consumption during detector operations. 
+
 \subsubsection{Low Level Trigger: Trigger Primitive Generation}
 \label{sec:sp-daq:design-trigger-primitives}
 \fixme{single-phase module}
@@ -903,7 +917,7 @@ failures or other exceptional behavior during \dword{trigprimitive} processing.
 \Dwords{trigprimitive} derived from TPC data
 are produced in the front-end readout part of the \dword{daq} system,
 nominally in FPGA firmware or potentially in CPU or GPU software as described in
-Section~\ref{sec:daq:design-readout}.
+Section~\ref{sec:daq:design-upstream}.
 Any \dwords{trigprimitive} derived from PDS data are produced by the PDS system
 for consumption by the \dword{daq} \dword{daqdsn} subsystem.
 
@@ -1063,7 +1077,7 @@ processing required by the \dword{fd}.
 
 The functionality of the \dfirst{daqbes} is represented by the Output circle in Figure~\ref{fig:daq-conceptual-overview}. 
 It accepts trigger commands produced by the \dfirst{daqdss} as described in Section~\ref{sec:sp-daq:design-selection-algs}. 
-It queries the upstream DAQ buffers and accepts returned data as described in Section~\ref{sec:daq:design-readout}. 
+It queries the upstream DAQ buffers and accepts returned data as described in Section~\ref{sec:daq:design-upstream}. 
 Finally, it records trigger commands and the corresponding data in the
 form of ``event records'' to the output storage buffer, from which the data is transferred to offline.
 
@@ -1156,7 +1170,7 @@ Connections include:
 \begin{itemize}
 \item CCM elements sending control and configuration messages to all DAQ nodes and receiving from them messages containing monitoring information.  (Section~\ref{sec:fd-daq:design-run-control})
 \item Passing trigger information through the Data Selection system (Section~\ref{sec:sp-daq:design-selection-algs})
-\item Query based readout of upstream DAQ buffers. (Section~\ref{sec:daq:design-readout})
+\item Query based readout of upstream DAQ buffers. (Section~\ref{sec:daq:design-upstream})
 \item Delivery of trigger commands to the back-end and distributed back-end processing prior to writing final output. (Section~\ref{sec:fd-daq:design-backend})
 \end{itemize}
 
