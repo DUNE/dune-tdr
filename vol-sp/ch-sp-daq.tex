@@ -598,7 +598,6 @@ run start. This ensures continual readout of the
 majority of the detector in normal physics data-taking run mode, while
 enabling simultaneous calibration or test runs of small portion(s) of the
 detector without interruption of normal data-taking. 
-Partitioning is further described in Section~\ref{sec:daq:partition-lifetime}.
 
 \subsection{Upstream DAQ}
 \label{sec:daq:design-upstream}
@@ -619,7 +618,7 @@ namely the \dword{daqdsn} and the back-end DAQ.
 
 \begin{dunefigure}{fig:daq:readout-blocks}{\dword{dune} upstream
     \dword{daq} subsystem functional blocks.}
-  \includegraphics[width=0.8\textwidth]{daq_functional_blocks_upstream.pdf}
+  \includegraphics[angle=-90,width=0.8\textwidth]{daq_functional_blocks_upstream.pdf}
 \end{dunefigure}
 
 The upstream DAQ system comprises many similar \dword{daqrou}, each
@@ -1150,7 +1149,7 @@ processing required by the \dword{fd}.
 \label{sec:fd-daq:design-backend}
 \fixme{module-generic}
 
-The functionality of the \dfirst{daqbes} is represented by the Output circle in Figure~\ref{fig:daq-conceptual-overview}. 
+The functionality of the \dfirst{daqbes} is represented by the ``Event Builder'' and ``Data Flow Orchestrator'' in Figure~\ref{fig:fd-daq:layout} or the ``Output'' circle in Figure~\ref{fig:daq-conceptual-overview}. 
 It accepts trigger commands produced by the \dfirst{daqdss} as described in Section~\ref{sec:sp-daq:design-selection-algs}. 
 It queries the upstream DAQ buffers and accepts returned data as described in Section~\ref{sec:daq:design-upstream}. 
 Finally, it records trigger commands and the corresponding data in the
@@ -1187,7 +1186,7 @@ This asynchronous execution is governed by the \dword{daqdfo} and operates as il
 %\fixme{module-generic}
 %\metainfo{Explain art\dword{daq}, handling of trigger commands by asynchronous, parallel queries to front end Data Selector (but take care not to duplicate between here and in the overview).}
 
-The \dword{daq} back-end subsystem will provide the instances of the \dfirst{eb}.
+The \dword{daq} back-end subsystem will provide the instances of the \dfirst{eb} most likely as \textit{artDAQ}~\cite{artdaq} components of the same name.
 As described above, each EB instance will request selected data from
 the appropriate \dfirst{daqfbi}, as addressed by a received trigger command. 
 An \dword{eb} will aggregate the selected data and potentially apply processing and reduction (Section~\ref{sec:fd-daq:design-data-reduction}) as well as monitor its quality while in flight.
@@ -1233,35 +1232,6 @@ conservative storage capacity value.
   detector readout map to files, etc.}
 
 
-\subsection{Inter-process Communication}
-\label{sec:daq:design-ipc}
-\fixme{module-generic}
-
-The DUNE FD DAQ is an asynchronous, distributed data processing system. 
-As such, it consists of loosely connected elements.
-The elements or ``nodes'' are connected through forms of \dfirst{ipc}.
-Connections include:
-
-\begin{itemize}
-\item CCM elements sending control and configuration messages to all DAQ nodes and receiving from them messages containing monitoring information.  (Section~\ref{sec:fd-daq:design-run-control})
-\item Passing trigger information through the Data Selection system (Section~\ref{sec:sp-daq:design-selection-algs})
-\item Query based readout of upstream DAQ buffers. (Section~\ref{sec:daq:design-upstream})
-\item Delivery of trigger commands to the back-end and distributed back-end processing prior to writing final output. (Section~\ref{sec:fd-daq:design-backend})
-\end{itemize}
-
-The solutions for each form of IPC are currently being evaluated. 
-Certain general requirements apply.
-For the most part, they must support transport mechanisms that are \textit{reliable} and \textit{robust}. 
-Reliable that messages sent must be received fully unless critical failures of endpoints or the transport link occurs.  Robust means that some classes of failures (temporary network congestion or temporary endpoint failure) that might otherwise interrupt communications may be overcome.
-The acceptable duration of failure is chosen based on the particular protocol in use.
-Related to reliability, the \dword{ipc}  system used by CCM will provide \dword{daqdispre} functionality as described in Section~\ref{sec:fd-daq:design-run-control}.
-
-The ZeroMQ~\cite{zeromq} smart network socket library is being evaluated for providing a basis for IPC covering CCM, Data Selection and readout queries.  
-Section~\ref{sec:fd-daq:validation} contains description of some initial validation of this approach by adding a self-triggering feature to ProtoDUNE-SP which is close to what will be required for the DUNE FD DAQ.  Also described initial prototyping efforts based on ZeroMQ of core elements required for the IPC to support CCM and readout queries.
-
-The artDAQ system~\cite{artdaq} utilizes IPC for connecting its various elements.  It is full featured and well tested in production settings including in ProtoDUNE.  It is a natural choice for providing a basis for the DAQ back-end.  It will also be considered for providing a basis for the Data Selection system.  Upstream DAQ readout queries may also be implemented in terms of artDAQ elements.
-
-Additional R\&D and validation are needed to determine an optimal solution for each IPC domain.  This optimization process will take into account requirements unique to DUNE FD (minimal downtime, data rates, variation in detector modules, long term use, available expertise, flexibility for future developmental improvements, etc).
 
 \subsection{Control, Configuration, and Monitoring}
 \label{sec:fd-daq:design-run-control}
@@ -1306,56 +1276,41 @@ The blocks at partition scope are first described.
 
 \begin{itemize}
 \item Partition naming service provides \dword{daqdispre} for the components of a \dword{daqpart}. 
-  That is, it allows a component to be made aware  of the creation and continued operation of other components (discovery) or that other components have recently become unresponsive (presence). 
+  That is, it allows one component to be made aware of the creation and continued operation of other components (discovery) or that others have recently become unresponsive (presence). 
 
 \item Run control provides a central director;  its creation is the first step in initiating a \dword{daqpart}. 
-  The \dword{rc} accepts, interprets, and validates input commands that may come either from a human via a user interface, or from other blocks. 
+  The \dword{rc} accepts, interprets, and validates input commands that may come either from a human via a user interface, or from other blocks (expert systems). 
   The commands describe a desired state of the \dword{daqpart}. 
-  \dword{rc} may query other blocks to validate commands and then execute the commands by allocating processes through process management. 
+  \dword{rc} will query other blocks to validate commands and then execute the commands by allocating processes through process management. 
   Once successfully allocated, their lifetimes are managed by \dword{rc}. 
-  Throughout its lifetime, \dword{rc} may reconfigure an existing process, destroy it, or allocate additional processes. 
-  \dword{rc} may query the partition-naming service in order to resolve resource identifiers in commands into their corresponding network endpoint addresses.  
+  Throughout its lifetime, \dword{rc} will reconfigure an existing process, destroy it, or allocate additional processes. 
 
 \item Supervisor provides a locus of expert system automation. 
-  This block is initiated along with its \dword{rc} peer and augments human commands with automated ones. 
-  For example, as certain ``common exceptions'' are encountered and understood so that a means to correct them can be developed, the supervisor can be extended to automatically issue the corrective actions that must otherwise be manually performed by a human operator.
+  This block is instantiated by the \dword{rc} in order to augment or facilitate human commands with automated ones. 
+  For example, it is expected that some set of commonly occurring exceptions or errors will be cataloged as the operators gain experience with the DAQ.   Where possible, appropriate responses to these will be codified in the form of \dword{rc} commands.  The supervisor then will be charged with issuing these commands when one of the known exceptions are raised.
 
 \end{itemize}
 
-Global scope controls \dword{daq} components for all \dwords{daqpart} across all \dwords{detmodule}\footnote{\dword{daq} instances at locations other than the \dword{fd} cavern are expected to operate in a wholly distinct manner.}.  It consists of the following blocks:
+Global scope controls \dword{daq} components for all \dwords{daqpart} across all \dwords{detmodule}.  It consists of the following blocks:
 
 
 \begin{itemize}
-\item Global naming service aggregates the \dword{daqdispre} information across partitions.  Like the partition naming service, this may be implemented as a centralized (but redundant) explicit service or may be provided by extending the IPC \dword{daqdispre} mechanism to the entire FD \dword{daq} network.
+\item Global naming service aggregates the \dword{daqdispre} information across partitions.  
 
 \item Process management allocates and may reclaim sets of processes on behalf of a requesting component (specifically \dword{rc} and resource management). 
-  An allocation request includes a complete description of the processes and their desired initial configuration. 
-  A successful allocation occurs only after this role successfully initiates all requested processes and confirms their presence. 
   Process management only allocates processes if their requester has appropriate access privileges as determined by access management and if resource management determines sufficient resources exist. 
-  Process management may support pre-allocation if sufficient access and resources are confirmed and reserved; if so, a token (aka ``cookie'') is returned to the requester. 
-  This cookie may be subsequently be presented to complete the allocation and claim the processes. 
-  After a configured timeout, the cookie may be invalidated.\footnote{This will be required if the race condition between multiple UIs and RCs is a problem.}  
   
-\item Resource management determines whether any process allocation can proceed and enacts a process garbage collection mechanism. 
-  An allocation is successful if sufficient process resources are available and if it is consistent with a set of configured constraints maintained by this component. 
-  Resource management monitors all allocated processes as well as the process initiating a request in order to perform ``garbage collection''. 
-  This is performed in the event that the allocated processes outlive the requesting processes.
-  Resource management  notifies process management of any remaining processes from an allocation when it detects that the requester is no longer present.
-  Resource management also supports pre-allocation validation queries. 
-  A validation response merely indicates current state and it represents no guarantee that the allocation will subsequently succeed.
+\item Resource management determines whether any process allocation can proceed.  It also enacts process garbage collection to reap any processes which have outlived a controlled shutdown command.
 
   
-\item Access management is responsible for providing authentication and authorization for all \dword{daq} functions that require access control. 
-  This block may be implemented as an explicit centralized (but redundant) service or through a distributed IPC mechanism or as some mixture of the two designs. 
+\item Access management is responsible for providing authentication and authorization for all \dword{daq} functions which require some level of access control. 
 
 \end{itemize}
 
-The last block in Figure~\ref{fig:daq-ccm-control} represents applications that provide user interfaces (UI) to the control subsystem.
+The last block in Figure~\ref{fig:daq-ccm-control} represents a number of different applications which provide a Human-Machine Interface (UI) to the control subsystem.
 At least one UI will be developed to allow a trained operator to construct and issue commands required to initiate, configure, potentially reconfigure, and finally terminate \dwords{daqpart}. 
-The UI may validate user commands before issuing them to an \dword{rc} by directly querying the process manager block. 
-If sufficient resources are unavailable or if the user lacks appropriate access privileges, the UI will present a descriptive error message or otherwise disable corresponding functionality.  
-If the user permission is valid the UI sends the use-initiated command to the \dword{rc} for execution.
-Note that subsequent commands from the \dword{rc} to other blocks are also subject to access management.
+UIs may enact access control in issuing commands but this does not replace access control inside the RC when accepting commands.
+Any UI used for nominal operation or monitoring of the DUNE FD DAQ (``shift work'') will be usable remotely from any DUNE institution and from a variety of personal computing platforms.  
 Additional UI elements will be developed as described in sections~\ref{sec:daq:design:ccm:configuration} and~\ref{sec:daq:design:ccm:monitoring}.
 
 
@@ -1364,16 +1319,14 @@ Additional UI elements will be developed as described in sections~\ref{sec:daq:d
 
 The \dword{daq} configuration subsystem provides persistent data storage for all historic, current, and future configuration information applicable to the \dword{daq}.
 It provides a singular point (via high-availability, redundant services) for the allocation of unique and monotonically increasing \dwords{daqrunnum}.
-The configuration data stores operate in an insert-only mode with no update nor deletion of records so as to keep a complete record of configuration actions.
-The configuration subsystem supports the following types of information:
+The configuration data stores operate in an ``insert-only'' mode so that no prior information may be overwritten. 
+The following types of information will be managed:
 
 \begin{itemize}
 
-\item Partition structure contains descriptions of the multiplicity and connectivity of \dword{daq} components for any partition. 
-  Structure and connectivity is expressed in an abstract manner with logical addressing and not through concrete addressing (eg, host computer network address and port numbers). 
-  This allows for identical structure to be reapplied to various collections of specific hardware.\footnote{It is the discovery and presence from naming services as described in Section~\ref{sec:daq:design:ccm:control} that allow mapping from abstract to concrete addressing.}
+\item Partition structure contains descriptions of the multiplicity and connectivity of \dword{daq} components for any partition.   Eg, this describes the overall connectivity of ``nodes'' in the DAQ ``graph''.
 
-\item Component parameters comprise configuration information associated with any given \dword{daq} component.  This data is structured following a schema defined by the associated component and this schema is versioned to allow for schema evolution.
+\item Component parameters comprise configuration information associated with any given \dword{daq} component.  Eg, thresholds in a trigger candidate processor or gains and peaking times of a FE amplifier.
 
 \item Run number provides a monotonically increasing sequence of \dwords{daqrunnum} that are allocated upon request to assure that each is unique.
 
@@ -1384,7 +1337,7 @@ The configuration subsystem supports the following types of information:
 
 
 Access to configuration information is via a service that hides the choice of storage technology from any client queries.
-This interface will also be used by configuration editors utilized by human operators as well as any  generators employed by expert systems.
+This interface will also be used by editors run by human operators or by  generators run as part of an expert system.
 
 \subsubsection{Monitoring}
 \label{sec:daq:design:ccm:monitoring}
@@ -1417,88 +1370,34 @@ Such streams will be summarized into histograms or other statistical representat
 In addition to this \dword{daq} \dword{daqccm} monitoring subsystem, a separate system must be used to monitor in depth the quality of the detector data content itself. 
 See Section~\ref{sec:fd-daq:design-data-quality} for the description of this data quality monitoring system.
 
-\subsubsection{Partition Lifetime}
-\label{sec:daq:partition-lifetime}
+\subsubsection{Inter-Process Communication}
+\label{sec:daq:design-ipc}
 
-The partition lifetime is described here in a somewhat linear narrative, it should be noted that the components will be constructed through some suitable protocol that need not progress in the same linear order. 
-In particular, the operation of the partition components shall be robust to the order in which peers are discovered.
+The DUNE FD DAQ is an asynchronous, parallel distributed data processing system. 
+It is composed of many independent processes which ingest and produce messages. 
+The mechanisms of such message passing are generally called \dword{ipc}. 
+Referring to Figure~\ref{fig:fd-daq:layout}, IPC is used for both in-band detector data flow between Upstream DAQ and back-end Event Builders and for out-of-band messages as part of Control, Configuration and Monitoring.  The IPC used by the Data Selection spans both descriptions as it passes derivations of a subset of detector data (trigger primitives, candidates) and culminates in a source of out-of-band message (trigger commands) to direct the readout by Event Builder and other components of detector data that is held in the Upstream DAQ buffers.
 
-After a process is executed via the allocation mechanism described in Section~\ref{sec:daq:design:ccm:control}, it will apply its initial configuration. 
-This information includes any personal identifiers the component will assert as part of \dword{daqdispre} as well as any identifiers required to find any other peer components which are needed for its own operation. 
-In particular, a component is provided the identity of the partition's \dword{rc} instance so that it may receive control directives.
+The ZeroMQ~\cite{zeromq} smart socket library is the basis of a system being developed and evaluated for parts of both in-band and out-of-band IPC. 
+As part of the CCM, this include the issuing of control and reconfiguration commands to and receiving of monitoring messages from essentially all DAQ components. 
+As part of Data Selection, this includes the transfer of trigger primitive, candidate and command messages. 
+In the Upstream DAQ this includes the Buffer Interface Service which provides access to the Upstream DAQ primary buffers for queries by Event Builder and other components. 
+IPC must be implemented broadly across many DAQ systems and ZeroMQ allows their problems to be solved in common, shared software.  As CCM has the most complex IPC needs, this work is organizationally considered part of this system.
 
-It is through a control directive enacted by each individual component that the overall partition structure and connectivity emerges.  
-These directives must be issued prior to some activation criteria in order to enable the \textit{zero-downtime reconfiguration} feature as described next.
-The control directive contains a \dfirst{ccc}.
-A \dword{ccc} provides, at a minimum, the following pieces of information:
+One ZeroMQ facility in particular is worth additional description. 
+Zyre will provide a decentralized implementation \dword{daqdispre} (see Section~\ref{sec:daq:design:ccm:control}). 
+It uses UDP broadcast beacons and a connected followup to provide peer discovery on the local network. 
+A heartbeat mechanism provides presence so that a compent may discover when a peer has become unresponsive.  
+As Zyre uses the network itself, there is no central point of failure. 
+The network provides the naming service described above. 
+Zyre also allows for more centralized, connection oriented, discovery which can be used to allow the process to span networks.
 
-\begin{itemize}
-\item Run number is as described in Section~\ref{sec:daq:design:ccm:configuration}. 
-  Here, it identifies a desired and collective partition state which will be constructed once all \dwords{ccc} are enacted.
-\item Activation time stamp (ACT) states the \textit{data time} (see Section~\ref{sec:daq:design-ipc}) at which the \dword{ccc} shall take effect. 
-\item Configuration payload provides the component-specific configuration to be enacted and may include   actions must be performed prior to the \dword{act} in order to assure a zero-downtime transition.
-\end{itemize}
-
-When a \dword{ccc} is received by a component, that component initiates any new connections with peers and performs any other pre-\dword{act} actions as directed by the \dword{ccc}. 
-The component then begins (or continues) to monitor the \textit{data time} of received messages on its new (or previous) input sockets. 
-If the component was operating as part of the prior partition it will continue to service its previous input and produce output to any previously connecting consumers.
-Data is not yet sent to any new connections.
-Upon receiving input with a data time after the \dword{act} it will apply the new configuration specified in the \dword{ccc}. 
-In this reconfiguration process, any pre-\dword{act} data that may still be buffered by the component shall be flushed to its (previously connected) output sockets. 
-Any input or output connections no longer applicable to the new, post-\dword{act} partition definition shall be dropped. 
-Finally, the component shall renew operations, beginning with the held data which had satisfied the \dword{act} criteria and which initiated the reconfiguration processes.
-
-For this mechanism to truly provide zero-downtime, the partition components must receive reconfiguration messages from the \dword{ccc} sufficiently in advance of input data passing the \dword{act}.
-This means the human-UI-\dword{rc} chain must select an \dword{act} knowing the most recent \textit{data time} as well as some lead time to apply.  
-For any given reconfiguration an optimal lead time involves many interdependent factors but may be estimated by considering a maximum calculated over all components involved in the reconfiguration of the time difference between their required reconfiguration time and the latency for data to arrive at the component from the time of sampling. 
-In a real system this maximum has some distribution. 
-In practice it is expected that the lead time must be chosen in some %empiric 
-manner or simply ``long enough''.
-Even a generous choice is likely to satisfy human human impatience especially given the alternative is accepting data loss.
-
-Although the lead time may need to be many seconds, it is important to note that the minimum time between subsequent \dword{act}s is essentially zero. 
-Multiple sets of \dwords{ccc} may be issued over some short time span and queued by components. 
-In principle, this allows zero-downtime sequencing of runs of arbitrarily short duration.
-Practically however, this may be limited due to performance issues. 
-For example, if a new set of \dwords{ccc} requires many duplicate readers of data streams this may cause bandwidth limits to be reached. 
-To the extent this fast run sequencing is needed, these potential limitations require additional study.
-
-Finally, after cycling through one or more run numbers, the partition may be terminated. 
-A final round of \dwords{ccc} is issued by the partition's \dword{rc}. 
-Each \dword{ccc} directs the termination procedure of its component. 
-This procedure starts just as any zero-downtime reconfiguration. 
-The \dword{ccc} instructs the component to continue processing until receiving input data which satisfies the \dword{act} criteria at which time any remaining buffered data is flushed to the component output connections. 
-Then, unlike zero-downtime reconfiguration, the component simply destroys all connections and exits. 
-The \dword{rc} notifies the UI and process manager of the destruction of the partition (saving, for the moment, the destruction of the \dword{rc} itself). 
-The process manager notifies the resource manager that the resources have been released. 
-The \dword{rc} then terminates itself, and the partition is no more.
-The resource manager confirms partition processes have terminated through \dword{daqdispre}. 
-In the odd case that the \dword{rc} aborts without cleanly terminating the partition, its absence must be detected, and the remaining partition processes are reaped in the garbage collection mechanism described in Section~\ref{sec:daq:design:ccm:control}.
-
-\subsubsection{Self-healing}
-\label{sec:daq:self-healing}
-
-We are attempting to design a system such that when an error state
-occurs, the system will attempt an automatic recovery to minimize data
-loss.
-
-The above zero-downtime reconfiguration mechanism is intentional and typically driven by human action or automated run sequencing algorithms. 
-Similarly, the partition will be \textit{self-healing} in the face of unexpected failures that render peers unresponsive or when unexpected information content is received by partition components.  
-Extending the metaphor, self-healing involves these phases: \textit{detection} of an injury to the partition, \textit{diagnosis} of the scope of the injury, and \textit{intervention} that executes an action on the partition.
-
-Detection is performed by the \dword{daq} control subsystem supervisor functional block using at least one of two methods.
-First, if a component in the partition becomes unresponsive (i.e., it crashes or hangs) the supervisor  receives notification through \dword{daq} \dword{daqdispre}. 
-Second, if a component directly detects injury, such as may be the case when it receives  data outside of expected norms, it reports this fact through \dword{ipc} to the supervisor.
-
-When injury is detected the supervisor  diagnoses this using heuristics and other methods that are expected to evolve as failure modes are discovered or removed. 
-It is thus crucial that the supervisor is designed and developed in a way that facilitates this ongoing evolution.  
-
-Finally, the supervisor responds to the diagnosis with some intervention. 
-Response  in all cases includes notifying the monitoring subsystem. 
-Any additional response involves sending commands to the \dword{rc} to initiate a reconfiguration,  which may be to terminate the partition.
-When initiating a reconfiguration, as with any reconfiguration, the command to the \dword{rc} must include information required by the \dword{rc} to issue \dword{ccc} messages. 
-If the partition remains it is reconfigured and thus begins a new run number as described in Section~\ref{sec:daq:partition-lifetime}.
-
+As described in~\ref{sec:fd-daq:design-backend}, \textit{artDAQ}~\cite{artdaq} utilizes IPC between its back-end components. 
+It has been well tested with ProtoDUNE and other experiments. 
+ArtDAQ may be used for some portions of the IPC described above. 
+For example, if the Buffer Interface Service is implemented as an artDAQ Board Reader it would necessarily use artDAQ IPC. 
+This would limit the types of clients that could query for data in the buffers to be artDAQ modules. 
+Understanding how to optimally select an IPC for such parts of the DAQ connection graph is an area of ongoing R\&D effort.
 
 \subsection{Timing and Synchronization}
 \label{sec:sp-daq:design-timing}
@@ -1752,11 +1651,13 @@ Gbps optical point-to-point links into commercial host memory and,
 from there, to store, dispatch or process the data as convenient via
 software. 
 
-In ProtoDUNE, a single APA’s FELIX readout consists of two servers,
-with a point-to-point 100 Gbps network connection. The FELIX I/O card
-interfaces with its host PC through 16-lane PCIe Gen3. It transfers
-the incoming WIB data directly into the host PC’s memory using
-continuous DMA transfer. The FELIX host PC runs a software process,
+In ProtoDUNE, a single APA,  FELIX-based readout consists of two servers,
+with a point-to-point 100 Gbps network connection.
+The FELIX I/O card
+interfaces with its host PC through 16-lane PCIe Gen3 (theoretical bandwidth of \SI{16}{GB/s}).
+It transfers
+the incoming WIB data directly into the host PC memory using
+continuous DMA transfer. The FELIX host PC runs a software process
 which publishes the data to any client subscribing to it, based on
 link identifiers. The clients of this application are the FELIX
 BoardReader processes, which are part of the artdaq framework. In
@@ -1764,7 +1665,7 @@ order to sustain the data rate, modest modifications of the firmware
 (increased block size and chunk merging) and software (scatter-gather
 publisher) were carried out specifically for ProtoDUNE: each FELIX
 host receives and publishes data at ~75 Gbps. The BoardReader hosts
-are equipped with embedded Intel QuickAssist (QAT) \cite{xx} technology for
+are equipped with embedded Intel QuickAssist (QAT) \cite{qat} technology for
 hardware accelerated data compression. The ProtoDUNE implementation of
 the FELIX front-end readout is
 shown in Figure~\ref{fig:sp-daq:felix-pd-impl}.
@@ -1780,6 +1681,7 @@ trigger candidates generation on the FELIX host.
 
 \begin{dunefigure}{fig:sp-daq:felix-pd-impl}{The topology of the FELIX based
     upstream DAQ of ProtoDUNE. The FELIX host servers are publishing the data from the WIBs over 100Gb network interfaces. The BoardReader hosts are carrying out trigger matching, data compression and forwarding of fragments to the event builder.}
+  \fixme{need a figure, check the recent FELIX/protodune paper}
 %  \includegraphics[width=0.7\textwidth]{}
 \end{dunefigure}
 
@@ -1998,45 +1900,15 @@ that of DUNE.
 
 \subsubsection{Prototype Inter-process Communication System}
 
-A prototype \dfirst{ipc} system is currently under development. 
-Some of the goals of this prototype are:
+A prototype of the \dword{ipc} mechanism described in Section~\ref{sec:daq:design-ipc} is currently under development and testing at \dword{protodune}.  Goals of this prototype include evaluating throughput and rate limitations, understanding message schema and application level protocols, prototyping CCM functionality including \dword{daqdispre}, investigating scaling and software complexity management as well as providing functional support for other tests of the DUNE FD DAQ design at \dword{protodune}.
 
-\begin{itemize}
-\item Evaluate raw data throughput, particularly via inter-thread communication transport.
-\item Evaluate packet rate limitations, particularly those relevant to the hierarchical trigger layers of the \dword{daqdsn} system described in Section~\ref{sec:sp-daq:design-selection-algs}.
-\item Understand the required message schema and protocols.
-\item Prototype high-level functionality described in Section~\ref{sec:daq:design-ipc} such as zero-downtime reconfiguration, self healing and the patterns required \dword{daqccm} as described in Section~\ref{sec:fd-daq:design-run-control}.
-\item Investigate scaling in terms of performance and software complexity management.
-\item Provide functional support for the vertical and horizontal slice tests described above.
-\end{itemize}
+Initial offline prototype tests have demonstrated ZeroMQ inter-thread transport is more than sufficient for use in the highest rate \dword{daq} context (input to \dword{trigprimitive} production).
+Tests with small packets have demonstrated ZeroMQ's ability to handle the high packet rate of \dword{trigprimitive} or trigger candidate data over all three of the ZeroMQ transport mechanisms that are being considered for use (inter-thread, inter-process and network).  
 
-The prototype software development follows some design principles:
+ZeroMQ IPC has been successfully exercised at \dword{protodune} as part of a practical solution to transfer the full stream of trigger primitives out of one process and in to another. 
+This tests the eventual leg between producers of trigger primitives and their consumers (trigger candidate processors). 
+The merging of multiple, asynchronous trigger primitive streams into a single ordered stream which is properly prepared for input to trigger candidate processing has been developed and tested offline.  Performance testing and integration into the self-triggering prototype at \dword{protodune} is in progress.
 
-\begin{itemize}
-\item The \dword{daq} is modeled as a cyclic, data flow graph.
-\item Graph nodes in the graph perform transformations and may consume data input from and produce data output to other nodes.
-\item Graph edges connect nodes through ports associated with a network socket.
-\item Graph construction emerges by initiating connections locally.
-\item Executable processes provide one or more nodes that operate asynchronously from one-another governed only by the flow of messages across their shared edges.
-\item Construction of nodes in executable processes and larger graph construction is dynamic governed by initial user configuration and later by messages flowing in the graph itself.
-\end{itemize}
-
-The prototype development is based on the well-established, high-quality free software from the ZeroMQ group.
-Some of the reasons for selecting their technology include:
-\begin{itemize}
-\item ZeroMQ software follows a well layered set of software libraries that emphasize portability, high performance, fault tolerance, minimal software dependency and long-lived use and support.
-\item A wide variety of language bindings exist, importantly C/C++ for high performance and Python for fast development are two of the best supported.
-\item ZeroMQ abstracts functionality in important ways such as concrete implementation of high level communication patterns (eg, pub/sub) and high-level independence from low-level transport mechanism (three are supported: inter-thread queues, inter-process Unix-domain sockets and inter-computer network sockets). 
-\item It supports a truly decentralized system design (this is the ``Zero'' in ``ZeroMQ'') critical to satisfying the requirements on robustness.  In particular the ZeroMQ project Zyre provides a distributed, low-latency \dword{daqdispre} system.
-\item ZeroMQ has been evaluated favorably CERN~\cite{Dworak:2012mf} and has been used in various \dword{daq} contexts in other experiments.
-\end{itemize}
-
-Initial prototype tests have demonstrated that the raw data throughput of ZeroMQ inter-thread transport is sufficient for use in even the highest rate \dword{daq} context (input to \dword{trigprimitive} production).
-Rate tests of small packets have been performed to gauge ZeroMQ ability to handle high packet rate \dword{trigprimitive} or trigger candidate data. 
-These tests have so far been performed merely on Gbps networks. 
-Given reasonably linear scaling as well as benchmarks preformed on faster networks by others, ZeroMQ will perform adequately for DUNE FD \dword{daq} purposes.
-
-The ZeroMQ-based prototype software will continue to be developed with the goal to understand how to manage software and configuration complexity and to participate in the other demonstrators described in this section. 
 
 
 % \subsubsection{Future \dword{protodune} \dword{daq} Demonstrator}
