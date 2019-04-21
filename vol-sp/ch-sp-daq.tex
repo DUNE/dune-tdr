@@ -989,9 +989,9 @@ module are cross-channel and -time correlated, and further selection
 criteria are applied. This may result in the
 output of trigger candidates. 
 More specifically, once activity is localized in time and channel (``space'') it is
-possible to apply a rough energy-based threshold based on combining the
-statistical metrics carried by the input \dwords{trigprimitive}, which
-defines a trigger candidate. 
+possible to apply a rough energy-based threshold based on the combined
+metrics carried by the cross-correlated \dwords{trigprimitive};
+satisfying this criteria defines a trigger candidate. 
 
 A trigger candidate packet carries information about all the trigger
 primitives that were used in its formation. 
@@ -1002,8 +1002,8 @@ These measures are used downstream by the module level trigger,
 as described more in the next section.
 
 While the selection applied in the previous stage (trigger primitive
-generation) was driven by a
-measure of noise, here it is driven by background activity.  
+generation) is driven by a
+measure of noise, at trigger candidate generation stage it is driven by background activity.  
 In particular, the very high rate, low energy
 $^{39}$Ar decays are expected to dominate 
 trigger candidate rates, followed by activity from the $^{42}$Ar decay
@@ -1015,11 +1015,11 @@ module level trigger.
 This stage of data selection is
 implemented in O(100) CPU servers, which receive the trigger primitive
 stream from the upstream DAQ and distribute trigger candidates to the
-module level trigger stage of Data Selection via high speed network. Studies are
+module level trigger stage, described next, via the 10 Gbps DAQ network. Studies are
 underway to demonstrate CPU resource utilization and latency, as are
 efforts to demonstrate online trigger candidate generation at ProtoDUNE.
 Trigger candidate generation performance is summarized in
-Section~\ref{sec:sp-daq:design-validation}.
+Section~\ref{sec:sp-daq:design-validation}. 
 
 %Additional studies are expected but nominally individual candidates, or
 %groups of candidates nearby in detector space in time, with measures of
@@ -1029,7 +1029,7 @@ Section~\ref{sec:sp-daq:design-validation}.
 
 \subsubsection{Module Level Trigger}
 
-Data selection is further facilitated as all trigger candidates are consumed
+Data selection is further facilitated as trigger candidates are consumed
 by the module level trigger in order to form the ultimate trigger
 decision which prompts the readout of event records. 
 The physical (channel and time) location, extent as well as the energy measure of the
@@ -1042,13 +1042,13 @@ otherwise, indicate the former.
 
 When a particular condition in a category is satisfied, the trigger
 decision is made and a trigger command is formed. 
-This packet includes information of the candidates (and primitives)
+The trigger command packet includes information of the candidates (and primitives)
 that were used to form it. 
-The decision also provides direction as to what set of detector components
-are to be read out and over what time period.
-As described at the start of this section, localized triggers will lead
-to the readout of the entire detector module for a period equal to \SI{5.4}{\milli\second}.  Extended triggers (\dword{snb}) will
-direct the readout of much longer period of \SI{100}{s}.
+The decision also provides direction as to what set of detector subcomponents
+are to be read out and over what time period. 
+As described at the start of this section, localized triggers will instruct
+the readout of the entire detector module for a period equal to \SI{5.4}{\milli\second}.  Extended triggers (\dword{snb}) will
+instruct the readout of much longer period of \SI{100}{s}.
 
 The module level trigger sends its produced trigger commands to the
 \dfirst{daqbes} for the detector module, specifically the data flow
@@ -1057,8 +1057,9 @@ execution as described in Section~\ref{sec:fd-daq:design-backend}. The
 entire data selection chain as well as resulting query of data from
 the upstream DAQ buffers must be 
 accomplished promtly (within less than a second, not accounting for
-integration time in the case of a supernova burst trigger), as dictated by the upstream DAQ 
-buffer size.
+integration time in the case of a supernova burst trigger). This
+latency is governed by the upstream DAQ 
+buffer size limitation.
 
 The module level trigger is implemented in O(1) CPU server (with 100\%
 redundancy), which
@@ -1072,8 +1073,8 @@ Section~\ref{sec:sp-daq:design-validation}.
 
 \subsubsection{External Trigger Interface}
 
-The External Trigger Interface provides an interface between the
-module level trigger and the timing subsystem, calibration system,
+The external trigger interface provides an interface between the
+module level trigger and the timing and synchronization subsystem, calibration system,
 other far detector modules, and the
 outside world (external to the far detector). It is also responsible for correlating system timing with trigger information. 
 
