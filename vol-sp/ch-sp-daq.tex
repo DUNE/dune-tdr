@@ -266,7 +266,7 @@ Self-triggering on \dword{snb} activity is a unique challenge for the
 DUNE FD, and an aspect of the design which has never been demonstrated
 in a LArTPC. The challenge with \dword{snb} triggering is two-fold. 
 First, the activity of the individual \dword{snb} neutrino interactions
-is expected to be of relatively low energy (\SIrange{10}{30}{\mev}),
+is expected to be of relatively low energy (\SIrange{10}{30}{\mega\electronvolt}),
 sometimes indistinguishable from pile-up of radiological background activity in the
 detector.  Triggering on an ensemble of \bigo{100} events expected on
 average in the case of a galactic supernova burst is therefore
@@ -383,7 +383,7 @@ TPC \dword{adc} Dynamic Range& 12 bits\\ \colhline
 PDS \dword{adc} Sampling Rate & TBD \\ \colhline
 PDS \dword{adc} Dynamic Range & TBD \\ \colhline
 PDS \dword{adc} Readout Length & TBD \\ \colhline
-Localized Event Record Window & \si{5.4}{\milli\second}\\  \colhline
+Localized Event Record Window & \SI{5.4}{\milli\second}\\  \colhline
 Extended Event Record Window &  100 s\\  \colhline
 Full size of TPC Localized Event Record per Module & 6.22 GB \\  \colhline
 Full size of TPC Extended Event Record per Module & 115 TB\\  \colhline
@@ -410,7 +410,7 @@ are listed in Table~\ref{tab:sp-daq:interfaces}, and described
 briefly in the following subsections. Interface agreements with
 facilities and underground installation are described in Section~\ref{sec:sp-daq:production}.
 
-
+\fixme{Add summaries in table. Georgia}
 \begin{dunetable}
 [\dword{daq} System Interface Links]
 {p{0.3\textwidth}p{0.3\textwidth}p{0.2\textwidth}}
@@ -418,21 +418,21 @@ facilities and underground installation are described in Section~\ref{sec:sp-daq
 {Data Acquisition System Interface Links }
 Interfacing System & Description & Reference \\ \toprowrule
 TPC CE & & \citedocdb{6742}{v6}\\ \colhline
-PDS & &  \citedocdb{6727}{v2} \\ \colhline
-Integration Facility & & \citedocdb{7042}{v0} \\
-Facilities &&  \citedocdb{6988}{v1} \\ \colhline
+PDS Readout & &  \citedocdb{6727}{v2} \\ \colhline
+Computing &&  \citedocdb{7123} \\ \colhline
 CISC & & \citedocdb{6790}{v1} \\ \colhline
 Calibration & Constraint on total volume of the calibration data;
 trigger and timing distribution from the DAQ & \citedocdb{7069} \\ \colhline
-Computing &&  \citedocdb{7123} \\ \colhline
-Timing &&  \citedocdb{11224} \\ \colhline
+Timing and Synchronization &&  \citedocdb{11224} \\ \colhline
+Integration Facility & & \citedocdb{7042}{v0} \\
+Facilities &&  \citedocdb{6988}{v1} \\ \colhline
 \end{dunetable}
 
 \begin{description}
 \item[TPC Cold Electronics] The \dword{daq} and TPC \dword{ce} interface is described in
 \citedocdb{6742}. The physical interface is at the \dword{cuc}, where optical links from the \dwords{wib} transfer
 the raw TPC data to the \dword{daq} \dword{fe} readout (\dword{felix}; see
-Section~\ref{??}). This ensures the \dword{daq} is electically decoupled from the detector
+Section~\ref{sec:daq:design-upstream}). This ensures the \dword{daq} is electically decoupled from the detector
 cryostat. Ten \SI{10}{Gbps} links are expected per \dword{apa}, and have
 been specified as 300m OM4 multi-mode fibers from \dword{sfp}+ at the \dword{wib} to
 \dword{minipod} on \dword{felix}. The data format has been specified
@@ -492,7 +492,7 @@ them.
 A single interface document,
 \citedocdb{11224}, describes all these timing interfaces. 
 
-Accuracy of timestamps delivered to  detector endpoints will be $\pm$\SI{500}{\nano\second} with respect to UTC.  Synchronization between any two endpoints in the detector will be better than \SI{10}{\nano\second} on average.   Between detector modules, synchronization will be better than \SI{25}{\nano\second} on average.  The timing system will also provide a synchronized clock source by which DAQ computer system clocks may be synchronized using standard network time protocols.  System clocks are expected to be synchronized to within a \si{\milli\second} using NTP and \si{\micro\second} using PTP standards. 
+Accuracy of timestamps delivered to  detector endpoints will be $\pm$\SI{500}{\nano\second} with respect to UTC.  Synchronization between any two endpoints in the detector will be better than \SI{10}{\nano\second} on average.   Between detector modules, synchronization will be better than \SI{25}{\nano\second} on average.  The timing system will also provide a synchronized clock source by which DAQ computer system clocks may be synchronized using standard network time protocols.  System clocks are expected to be synchronized to within a ms using NTP and \si{\micro\second} using PTP standards. 
 \end{description}
 
 \section{Data Acquisition System Design}
@@ -541,10 +541,10 @@ to offline; and CCM extends throughout the entire physical layout of the
 system, supported on a private network throughout the DAQ system. Each of these subsystems is described in further
 detail in the following subsections. To first order, the DAQ system
 is implemented as an online data processing and data flow system. As
-such, Inter-process Communication (IPC) (Section~\ref{sec:daq:design-ipc}) is an
+such, Inter-process Communication (IPC) is an
 additional, central component to the FD DAQ, which spans across multiple
 subsystems, as do other Infrastructure Software components, e.g.~databases. Due
-to its central role, IPC is described below in a separate subsection.
+to its central role, IPC is described below in a separate subsection (Section~\ref{sec:daq:design-ipc}).
 
 Front-end readout is carried out by the Upstream DAQ, using custom data receiver and
 co-processing FPGA/CPU hardware, all of which is hosted in O(100) servers in the CUC. A
@@ -713,7 +713,7 @@ those collectively dictate the temporary storage technology and scale.
 
 The buffering time required to select data associated with a localized
 trigger is dominated by processing speed, pipeline depths and network latency. Some studies must still be performed but initial estimates indicate that the time buffering time required should not exceed approximately one second. 
-A  \si{5.4}{\milli\second} block of data must be copied from the buffer
+A \SI{5.4}{\milli\second} block of data must be copied from the buffer
 in order to fully capture interesting localized activity. As the full stream of data must constantly be buffered, a RAM
 technology is selected based on providing sufficient throughput,
 endurance, and capacity. 
@@ -906,8 +906,8 @@ in time and channel (mapped to physical) space from which they are derived:
 \end{itemize}
 Each trigger type furthermore prompts readout
     of the entire module but over significantly different time
-    ranges: localized triggers prompt readout of \si{5.4}{\milli\second} event records; extended
-    triggers prompt readout of \si{100}{\second} event records. 
+    ranges: localized triggers prompt readout of \SI{5.4}{\milli\second} event records; extended
+    triggers prompt readout of \SI{100}{\second} event records. 
 
 Viable algorithms for the low level and module level trigger already exist, including
 algorithms for a module level supernova burst trigger, and it has
@@ -1047,7 +1047,7 @@ that were used to form it.
 The decision also provides direction as to what set of detector components
 are to be read out and over what time period.
 As described at the start of this section, localized triggers will lead
-to the readout of the entire detector module for a period equal to 5.4\si{\milli\second}.  Extended triggers (\dword{snb}) will
+to the readout of the entire detector module for a period equal to \SI{5.4}{\milli\second}.  Extended triggers (\dword{snb}) will
 direct the readout of much longer period of \SI{100}{s}.
 
 The module level trigger sends its produced trigger commands to the
