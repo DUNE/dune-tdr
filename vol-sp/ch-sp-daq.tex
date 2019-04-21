@@ -81,7 +81,7 @@ upstream to the back-end of the system and then to offline. The majority
 of raw data processing and buffering is performed underground, in the
 front-end part of the system, thus minimizing data bandwidth to the surface. A
 hierarchical data selection subsystem consumes minimally-processed
-information from the front-end readout, and
+information from the upstream DAQ, and
 constructs module-level trigger decisions. Upon such a decision, a data
 flow orchestrator process is activated as part of the back-end part of
 the system
@@ -543,7 +543,7 @@ Front-end readout is carried out by the Upstream DAQ, using custom data receiver
 co-processing FPGA/CPU hardware, all of which is hosted in O(100) servers in the CUC. A
 similar number of additional servers is responsible for the execution
 of subsequent software-based low-level processing of trigger primitives
-generated in the front-end readout for the purposes of data selection; the collective
+generated in the upstream DAQ for the purposes of data selection; the collective
 low-level information (trigger primitives and trigger candidates
 constructed from trigger primitives) is propagated to a central server responsible
 for further processing and module-level triggering; the module level
@@ -603,8 +603,7 @@ It is physically connected to the detector electronics via optical
 fiber(s) and buffers and serves data to other \dword{daq} subsystems,
 namely the \dword{daqdsn} and the back-end DAQ.
 
-\begin{dunefigure}{fig:daq:readout}{\dword{dune} \dword{daq} front-end
-    readout subsystem and its connections.}
+\begin{dunefigure}{fig:daq:readout}{\dword{dune} upstream \dword{daq} subsystem and its connections.}
   \includegraphics[width=0.8\textwidth]{daq-readout.png}
 \end{dunefigure}
 
@@ -647,12 +646,12 @@ To minimize the space and power consumption footprint of the \dword{daq}, 10-20 
 \dword{felix} is a \dword{fpga}-based PCIe board developed initially for ATLAS and now proposed or already used in several experiments, including \dword{protodune}. 
 Existing firmware has been adopted and is being adapted to ensure
 decoding and format checking of incoming data and then to marshal the
-data to other blocks of the readout subsystem.
+data to other blocks of the upstream DAQ subsystem.
 
 \subsubsection{Network based I/O}
 \label{sec:fd-daq:upstream-io}
 
-The readout subsystem provides access to the \dword{daqdsn} and \dword{daqbes} through a commercial, off-the-shelf switched network as illustrated in Figure~\ref{fig:daq:readout}).
+The upstream DAQ subsystem provides access to the \dword{daqdsn} and \dword{daqbes} through a commercial, off-the-shelf switched network as illustrated in Figure~\ref{fig:daq:readout}).
 The network communication protocol is as described in Section~\ref{sec:daq:design-ipc}.
 The network I/O is handled by the \dwords{daqrou} via software; dedicated hardware or firmware development is not required.
 
@@ -660,7 +659,7 @@ The network I/O is handled by the \dwords{daqrou} via software; dedicated hardwa
 \label{sec:fd-daq:upstream-proc}
 
 The data processing functional block resides either on the FELIX board FPGA, or on
-an additional, dedicated co-processor providing additional FPGA
+an additional, dedicated co-processor (see Section~\ref{xx}) providing additional FPGA
 processing resources, or both. Data processing can also be carried out in the host
 server processor. This functional block is ultimately
 responsible for identifying regions of interest in the
@@ -671,15 +670,17 @@ that better suits subsequent data analysis. This implies, e.g.~reorganizing
 data into different streams (collection plane vs. induction plane(s),
 or re-arranging time and channel order and aggregating samples into frames), applying noise filtering algorithms, and compressing or zero-suppressing data.
 
-The readout system summarizes the identified regions of interest
-on a per-channel basis into information packets
-called \dwords{trigprimitive}.  These are forwarded to the
+The upstream DAQ system also facilitates the identification and
+summary of regions of interest within the data, 
+on a per-channel basis, into information packets
+called \dwords{trigprimitive}.  These are forwarded to subsequent
+stages of the
 \dword{daqdsn} system which makes correlations and ultimately decides whether and which data is to be saved.
 
-This functional block may be implemented via FPGA, GPU, CPU, or a
+This functional block in principle may be implemented via FPGA, GPU, CPU, or a
 combination of these elements. Deciding on the exact implementation is
-premature at this stage; this is one of the main topics to explore
-within upstream DAQ and Data Selection. The DAQ design includes both FPGA and
+premature at this stage; this is central to ongoing development efforts 
+within upstream DAQ and Data Selection at protoDUNE. The DAQ design includes both FPGA and
 CPU elements in the upstream DAQ, which provides the needed
 flexibility and 
 adaptability to meet the ultimate processing needs of the detector;
