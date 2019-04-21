@@ -930,28 +930,33 @@ threshold crossing times and statistical measures of its \dword{adc} samples.
 In addition, these packets carry a flag indicating the occurrence of any
 failures or other exceptional behavior during \dword{trigprimitive} processing.
 
-\Dwords{trigprimitive} derived from TPC data
-are produced in the front-end readout part of the \dword{daq} system,
-nominally in FPGA firmware or potentially in CPU or GPU software as described in
+\Dwords{trigprimitive} derived from TPC and PDS data
+are produced in the upstream DAQ,
+nominally in FPGA firmware or potentially in CPU or GPU software, as described in
 Section~\ref{sec:daq:design-upstream}.
-Any \dwords{trigprimitive} derived from PDS data are produced by the PDS system
-for consumption by the \dword{daq} \dword{daqdsn} subsystem.
 
-Algorithms for generating \dwords{trigprimitive} are still under development
-\cite{docid-11275}. 
-One example algorithm\cite{docid-11236} establishes a waveform baseline
-for a given channel, subtracts this baseline from each sample, maintains
-a measure of the noise, and searches for the waveform to cross a
-threshold defined in terms of the noise level.
-This algorithm has been validated using both Monte Carlo simulations and
+Algorithms for generating \dwords{trigprimitive} are under continual development
+\cite{docid-11275}. Nominally, trigger primitive generation proceeds
+by establishing a waveform baseline
+for a given channel, subtracting this baseline from each sample, maintaining
+a measure of the noise, and searching for the waveform to cross a
+threshold defined in terms of the noise level. This thredhold crossing
+represents a ``hit''. 
+Such algorithms (see, e.g.~\cite{docid-11236}) have been validated
+using both Monte Carlo simulations and 
 real data from \dword{protodune}. 
-Its performance is summarized in
+Trigger primitive performance is summarized in
 Section~\ref{sec:sp-daq:design-validation}.
 
-The format and schema of \dwords{trigprimitive} require study and
-optimization and this may be tightly coupled with the formation of
-trigger candidates discussed next. 
-Initial estimates show that 20 bytes provides a generous data
+The format and schema of \dwords{trigprimitive} are subject to further
+optimization, as they are further tightly coupled with the generation of
+trigger candidates, discussed in the following subsection. Nominally,
+each trigger primitive comprises the channel address (32 bit), hit
+start time (64 bit), the time over
+threshold (16 bit), the integral ADC value (32 bit), an error flag (16
+bit), and possibly also
+the waveform peak (12 bit) associated with the hit. 
+As such, 20-22 bytes provides a generous data
 representation of \dword{trigprimitive} information. 
 The \dword{trigprimitive} rate will be dominated by the rate of decay of naturally occurring
 $^{39}$Ar, which is about \SI{10}{\mega\hertz} per module.
@@ -966,22 +971,27 @@ rate providing trigger candidates as described next.
 
 \subsubsection{Low Level Trigger: Trigger Candidate Generation}
 
-\Dwords{trigprimitive} from individual, contiguous fragments of the detector
-module are consumed in order that cross-channel and -time clustering may be
-performed and possibly result in the output of trigger candidates.
-Once activity is localized in time and channel (``space'') it is
+At the trigger candidate generation stage of the low level trigger,
+\dwords{trigprimitive} from individual, contiguous fragments of the
+detector 
+module are cross-channel and -time correlated, and further selection
+criteria are applied. This may result in the
+output of trigger candidates. 
+More specifically, once activity is localized in time and channel (``space'') it is
 possible to apply a rough energy-based threshold based on combining the
-statistical metrics carried by the input \dwords{trigprimitive}.
+statistical metrics carried by the input \dwords{trigprimitive}, which
+defines a trigger candidate.
 
 A trigger candidate packet carries information about all the trigger
 primitives that were used in its formation. 
 In particular, it provides a measure of the total activity represented
-by these primitives.
-This measure will be used downstream to allow the final trigger
-decision, as described more in the next section.
+by these primitives, as well as a measure of their collective time and channel
+location within the module.
+This measure is used downstream by the module level trigger, 
+as described more in the next section.
 
-Prior to output of, a candidate is subject to a selection criteria.
-While the selection applied in the previous stage was driven by a
+While the selection applied in the previous stage (trigger primitive
+generation) was driven by a
 measure of noise, here it is driven by background activity.  
 In particular, candidates which are consistent with activity from the
 very high rate, low energy $^{39}$Ar decays will be strongly prescaled. 
@@ -1050,9 +1060,9 @@ timing section (later).
 \label{sec:fd-daq:design-data-reduction}
 
 The last processing stage in the \dword{daqdsn} subsystem is the
-\dfirst{hlt}, which resides in the back-end part of the \dword{daq} and
+high level filter, which resides in the back-end part of the \dword{daq} and
 is further referenced in Section~\ref{sec:fd-daq:design-data-reduction}.
-The \dword{hlt} acts on triggered, read out, and aggregated data,
+The high level filter acts on triggered, read out, and aggregated data,
 produced by an \dword{eb}. 
 It therefore serves primarily to down-select and thus
 limit the total triggered data rate to offline, thereby keeping %. This allows to keep
@@ -1064,7 +1074,7 @@ classification. As it benefits from a longer latency (time between
 $\sim$Hz-level built events), it can accommodate higher level of
 sophistication in algorithms for \dword{daqdsn} decisions.
 
-More specifically, the \dword{hlt} may further reduce the rate of data saved to final output storage by
+More specifically, the high level filter may further reduce the rate of data saved to final output storage by
 applying refined selection criteria which may otherwise be prohibitive
 to apply to the pre-trigger data stream.  For example, instrumentally-generated signals (e.g.~correlated noise)
 may produce trigger candidates that can not be rejected by the module
@@ -1082,8 +1092,8 @@ To fully understand how much and what type of data reduction may be
 beneficial, simulation studies are ongoing \citedocdb{xx} and will
 necessarily have to be
 validated with initial data analysis after
-first DUNE \dword{fd} operation. Planned 
-development efforts will also be carried out to determine the scale of
+first DUNE \dword{fd} operation. Development efforts are also being
+carried out to determine the scale of 
 processing required by the \dword{fd}.
 
 
