@@ -6,7 +6,6 @@
 \fixme{Add missing
   references. Georgia}
 \fixme{Add section on co-processor development. Georgia}
-\fixme{}
 
 \section{Introduction}
 \label{sec:fd-daq:introduction}
@@ -701,9 +700,10 @@ those will depend, for example, on noise levels in the detector.
 \label{sec:fd-daq:upstream-buf}
 
 In \dword{dune}, the upstream DAQ system is in charge of buffering all
-detector data until the \dword{daqdss} has formed a trigger decision
-(Section~\ref{sec:sp-daq:design-selection-algs}) and until the
-\dword{daqbes} (Section~\ref{sec:fd-daq:design-backend}) has requested and received that selected data. 
+detector data until the \dword{daqdss} has issued a trigger command
+(see Section~\ref{sec:sp-daq:design-selection-algs}) and until the
+\dword{daqbes} (Section~\ref{sec:fd-daq:design-backend}) has requested
+and received the corresponding selected data. 
 In addition, in the case of a \dword{snb} trigger, data received after
 the issuing of the trigger must be buffered for a longer period to
 avoid loss of data due to any possible downstream
@@ -1103,8 +1103,7 @@ redundancy), which hosts a number of White Rabbit node cards.
 \label{sec:fd-daq:design-data-reduction}
 
 The last processing stage in the \dword{daqdsn} subsystem is the
-high level filter, which resides in the back-end part of the \dword{daq} and
-is further referenced in Section~\ref{sec:fd-daq:design-data-reduction}.
+high level filter, which resides in the back-end part of the \dword{daq}.
 The high level filter acts on triggered, read out, and aggregated data,
 produced by an \dword{eb}. 
 It therefore serves primarily to down-select and thus
@@ -1151,13 +1150,16 @@ form of ``event records'' to the output storage buffer, from which the data is t
 
 \subsubsection{Dataflow Orchestration}
 
-To minimize data extraction latency, the \dword{daqbes} must execute
-trigger commands to completion in an asynchronous way (not serially). 
-This asynchronous execution is governed by the \dword{daqdfo} and operates as illustrated in Figure~\ref{fig:daq:backend} and as discussed here:
+To minimize the latency in the readout of the data from the Upstream
+DAQ buffers, the back-end DAQ will support parallel readout of event
+records into a pool of Event Builder processes.  This asynchronous, parallel readout will be coordinated by a dataflow orchestrator (DFO).  Its operation is illustrated in Figure~\ref{fig:daq:backend} and is discussed here:
 
 \begin{dunefigure}{fig:daq:backend}{Illustration of \dword{dune} \dword{daq} back-end operation.}
   \includegraphics[width=0.8\textwidth]{daq-backend.pdf}
 \end{dunefigure}
+
+\fixme{Remove egress reference from figure. Replace with Back-end
+  DAQ. Do we need to show event builder idle pool? Brett}
 
 \begin{itemize}
 \item \dword{daqdfo} accepts a time ordered stream of \dwords{trigcommand} and dispatches each for execution possibly by first splitting up each command into one or more contiguous segments.
@@ -1639,10 +1641,10 @@ and as IPC, which is common across multiple DAQ subsystems.
 
 %The detector readout for DUNE will be based Front-End Link EXchange (FELIX)[?] system, originally developed for the ATLAS experiment DAQ upgrades.
 The use of FELIX as the front-end readout technology for DUNE was
-successfully prototyped on ProtoDUNE, initially for the readout of one
-APA. The FELIX concept allows to stream data coming over multiple 10
+successfully prototyped at ProtoDUNE, initially for the readout of one
+APA. In ProtoDUNE, FELIX allows streaming of data coming over multiple 10
 Gbps optical point-to-point links into commercial host memory and,
-from there, to store, dispatch or process the data as convenient via
+from there, storing, dispatching or processing of the data via
 software. 
 
 In ProtoDUNE, a single APA,  FELIX-based readout consists of two servers,
@@ -1787,7 +1789,7 @@ rates up to 40 Hz and 3 ms readout window
 allows confident scaling of the protoDUNE back-end DAQ subsystem to
 that of DUNE.
 
-\fixme{Add HLF simulations}
+\fixme{Add HLF simulations. Georgia}
 
 % \subsubsubsection{Ongoing  \dword{felix}  Throughput Demonstration at \dword{protodune}}
 % \label{sec:sp-daq:validation-pdune-felix}
