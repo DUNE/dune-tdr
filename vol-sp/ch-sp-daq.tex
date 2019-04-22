@@ -3,9 +3,8 @@
 
 \fixme{Fix SI units throughout, and use consistent dword
   references. Brett}
-\fixme{Add missing
-  references. Georgia}
-\fixme{Add section on co-processor development. Georgia}
+\fixme{Add missing references. Georgia}
+\fixme{Add a couple of figures on co-processor. Georgia}
 
 \section{Introduction}
 \label{sec:fd-daq:introduction}
@@ -1822,7 +1821,31 @@ rates up to 40 Hz and 3 ms readout window
 allows confident scaling of the protoDUNE back-end DAQ subsystem to
 that of DUNE.
 
-\fixme{Add HLF simulations. Georgia}
+In the case of the high level filter, the DAQ consortium is exploring the
+use of machine learning techniques, specifically image classification
+with the use of convolutional neural networks (CNNs) on GPUs, as a way to
+classify and down-select individual sections of TPC channel vs. time
+(``frames''), with extent of one APA's worth of collection plane
+channels by one drift length (2.25 ms, or, 4500 samples). CNNs have
+been trained on Monte Carlo simulations of frames with each of
+the following off-beam event topologies: 
+atmospheric neutrino interactions, baryon number violating
+interactions (proton decay or neutron-antineutron oscillation), cosmic
+ray interactions, supernova neutrino interactions, or no interactions at all; all
+with radiological and noise background included in the
+simulations. Preliminary studies show that a CNN can be sucessfully trained classify any
+given input frame as one of three categories: empty, containing a supernova neutrino
+interaction, or containing a high-energy (atmospheric neutrino, baryon
+number violating, or cosmic ray) interaction. Specifically, empty frames can be
+rejected with an efficiency of $>$99\%, while frames containing or
+partially containing 
+a supernova neutrino, an atmospheric/cosmic interaction, or a baryon
+number-violating interaction can be preferentially selected with efficiency
+$>$88\%, $>$92\%, or $>$99\%, respectively  \cite{docdb11311}. Such
+filter could potentially be applied to reduce the event record size by
+more than two orders of magnitude. Inference latency is under study to validate limiting event
+record throughput (from the Event Builder) through such filtering
+stage, for a reasonably sized GPU cluster. 
 
 % \subsubsubsection{Ongoing  \dword{felix}  Throughput Demonstration at \dword{protodune}}
 % \label{sec:sp-daq:validation-pdune-felix}
