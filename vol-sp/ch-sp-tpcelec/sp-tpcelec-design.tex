@@ -1,7 +1,6 @@
 \section{System Design}
 \label{sec:fdsp-tpcelec-design}
 
-\begin{comment}
 In order to achieve the lowest possible overall noise in the readout of 
 the \dword{apa} wire planes, all possible sources of noise need to be kept to a
 minimum. This requires not only minimizing the noise sources in each
@@ -27,53 +26,20 @@ cold cables, and the cables trays. Then in
 the infrastructure on the top of the cryostat, including the
 feedthroughs, the \dwords{wiec}, the timing distribution and
 synchronization system, and the services that provide the low
-voltage power and the bias voltage to the \dword{tpc} electronics. Finally,
-we conclude in~\ref{sec:fdsp-tpcelec-overview-remaining}
+voltage power and the bias voltage to the \dword{tpc} electronics. 
+The design presented here is very similar to the one used for
+\dword{pdsp}. The results obtained with this detector are 
+discussed in Section~\ref{sec:fdsp-tpcelec-overview-pdune}.
+Then in \ref{sec:fdsp-tpcelec-overview-lessons} we discuss
+how the lessons learned from the construction, installation,
+commissioning. and operation are informing the final design
+of the \dword{dune} \dword{sp} detector module and later in
+\ref{sec:fdsp-tpcelec-overview-remaining} we conclude
 with a discussion of the design maturity and of
 the remaining prototype activities that are required prior to
 the beginning of he detector construction. Other aspects of
 the system design, pertaining to the grounding of other 
 detector components, are discussed in Section~\ref{sec:fdsp-tpcelec-interfaces}.
-\end{comment}
-
-To minimize the overall noise of the readout of the \dword{apa}
-wire planes, all possible sources of electroni noise need to be kept to a
-minimum.  This includes noise associated with components in the readout chain
-of the \dword{apa} wires, such as \dword{fe} amplifier noise, and from other
-aspects of the system, such as the channeling of noise inside the cryostat
-through ground connections and through the readout chain of other detector
-components, like the \dword{pds}, the \dword{hvs}, or the cryogenic
-instrumentation. 
-
-This section describes the overall
-system design of the \dword{tpc} electronics.
-
-%\fixme{do we need the rest of the next pgraph? Nora wanted!}
-\begin{comment}
-, starting in
-\ref{sec:fdsp-tpcelec-design-grounding} with a description of the
-grounding and shielding scheme adopted in the \dword{dune} \dword{spmod}
-to minimize the overall noise in the detector, followed in
-\ref{sec:fdsp-tpcelec-design-bias} by a discussion of the bias
-voltage distribution system. Later, we describe in 
-\ref{sec:fdsp-tpcelec-design-femb} the \dwords{femb}, including
-the design of the \dwords{asic} that are being considered for
-use in \dword{dune}. In~\ref{sec:fdsp-tpcelec-design-infrastructure}
-we discuss the infrastructure for the \dword{ce} inside the cryostat,
-that includes the cold boxes that shield the \dwords{femb}, the
-cold cables, and the cables trays. Then in
-\ref{sec:fdsp-tpcelec-design-ft}-\ref{sec:fdsp-tpcelec-design-timing} we discuss 
-the infrastructure on the top of the cryostat, including the
-feedthroughs, the \dwords{wiec}, the timing distribution and
-synchronization system, and the services that provide the low
-	voltage power and the bias voltage to the \dword{tpc} electronics. Finally,
-we conclude in~\ref{sec:fdsp-tpcelec-overview-remaining}
-with a discussion of the design maturity and of
-the remaining prototype activities that are required prior to
-the beginning of he detector construction. Other aspects of
-the system design, pertaining to the grounding of other 
-detector components, are discussed in Section~\ref{sec:fdsp-tpcelec-interfaces}.
-\end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Grounding and Shielding}
@@ -94,11 +60,33 @@ might be injected into the electronics either in the cold or just
 outside the cryostat by direct conduction along unavoidable power 
 or signal connections to other devices. This approach to minimizing
 the detector noise by using appropriate grounding and shielding procedures
-is discussed in detail in~\cite{radekaNoise}.
+is discussed in detail in~\cite{radekaNoise}. In the specific case
+of the \dword{dune} \dword{spmod} this approach results in the 
+following set of requirements that need to be respected during the
+design and the construction of the detector:
+\begin{itemize}
+\item{The \dword{apa} frame shall be connected to the common of
+all the \dword{fe} \dwords{asic};}
+\item{All electronical connections (low voltage power, bias voltage,
+clock, control, and data readout) from one \dwords{apa} shall lead to a 
+single \dword{sft};}
+\item{All \dwords{apa} shall be insulated from each other;}
+\item{The common of the \dword{fe} \dword{asic} and the rest of the 
+\dword{tpc} readout electronics should be connected to
+the common plane of the \dword{femb};}
+\item{The return leads of the \dword{apa} power line and any shield
+for the clock. control. and data readout shall be connecdted
+to the common plane of the \dword{femb} at one end and
+to the flange of the \dword{sft} at the other hand; this shall be 
+the only connection of the \dword{apa} frame to the cyostat;}
+\item{The mechanicel suspension from the frame of the \dword{apa}
+to the cryostat should be insulated.}
+\end{itemize}
 
-As discussed in \ref{sec:fdsp-tpcelec-overview-pdune}
+These requirements have been used already for the construction
+of the \dword{pdsp} prototype. As discussed in \ref{sec:fdsp-tpcelec-overview-pdune},
 the initial results from the online monitoring and the
-analysis of the \dword{pdsp} indicate that the system
+analysis of \dword{pdsp} indicate that the system
 noise requirements for the \dword{dune} \dword{spmod}
 can be met.
 
@@ -138,6 +126,10 @@ shown in Figure~\ref{fig:connections}, and to the \dword{pcb}
 shield layer on the \dwords{pd}. The cable shields have no 
 electrical connection to the \dword{apa} frame or the \dword{tpc}
 electronics.
+
+Further aspects of the \dword{dune} grounding scheme are 
+discussed in Section~5.6 of Volume~\volnumbertc of this \dword{tdr},
+\voltitletc, and in~\cite{DUNE:GroundingRules}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Distribution of Bias Voltages}
@@ -220,7 +212,7 @@ communication \dwords{asic} (see Figure~\ref{fig:ce-scheme}).
 The \dword{femb} also contains regulators that produce the voltages 
 required by the \dwords{asic} and filter those voltages, and 
 a micro-electromechanical system oscillator that provides
-a reference to the \dword{coldata} \dword{pll}. The \dword{larasic} 
+a \SI{40}{MHz} reference to the \dword{coldata} \dword{pll}. The \dword{larasic} 
 inputs are protected by an external series inductor and two 
 diodes as well as the internal diode protection in the chip.
 
@@ -352,7 +344,8 @@ programmable to allow different gain and peaking time settings.}
 
 Each \dword{fe} \dword{asic} channel has a dual-stage charge amplifier 
 and a \num{5}$^{th}$ order semi-Gaussian shaper as an anti-aliasing 
-filter for the \dword{tpc} signals. It has programmable gain 
+filter for the \dword{tpc} signals, optimized for loads in the range 
+\SIrange{170}{210}{pF}, that is the capacitance of the \dword{apa} wires. It has programmable gain 
 selectable, at the \dword{asic} level, from one of \num{4.7}, \num{7.8}, \num{14}, or \SI{25}{mV/fC}
 (corresponding to full-scale charge of \num{1.9e6}, \num{1.1e6}, \num{625e3}, 
 and \SI{350e3}{$e^-$}), programmable peaking time selectable from one of 
@@ -379,7 +372,7 @@ chip-to-chip variation in the calibration capacitor are typically
 less than \num{1}\%. The variations of the calibration capacitors
 could be characterized prior to the beginning of \dword{dune}
 data taking, using the \dword{qc} process, discussed in
-Section~\ref{sec:fdsp-tpcelec-integration-qc}.
+Section~\ref{sec:fdsp-tpcelec-production-qc}.
 
 Shared among the \num{16} channels in the \dword{fe} \dword{asic} are 
 the digital interface, programming registers, a temperature monitor, 
@@ -455,13 +448,23 @@ in Section~\ref{sec:fdsp-tpcelec-overview-remaining}.
 \label{sec:fdsp-tpcelec-design-femb-adc}
 
 \dword{coldadc} is a low-noise \dword{adc} \dword{asic} designed to digitize
-\num{16} input channels at a rate of \SI{2}{MHz}. It is implemented in the \dword{tsmc}
+\num{16} input channels at a rate of $\sim\SI{2}{MHz}$, as required for the
+\dword{dune} \dword{spmod}. \dword{coldadc} was designed to operate with 
+an external \SI{64}{MHz} clock and an external digitization signal at
+\SI{2}{MHz}.The \SI{2}{MHz} signal is aligned on the rising edge of one of
+the \SI{64}{MHz} transitions, as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-coldata}.
+In the \dword{dune} \dword{spmod} the external clock operates at \SI{62.5}{MHz}
+clock as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-coldata}. 
+For the remainder of this section we assume for simplicity that the main clock is 
+running at \SI{64}{MHz}. \dword{coldadc} is implemented in the \dword{tsmc}
 \SI{65}{nm} \dword{cmos} technology and has been designed by a team of engineers
 from \dword{lbnl}, \dword{bnl}, and \dword{fnal}.  The \dword{asic} uses a conservative,
 industry-standard design including digital calibration.  Each \dword{coldadc}
 receives \num{16} voltage outputs from a single \dword{larasic} chip.  The voltages
 are buffered, multiplexed by \num{8}, and input to two \num{15}-stage pipelined \dwords{adc}
-operating at \SI{16}{MHz}.  The \dword{adc} uses the well-known pipelined architecture
+operating at \SI{16}{MHz}. The \SI{16}{MHz} clock is generated internally in
+\dword{coldadc} and share its' rising edge with the \SI{2}{MHz} clock. 
+The \dword{adc} uses the well-known pipelined architecture
 with redundancy~\cite{PipelinedADC}.  Digital logic is used to correct non-linearity
 introduced by non-ideal amplifier gain and offsets in each pipeline
 stage~\cite{CalibrationCorrection}, and an automatic calibration procedure is
@@ -790,13 +793,16 @@ the \dword{mosi} line, bits from the other end of the shift register are shifted
 out on the \dword{miso} line. It is thus only possible to read \dword{larasic} 
 configuration registers while writing new configuration data.
 
-In addition to the configuration commands, \dword{coldata} %also 
+In addition to the configuration commands, \dword{coldata} 
 receives a master clock and a fast command signal on a \dword{lv} 
 differential pair from
 the \dword{wib}. Currently the master clock is \SI{64}{MHz}, but it will be
 changed to \SI{62.5}{MHz} to simplify the overall \dword{fd} \dword{spmod} 
-synchronization. The clock used for sampling the \dword{adc} is created inside
-\dword{coldata} by dividing the master clock by \num{32}. Both the master clock and
+synchronization, as already discussed in the case of \dword{coldadc}. The clock 
+used for sampling the \dword{adc} is created inside
+\dword{coldata} by dividing the master clock by \num{32}. The relative phase
+of the \num{2} and the \SI{64}{MHz} clocks is set by an appropriate fast
+command sent from the \dword{wib}.  Both the master clock and
 the \dword{adc} sampling clocks are passed from \dword{coldata} to the four
 \dword{coldadc} chips that it controls. Depending on the master clock frequency
 the \dword{adc} will convert input data every \num{500} or \SI{512}{ns}, 
@@ -857,7 +863,9 @@ character (K28.1) will be sent between each ``Frame-15.'' A series of 8b/10b
 command characters (K28.5) is sent at the end of each frame of \num{12}-bit or 
 \num{14}-bit data to ensure synchronization of the high-speed links.
 
-The serializers and output drivers use clocks derived from a micro-electromechanical
+The serializers and output drivers operate asynchronously in a separate clock domain that
+is not related to the use the master clock signal received from the \dword{wib}. Instead
+they use clocks derived from a \SI{40}{MHz} micro-electromechanical
 system oscillator on the \dword{femb}. A single \dword{pll} generates a 
 \SI{1.28}{GHz} clock for both serializers and output drivers. The \num{10}-bit
 serializers are implemented using two \num{5}:\num{1} multiplexers (clocked at \SI{128}{MHz}) 
@@ -885,6 +893,17 @@ were included in the first partial prototype (CDP1)
 test chip that was produced in Fall 2017 and shown to work as designed.  
 The pre-emphasis circuit has been added to the current mode driver, which 
 was verified in CDP1 and can be disabled if desired. 
+
+A conservative estimation of the power consumption of \dword{coldata},
+that is dominated by the power required for the \dword{lvds} transmitters
+and receivers, amounts to \SI{195}{mW} for each \num{64}-channel \dword{asic}.
+
+The design of the first complete prototype of \dword{coldata} has been
+submitted for fabrication at the end of April 2019, and the first chips
+are expected back from the foundry at the end of July. Based on past 
+experience with the verification of the CDP1 prototype we expect to 
+validate the design and proceed to the construction of complete \dword{dune}
+\dwords{femb} in the early Fall of 2019.
 
 \begin{dunefigure}
 [\dword{coldata} output simulated eye diagram]
@@ -970,89 +989,23 @@ of $\sim\SI{330}{e^-}$ with \SI{1}{$\mu$s} peaking time.}
 \label{sec:fdsp-tpcelec-design-femb-alt-cryo}
 
 
-%%%%%%%%%%%%%%%%%%%%
-%%%%% OLD TEXT %%%%%
-%%%%%%%%%%%%%%%%%%%%
-%
-%The \dword{slac} \dword{cryo} \dword{asic} differs from the baseline 
-%three-chip design by combining the functions of an analog 
-%preamplifier, \dword{adc}, and data serialization along with %and 
-%transmission 
-%for \num{64}~wire channels into a single chip. It is based on a design 
-%developed for the \dword{nexo} experiment~\cite{nEXO} and differs from 
-%it only in the design of the preamplifier, which is modified for the 
-%higher capacitance of the \dword{dune} \dword{spmod} wires compared 
-%to the small pads of \dword{nexo}. The \dwords{femb} constructed using 
-%this chip would use only two \dwords{asic}, compared to the \num{18} 
-%(eight~\dword{fe}, eight~\dword{adc} and two~\dword{coldata}) needed 
-%in the baseline design. This drastic reduction in part count may 
-%significantly improve \dword{femb} reliability, reduce power, and reduce 
-%costs related to production and testing. 
-%
-%Figure~\ref{fig:cryo-architecture} shows the overall architecture of 
-%the \dword{cryo} \dword{asic}, which is implemented in 
-%\SI{130}{nm} \dword{cmos}. It comprises two identical \num{32}-channel 
-%blocks. The current signal from each wire is amplified using a preamplifier 
-%with pole zero cancellation and an anti-alias fifth-order Bessel filter. 
-%Provisions are also made for injection of test pulses. Gain and peaking 
-%time are adjustable to values similar to those of the baseline design.
-%
-%\begin{dunefigure}
-%[Overall architecture of the CRYO \dword{asic}.]
-%{fig:cryo-architecture}
-%{Overall architecture of the \dword{cryo} \dword{asic}.}
-%\includegraphics[width=0.8\textwidth]{sp-tpcelec-cryo-schematic.png}
-%\end{dunefigure}
-%
-%The \dword{adc} uses \SI{8}{MHz} \dword{sar}, so four input channels are 
-%multiplexed onto a single \dword{adc}. The data serialization and transmission 
-%block uses a custom 12b/14b encoder, so \num{32} channels of \num{12}-bit, 
-%\SI{{\sim}2}{MHz} data can be transmitted with a digital bandwidth of 
-%only \SI{896}{Mbps}, which is significantly lower %less 
-%than the required bandwidth 
-%of the baseline, which is \SI{1.28}{Gbps}.
-%
-%One key concern with mixed signal \dwords{asic} is the possibility of 
-%interference from the digital side causing noise on the very sensitive 
-%preamplifier. To avoid this interference, the \dword{cryo} design 
-%uses well established techniques for isolating the substrate; these are 
-%described in the literature~\cite{yeh} and %that 
-%have been successfully 
-%used in previous \dwords{asic}.
-%
-%The infrastructure requirements for a \dword{cryo} \dword{asic}-based 
-%system are similar to those of the baseline option. However, in most 
-%cases, somewhat fewer resources are needed.
-%\begin{itemize}
-%\item{A single voltage is needed for the power supply. This is used to 
-%generate two supply voltages using internal voltage regulators.}
-%\item{The warm interface is different. \dword{cryo} operates with
-%a \SI{56}{MHz} clock, does not require a fast command, and uses
-%the \dword{saci}~\cite{SACI} protocol for configuration rather than \dword{i2c}.}
-%\end{itemize}
-%
-%The first iteration of the \dword{cryo} \dword{asic} design was 
-%submitted to MOSIS~\footnote{MOSIS\texttrademark{}, \url{https://www.mosis.com/}.} for fabrication in November 2018.  
-%The first prototypes were delivered at the end of January 2019. Simulation-based 
-%studies have already been performed; at \SI{0.8}{\micro\second} peaking 
-%time and an input capacitance of \SI{200}{pF} (similar to that expected 
-%in the \dword{spmod}), the noise level is approximately 
-%\num{500}\,e$^-$, similar to that expected with the 
-%baseline \dword{fe} and \dword{adc} \dword{asic} design in \dword{lar} 
-%with the same input capacitance.  The prototypes will first be tested in an existing 
-%test stand at \dword{slac}. Subsequent tests are planned for a small test 
-%\dword{tpc} at \dword{fermilab} and on an \dword{apa} in the \dword{pdsp} 
-%cold box; these test facilities are described in 
-%Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
+The \dword{slac} \dword{cryo} \dword{asic} differs from the baseline three-chip 
+design by combining the functions of an analog preamplifier, \dword{adc}, and 
+data serialization along with transmission for \num{64} wire channels into a single 
+chip. It is based on a design developed for the \dword{nexo} experiment~\cite{nEXO} 
+and differs from it only in the design of the preamplifier, which is modified for 
+the higher capacitance of the \dword{dune} \dword{spmod} wires compared to the small 
+pads of \dword{nexo}. The \dwords{femb} constructed using this chip would use only 
+two \dwords{asic}, compared to the \num{18} (eight \dword{fe}, eight \dword{adc} and 
+two \dword{coldata}) needed in the baseline design. This drastic reduction in 
+part count may significantly improve \dword{femb} reliability, reduce power 
+(\SI{40}{mW} per channel), and reduce costs related to production and testing.
 
-
-%%%%%%%%%%%%%%%%%%%%
-%%%%% NEW TEXT %%%%%
-%%%%%%%%%%%%%%%%%%%%
-
-The \dword{slac} \dword{cryo} \dword{asic} differs from the baseline three-chip design by combining the functions of an analog preamplifier, \dword{adc}, and data serialization along with transmission for 64 wire channels into a single chip. It is based on a design developed for the \dword{nexo} experiment~\cite{nEXO} and differs from it only in the design of the preamplifier, which is modified for the higher capacitance of the \dword{dune} \dword{spmod} wires compared to the small pads of \dword{nexo}. The \dwords{femb} constructed using this chip would use only two \dwords{asic}, compared to the 18 (eight \dword{fe}, eight \dword{adc} and two \dword{coldata}) needed in the baseline design. This drastic reduction in part count may significantly improve \dword{femb} reliability, reduce power (\SI{40}{mW} per channel), and reduce costs related to production and testing.
-
-Figure~\ref{fig:cryo-schematic} shows the overall architecture of the \dword{cryo} \dword{asic}, which is implemented in 130 nm \dword{cmos}. It comprises two identical 32-channel blocks (banks) and a common section providing biasing voltages and currents plus the controls signals, the clocks generation and the configuration of the registers.
+Figure~\ref{fig:cryo-schematic} shows the overall architecture of the 
+\dword{cryo} \dword{asic}, which is implemented in \SI{130}{nm} \dword{cmos}. 
+It comprises two identical 32-channel blocks (banks) and a common section
+providing biasing voltages and currents plus the controls signals, the clocks 
+generation and the configuration of the registers.
 
 \begin{dunefigure}
 [Overall architecture of the \dword{cryo} \dword{asic}.]
@@ -1061,44 +1014,83 @@ Figure~\ref{fig:cryo-schematic} shows the overall architecture of the \dword{cry
 \includegraphics[width=0.9\textwidth]{sp-tpcelec-cryo-schematic.png}
 \end{dunefigure}
 
-The current signal from each wire is amplified using a preamplifier with pole zero cancellation~\cite{DeGeronimo:2011zz} and an anti-alias fifth-order Bessel filter (Fig.\ref{fig:cryo-FE}). Provisions are also made for injection of test pulses. Gain and peaking time are adjustable to values similar to those of the baseline design. 
+The current signal from each wire is amplified using a preamplifier with pole 
+zero cancellation~\cite{DeGeronimo:2011zz} and an anti-alias fifth-order 
+Bessel filter (Fig.\ref{fig:cryo-FE}). Provisions are also made for injection 
+of test pulses. Gain and peaking time are adjustable to values similar to 
+those of the baseline design. 
 
 \begin{dunefigure}
 [\dword{cryo} front-end section architecture and typical front-end response.]
 {fig:cryo-FE}
 {\dword{cryo} front-end section architecture (left); typical response of the \dword{cryo} front-end (right).}
 \includegraphics[width=.54\textwidth]{sp-tpcelec-cryo-feschematic.png}
-\includegraphics[width=.45\textwidth]{sp-tpcelec-cryo-filter.png}
+\includegraphics[width=.45\textwidth,trim={0 5.5cm 6.5cm 3cm},clip]{sp-tpcelec-cryo-filter.pdf}
 \end{dunefigure}
 
-The four programmable gain settings 6X, 3X, 1.5X, and 1X correspond to full scale signals of 320x$\SI{103}{e^{-}}$, 640x$\SI{103}{e^{-}}$, 1280x$\SI{103}{e^{-}}$, and 1920x$\SI{103}{e^{-}}$. A filter with a Bessel shape has been chosen because of its flat group delay characteristic which minimize waveform distortion as well as providing noise shaping performance similar to more classic semi-gaussian shaper implementations. The four programmable peaking times of the filter range from $\SI{0.6}{{\mu}s}$, $\SI{1.2}{{\mu}s}$, $\SI{2.4}{{\mu}s}$, and $\SI{3.6}{{\mu}s}$, corresponding to filter bandwidths equivalent to the ones used in the baseline solution. Similarly to the baseline design the channel provides the possibility to set the baseline for operation with either the collection or the induction wires. Baseline level can be set and trimmed independently in each single channel. Channel outputs can be connected one-at-a-time to an analog monitor to probe the analog signal.
+The four programmable gain settings 6X, 3X, 1.5X, and 1X correspond to full scale signals of 
+$\SI{3.2e5}{e^{-}}$, $\SI{6.4e5}{e^{-}}$, $\SI{1.28e6}{e^{-}}$, and $\SI{1.92e6}{e^{-}}$. A 
+filter with a Bessel shape has been chosen because of its flat group delay characteristic 
+which minimize waveform distortion as well as providing noise shaping performance similar 
+to more classic semi-gaussian shaper implementations. The four programmable peaking times 
+of the filter range from $\SI{0.6}{{\mu}s}$, $\SI{1.2}{{\mu}s}$, $\SI{2.4}{{\mu}s}$, 
+and $\SI{3.6}{{\mu}s}$, corresponding to filter bandwidths equivalent to the ones used in 
+the baseline solution. Similarly to the baseline design the channel provides the possibility 
+to set the baseline for operation with either the collection or the induction wires. 
+Baseline level can be set and trimmed independently in each single channel. Channel 
+outputs can be connected one-at-a-time to an analog monitor to probe the analog signal.
 
-Four input channels are multiplexed onto a single fully differential 12 bit \SI{8}{MSPS} \dword{adc}. Signals from the four channels are concurrently sampled onto a Sample and Hold stage. An \dword{adc} driver after the multiplexer performs the single-ended to differential conversion. The \dword{adc} has a SAR architecture (Figure~\ref{fig:cryo-ADC}) with a split cap DAC based on VCM switching~\cite{5482529}, and has the option to be calibrated for offset compensation.
+Four input channels are multiplexed onto a single fully differential 12 bit \SI{8}{MSPS} 
+\dword{adc}. Signals from the four channels are concurrently sampled onto a Sample and Hold 
+stage. An \dword{adc} driver after the multiplexer performs the single-ended to differential 
+conversion. The \dword{adc} has a pure \dword{sar} architecture (Figure~\ref{fig:cryo-ADC}) with a split 
+cap \dword{dac} based on V$_cm$ switching~\cite{5482529}, and has the option to be 
+calibrated for offset compensation.
 
 \begin{dunefigure}
 [\dword{cryo} \dword{adc} architecture.]
 {fig:cryo-ADC}
 {\dword{cryo} \dword{adc} architecture.}
-\includegraphics[width=.75\textwidth]{sp-tpcelec-cryo-adcschematic.png}
+\includegraphics[width=.9\textwidth]{sp-tpcelec-cryo-adcschematic.pdf}
 \end{dunefigure}
 
 External signals can be routed to the input of each single \dword{adc} allowing standalone characterization.
 
-The data serialization and transmission block uses a custom 12b/14b encoder, so 32 channels of 12-bit, \SI{2}{MSPS} data can be transmitted with a digital bandwidth of only \SI{896}{Mbps}, which is significantly lower than the required bandwidth of the baseline, which is \SI{1.28}{Gbps}.
+The data serialization and transmission block uses a custom 12b/14b encoder, so 32 channels 
+of 12-bit, \SI{2}{MSPS} data can be transmitted with a digital bandwidth of only \SI{896}{Mbps}, 
+which is significantly lower than the required bandwidth of the baseline, which is \SI{1.28}{Gbps}.
 
-One key concern with mixed signal \dwords{asic} is the possibility of interference from the digital side causing noise on the very sensitive preamplifier. To avoid this interference, the \dword{cryo} design uses well established techniques for isolating the substrate; these are described in the literature~\cite{yeh} and have been successfully used in previous \dwords{asic}. Furthermore power domains of the various sections of the \dwords{asic} are isolated using multiple internal Low Drop-Out regulators (LDOs).
+One key concern with mixed signal \dwords{asic} is the possibility of interference from the 
+digital side causing noise on the very sensitive preamplifier. To avoid this interference, 
+the \dword{cryo} design uses well established techniques for isolating the substrate;
+these are described in the literature~\cite{yeh} and have been successfully used in previous i
+\dwords{asic}. Furthermore power domains of the various sections of the \dwords{asic} are 
+isolated using multiple internal \dwords{ldo}.
 
-For reliability purposes the analog section of the \dword{asic} using thick oxide devices is biased at 2V (20\% less than nominal voltage) and does not use minimum length devices. The digital section of the \dword{asic} uses instead core devices biased at 1V (again 20\% less than nominal voltage).
+For reliability purposes the analog section of the \dword{asic} using thick oxide devices 
+is biased at 2V (20\% less than nominal voltage) and does not use minimum length devices.
+The digital section of the \dword{asic} uses instead core devices biased at 1V (again 20\% 
+less than nominal voltage).
 
-The infrastructure requirements for a \dword{cryo} \dword{asic}-based system are similar to those of the baseline option.  However, in most cases, somewhat fewer resources are needed; for instance:
+The infrastructure requirements for a \dword{cryo} \dword{asic}-based system are similar 
+to those of the baseline option. However, in most cases, somewhat fewer resources are 
+needed; for instance:
 \begin{itemize}
-\item A single voltage is needed for the power supply. This is used to generate the two supply voltages using internal voltage regulators.
-\item The warm interface is different. \dword{cryo} operates in synchronous with a \SI{56}{MHz} clock, does not require a fast command, and uses the SACI~\cite{SACI} protocol for configuration rather than \dword{i2c}.
+\item A single voltage is needed for the power supply. This is used to generate the two 
+supply voltages using internal voltage regulators.
+\item The warm interface is different. \dword{cryo} operates in synchronous 
+with a \SI{56}{MHz} clock, does not require a fast command, and uses the 
+SACI~\cite{SACI} protocol for configuration rather than \dword{i2c}.
 \end{itemize}
 
-Simulation-based studies have been performed; at $\SI{1.2}{{\mu}s}$ peaking time and an input capacitance of \SI{220}{pF} (similar to that expected in the SP module), the noise level is approximately $\SI{500}{e^{-}}$, similar to that expected with the baseline \dword{fe} and \dword{adc} \dword{asic} design in LAr with the same input capacitance.
+Simulation-based studies have been performed; at $\SI{1.2}{{\mu}s}$ peaking time and an 
+input capacitance of \SI{220}{pF} (similar to that expected in the \dword{spmod}), the noise 
+level is approximately $\SI{500}{e^{-}}$, similar to that expected with the baseline 
+\dword{fe} and \dword{adc} \dword{asic} design in LAr with the same input capacitance.
 
-The first iteration of the \dword{cryo} \dword{asic} design (see Figure~\ref{fig:cryo-photos}) was submitted to MOSIS for fabrication in November 2018. The first prototypes were delivered at the end of January 2019.
+The first iteration of the \dword{cryo} \dword{asic} design (see Figure~\ref{fig:cryo-photos}) 
+was submitted to MOSIS for fabrication in November 2018. The first prototypes were 
+delivered at the end of January 2019.
 
 \begin{dunefigure}
 [Photos of \dword{cryo} \dword{asic} prototype.]
@@ -1109,9 +1101,19 @@ The first iteration of the \dword{cryo} \dword{asic} design (see Figure~\ref{fig
 \includegraphics[width=.4075\textwidth]{sp-tpcelec-cryo-cryophoto.png}
 \end{dunefigure}
 
-The prototypes are under test in an existing test stand at \dword{slac} and a cryostat developed at Michigan State University. Subsequent tests are planned for a small test TPC at Fermilab and on an APA in the \dword{pdsp} cold box; these test facilities are described in Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
+The prototypes are under test in an existing test stand at \dword{slac} using the \dword{cts}
+described in Section~\ref{sec:fdsp-tpcelec-qa-initial}. Subsequent system tests are planned 
+using the facilities described in Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
 
-The first prototype of the \dword{asic} is functional at both room temperature and liquid nitrogen temperature. In particular all the key blocks have been verified. Configuration of all the 64 channel registers (13 bits each) and the 17 (16-bit) global registers has been verified. Optimization of the register values at room temperature and cold is ongoing. Initialization procedures for the \dword{asic} power up have been established. Operation of the on chip LDOs has been verified and expected supply levels are stable across temperature. Injected pulses on the frontend channels are visible on the analog monitor (Figure~\ref{fig:cryo-FEresponse}) as well as they are digitized with the internal \dwords{adc}.
+The first prototype of the \dword{asic} is functional at both room temperature and \lntwo 
+temperature. In particular all the key blocks have been verified. Configuration of all the 
+64 channel registers (13 bits each) and the 17 (16-bit) global registers has been 
+verified. Optimization of the register values at room temperature and cold is 
+ongoing. Initialization procedures for the \dword{asic} power up have been established. 
+Operation of the on-chip \dwords{ldo} has been verified and expected supply levels are 
+stable across temperature. Injected pulses on the frontend channels are visible on 
+the analog monitor (Figure~\ref{fig:cryo-FEresponse}) as well as they are digitized 
+with the internal \dwords{adc}.
 
 \begin{dunefigure}
 [\dword{cryo} \dword{asic} front-end response at liquid nitrogen temperature.]
@@ -1120,18 +1122,31 @@ The first prototype of the \dword{asic} is functional at both room temperature a
 \includegraphics[width=.65\textwidth]{sp-tpcelec-cryo-pulses.png}
 \end{dunefigure}
 
-Encoded data are transmitted and correctly decoded in the external FPGA. Figure~\ref{fig:cryo-analogmon} shows an example of a pulse injected in a channel visible on both the analog monitor as well as in the data acquired by the \dword{asic}. Data are acquired at liquid nitrogen temperature at the nominal $\sim$\SI{2}{MSPS} rate.
+Encoded data are transmitted and correctly decoded in the external \dword{fpga}. 
+Figure~\ref{fig:cryo-analogmon} shows an example of a pulse injected in a channel 
+visible on both the analog monitor as well as in the data acquired by the \dword{asic}. 
+Data are acquired at \lntwo temperature at the nominal $\sim$\SI{2}{MSPS} rate.
 
 \begin{dunefigure}
 [Example of a pulse injected in a \dword{cryo} \dword{asic} channel]
 {fig:cryo-analogmon}
 {Example of a pulse injected in a \dword{cryo} \dword{asic} channel, visible on both the analog monitor and in the output data.}
-\includegraphics[width=.99\textwidth]{sp-tpcelec-cryo-analogmonitor.png}
+\includegraphics[width=.99\textwidth,trim={1cm 4cm 3cm 3cm},clip]{sp-tpcelec-cryo-analogmonitor.pdf}
 \end{dunefigure}
 
-From the functional point of view, a single unexpected behavior has been identified in the digital multiplexer that is used at the input of the encoders. The latches at the input of the multiplexer show poor driving capability resulting in a presence of a ghost from a previously multiplexed channel. The effect is not present on the first 12 channels of each block which show expected behavior. The effect has been understood replicated in simulation and a trivial fix has been implemented for the next version of the \dword{asic}.
+From the functional point of view, a single unexpected behavior has been identified 
+in the digital multiplexer that is used at the input of the encoders. The latches
+at the input of the multiplexer show poor driving capability resulting in a presence
+of a ghost from a previously multiplexed channel. The effect is not present on the 
+first 12 channels of each block which show expected behavior. The effect has been
+understood replicated in simulation and a trivial fix has been implemented for 
+the next version of the \dword{asic}.
 
-Performance characterization will begin as soon as the optimal bias configuration of the various block is completed. 
+Performance characterization will begin as soon as the optimal bias configuration of 
+the various block is completed. 
+
+\forlbnc{Additional results on the performance of CRYO will be added prior to the
+final submission of the TDR in July.}
 
 %%%%%%%%%%%%%%%%%%
 \subsubsection{Procedure and Timeline for \dword{asic} Selection}
@@ -1140,27 +1155,44 @@ Performance characterization will begin as soon as the optimal bias configuratio
 We are currently pursuing two different \dword{asic} designs and 
 planning on qualifying the \dword{cots} \dword{adc} solution that 
 will be used for the \dword{sbnd} experiment.
-we plan to continue developing both the three-\dword{asic} 
+We plan to continue developing both the three-\dword{asic} 
 solution and the \dword{cryo} \dword{asic} for at least a second 
 iteration before deciding which \dword{asic} solution to 
-implement in the \dword{dune} \dword{spmod}. This assumes that 
-the \dwords{femb} populated with the first set of prototypes of 
-the two kinds of \dwords{asic}, expected to become available in 
-spring 2019, demonstrate a performance at least similar to that 
+implement in the \dword{dune} \dword{spmod}. This plan requires
+that multiple flavors of the \dword{femb} are also designed 
+and tested. The \dwords{femb} populated with the first set of prototypes of 
+the two kinds of \dwords{asic} will be available in early summer 2019 
+and are expected to have a performance at least similar to that 
 of the boards used for \dword{pdsp}. We plan to review the results 
 of the system tests and of the component lifetimes discussed 
 in Section~\ref{sec:fdsp-tpcelec-qa} in fall 2019. 
 In that review, we will also decide whether to change anything on 
 the list of specifications for the \dwords{asic} and to further develop
 the two custom \dword{asic} solutions, including fixing any 
-issues found during the tests of the first version.  of the \dwords{asic}. 
+issues found during the tests of the first version of the \dwords{asic}. 
 We expect that the subsequent iteration
 of the design, fabrication, and testing of the \dwords{asic} and
 \dwords{femb} will take an additional twelve months. At the end 
 of this process, when results from standalone tests of the
 \dwords{asic} and system tests of the \dwords{femb} are
 available, we should be in position to decide which \dword{asic}
-solution to adopt.
+solution to adopt. We are assuming that the second iteration of
+the \dwords{asic} design will meet all the \dword{dune} requirements.
+The schedule for the construction of the \dword{dune} \dword{spmod}
+currently has between eight and fourteen months of float for the
+\dwords{asic} and \dwords{femb}, which would allow for a third 
+design iteration, in case that would be needed, as discussed
+in Section~\ref{sec:fdsp-tpcelec-management-planning}. This does
+not apply for the second run of \dword{pdsp} (discussed
+later in Section~\ref{sec:fdsp-tpcelec-qa-facilities-pdune}).
+Ideally for the second run of \dword{pdsp} the \dwords{asic}
+from the engineering run would be used, but this is not compatible
+with the currently planned date for the installation of the \dwords{femb}
+on the \dwords{apa}. In order to meet the current goal for the starting
+date of the second run of \dword{pdsp}, \dwords{asic} from the
+second round of prototyping would have to be used. In case a
+third round of prototypes is necessary, the second run of 
+\dword{pdsp} would have to be delayed by one year.
 
 The selection of the \dword{asic}(s) to be used for the
 construction of the \dword{sp} \dword{detmodule} will be
@@ -1169,12 +1201,13 @@ criteria, as well as consideration of the costs and
 resources required during the construction and testing
 of the \dwords{femb}. We have not yet decided what weight 
 to assign to these criteria. Reliability would in principle favor
-favor the single-\dword{asic} solution that requires 
+the single-\dword{asic} solution that requires 
 \dwords{femb} with fewer connections, while power 
-density considerations could less favorable to \dword{cryo}.
+density considerations could be less favorable to \dword{cryo}.
 We plan to charge a committee to draft a series of recommendations 
-on the \dword{asic} selection in fall
-2019. These recommendations could also inform the second cycle of design for
+on the \dword{asic} selection in fall 2019, at least one year
+ahead of the expected decision date. These recommendations could 
+also inform the second cycle of design for
 \dwords{asic} and \dwords{femb}. Once the second cycle of design
 and testing is complete, these recommendations will be used by the
 committee charged with the final design review to suggest a
@@ -1201,7 +1234,8 @@ form inside
 the \dword{ce} box, they must get %these should be 
 channeled through the two side
 \dword{apa} frames, from where they would reach the top of the cryostat.
-A test setup is being prepared at \dword{bnl} to measure the
+As already discussed in Section~\ref{sec:fdsp-tpcelec-overview-requirements},
+a test setup is being prepared at \dword{bnl} to measure the
 maximum power that can be dissipated in \dword{lar} at a
 depth equivalent to those of the \dwords{femb} installed on
 the bottom \dword{apa}. Together with measurements of the
@@ -1294,111 +1328,136 @@ from the signal flange to the \dword{femb} and stream the $\sim$\SI{1}{Gbps}
 high-speed data from the \dword{femb} to the signal flange. Each 
 \dword{femb} connects to a signal flange via one data cable bundle, 
 leading to \num{20} bundles between one \dword{apa} and one flange. 
-Based on the existing \dword{pdsp} data bundle, containing \num{12} 
-low-skew shielded twin-axial cables, the following differential signals
-can be transmitted between the \dword{wib} and the \dword{femb}:
+For the baseline \dwords{asic} configuration \num{10} low-skew shielded 
+twin-axial cables are required to transmit the following differential signals
+between the \dword{wib} and the \dword{femb}:
 \begin{itemize}
 \item four \SI{1.28}{Gbps} data (two from each \dword{coldata});
 \item two \SI{64}{MHz} clocks (one input to each \dword{coldata});
-\item two fast command lines (one input to each \dword{coldata});
-\item three \dword{i2c}-like control lines (clock, data-in, and data-out); and
-\item one multipurpose \dword{larasic} output (temperature, 
-reference voltage, or analog test output).
+\item one fast command line (shared between the two \dword{coldata} \dwords{asic});
+\item three \dword{i2c}-like control lines (clock, data-in, and data-out).
 \end{itemize}
-For the \dword{dune} \dword{spmod} the total number of data and control cables could be 
-reduced by doubling the data transmission speed to \SI{2.56}{Gbps}
-and having only one link for each \dword{coldata} and/or by
-sharing the clock and fast command lines between the two 
-\dword{coldata} \dwords{asic}. This would reduce the number
-of data and control cables to either ten or eight. In the
-case of the \dword{cryo}, four cables are required to transmit
-the data at \SI{896}{Mbps}, five cables are required for the
-\dword{saci} protocol (three shared and one for each \dword{asic}
-on the \dword{femb}), and in the current \dword{femb} prototype, 
-two cables are used to transmit copies of the same \SI{56}{MHz}
-clock. It is also possible in this case to reduce the 
-number of data and control cables by %either 
-doubling the data transmission 
-speed, %or by 
-sharing the clock(s) between the two \dword{cryo} \dwords{asic}
-on the \dword{femb}, or %by doing 
-both.
+As discussed later, this number of connections is compatible with routing
+the cables bringing the power and transmitting the data and controls for
+the lower \dword{apa} through the \dword{apa} frame. We are making the
+assumption that the fast command line can be shared between the two 
+\dword{coldata} \dwords{asic}, but will also consider other possibilities,
+like sharing the \SI{64}{MHZ} clock between the two \dwords{asic} or
+increasing the data transmission speed to \SI{2.56}{Gbps}, thereby
+reducing the number of data transmission lines to two for each \dword{femb}.
 
-The \dword{lv} power is passed from the signal flange to the 
-\dword{femb} by bundles of \num{20}AWG twisted-pair wires, with half of
+The \dword{lv} power is passed from the signal flange to the
+\dword{femb} by bundles of \SI{20}{AWG} twisted-pair wires, with half of
 the wires serving as power feeds and the other half as returns.
-For a single \dword{femb}, the resistance between \dword{femb} ground
-and the feedthrough ground is measured to be 
-$<\SI{30}{\milli\ohm}$ at room temperature ($<\SI{10}{\milli\ohm}$ 
-at \dword{lar} temperature) for cables with a length of \SI{9}{m}. 
-The total cross section of all the power return wires for one
-\dword{apa} is approximately \SI{80}{mm$^2$}, corresponding to a
-resistance <\SI{1.5}{\milli\ohm} at room temperature or 
-$<\SI{0.5}{\milli\ohm}$ at \dword{lar} temperature for the
-\SI{9}{m} cables.
-In the \dword{pdsp} design, %there is 
-a total of nine 
-twisted-pair wires %that are used to 
-bring power to the
-\dwords{femb}, with four pairs of wires going to the analog
-motherboard and five pairs connected to the mezzanine containing
-the \dword{fpga}. Two pairs of wires (one for the motherboard,
-and one for the mezzanine) %are used to 
-provide a very low
-current to the bias line of the \dword{lv} regulators 
-(\SI{0.01}{A} at \SI{5}{V}). Six pairs of wires at %provide 
-various voltages %that are used to 
-provide power through the
-\dword{lv} regulators to the \dword{larasic} and the \dword{adc}
-on the motherboard, and to the \dword{fpga} on the mezzanine.
-The final wire pair is available for sending pulses to the
-\dword{femb}. %It is hard to plan the exact number of 
-%power connections required for \dword{dune}, since 
-Measurements 
-of power consumption for the new \dwords{asic} (\dword{coldadc}, 
-\dword{coldata}, and \dword{cryo}) are not yet available.  It is conceivable that we can  reduce the number of twisted-pair
-wires from %will be reduced from the current number of 
-nine %down 
-to at most seven, simply by removing the pair
-reserved for sending pulses to the \dword{femb} and %by
-%having a single line 
-providing power to the bias
-line of the \dword{lv} regulators using a single line, 
-because all the \dwords{asic} will probably fit on a single board.  
-%In the case that the \dword{cryo} is used the reduction
-%could be even larger, 
-Use of the \dword{cryo} would allow an even larger reduction, %as 
-since the \dword{femb} may not need \dword{lv} regulators. 
+Using the measured power consumption for \dword{larasic} and \dword{coldadc}
+and the estimates for \dword{coldata} the total power required to
+operate each \dword{femb} is estimated as \SI{6}{W} (\SI{2.4}{A}
+and \SI{2.5}{V}), including the power dissipated in the linear voltage
+regulators. This assumes that linear voltage regulators are
+used on the \dword{femb} to reduce the \SI{2.5}{V} provided by the
+\dword{wib} down to the various voltages required by the three
+\dwords{asic}:
+\begin{itemize}
+\item \SI{1.8}{V} for \dword{larasic}, and
+\item \SI{2.25}{V} and \SI{1.1}{V} for \dword{coldadc} and \dword{coldata}.
+\end{itemize}
+We currently assume that only \SI{2.5}{V} will be provided by the 
+\dword{wib}, since the largest fraction of the power required by
+the \dword{femb} is at \SI{2.25}{V}. We are currently planning on using 
+a total of eight \num{20}AWG twisted-pair wires, seven of which will be used
+for bringing the \SI{2.25}{V} to the \dword{femb}, with the eighth
+one reserved for the \SI{5}{V} bias for the linear voltage regulators
+(this connection carries a very low current). With this cable plant the
+resistance of the cable bundle is $\SI{41}{mi\milli\ohm}$ for the upper 
+\dword{apa} (\SI{9}{m} cable length) and $\SI{101}{\milli\ohm}$ for
+the lower \dword{apa} (\SI{22}{m} cable length). To account for the
+voltage drop along the wires and the returns, the \dword{wib} needs to
+provide (operation in warm) \SI{2.7}{V} and \SI{3.0}{V} for the upper
+and lower \dwords{apa}, respectively. For one \dword{femb} the power
+dissipated in the cables is \SI{0.2}{W} and \SI{0.5}{W} for the upper
+and lower \dwords{apa}, respectively. The figures for the power 
+dissipated in the cables are reduced by two thirds for operation
+in \dword{lar}, which allows for a reduction of the voltage 
+provided by the \dword{wib}. The size of the cable bundles planned
+for \dword{dune} represents a small reduction compared to that used
+for \dword{pdsp}, where bundles of nice \num{20}AWG twisted-pair wires
+were used. Overall the total resistance of the power return wires
+are \SI{2}{\milli\ohm} and \SI{5}{\milli\ohm} for the upper and
+lower \dword{apa}, respectively, numbers that are reduced by 
+a factor three for operation in \dword{lar}. The total power 
+dissipated inside the power cables (few W at \dword{lar} temperature)
+is small compared to the total power dissipaged in the \dwords{femb},
+\SI{240}{W}.
 
 The cable plant for one \dword{apa} in the \dword{lar} includes
-also the cables that provides the bias voltages applied to the $X$-, $U$-, and $G$-plane 
-wire layers, three \dword{fc} terminations, and an electron diverter, 
-as shown in Figure~\ref{fig:CR-board}. The voltages are supplied 
-through eight \dword{shv} connectors mounted on the signal flange. 
-RG-316 coaxial cables carry the voltages from the signal flange to 
-a patch panel \dword{pcb} that includes noise filtering mounted on the top 
-end of the \dword{apa}. From there, wire bias voltages are carried by single wires to 
-various points on the \dword{apa} frame, including the \dword{cr} 
-boards, a small \dword{pcb} mounted on or near the patch panel that 
-houses a noise filter and termination circuits for the \dword{fc}  
-voltages, and a small mounted board near the electron diverter 
+also the cables that provides the bias voltages applied to the $X$-, $U$-, and $G$-plane
+wire layers, three \dword{fc} terminations, and an electron diverter,
+as shown in Figure~\ref{fig:CR-board}. The voltages are supplied
+through eight \dword{shv} connectors mounted on the signal flange.
+RG-316 coaxial cables carry the voltages from the signal flange to
+a patch panel \dword{pcb} that includes noise filtering mounted on the top
+end of the \dword{apa}. From there, wire bias voltages are carried by single wires to
+various points on the \dword{apa} frame, including the \dword{cr}
+boards, a small \dword{pcb} mounted on or near the patch panel that
+houses a noise filter and termination circuits for the \dword{fc}
+voltages, and a small mounted board near the electron diverter
 that also houses wire bias voltage filters.
 
 In Sections~\ref{sec:fdsp-apa-intfc-cables} and \ref{sec:fdsp-tpcelec-interfaces-apa}
-we discuss the problem of routing the cold cables (data and control, power, and 
+we discuss the problem of routing the cold cables (data and control, power, and
 bias voltages) for the bottom \dword{apa} through the frames of both
 the top and bottom \dword{apa}s. Routing tests were initially performed
-with the \dword{pdsp} cable bundles, and even after increasing 
-the cross section of the side tubes from $\num{3}\times\SI{3}{in^2}$ 
+with the \dword{pdsp} cable bundles, and even after increasing
+the cross section of the side tubes from $\num{3}\times\SI{3}{in^2}$
 to $\num{4}\times\SI{4}{in^2}$, routing was difficult. After understanding that we
-could reduce the number of cables, we ran a second set of tests with fewer sets 
-of cables (nine rather than ten sets of 12 data and control cables, nine rather than 
+could reduce the number of cables, we ran a second set of tests with fewer sets
+of cables (nine rather than ten sets of 12 data and control cables, nine rather than
 ten sets of nine twisted-pair wires for power, and eight bias voltage cables, as before).
 This insertion test was successful, once
-a \SI{2.5}{in} diameter conduit was inserted inside the 
+a \SI{2.5}{in} diameter conduit was inserted inside the
 \dword{apa} frame to present a uniform cross section to
 the cables and the cables were restrained with a mesh. We expect that it will be possible
 to route the cold cables through the \dword{apa} frame.
+
+The cable plant discussed above in the case that the three \dword{asic}
+solution is chosen can be used also for \dwords{femb} populated with the
+\dword{cryo} \dword{asic}. In that case the power requirements are 
+reduced (\SI{5}{W} at \SI{2.5}{V}), and the internal \dwords{ldo} do
+not require an external bias line. Six of the eight \num{20}{AWG} twisted-pair
+wires could be used to bring the low voltage power to the \dword{femb},
+while the remaining two could be used to sense the voltage on the \dword{femb}.
+This configuraiton would entail a small increase ($\sim14$\%) of the 
+total resistance seen on the return wires. The low-skew shielded
+twin-axial cables are required to transmit the following differential signals
+between the \dword{wib} and the \dword{femb}:
+\begin{itemize}
+\item four \SI{896}{Mbps} data (two from each \dword{cryo});
+\item two \SI{56}{MHz} clock signals (one for each \dword{cryo}); and
+\item four shared \dword{saci} signals.
+\end{itemize}
+In the current design of \dword{cryo} a total of five \dword{saci} signals
+are required: three of them are shared between the two \dword{asic} on the
+\dword{femb}, and two separate ones are required to send commands to the
+two \dword{cryo} \dwords{asic}. We are planning to implement internal 
+addresses in a future version of \dword{cryo}, such that the two \dwords{asic}
+can share the command line.
+
+The proposed cable plant is also compatible with the use of the \dword{cots}
+\dword{adc}. The current design of the \dword{sbnd} \dword{femb} uses 
+twelve low-skew shielded twin-axial cables, instead of ten, but some of
+the signals are not used. The low voltage power is transmitted with a 
+bundle of nine \num{20}{AWG} twisted-pair wires, but two of them are
+used for the bias of the linear voltage regulators, which requires very
+little current.
+
+In all possible configurations of the \dword{femb} it is very likely that
+the cable plant required to bring the low voltage power and the controls
+to the \dwords{femb} and to read out the data from the \dwords{femb} is
+compatible with the option of routing the cables through the \dword{apa}
+frame. This however does not leave much room for building redundancy in
+the system. The cable connections need to be extremely reliable, since
+the loss of one connection could result in an entire \dword{femb} being
+unresponsive.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Warm Interface Electronics}
@@ -1559,12 +1618,10 @@ Section~\ref{sec:fdsp-tpcelec-overview-requirements}. This requires
 that the \dword{tpc} electronics be synchronized to a level of a few ns, which is
 much smaller than the time difference between two charge samples.
 This level of synchronization between the sampling time of different
-\dwords{femb} contributes negligibly %gives a negligible contribution 
-to the expected
-resolution % of the measurement 
+\dwords{femb} contributes negligibly to the expected resolution % 
 of the reconstructed space points measurement,
 both in the \dword{apa} plane and along the drift distance.
-The timing distribution and synchronization system for the %\dword{dune} 
+The timing distribution and synchronization system for the 
 \dword{spmod} is described in Section~\ref{sec:sp-daq:design-timing}.
 Each \dword{wiec} has a bidirectional optical connection with the
 timing system in the \dword{ptc}. Inside the \dword{ptc} the optical
@@ -1572,54 +1629,49 @@ signal from the timing system is converted, as discussed in the previous
 section, to an electrical signal and distributed via the backplane to
 the \dwords{wib} that constitute an endpoint for the timing distribution
 system. Each \dword{wib} contains a standalone jitter-reducing \dword{pll} 
-that %is used to 
-forwards the clock to all the \dwords{femb}. The
+that forwards the clock to all the \dwords{femb}. The
 \dword{fpga} contained inside the \dword{wib} implements the 
-protocol~\cite{bib:docdb1651,bib:docdb11233}% that is needed 
-for aligning
+protocol~\cite{bib:docdb1651,bib:docdb11233} for aligning
 the phase of the clock at the endpoint of the distribution tree.
 
 The timing distribution and synchronization system ensures that
-all the \dwords{wib} are synchronized to within $\sim\SI{3}{ns}$. %For
-The synchronization of the \dword{pdsp} \dwords{femb} relies on
-the fact that all the cables connecting the \dwords{wib} to the
+all the \dwords{wib} are synchronized to within $\sim\SI{3}{ns}$. 
+One possible way of synchronizing the \dwords{femb} is the one
+that was used in \dword{pdsp}, which relies on the fact that 
+that all the cables connecting the \dwords{wib} to the
 \dwords{femb} have approximately the same length (a length 
 difference of \SI{0.5}{m} corresponds to a difference in the
-sampling time of \SI{2.5}{ns}). We could use the same approach %could also be used 
-for the \dword{dune} \dword{spmod}, correcting %inside the \dword{fpga} of the \dword{wib} 
-for the top-bottom \dword{apa} cable length difference (corresponding to $\sim\,\SI{65}{ns}$) %in length between the cables for top and bottom \dword{apa}s
-inside the \dword{fpga} of the \dword{wib}.  
-%that corresponds to approximately \SI{30}{ns}. 
-%This time difference could be measured for a sample of short and long cables 
-We could measure the time difference for a sample of short and long cables prior to the installation of the \dwords{femb} on
-the \dwords{apa}. %Using the cable lengths, 
-Synchronizing the \dword{ce} with the \dword{pds} requires one (or two)
+sampling time of \SI{2.5}{ns}). The same approach could be used
+for the \dword{dune} \dword{spmod}, correcting for the top-bottom 
+\dword{apa} cable length difference (corresponding to $\sim\,\SI{65}{ns}$) 
+inside the \dword{fpga} of the \dword{wib}. The exact correction
+factor could be obtained by measuring the time propagation 
+difference for a sample of short and long cables prior to the 
+installation of the \dwords{femb} on the \dwords{apa}. 
+Synchronizing the \dword{ce} with the \dword{pds} requires one
 additional time constants that correspond to the transit 
 time of the Fast Command sent from the \dword{wib} to
 \dword{coldata} and from there to the \dword{coldadc},
 which includes the propagation time along the cables
 (\SI{45}{ns} for the \SI{9}{m} long cables to the top \dword{apa}s
 and \SI{110}{ns} for the \SI{22}{m} long cables to the bottom \dword{apa}s) 
-plus the propagation time inside
-the \dwords{asic}. This overall time constant  %that is ... below 
-can be obtained offline
-from the data, but it represents at most a correction
-of $\mathcal{O}(\SI{150}{\mu m})$ on the position of
-a track along the drift distance.
-We will implement a timer inside the \dword{wib}'s \dword{fpga} 
-and measure the transit time of a command
+plus the propagation time inside the \dwords{asic}. This overall 
+time constant can be obtained offline from the data, but it represents 
+at most a correction of $\mathcal{O}(\SI{150}{\mu m})$ on the 
+position of a track along the drift distance.
+Instead of relying on cable measurements we are also considering
+the addition of a timer inside the \dword{wib}'s \dword{fpga},
+to measure the transit time of a command
 sent to the \dword{femb} and its corresponding return
 message. This study will help us understand whether the 
 relative phases of the \dword{femb}and the \dword{wib} 
 can be aligned more precisely.
 
-%It should be noted that 
-The communication between the
-\dword{wib} and the \dword{daq} backend is asynchronous
-and %that 
-the \num{64}-bit time-stamp is inserted in the data frame
-in the \dword{wib}'s \dword{fpga}. %inside the \dword{wib}. 
-%In the case of 
+The communication between the \dword{wib} and the \dword{daq} 
+backend is asynchronous and the \num{64}-bit time-stamp, that
+is used to indicate the time at which the signal waveform was
+sample~~\ref{sec:sp-daq:design-timing}, is inserted in the data frame
+in the \dword{wib}'s \dword{fpga}. 
 For the three-\dwords{asic} solution, the communication
 from the \dword{femb} to the \dword{wib} is also
 asynchronous and a \num{8}-bit time stamp is sent to
@@ -1630,19 +1682,17 @@ This \num{8}-bit time stamp is used only to ensure
 that the \dword{femb} and the \dword{wib} are
 still in sync. 
 
-%One major difference between 
-In contrast to the three-\dwords{asic} solution, %and 
-in the \dword{cryo}-based \dwords{femb} solution %that
+In contrast to the three-\dwords{asic} solution, 
+in the \dword{cryo}-based \dwords{femb} solution 
 the communication between the \dword{femb} and 
 \dword{wib} is entirely synchronous, using a \SI{56}{MHz} 
 clock. In order to properly align the phase of the
 \dword{adc} sampling for the top and bottom \dword{apa}s,
 appropriate delays must be added to the sampling
-command in the \dword{wib}'s \dword{fpga}. % inside the \dword{wib}.
-%The considerations made above on the overall alignmentof 
+command in the \dword{wib}'s \dword{fpga}. 
 The requirements listed above for synchronizing 
 the \dword{ce} relative to the \dword{pds} remain
-valid for this case. %also for the case of the \dword{cryo}-based \dwords{femb}.
+valid for this case. 
 
 \fixme{Marco: we need to write something about the compatibility
 of CRYO that uses a 56 MHz clock with the planned
@@ -1654,13 +1704,14 @@ of CRYO that uses a 56 MHz clock with the planned
 \label{sec:fdsp-tpcelec-design-services}
 
 A fully-loaded \dword{wib} (one \dword{wib} plus four \dwords{femb}) 
-requires \SI{12}{V} and draws up to approximately \SI{4}{A}.  In 
+requires \SI{12}{V} and draws \SIrange{4.3}{4.7}{A}, including the
+power required by the \dword{fpga} and the optical components (the range 
+covers the difference between upper and lower \dword{apa}, and operation
+at \lntwo and room temperature). In 
 \dword{pdsp} the full electronics for one \dword{apa} (one \dword{ptc}, 
 five \dwords{wib}, and \num{20} \dwords{femb}) requires \SI{12}{V} and 
-draws approximately \SI{20}{A}, for a total power of approximately 
-\SI{240}{W}, as described in Section~\ref{sec:fdsp-tpcelec-design-warm}. 
-The \dword{spmod} implementation should require less power because 
-the \dword{fpga} will be replaced by the \dword{coldata} chips.
+draws \SIrange{22}{24}{A}, for a total power of approximately 
+\SI{240}{W}. 
 
 The \dword{lv} power is delivered at \SI{48}{V} to the \dword{ptc}, 
 so each \dword{lv} power mainframe is chosen to bracket that value; 
@@ -1668,12 +1719,13 @@ each has roughly \numrange{30}{60}{V}, \SI{13.5}{A}, \SI{650}{W}
 maximum capacity per \dword{apa}. Using 10AWG cable, and assuming
 a distance of \SI{20}{m} between the \dword{lv} power supplies 
 that are situated on the detector mezzanine and the most distant
-cryostat penetration for a row of \dword{apa}s, a \SI{0.8}{V} 
-drop should occur along the cable with a required power of 
-$\sim\SI{240}{W}$ out of \SI{650}{W} available, as measured
-in \dword{pdsp}. Three quarters of the power is dissipated in
-the \dwords{femb}, one quarter is dissipated inside the \dword{wiec} 
-that is air-cooled, and only a few watts are dissipated in the cables. 
+cryostat penetration for a row of \dword{apa}s, a voltage
+drop of at most \SI{1}{V} should occur along the cable with a required power of 
+$\SIrange{335}{360}{W}$ out of \SI{650}{W} available.
+At most $\sim\SI{150}{W}$ is dissipated inside the cryostat, and another
+$\sim\SI{200}{W}$ is dissipated inside the \dword{wiec}, that is
+air-cooled, and only a few watts are dissipated in the warm cables
+that are located below the false flooring on top of the cryostat.
 Multiplying by the total number of \dwords{wiec}, less 
 than \SI{1}{kW} of power is dissipated in the cabling system 
 over the entire surface of the cryostat. 
@@ -1682,19 +1734,22 @@ Four wires are used for each \dword{ptc} module; two 10AWG, shielded, twisted-pa
 cables for the power and return; and two 20AWG, shielded, twisted-pair 
 cables for the sense. The primary protection is the over-current 
 protection circuit in the \dword{lv} supply modules, which is set 
-higher than the \SI{20}{A} current draw of the \dword{wiec}. 
+higher than the $\sim\SI{8}{A}$ current draw of the \dword{wiec}. 
 Secondary sense line fusing is provided on the \dword{ptc}.  
 Tests are being performed in \dword{pdsp} to check which is the
-best scheme for connecting the shields of the power cables. Most 
-data was collected with the shield connected to ground on the 
-power supply side, but tests are also planned with the shield
-connected to ground on the \dword{wiec} side, and connected on both sides. %with both connections.
+best scheme for connecting the shields of the power cables. In
+\dword{pdsp} the shield of the warm power cables is connected to
+ground on both the power supply side and on the \dword{ce} flange.
+Other shield connection schemes are being investigated in \dword{pdsp}
+and the connection scheme yielding the lowest read-out noise will be
+used for \dword{dune}.
 
-An additional \SI{18}{V} linear power supply will provide power to the 
-cooling fans for the \dword{wiec}. It will be interlocked to the \SI{48}{V} 
-power supplies, so the \dwords{wib} cannot be powered unless the cooling 
-fans are operating. A \SI{10}{V} power supply will provide power to the four 
-heating elements on each \dword{pd} and \dword{ce} flange.
+Switching power supplies controlled by the slow controls system provide
+power to the heaters (\SI{12}{V}) and the fans (\SI{24}{V}) that are 
+installed on the \dword{ce} flanges. Temperature sensors mounted on the
+flanges, and power consumption and speed controls from the fans are 
+connected to the interlock system that is part of the \dword{ddss}, in
+addition to being monitored by the slow controls system.
 
 Bias voltages for the \dword{apa} wire planes, the electron diverters, 
 and the last \dword{fc} electrodes are generated by supplies that are 
@@ -1738,9 +1793,7 @@ detector are also installed on the detector mezzanine.
 \subsection{ProtoDUNE-SP Results}
 \label{sec:fdsp-tpcelec-overview-pdune}
 
-The \dword{pdsp}% \dword{protodune}-\dword{sp} 
-detector, described 
-in Chapter~\ref{ch:sp-execsum}, is a 700~ton fiducial volume 
+The \dword{pdsp} detector is a 700-ton fiducial volume
 \dword{lartpc} with 15,360 sense wires. 
 The system was deployed in a beamline at the CERN Neutrino Platform 
 in 2018 and continues to take cosmic event data into 2019. The goal of 
@@ -1748,9 +1801,13 @@ the \dword{pdsp} \dword{tpc} readout was to validate the concept
 and the design of the integrated \dword{apa}+\dword{ce} readout 
 and measure the performance of the \dword{tpc} electronics system with components 
 as close as possible to those in the final \dword{dune} \dword{tpc} readout.
-
-\fixme{move the next three paragraphs after the discussion of the detector
-performance}
+In the case of the \dword{tpc} electronics, most of the detector components 
+used in \dword{pdsp} are prototype of the \dword{dune} ones discussed in the 
+previous Sections. The major difference is the \dword{femb}, where an
+early version of \dword{larasic} (P2) is used for the \dword{fe}, followed
+by the first prototype (P1) of an \dword{adc}, implemented in the \SI{130}{nm} 
+technology and using the ``domino'' architecture~\cite{dominoADC}, and by
+a \dword{fpga} that provided the data serialization functionality.
 
 Each of the six \dword{pdsp} \dword{apa}+\dword{ce}
 readout units consists of 2,560 sense wires, of which 960 are \SI{6}{m} 
@@ -1768,7 +1825,7 @@ function of the cold cycle time. At a stable temperature of
 \SI{160}{K} the \dword{enc} for all three wire planes is less than 500~e$^-$.
 
 \begin{dunefigure}
-	[\dword{pdsp} APA \#2 \dword{enc} levels measured in GN$_2$ in the CERN cold box]
+[\dword{pdsp} APA \#2 \dword{enc} levels measured in GN$_2$ in the CERN cold box]
 {fig:apa2-cycle}
 {Left $y$ axis: Noise (in electrons) for U, V, and X (red, blue, and green 
 curves) sense wire planes as a function of time (hours) for the APA \#2 cold 
@@ -1796,24 +1853,21 @@ appeared when the high voltage reached \SI{180}{KV}.}
 
 No further loss of readout channels has occurred since 
 the end of September 2018.
-With the detector operating under nominal %operating 
+With the detector operating under nominal
 conditions, the \dword{enc}
 measured by the online monitoring program was approximately $\SI{550}{e^-}$ 
 on the collection wires and approximately $\SI{650}{e^-i}$ on the induction
-wires, averaged over all operational channels. The noise increased %s
+wires, averaged over all operational channels. The noise increased
 relative to the tests performed inside the cold box due to the 
 larger dielectric constant of \dword{lar} relative to GN$_2$. 
-These noise measurements  %in the two conditions 
+These noise measurements 
 are consistent with the 
 ratio of the corresponding capacitances of the \dword{apa} wires. 
 Figure~\ref{fig:apa3-noise} 
-shows the \dword{enc} (in electrons) for all channels of one %of the 
-\dword{apa}+\dword{ce} readout unit. %s. 
-The collection channels with \dword{enc} larger than \SI{1500}{e$^-$} had a problem %are caused by a problem
- in the P1-\dword{adc} 
-\dword{asic};  %used in \dword{protodune}-\dword{sp},
-this problem had already
-been identified %at the time of testing the components 
+shows the \dword{enc} (in electrons) for all channels of one 
+\dword{apa}+\dword{ce} readout unit. 
+The collection channels with \dword{enc} larger than \SI{1500}{e$^-$} had a problem 
+in the P1-\dword{adc} \dword{asic}; this problem had already been identified 
 prior to their
 installation on the \dwords{femb}. The channels on all three planes 
 with \dword{enc} smaller than \SI{300}{e$^-$} have an open connection somewhere in 
@@ -1821,7 +1875,7 @@ front of the \dword{ce} system. Figure~\ref{fig:ENC-all} summarizes
 \dword{enc} levels in the entire \dword{pdsp} detector both before and
 after the application of a simple common-mode filter similar
 to the one used in \dword{microboone}~\cite{Acciarri:2017sde};
-an improvement of roughly 100~e$^-$ is seen on all planes. % after the common-mode filter is applied.
+an improvement of roughly 100~e$^-$ is seen on all planes. 
 
 \begin{dunefigure}
 [TPC ENC levels measured at \dword{pdsp} after \lar fill]
@@ -1846,25 +1900,15 @@ The overall performance of the \dword{ce} system in
 \dword{ce} noise specification %requirements 
 for the \dword{spmod} %\dword{fd} 
 listed in Section~\ref{sec:fdsp-tpcelec-overview-requirements}. 
-%Another demonstration of the performance achieved
-%and of the progress made since previous detectors based on the
-%\dword{lartpc} technology is given by 
-%
 A comparison of the raw data from 
 a \dword{pdsp} event (Figure~\ref{fig:pdsp-display}) to 
-that from a \dword{microboone} event (Figure~\ref{fig:microboone-display}~\cite{Acciarri:2017sde}) demonstrates the improvements achieved in \dwords{lartpc} performance. 
+that from a \dword{microboone} event (Figure~\ref{fig:microboone-display}~\cite{Acciarri:2017sde}) 
+demonstrates the improvements achieved in \dwords{lartpc} performance. 
 The \dword{pdsp} event was collected very early in the data taking
 period when the charge collection efficiency was still limited
 by the amount of impurities in the \dword{lar}; it shows very little
 noise and appears to be of the same quality as the \dword{microboone}
 event display after offline noise removal. 
-% This clearly demonstrates %shows -- repetitive (anne)
-%that significant progress has been made 
-%significant progress in the overall system
-%design,  % based on the lessons learned from previous experiments
-%using the \dword{lartpc} technology, 
-%resulting in immediate collection of high quality
-%data with very little noise. % immediately after the beginning of data taking.
 
 \fixme{Marco: make sure that the event display is before removal of
 common mode noise.}
@@ -1892,6 +1936,34 @@ identified noise sources are subtracted~\cite{Acciarri:2017sde}.}
 \includegraphics[width=0.9\linewidth]{sp-tpcelec-microBoone_display.pdf}
 \end{dunefigure}
 
+\begin{dunefigure}
+[Signal over noise for muon tracks reconstructed in \dword{pdsp}.]
+{fig:pdsp-signalovernoise}
+        {Signal over noise for reconstructed muon tracks in \dword{pdsp}.}
+\includegraphics[width=0.85\linewidth]{sp-tpcelec-tracks-signal-over-noise.pdf}
+\end{dunefigure}
+
+The \dword{snr} has been evaluated a selected cosmic muon sample, with tracks
+crossing the \dword{lar} volume at shallow angle with respect to the anode plane and
+large angle wth respect to the direction of the wires in the plane considered
+for \dword{snr} characterization. The charge deposited on each wire in a plane is evaluated
+using the pulse height (peak) of the hit found in the raw waveform.
+A correction taking into account different relative angle between track and wire
+direction has been applied to normalize the hit response. The noise value is extracted
+from a fitted Gaussian width on the pedestal distribution of the waveform baseline of the
+wire. The electric field in the \dword{tpc} volume was at nominal level of \SI{500}{V/cm},
+and the \dword{lar} purity for the runs considered in this analysis was about \SI{5.5}{ms}
+as measured by the purity monitors, corresponding to $\sim35$\% charge loss due to
+attachment for tracks close to the cathode. No noise filtering has been applied for
+this measurement. In addition, we ignored the effect of the space charge, that introduces
+distortions of the electrical field in the \dword{tpc} volume that may locall change the
+recombination factor and therefore affect the \dword{snr} value. The distribution of
+the \dword{snr} for all the wires in the sample of muon tracks considered is shown
+in Figure~\ref{fig:pdsp-signalovernoise}. For the collection plane the mean value
+of the distribution of \dword{snr} is 38, while for the two induction planes it is
+14 (U) and 17 (V). A more accurate \dword{snr} estimate will be performed again as
+soon as the effects of space charge are fully understood.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{ProtoDUNE-SP Lessons Learned}
 \label{sec:fdsp-tpcelec-overview-lessons}
@@ -1899,7 +1971,8 @@ identified noise sources are subtracted~\cite{Acciarri:2017sde}.}
 As discussed in Section~\ref{sec:fdsp-tpcelec-overview-pdune}, the initial 
 data from \dword{pdsp} show that the \dword{spmod} can meet the noise specification. 
 The experience with the \dword{tpc} electronics in \dword{pdsp} nonetheless motivates 
-several improvements to the \dword{tpc} electronics system design. 
+several improvements to the \dword{tpc} electronics system design, some of which
+have already been implemented and discussed in the previous Sections.
 A complete list of the lessons learned from the construction, testing, integration,
 installation, commissioning of the \dword{tpc} electronics detector components
 is available~\cite{bib:docdb12367}. This reference also discusses
@@ -1930,38 +2003,11 @@ the \dword{adc} bits, independent of the input voltage. About 10\%
 of the channels having this problem need to be masked from analysis, 
 resulting in a loss of efficiency for \dword{pdsp}, 
 while in a majority of cases an approximated value for the charge can
-be obtained via interpolation. 
-
-To resolve this problem, a  \dword{bnl}-\dword{fermilab}-\dword{lbnl} collaboration 
-is developing a new \dword{adc} \dword{asic} (called the 
-\dword{coldadc} \dword{asic}), and first
-prototypes are planned to be characterized in February 2019.
-Section~\ref{sec:fdsp-tpcelec-design-femb-adc} presents a detailed design.  In parallel, two
-alternatives are being considered. %for  \dword{dune}. 
-First, the \dword{sbnd} 
-collaboration has found %demonstrated that there is also 
-a \dword{cots} 
-solution for the analog-to-digital conversion, based on the Analog 
-Devices~\cite{AnalogDevices} AD7274~\cite{AD7274} \dword{adc}, that meets 
-the \dword{dune} specifications %requirements 
-and that could be used in the \dword{spmod} in %the
-case  the custom \dword{asic} is not %developments were not successfully
-completed in time. % for the detector construction. 
-This \dword{cots}
-solution is not the baseline approach for \dword{dune} since it
-requires one chip for each readout channel (i.e., a total
-of \num{384000} chips), which would increase the cost %cause significant cost increases
-and may
-require a very extensive \dword{qc} program. The qualification
-of this \dword{cots} \dword{adc} for use in \dword{dune} is described
-in Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cots}. 
-The second alternative is a single \num{64}-channel \dword{asic}, referred to as a \dword{cryo},
-that consolidates the \dword{fe}, the analog-to-digital conversion, and the
-data serialization functions %alities 
-in a single chip. %This  development 
-It has also reached the prototype stage with \dword{asic} %that are planned to be 
-characterization planned in February 2019. %More details about this solution are discussed in 
-Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cryo} provides details.
+be obtained via interpolation. These problems prompted us to abandon
+this design and to develop the completely new \dword{coldadc}, to
+adapt the \dword{cryo} \dword{asic} for use in \dword{dune}, and to
+follow the approach of the \dword{sbnd} Collaboration and consider
+also the \dword{cots} \dword{adc} option.
 
 Initial analysis of the \dword{pdsp} data has uncovered a new problem with \dword{larasic} 
 that occurs when $>$\SI{50}{fC} is collected over a period of \SIrange{10}{50}{$\mu$s}, 
@@ -1992,16 +2038,13 @@ observed, the decision was taken to operate the \dword{ce} in \dword{pdsp}
 using the \SI{900}{mV} baseline also for the collection wires, sacrificing
 the dynamic range. Data from the wires where the problem occurs can
 be masked in analysis, resulting in a loss of efficiency. It should be
-noted that the problem occurs more often in \dword{pdsp} %compared to
-%\dword{dune} 
-than is expected in the \dword{fd}  \dword{spmod} due to the presence of cosmic rays traveling parallel
-to the \dword{apa} wires. % in the first case. 
-The problem %cannot be discounted for \dword{dune}, however, since it 
-could, however, affect the \dword{spmod}'s ability to detect
+noted that the problem occurs more often in \dword{pdsp} 
+than is expected in the \dword{fd}  \dword{spmod} due to the presence of 
+cosmic rays traveling parallel to the \dword{apa} wires.
+The problem could, however, affect the \dword{spmod}'s ability to detect
 electromagnetic showers -- one of the main physics signals.
-%The plan and the timeline for addressing this issue in a new \dword{larasic} prototype
-%of  are going to be discussed in 
-Section~\ref{sec:fdsp-tpcelec-design-femb-fe} discusses the plans and timeline for addressing this issue in a new \dword{larasic} prototype.
+Section~\ref{sec:fdsp-tpcelec-design-femb-fe} discusses the plans and timeline 
+for addressing this issue in a new \dword{larasic} prototype.
 
 \begin{dunefigure}
 [Image of a connector for the cold cables lifted from the \dword{femb}]
@@ -2010,7 +2053,7 @@ Section~\ref{sec:fdsp-tpcelec-design-femb-fe} discusses the plans and timeline f
 the \dword{femb} due to the presence of excess epoxy on the 
 connection between the cold cables and the printed circuit board
 that acts as the ``male'' part of the connector.}
-\includegraphics[width=1.0\linewidth]{sp-tpcelec-femb-problem.png}
+\includegraphics[width=0.85\linewidth]{sp-tpcelec-femb-problem.png}
 \end{dunefigure}
 
 \begin{comment}During the integration of the \dwords{femb} onto the \dword{apa}s 
@@ -2144,25 +2187,25 @@ development of \dword{coldata} and of a completely new \dword{adc} is more invol
 
 \begin{dunetable}
 [Status of the design of the different CE detector components]
-{p{0.20\textwidth}p{0.15\textwidth}p{0.40\textwidth}p{0.15\textwidth}}
+{p{0.27\textwidth}p{0.15\textwidth}p{0.50\textwidth}}
 {tab:SPCE:designstatus}
 {Status of the design of the different CE detector components and expected
 amount of engineering and prototyping required prior to construction.}
-Component & Status & Expected work & Required resources\\ \toprowrule
-\dword{larasic} & Advanced & Fix issues observed in \dword{pdsp}, port differential output from \dword{coldadc} design & 1 FTE \\ \colhline
-Commercial ADC & Complete & None & None \\ \colhline
-\dword{coldadc} & \multicolumn{2}{l}{See text for details} & 2 FTE \\ \colhline
-\dword{coldata} & \multicolumn{2}{l}{See text for details} & 1 FTE \\ \colhline
-\dword{cryo} & \multicolumn{2}{l}{See text for details} & 0.8 FTE \\ \colhline
-\dword{femb} & Advanced & Experience with multiple prototypes, final design will follow the \dword{asic} selection & 1 FTE \\ \colhline
-Cold cables & Very advanced & Minor modifications, additional vendor qualification & 0.5 FTE \\ \colhline
-Cryostat penetrations & Advanced & Add \dword{ce} flange for bottom \dword{apa} & 0.5 FTE \\ \colhline
-\dword{wiec} & Very advanced & Add air filters and hardware interlock system & 0.4 FTE \\ \colhline
-\dword{wib} & Advanced & Update design to use cheaper FPGA, modify \dword{femb} power, new firmware & 3 FTE  \\ \colhline
-\dword{ptc} & Very advanced & Add interface to interlock system & 0.5 FTE \\ \colhline
-Power supplies & Very advanced & Investigate possible additional vendors, rack arrangement & 0.2 FTE \\ \colhline
-Warm cables & Very advanced & Finalize cable layout, identify vendors & 0.2 FTE \\ \colhline
-Readout and control fiber plant & Very advanced & Finalize plant layout & 0.1 FTE \\ \colhline
+Component & Status & Expected work \\ \toprowrule
+\dword{larasic} & Advanced & Fix issues observed in \dword{pdsp}, port differential output from \dword{coldadc} design \\ \colhline
+Commercial ADC & Complete & None \\ \colhline
+\dword{coldadc} & \multicolumn{2}{l}{See text for details} \\ \colhline
+\dword{coldata} & \multicolumn{2}{l}{See text for details} \\ \colhline
+\dword{cryo} & \multicolumn{2}{l}{See text for details} \\ \colhline
+\dword{femb} & Advanced & Experience with multiple prototypes, final design will follow the \dword{asic} selection \\ \colhline
+Cold cables & Very advanced & Minor modifications, additional vendor qualification \\ \colhline
+Cryostat penetrations & Advanced & Add \dword{ce} flange for bottom \dword{apa} \\ \colhline
+\dword{wiec} & Very advanced & Add air filters and hardware interlock system \\ \colhline
+\dword{wib} & Advanced & Update design to use cheaper FPGA, modify \dword{femb} power, new firmware \\ \colhline
+\dword{ptc} & Very advanced & Add interface to interlock system \\ \colhline
+Power supplies & Very advanced & Investigate possible additional vendors, rack arrangement \\ \colhline
+Warm cables & Very advanced & Finalize cable layout, identify vendors \\ \colhline
+Readout and control fiber plant & Very advanced & Finalize plant layout \\ \colhline
 \end{dunetable}
 
 The area that requires most work is that of the \dword{asic}s that are mounted

@@ -1,6 +1,8 @@
 \chapter{Cryogenic Instrumentation and Slow Control}
 \label{ch:sp-cisc}
 
+%\metainfo{Dual-phase section starts here [not a real fixme, just a landmark]}
+
 \fixme{which portions of this are identical to what will be in the DP version of CISC? We need to note these portions. anne.  Please see added footnote - Glenn. I think I'll take it out of footnote and move it to main text. Tim hates footnotes! Anne}
 %%%%%%%%
 \section{Introduction} 
@@ -14,7 +16,7 @@ two main branches: cryogenics instrumentation and slow controls, as illustrated 
 
 \begin{dunefigure}[CISC subsystem chart]{fig:cisc-subsystem-chart}
   {\dword{cisc} subsystem chart}
-  \includegraphics[width=0.6\textwidth]{CISC_scope-v3a_TDR.pdf}
+  \includegraphics[width=0.8\textwidth]{graphics/CISC_scope_SP_2019Apr15.png}
 \end{dunefigure}
 
 
@@ -35,11 +37,11 @@ Finally, a high detector live-time fraction over multi-year operation cannot be 
  
 The baseline designs for all the \dword{cisc} systems have been used in \dfirst{pdsp}, % designs arethe baseline for all \lar instrumentation devices, and %requirements for 
 and most design
-parameters are extrapolated from these designs. The \dword{pdsp} data will therefore be used to validate the instrumentation designs and to understand their performance.
+parameters are extrapolated from these designs. The \dword{pdsp} data (and in some cases \dword{pddp} data) will therefore be used to validate the instrumentation designs and to understand their performance.
 
 %\subsection{Components}
 \subsection{Scope}
-\fixme{I am merging this with scope. Anne}
+%\fixme{I am merging this with scope. Anne}
 
 \subsubsection{Cryogenics Instrumentation}
 %The devices included under c
@@ -48,10 +50,10 @@ gas analyzers and \lar level monitors that are directly related to the external 
 
 A test facility for the instrumentation devices is also part of the cryogenics instrumentation.
  \dword{cisc} is responsible for design through commissioning in the \dword{spmod} %\dfirst{fd}.
-of \lar instrumentation devices (purity monitors, thermometers, cameras, and light-emitting system, and their associated feedthroughs) and the instrumentation test facility.
+of \lar instrumentation devices (purity monitors, thermometers, cameras, and light-emitting system, and their associated feedthroughs) and the \dword{citf}.
 
 Cryogenics instrumentation %also 
-requires significant physics and
+requires significant engineering, physics and
 simulation work, such as \efield simulations and cryogenics modeling
 studies using \dfirst{cfd}. \efield simulations
 %are required to 
@@ -129,7 +131,7 @@ Important design considerations for instrumentation devices include stability, r
 Such longevity %a long lifetime 
 is uncommon for any device, so the overall design allows replacement of devices where possible. %A requirement common to every element inside the cryostat is that 
 DUNE requires the \efield  on any instrumentation devices inside the cryostat to be less than \localefield to minimize the risk of dielectric breakdown in \lar. %To avoid confusing event reconstruction, we include another important design parameter that should be evaluated in \dword{pdsp}: the maximum noise level induced by instrumentation devices on the readout electronics that can be tolerated.
-A consideration important for even reconstruction is the maximum noise level induced by instrumentation devices that the readout electronics  can tolerate. \dword{pdsp} is evaluating this.  Tables~\ref{tab:fdgen-slow-cryo-requirements-1} and \ref{tab:fdgen-slow-cryo-requirements-2} show the full set of specifications %requirements for the \dword{cisc} subsystems.
+A consideration important for event reconstruction is the maximum noise level induced by instrumentation devices that the readout electronics  can tolerate. \dword{pdsp} is evaluating this.  Tables~\ref{tab:fdgen-slow-cryo-requirements-1} and \ref{tab:fdgen-slow-cryo-requirements-2} show the full set of specifications %requirements for the \dword{cisc} subsystems.
 that relate to the \dword{cisc} subsystems.
 
 Data from purity monitors and different types of thermometers will be used to validate the \lar fluid flow model. 
@@ -138,11 +140,12 @@ A number of requirements drive the design parameters for the precision and granu
 For example, the electron lifetime measurement precision must be \SI{1.4}{\%} to keep the bias on the charge readout in the \dword{tpc} below \SI{0.5}{\%} at \SI{3}{ms} lifetime. For thermometers, the %requirements 
 parameters are driven by the \dshort{cfd} simulations based on \dword{pdsp} design.
 The temperature measurement resolution must be less than \SI{2}{mK}, and the relative precision of those measurements must be less than \SI{5}{mK}. The resolution is defined as the temperature RMS for individual measurements and is driven by the electronics. The relative precision also includes the effect of reproducibility for successive immersions in \dword{lar}. 
-The relative precision is particularly important in order to characterize is %because 
+The relative precision is particularly important in order to characterize %because 
 gradients below \SI{20}{mK}. % should be characterized.  
 As will be described below, the laboratory calibration data and the recent analysis of thermometer instrumentation data from \dword{pdsp} shows that a \SI{2.5}{mK} relative precision is achievable. 
 
-The level meters must have a precision of 0.1\% over \SI{14}{m} (i.e., \SI{14}{mm}) for measurement accuracy during filling. This precision is also sufficient to ensure that the \dword{lar} level stays above the \dwords{gp} of a \dfirst{sp} module. As shown in Table~\ref{tab:fdgen-slow-cryo-requirements-2}, several requirements drive the design of cold and warm cameras and the associated light emitting system. The components of the camera systems must not contaminate the \lar or produce bubbles when the \dword{hv} so as  to avoid  increasing the risk of \dword{hv} discharge. Both cold and warm cameras must provide coverage of at least \SI{80}{\%} of the \dword{tpc} volume 
+The level meters must have a precision of 0.1\% over \SI{14}{m} (i.e., \SI{14}{mm}) for measurement accuracy during filling. This precision is also sufficient to ensure that the \dword{lar} level stays above the \dwords{gp} of a \dfirst{sp} module. As shown in Table~\ref{tab:fdgen-slow-cryo-requirements-2}, several requirements drive the design of cold and warm cameras and the associated light emitting system. The components of the camera systems must not contaminate the \lar or produce bubbles % when the \dword{hv}
+so as  to avoid  increasing the risk of \dword{hv} discharge. Both cold and warm cameras must provide coverage of at least \SI{80}{\%} of the \dword{tpc} volume 
 \fixme{An illustration showing where all these instruments go would be helpful. Anne. Locations are not defined yet for some of the devices [Carmen and Glenn] -- can't fix by deadline.}
 with a resolution of \SI{1}{cm} for cold cameras and \SI{2}{mm} for warm cameras on the \dword{tpc}.
 % CEL: my 'fix me' with details, removed. Wanted to hold 
@@ -157,7 +160,7 @@ details  are in Table~\ref{tab:fdgen-slow-cryo-requirements-1}.
 
 For slow controls, the system must %be designed to 
 be sufficiently robust to monitor 
-a minimum of 50,000  variables, and 
+a minimum of 150,000  variables per \dword{detmodule}, and 
 support a broad range of monitoring and archiving rates. The system must also %be capable of an 
 interface with a large number of detector subsystems and %to 
 establish two-way communication with them for control and monitoring. 
@@ -176,7 +179,7 @@ Noise from Instrumentation devices				             & $\ll$ \elecnoisefe         
 \\ \colhline                     
 Max. \efield near instrumentation devices				     & <\localefield			                                                & <15 kV/cm		                                          \\ \colhline                     
 \textbf{Purity Monitors}	                                             &                                                                      &                                                         \\ \colhline                      
-Precision in electron lifetime				                 & <1.4\% at 3~ms (<4\% at 9~ms)			                                            & < 1\%		                                              \\ \colhline                     
+Precision in electron lifetime				                 & <1.4\% at 3~ms,  <4\% at 9~ms,  relative differences <2.5\%			                                            & < 1\%		                                              \\ \colhline                     
 Range in electron lifetime				                     & 0 - 10 ms  			                    & (0 - 30 ms inline)       
 \\ \colhline                         
 Longevity				                                     & \dunelifetime			                                                    & > \dunelifetime		                                      \\ \colhline                     
@@ -212,7 +215,12 @@ Detection limit: 3 sigma & Different analyzer modules needed to cover entire ran
 Stability   & <\% of full scale range.		 & %<\% of full scale range.
 \\ \colhline         
 Longevity		 & >10 years	  & %10 years  
-\\   
+\\   \colhline
+\textbf{Pressure Meters (GAr)}	          &    &          \\ \colhline            
+Relative precision (DUNE side)		   & 0.1~mbar	& %0.1\% over 14 m (14 mm)
+\\ \colhline  
+Absolute precision (DUNE side)		   & <5~mbar	& %0.1\% over 14 m (14 mm)
+\\  
 \end{dunetable}
 
 
@@ -223,11 +231,11 @@ Longevity		 & >10 years	  & %10 years
 {List of specifications for the different CISC subsystems}   
 Quantity/Parameter		     & Specification	  & Goal   \\ \toprowrule   
 \textbf{Level Meters}	          &    &          \\ \colhline            
-Precision (LBNF side)		   & 0.1\% over 14 m (14 mm)			                                    & %0.1\% over 14 m (14 mm)
+Precision (LBNF scope)		   & 0.1\% over 14 m (14 mm)			                                    & %0.1\% over 14 m (14 mm)
 \\ \colhline           
-Precision (additional level meters, \dword{dune} side) & 10 mm  &  <5 mm
+Precision (capacitive level meters, \dword{dune} scope) & 1~cm  &  <5 mm
 \\ \colhline         
-Longevity		  & 20 years	   & > 20 years		                                                  \\ \colhline     
+Longevity (all)		  & 20 years	   & > 20 years		                                                  \\ \colhline     
 \textbf{Cold cameras}	                                             &                                                                      &                                                                     \\ \colhline        
 Coverage				                                     & 80\% of the exterior of HV surfaces			                        & 100\% 	                                                          \\ \colhline         
 Frames per second	   & yet to be defined	  & %yet to be defined
@@ -260,7 +268,7 @@ Turn-Around time	 & $\sim\,$9 days   & 9 days 	  \\ \colhline
 LAr purity		   & O2, H2O: low enough  to measure drifting electrons of devices under test, $\sim\,\SI{0.5}{ms}$.    N2: ppm for scintillation light tests. 	        &  >1.0 ms                                                            \\ \colhline
 \textbf{Slow Controls}		                                         &                                                                      &                                                                     \\ \colhline
 Alarm rate	  & <150/day			                                                    &  < 50/day                                                           \\ \colhline
-Total No. of variables				                         & 150,000			                                                    &  150,000 - 200,000                                                   \\ \colhline
+Total No. of variables per \dword{detmodule}				                         & 150,000			                                                    &  150,000 - 200,000                                                   \\ \colhline
 Server rack space				                             & 2 racks			                                                    &  3 racks                                                            \\ \colhline
 Archiving rate 				                                 & 0.02 Hz			                                                    &  Broad range 1 Hz  to 1 per few min.                                \\ \colhline
 Near Detector Status & Beam conditions and detector status	                                &  Full beam and detector status                                      \\          
@@ -270,7 +278,9 @@ Near Detector Status & Beam conditions and detector status	                     
 \subsection{Fluid Dynamics Simulation}
 \label{sec:fdgen-cryo-cfd}
 
-Proper placement of purity monitors, thermometers, and liquid level monitors within the \dword{detmodule} requires knowing how \lar flows within the cryostat, given its fluid dynamics, heat and mass transfer, and distribution of impurity concentrations. Fluid motion within the cryostat is driven primarily by small changes in density caused by thermal gradients within the fluid, although pump flow rates and inlet and outlet locations also contribute. Heat sources include exterior heat from the surroundings, interior heat from electronics, and heat flow through the pump inlet. In principle, purity monitors can be placed throughout the cryostat to determine if the argon is pure enough for experimentation. However, some areas inside the cryostat are off limits for such monitors. 
+Proper placement of purity monitors, thermometers, and liquid level monitors within the \dword{detmodule} requires knowing how \lar flows within the cryostat, given its fluid dynamics, heat and mass transfer, and distribution of impurity concentrations. Fluid motion within the cryostat is driven primarily by small changes in density caused by thermal gradients within the fluid, although pump flow rates and inlet and outlet locations also contribute. Heat sources include exterior heat from the surroundings, interior heat from electronics, and heat flow through the pump inlet. In principle, purity monitors can be placed throughout the cryostat to determine if the argon is pure enough for experimentation. However, fluid flow, \dword{hv}, cost, and space constraints limit the distribution of these monitors in the cryostat.
+
+%However, some areas inside the cryostat are off limits for such monitors. 
 % \fixme{anne moved prev pgraph up --- looks good [Glenn, Carmen, Sowjanya]}
 
 To determine the purity of the argon in regions where experimental data is unavailable, \dword{cfd} simulations can be used to better understand and quantify impurity levels. The overall goal of the \dword{cfd} simulations
@@ -278,9 +288,9 @@ To determine the purity of the argon in regions where experimental data is unava
 %for the \dword{spmod} 
 is to better understand and predict the fluid (in either a liquid and vapor state) motions and the implications for the detector performance. % of the detectors. 
 The fluid flow behavior can be determined by simulating \dword{lar} flow within a \dword{detmodule} %the detector 
-using Siemens Star-CCM$+$\footnote{https://mdx.plm.automation.siemens.com/star-ccm-plus}, a commercially available \dword{cfd} code.  Such a model must properly define the fluid characteristics, solid bodies and fluid-solid interfaces, and provide a means for measuring contamination, while still maintaining reasonable computation times. In addition, these fluid dynamics simulations are compared with available experimental data to assess simulation accuracy and credibility. 
+using Siemens Star-CCM$+$\footnote{https://mdx.plm.automation.siemens.com/star-ccm-plus}, a commercially available \dword{cfd} code.  Such a model must properly define the fluid characteristics, solid bodies and fluid-solid interfaces, and provide a means for measuring contamination, while still maintaining reasonable computation times. In addition, these fluid dynamics simulations are compared with available experimental data (see Section~\ref{sec:cfdvalid}) to assess simulation accuracy and credibility. 
 
-\fixme{seems like the above is sp/dp independent but the next stuff isn't. anne. The text has been modified [Carmen and Glenn] --- we think this is fixed.}
+%\fixme{seems like the above is sp/dp independent but the next stuff isn't. anne. The text has been modified [Carmen and Glenn] --- we think this is fixed.}
 Although simulation of the \dword{detmodule} presents challenges, %there are 
 acceptable simplifications can %to 
 accurately represent the fluid, the interfacing solid bodies, and variations of contaminant concentrations. Because of the magnitude of thermal variation within the cryostat, modeling of the \lar is simplified by using constant thermophysical properties, calculating buoyant force with the Boussinesq Model (using a constant density for the fluid with application of a temperature-dependent buoyant force), and a standard shear stress transport turbulence model. Solid bodies that touch the \lar include the cryostat wall, cathode planes, anode planes, \dword{gp}, and \dword{fc}. As in previous \dword{cfd} models of the \dword{dune} 35-ton prototype and \dword{pdsp}%{protodune} 
@@ -305,10 +315,10 @@ Figure~\ref{fig:cfd-example} shows an example of the temperature
 distribution on a plane intersecting a \lar inlet and at a
 plane halfway between an inlet and an outlet; 
 the geometry used for
-this simulation is shown in Figure~\ref{fig:cfd-example-geometry}. Note the plume of higher temperature \lar between the walls and
+this simulation is shown in Figure~\ref{fig:cfd-example-geometry}\footnote{the inlet and outlet map has recently changed; it now consists of two rows of 64 inlets each at each longer side of the cryostat and four outlets along the shorter sides (drift direction) of the cryostat.}. Note the plume of higher temperature \lar between the walls and
 the outer \dword{apa} on the inlet plane. The current placement of instrumentation in
 the cryostat as shown in Figure~\ref{fig:cisc-tsensor-map} was determined using temperature and impurity distributions from previous simulations.
-\fixme{might make sense to move CFD down closer to fig 1-11? anne. We cannot figure out how to do this. [Glenn]}
+%\fixme{might make sense to move CFD down closer to fig 1-11? anne. We cannot figure out how to do this. [Glenn]. SG: we prefer to keep it here. }
 
 \begin{dunefigure}[\single \dword{cisc} geometry layout]{fig:cfd-example-geometry}
   {Layout of the \single \dword{tpc} within the cryostat (top) and positions of \dword{lar} inlets and outlets (bottom) as modeled in the \dword{cfd} simulations~\cite{bib:docdb5915}. The $y$ axis is vertical and the $x$ axis is parallel to the \dword{tpc} drift direction. Inlets are shown in green and outlets are shown in red.}
@@ -386,14 +396,15 @@ Among all chimneys
 \\
 \end{dunetable}
 %%%%%%%%%%%%%%%%%%%%
-\subsection{Validation in \dword{protodune}}
-
+\subsubsection{Validation in \dword{protodune}}
+\label{sec:cfdvalid}
 \dword{pdsp} has collected data to validate the \dword{cfd} using: % already installed instrumentation.
 \begin{itemize}
 \item static and dynamic T-gradient thermometers, 
 \item individual temperature sensors placed in the return \lar inlets, 
 \item two \twod grids of individual temperature sensors installed below the bottom ground planes and above the top ground planes, 
 \item a string of three purity monitors vertically spaced from near the bottom of the cryostat to just below the \lar surface
+\item two pressure sensors (relative and absolute) in the argon gas
 \item H$_{2}$O, N$_{2}$, and O$_{2}$ gas analyzers, 
 \item \dword{lar} level monitors, and
 \item standard cryogenic sensors including pressure transducers, individual temperature sensors placed around
@@ -479,7 +490,10 @@ Both this and % Besides that,
 coherent analysis of the instrumentation data require \dword{cfd} simulation results.
 
 %Something on \dword{protodune} Validation 
-\dword{pdsp} is testing the performance of all cryogenic instrumentation for the \dword{spmod}, validating the baseline  %\dword{fd} 
+\dword{pdsp} is testing the performance of 
+purity monitors, thermometers, level monitors and cameras
+%all cryogenic instrumentation 
+for the \dword{spmod}, validating the baseline  %\dword{fd} 
 design.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -513,6 +527,7 @@ less than \SI{20}{\percent} over the entire drift distance~\cite{bib:docdb3384}.
  The corresponding electron lifetime is $\SI{2.4}{ms}/[-\ln(0.8)] \simeq \SI{11}{ms}$.
 % (The corresponding \dword{lar} O2 purity requirement is about \SI{30}{ppt}.)
 
+
 %Residual gas analyzers are an obvious choice when analyzing argon gas and can be used to monitor the gas in the ullage of the tank. 
 Residual gas analyzers can be used to monitor the gas in the ullage of the tank and would be an obvious choice for analyzing argon gas. 
 Unfortunately, suitable and commercially available mass
@@ -525,11 +540,13 @@ along with an accurate \dword{cfd} model, enable the
 determination of purity at all positions throughout the \dword{detmodule}.
 % [I rewrote the last sentence slightly to make clear how the purity monitor spatial resolution relates to spatial resolution of purity =Glenn (anne reworded slightly - I believe the message is still the same.]
 
+The large scale of the DUNE \dwords{detmodule} increases the risk of failing to notice unexpected cryogenic and circulation failures. If these conditions were to persist, it could cause irreversible contamination to the \lar and terminate useful data taking.  Well scheduled purity monitor runs can catch sudden drops in e-lifetime, therefore mitigate this risk, as demonstrated in \dword{pdsp}. Purity monitors' role to mitigate this risk is unique because the cosmic-ray rate in DUNE's deep-underground FD is too low for TPC to measure e-lifetime frequently with its data. 
 
-Purity monitors also %serve to 
-mitigate the risk of \lar contamination.  The large scale of the \dwords{detmodule} increases the risk of failing to notice a sudden unexpected infusion of contaminated \lar %being injected 
-back into the cryostat.   
-If this condition were to persist, it could cause irreversible contamination to the \dword{lar} and terminate useful data taking.  Strategically placed purity monitors mitigate this risk, as demonstrated in \dword{pdsp}. 
+
+%Purity monitors also %serve to 
+%mitigate the risk of \lar contamination.  The large scale of the \dwords{detmodule} increases the risk of failing to notice a sudden unexpected infusion of contaminated \lar %being injected 
+%back into the cryostat.   
+%If this condition were to persist, it could cause irreversible contamination to the \dword{lar} and terminate useful data taking.  Strategically placed purity monitors mitigate this risk, as demonstrated in \dword{pdsp}. 
 
 Purity monitors are placed inside the cryostat but outside of the %detector 
 \dshort{tpc}. They are also placed  within the recirculation system outside the cryostat, both in front of and behind the filtration system. % before and after filtration. 
@@ -545,18 +562,43 @@ Purity monitors were deployed in previous \dword{lartpc} experiments, e.g., ICAR
 
 
 \dword{pdsp} and \dword{pddp} %use purity monitoring systems consisting of several 
-implement purity monitors to %that 
-measure electron lifetime at different heights.  Figure~\ref{fig-pdsp-prmassembly} shows the assembly of the \dword{pdsp} purity monitors. The design reflects improvements to ensure electric connectivity and improve signals. \dword{pdsp} uses a string of purity monitors connected with stainless steel tubes to protect the optic fibers. The purity monitor system at \dword{pdsp} measured electron lifetime every hour during commissioning and daily during the beam test. During %commissioning and while running the test beam, 
-this time, it %the purity monitor system at \dword{pdsp} 
-alerted us to serious problems twice, first %. The first time was 
-for filter saturation, and %the second was 
-then that the recirculation pump had stopped. This enabled us to prevent %These alerts were crucial to the success of running the test beam in the \dword{pdsp} project by preventing 
-situations that otherwise could have had serious consequences.
+use purity monitors to %that 
+measure electron lifetime at different heights. 
 
+Figure~\ref{fig-pdsp-prmassembly} shows the assembly of the \dword{pdsp} purity monitors. The design reflects improvements to ensure electric connectivity and improve signals. \dword{pdsp} uses a string of purity monitors connected with stainless steel tubes to protect the optic fibers. 
 \begin{dunefigure}[The \dword{pdsp} purity monitoring system]{fig-pdsp-prmassembly}
   {The \dword{pdsp} purity monitoring system}
   \includegraphics[width=0.9\textwidth]{PrMon_pdsp-PrMAssembly}
 \end{dunefigure}
+
+
+\dword{pdsp} implements three purity monitors. The purity monitors continuously monitored LAr purity during all commissioning, beam test and operation periods of \dword{pdsp}. Figure~\ref{fig-pdsp-prm} shows the \dword{pdsp} data taken using %them 
+its three purity monitors from commissioning of \dword{pdsp} starting in September 2018, through the entire beam running, to February 2019.
+
+%to the middle of test beam running, in November 2018. 
+
+\begin{dunefigure}[Measured electron lifetimes in the %four 
+three purity monitors at \dword{pdsp}]{fig-pdsp-prm}
+  {The measured electron lifetimes as of Feb 2019 in the %four 
+  three purity monitors as a function of time in \dword{pdsp}.}
+  \includegraphics[width=0.9\textwidth]{PrMon_pdsp-PrM.pdf}
+\end{dunefigure}
+
+
+
+The purity monitor system at \dword{pdsp} measured electron lifetime every hour during commissioning and daily during the beam test. During the commissioning and operation of ProtoDUNE-SP, purity monitors have alerted the experiment solely to serious problems several times. The first time was for filter saturation during LAr filling, and the rest were recirculation pump stoppages, false alarms, and problems from the cryostat-level gauges.  The dips in Figure~\ref{fig-pdsp-prm} show these sudden changes in purity caught by purity monitors. The purity alerts made by purity monitors are crucial to the ProtoDUNE-SP project's success, as they prevented situations which otherwise would have continued unnoticed for some time, with severe consequences to the ability to take any data. Neither the gas analyzers nor the TPC caught these problems in time. 
+
+
+At \dword{pdsp} (on surface) where we have enough TPC cosmic ray data to measure electron lifetime online, the large fluctuation in the online e-lifetime from TPC data makes it hard to catch the purity change caused by liquid argon re-circulation issue in time. On the other hand, after lower the purity monitor anode high voltage, electron drift time in purity monitors reaches 2.2 ms, the same as the TPC. Furthermore, the purity monitor can take large data sets in a short period of time at the same location, so the statistical error and effects from location dependent uncertainties are smaller in purity monitors compared to TPC. Each purity monitor e-lifetime measurement is based on purity monitor anode-to-cathode signal ratios from 200 UV flashes within 40 seconds at the same location, and the statistic error on the purity monitor e-lifetime is less than 0.03 ms when the purity is 6 ms. With this high sensitivity, purity monitors  caught the purity drops immediately and make the alert to the experiment in time.
+
+
+
+%The purity monitor system at \dword{pdsp} measured electron lifetime every hour during commissioning and daily during the beam test. During %commissioning and while running the test beam, 
+%this time, it %the purity monitor system at \dword{pdsp} 
+%alerted us to serious problems twice, first %. The first time was 
+%for filter saturation, and %the second was 
+%then that the recirculation pump had stopped. This enabled us to prevent %These alerts were crucial to the success of running the test beam in the \dword{pdsp} project by preventing 
+%situations that otherwise could have had serious consequences.
 
 
 
@@ -577,16 +619,7 @@ This measurement was also valuable for the \dword{pdsp} lifetime calibration. Be
 
 
 
-\dword{pdsp} implements three purity monitors. 
-Figure~\ref{fig-pdsp-prm} shows the \dword{pdsp} data taken using %them 
-its three purity monitors between the commissioning of \dword{pdsp} starting in September 2018, to the middle of test beam running, in November 2018. 
 
-\begin{dunefigure}[Measured electron lifetimes in the %four 
-three purity monitors at \dword{pdsp}]{fig-pdsp-prm}
-  {The measured electron lifetimes in the %four 
-  three purity monitors as a function of time in \dword{pdsp}.}
-  \includegraphics[width=0.9\textwidth]{PrMon_pdsp-PrM.pdf}
-\end{dunefigure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Purity Monitor Design}
@@ -623,14 +656,16 @@ field should make it possible to measure lifetimes of any length, regardless of 
 %means any lifetime can be measured no matter the length of the purity monitor (the lower the field, the lower the drift velocity, i.e., the longer the drift time). 
 On the other hand, increasing the voltage will shorten the drift time, allowing measurement of a short lifetime when purity is low. 
 
+The electron lifetime of the purest commercial \lar, after the first filtering and during the filling process, is typically higher than \SI{40}{\micro\second}. However, when the filter starts to saturate, the lifetime decreases to less than \SI{30}{\micro\second}.  To %achieve less 
+reduce the energy loss due to impurities,  the \dword{spmod} requires an electron lifetime greater than \SI{10}{\milli\second}.
+
 %According to our experience with \dword{pdsp}, for a 9.5 inch long purity monitor, varying the operational \dword{hv} on the anode from 250 V to 4000 V allows the purity monitors to measure an electron lifetime ranging from 35 $\mu$s to approximately 10 ms with high precision.
 Varying the operational \dword{hv} on the anode from \SI{250}{V} to \SI{4000}{V} in the \dword{pdsp}'s \SI{24}{cm} (9.5 inch) long purity monitor allowed us to make the \SI{35}{\micro\second} to \SI{10}{\milli\second} electron lifetime measurements. 
 %s ranging from 35 $\mu$s to approximately 10 ms with high precision.
-
 %%% [Deleted this as confusing --- what is ``gas phase'' in single phase detector? --- and not needed. -Glenn] In practice, at very low fields, drifting the electrons all the way up to the anode is difficult, and the discharge in the gas phase limits the anode high voltage to go above 4000 V. \fixme{I read this as "the discharge in the gas phase keeps the voltage in the anode below 4000V." Is that correct? {\em No...}}
-
-The electron lifetime of the purest commercial \lar, after the first filtering and during the filling process, is typically higher than \SI{40}{\micro\second}. However, when the filter starts to saturate, the lifetime decreases to less than \SI{30}{\micro\second}.  To %achieve less 
-reduce the energy loss due to impurities,  the \dword{spmod} requires an electron lifetime greater than \SI{10}{\milli\second}. Therefore, purity monitors with different lengths (drift distances) are needed to extend the measurable range to below \SI{35}{\micro\second} and above  \SI{10}{\milli\second}.
+%The electron lifetime of the purest commercial \lar, after the first filtering and during the filling process, is typically higher than \SI{40}{\micro\second}. However, when the filter starts to saturate, the lifetime decreases to less than \SI{30}{\micro\second}.  To %achieve less 
+%reduce the energy loss due to impurities,  the \dword{spmod} requires an electron lifetime greater than \SI{10}{\milli\second}. Therefore, 
+Purity monitors with different lengths (drift distances) are needed to extend the measurable range to below \SI{35}{\micro\second} and above  \SI{10}{\milli\second}.
 %Currently, specific sensitivity limits for purity monitors with a drift distance of the order of $\sim$\SI{20}{\centi\meter} are still to be determined in a series of tests. If the required sensitivity is not achieved by these ``short'' purity monitors, longer ones may be developed.
 
 The photocathode that produces the \phel{}s is an aluminum plate coated first with \SI{50}{\angstrom} of titanium followed by \SI{1000}{\angstrom} of gold, and is attached to the cathode disk.
@@ -716,7 +751,7 @@ A short version of the %assembly
 string
 %\fixme{string?}
 with all purity monitors will be tested in the \lar test facility. The full string will be assembled and shipped to \surf. 
- A vacuum test in a long vacuum tube will be performed onsite before inserting the full assembly into the \dword{spmod} cryostat. 
+ A vacuum test in a long vacuum tube will be performed on-site before inserting the full assembly into the \dword{spmod} cryostat. 
 
 %not clear if we want to ship the 12 meter assembly or assemble onsite yet.
 %Each monitor is assembled as the string is built from the top down, and in the end %there would be 
@@ -868,7 +903,8 @@ Figure~\ref{fig:cisc-static-tgradient} shows the baseline mechanical design of
 the static T-gradient monitor. Two stainless steel strings are anchored at the top and bottom corners of the cryostat
 using the available M10 bolts (see Figure~\ref{fig:sensor-support}, left). One string routes the cables while the other,
 separated from the first by \SI{340}{mm},  supports the temperature sensors.
-Given the height of the cryostat, an intermediate anchoring point is needed to reduce swinging. This is still under discussion. To account for shrinkage in the strings under cryogenic conditions and to guarantee that the same tension is always applied, a weight is hung at the bottom of the strings. A guiding system made of stainless steel and anchored by four M10 bolts at the bottom keeps the weight confined in space. A prototype is being built at IFIC, where the full system will be mounted using two dummy cryostat corners. We are also considering an alternative design with carbon fiber strings.  
+Given the height of the cryostat, an intermediate anchoring point is needed to reduce swinging. This is still under discussion. To account for shrinkage in the strings under cryogenic conditions and to guarantee that the same tension is always applied, a weight is hung at the bottom of the strings. A guiding system made of stainless steel and anchored by four M10 bolts at the bottom keeps the weight confined in space. A prototype is being built at \dfirst{ific}, where the full system will be mounted using two dummy cryostat corners. We are also considering an alternative design with carbon fiber strings.  
+%\fixme{please remake ific glossary term and send it to me so I can put it in master copy. 10 Apr. Anne}
 
 
 Figure~\ref{fig:sensor-support}, right shows the baseline design of the ($52\times \SI{15}{mm^2}$) 
@@ -929,8 +965,8 @@ A narrower connector (with two rows of two pins each) is being studied. This alt
  in situ.
 Namely, this T-gradient monitor is motorized, allowing vertical motion of the temperature sensor array %in vertical direction while installed 
 in the \dword{detmodule}, %. This ability enables 
-enabling precise cross-calibration between the sensors %{\em in situ}
-in situ, as illustrated in Figure~\ref{fig:sensor-cross-calibration}.  
+enabling precise cross-calibration between the sensors, %{\em in situ
+as illustrated in Figure~\ref{fig:sensor-cross-calibration}.  
 
 The procedure for cross-calibrations is the following: in step 1, the temperature reading  of all sensors is taken at the home (lowest) position of the carrier rod. In  step 2, the stepper motor moves the carrier rod up \SI{25}{cm}. Since the sensors along the entire  carrier rod are positioned \SI{25}{cm} apart, when the system is moved up \SI{25}{cm}, each sensor is positioned at the height that was occupied by another sensor in step 1. Then a second temperature reading is taken. In this manner, except for the lowest position two temperature measurements are taken at each location with %two 
 different sensors. Assuming that the temperature at each location is stable over the few minutes required to make the measurements, %the 
@@ -1020,7 +1056,9 @@ For all individual sensors, PCB sensor support, cables, and connection to the fl
 A %highly precise 
 high-precision and very stable system is required to achieve a readout level of $<\,\SI{5}{mK}$.
 The proposed readout system was used in \dword{pdsp} and relies on a variant of an existing mass PT100 temperature readout system developed at
-CERN for an LHC experiment; it has already been tested and validated by the collaboration experts. The system has an electronic circuit that includes
+CERN for an LHC experiment; it has already been tested and validated in \dword{pdsp}.
+%; it has already been tested and validated by the collaboration experts. 
+The system has an electronic circuit that includes
 \begin{itemize}
 \item a precise and accurate current source for the excitation of the temperature sensors measured using the four-wires method,
 \item a multiplexing circuit connecting the temperature sensor signals and forwarding the selected signal to a single line, and 
@@ -1041,13 +1079,12 @@ Figure~\ref{fig:Trepro} shows the system has a resolution higher than
 
 The goals for the \lar level monitoring system are basic level sensing when filling, and precise level sensing during static operations. 
 
-Filling the cryostat with \lar will take several months. During this operation, 
-the differential pressure between the top of
-the cryostat and known points below can be converted to depth using
-the known density of \lar.  The temperatures of \dwords{rtd} at known
-heights can also be used to determine when the cold liquid reaches 
-each \dword{rtd}. Fine tuning of the final \lar level will be done using 
-several capacitive level meters at the top of the cryostat. 
+Filling the cryostat with \lar will take several months. During this operation several systems will be use to monitor the \lar level. 
+The first 5.5 m will be covered by cameras and by the vertical arrays of \dwords{rtd} at known heights, since temperature will change drastically 
+when the cold liquid reaches each \dword{rtd}. Once the liquid reaches the level of the cryogenic pipes going out of the cryostat, 
+the differential pressure between that point and the bottom of the cryostat
+can be converted to depth using
+the known density of \lar.   Fine tuning of the final \lar level will be done using several capacitive level meters at the top of the cryostat. 
 
 During operation, liquid level monitoring has two purposes:
 the \dword{lbnf} cryogenics system uses monitoring to tune the \lar flow, and 
@@ -1067,11 +1104,10 @@ cryogenics internal piping plan.
 %This precision is sufficient for the  \dword{spmod}, since the plan is to keep the \lar surface at least \SI{20}{cm} above the \dwords{gp} (this is the value used for the \dword{hv}
 %interlock in \dword{pdsp}); thus, no additional level meters are required for the \single. 
 
-For \dword{hv} integrity, multiple capacitive level sensors (with a precision of \SIrange{5}{10}{mm}) will be deployed along the top of the fluid %, used 
-for use during stable operation, and checked against each other.
+For \dword{hv} integrity, multiple 4~m long capacitive level sensors (with a precision of less than 5~mm) will be deployed along the top of the fluid %, used 
+for use during stable operations, and checked against each other.
 One capacitive level sensor at each of the four corners of the cryostat will provide sufficient redundancy to ensure that no single point of failure compromises the %capacitive level sensor 
 measurement.
-
 
 % However, in the \dual \lar system the surface level should be controlled at the millimeter level, which can be accomplished with capacitive monitors. Using the same capacitive monitor system in each \dword{detmodule} reduces design differences and provides a redundant system for the \single.  Either system could be used for the \dword{hv} interlock.
 
@@ -1089,6 +1125,30 @@ Figure~\ref{fig:cisc_pdsp_level} shows the evolution of the \dword{pdsp} LAr lev
   \includegraphics[width=0.4\textwidth]{cisc_level_diffp.png}%
 \end{dunefigure}
 
+\dword{pdsp} is using the same design for differential pressure level meters which will also be used in the far detector \dword{spmod}. In the case of capacitive level meters, \dword{pdsp} is using commercially bought 1.5~m long level meters while \dword{pddp} is using 4~m long level meters that are custom-built by CERN. For the DUNE \dword{fd}, we plan to use the longer capacitive level meters custom-built by CERN for both \dword{sp} and \dword{dp} modules.
+
+\subsection{Pressure Meters}
+\label{sec:fdgen-slow-cryo-press-meter}
+
+The absolute temperature in the liquid varies with the pressure in the argon gas, therefore, precise measurements of pressure inside the cryostat allows for a better understanding of temperature gradients and \dword{cfd} simulations. In ProtoDUNE, pressure values were also be used to understand the strain gauge signals installed in the cryostat frame.
+
+Standard industrial pressure sensors can be used to measure the pressure of the argon gas in the ullage in the cryostat. For the DUNE \dword{fd}, the plan is to follow the same design and configuration used in \dword{pdsp}. ProtoDUNE uses two types of pressure sensors and a pressure switch as described below:
+\begin{itemize}
+    \item A relative pressure sensor (range: 0-400~mbar, precision: 0.01~mbar),
+    \item An absolute pressure sensor (range: 0-1600~mbar, precision: 0.05~mbar),
+    \item A mechanical relative pressure switch adjustable from 50 to 250~mbar. 
+\end{itemize}
+
+\begin{dunefigure}[Photo of the pressure sensors installed on a flange in \dword{pdsp}]{fig:pdsp-pressure}
+  {Photograph of the pressure sensors installed on a flange in \dword{pdsp}.}
+  \includegraphics[width=0.5\textwidth]{graphics/cisc-pdsp-pressure-meters.png}
+\end{dunefigure}
+
+Both sensors and the pressure switch are installed in a dedicated flange as shown in figure~\ref{fig:pdsp-pressure} and are connected directly to a slow controls system programmable logic control (PLC) circuit. Dedicated analogue inputs are used to read the current values (4 to 20~mA) which are then converted to pressure according to the sensors range. Given the much larger size of DUNE \dword{fd}, the system described above will be doubled for redundancy: two flanges in opposite cryostat sides will be instrumented with three sensors each. 
+
+There are also relative and absolute pressure sensors (with comparatively lower precision) installed by \dword{lbnf} which are also recorded by the slow controls system. %The measurements from high precision sensors will be cross checked with LBNF pressure sensors. 
+The availability of two types of sensors from LBNF and CISC allows for redundancy, independent measurements, and cross checks.
+
 %%%%%%%%%%%%%%%%%%% GAS ANALYZERS %%%%%%%%%%%%%%%%%%%%
 \subsection{Gas Analyzers}
 \label{sec:fdgen-slow-cryo-gas-anlyz}
@@ -1104,17 +1164,18 @@ The argon is sampled from either the argon vapor in the ullage or from the \dwor
 \end{dunefigure}
 
 %The following lists three times 
-The gas analyzer would be used three times:
-
+%The gas analyzer would be used three times:
+The gas analyzer would be predominantly used during three periods:
 
 \begin{enumerate}
 \item Once the detector is installed and after the air atmosphere is eliminated from the cryostat to levels low enough to begin cooldown. This purge and gas recirculation process is detailed in Section~\ref{sec:fdgen-slow-cryo-install-ga}. Figure~\ref{fig:cisc_Phase1_purge_gas_recirculation} shows the evolution of the $\text{N}_2$, $\text{O}_2$, and $\text{H}_2\text{O}$ levels from gas analyzer data taken during the purge and recirculation stages of the \dword{dune} \dword{35t} %Prototype P
 phase 1 run.
 
-%\item Track trace $\text{O}_2$ and $\text{H}_2\text{O}$ contaminants from $\>$tens of ppb to hundreds of ppt. This is useful when other means of monitoring impurity levels (e.g., purity monitors, or \dshort{tpc} tracks) are not yet sensitive. Figure~\ref{fig:cisc_O2AnalyzerPrM2_HVRun1} shows a example plot of $\text{O}_2$ levels at the beginning of \dword{lar} purification from one of the later \num{35}\si{t} %Prototype \dword{hv} runs.
+%\item Track trace $\text{O}_2$ and $\text{H}_2\text{O}$ contaminants from $\>$tens of ppb to hundreds of ppt. This is useful when other means of monitoring impurity levels (e.g., purity monitors, or \dshort{tpc} tracks) are not yet sensitive. Figure~\ref{fig:cisc_O2AnalyzerPrM2_HVRun1} shows an example plot of $\text{O}_2$ levels at the beginning of \dword{lar} purification from one of the later \num{35}\si{t} %Prototype \dword{hv} runs.
 \item Before other means of monitoring impurity levels (e.g., purity monitors, or \dshort{tpc} tracks) are sensitive, to track trace $\text{O}_2$ and $\text{H}_2\text{O}$ contaminants from $\>$tens of ppb to hundreds of ppt.  Figure~\ref{fig:cisc_O2AnalyzerPrM2_HVRun1} shows an example plot of $\text{O}_2$ levels at the beginning of \lar purification from one of the later \dword{35t} \dword{hv} runs.
 
-\item During cryostat filling to monitor the tanker \lar delivery purity. This tracks the impurity load on the filtration system and rejects any deliveries that do not meet specifications. Likely specifications for the delivered \lar are in the \SI{10}{ppm} range per contaminant.
+\item During cryostat filling to monitor the tanker \lar delivery purity. This tracks the impurity load on the filtration system and rejects any deliveries that do not meet specifications. %Likely 
+Specifications for the delivered \lar are in the \SI{10}{ppm} range per contaminant.
 
 \end{enumerate}
 
@@ -1132,7 +1193,9 @@ Because any one gas analyzer covers only one contaminant species and a range of 
 \SI{20}{\percent} to $\lesssim 100$~ppt for $\text{O}_2$,
 \SI{80}{\percent} to $\lesssim 1$~ppm for $\text{N}_2$, and
 $\sim \SI{1}{\percent}$ to $\lesssim 1$~ppb for $\text{H}_2\text{O}$.
-Because the total cost of these analyzers exceeds $\SI{100}[\mathdollar]{k}$, we want to be able to  sample more than a single location or cryostat with the same gas analyzers. At the same time, the tubing run lengths from the sample point should be as short as possible to maintain a timely response for the gas analyzer. This puts some constraints on sharing devices because, for example, argon is delivered at the surface, so a separate gas analyzer may be required there. %at the surface.
+Because the total cost of these analyzers exceeds $\SI{100}[\mathdollar]{k}$, we want to be able to  sample more than a single location or cryostat with the same gas analyzers. At the same time, the tubing run lengths from the sample point should be as short as possible to maintain a timely response for the gas analyzer. This puts some constraints on sharing devices because, for example, 
+a separate gas analyzer may be required in the storage infrastructure for argon delivery at the surface.
+%argon is delivered at the surface, so a separate gas analyzer may be required there. %at the surface.
 
 % \fixme{Do Gas Analyzers have \dword{protodune} design and results? Alan and Stephen say they weren't used as extensively at PDSP as at 35t, and "35t is also a prototype and has shown how gas analyzers can be used."}
 
@@ -1269,7 +1332,9 @@ SUB-D connectors are used at the cryostat flanges and the camera enclosure for s
 
 An alternative design uses an acrylic enclosure.
 This design was used successfully in \dword{pdsp} (see Figure~\ref{fig:gen-fdgen-cameras-enclosure}, bottom left). Cameras 001, 002, 004, and 005, shown in Figure~\ref{fig:pdsp-camera-locations}, use acrylic enclosures. 
-All operate successfully, including those at the bottom of the cryostat.
+All operate successfully, including those at the bottom of the cryostat.  It must be noted that the \dword{dune} \dword{fd} will be twice as deep as \dword{protodune}, and therefore cameras observing the lowest surfaces of the \dword{fc} must withstand twice the pressure.
+
+We will continue prototyping and testing in order to finalize and validate the cold camera design for \dword{dune}, focusing particularly on pressure resistance.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
@@ -1282,7 +1347,7 @@ inspections have been identified as likely uses:
 \begin{itemize}
 \item status of \dword{hv} \fdth and cup,
 \item status of \dword{fc} profiles, endcaps (\SI{0.5}{mm} resolution),
-\item $y$-axis deployment of calibration sources,
+\item vertical deployment of calibration sources,
 \item status of thermometers, especially dynamic thermometers,
 \item \dword{hv} discharge, corona, or streamers on \dword{hv} \fdth, cup, or \dword{fc},
 \item relative straightness and alignment of \dword{apa}/\dword{crp}, \dword{cpa}/cathode, and \dword{fc} (\SI{1}{mm} resolution),
@@ -1327,7 +1392,7 @@ thickness of the cryostat insulation, cameras can be moved vertically up to
 \SI{1}{m} inside the cryostat.
 % In the event that it
 % becomes necessary to deploy a camera more deeply, we would have the
-% option of building a a cable deployment system or a multi-pole
+% option of building a cable deployment system or a multi-pole
 % deployment system similar to the KamLAND full-volume calibration
 % system\cite{Busenitz:2009ac}, but this is not currently part of the
 % baseline design.
@@ -1336,9 +1401,9 @@ volume, coupled mechanically using ferrofluidic seals, thus reducing any risk of
 contamination and allowing manual rotation of the vertical
 drive in the event of motor failure.  
 
-An alternative design was demonstrated in \dword{pdsp}. In this design, the warm camera is contained inside a gas-tight acrylic tube inserted into the feedthrough, so a gate valve or a gas-tight rotatable stage is not needed, and the warm cameras can be removed for servicing or upgrade at any time. Figure~\ref{fig:gen-fdgen-cameras-movable} (right) shows an acrylic tube enclosure and camera immediately before deployment. These acrylic tube enclosures for removable cameras were deployed at the positions marked 201, 202, and 203 in Figure~\ref{fig:pdsp-camera-locations}; they operated successfully in \dword{pdsp}. Cameras with fisheye lenses were used in these tubes during initial operation; we plan to use other cameras during post-beam running.
+An alternative design was demonstrated in \dword{pdsp}. In this design, the warm camera is contained inside a gas-tight acrylic tube inserted into the feedthrough, so a gate valve or a gas-tight rotatable stage is not needed, and the warm cameras can be removed for servicing or upgrade at any time. Figure~\ref{fig:gen-fdgen-cameras-movable} (right) shows an acrylic tube enclosure and camera immediately before deployment. These acrylic tube enclosures for removable cameras were deployed at the positions marked 201, 202, and 203 in Figure~\ref{fig:pdsp-camera-locations}; they operated successfully in \dword{pdsp}. Cameras with fisheye lenses were used in these tubes during initial operation.  One camera was removed without any evidence of contamination of the \dword{lar}. We plan to use other cameras during post-beam running.
 
-To finalize and validate these designs for \dword{dune}, we will continue prototyping and testing, focusing particularly on longevity and pressure resistance.
+We will continue prototyping and testing in order to finalize and validate the inspection camera design for \dword{dune}, focusing particularly on longevity, camera replaceability, and protection of the \dword{lar}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1385,12 +1450,12 @@ This allows two different wavelengths of illumination using a single chain simpl
 
 
 
-%%%%%%%%%%%%%%%%%% CRYOGENIC TEST FACILITY %%%%%%%%%%%%%%%%%%%%
-\subsection{Cryogenic Test Facility}
+%%%%%%%%%%%%%%%%%% CRYOGENIC Instrumentation TEST FACILITY %%%%%%%%%%%%%%%%%%%%
+\subsection{Cryogenic Instrumentation Test Facility}
 % same for SP and DP
 % alan h
 
-The Cryogenic Test Facility at \fnal has provided access to small ($<\,\SI{1}{ton}$) to intermediate ($\sim\,\SI{1}{ton}$) volumes of purified TPC-grade \dword{lar}, required for %. Hardware that requires this high-purity liquid includes 
+The \dfirst{citf} at \fnal has provided access to small ($<\,\SI{1}{ton}$) to intermediate ($\sim\,\SI{1}{ton}$) volumes of purified TPC-grade \dword{lar}, required for %. Hardware that requires this high-purity liquid includes 
 any device intended for drifting electrons for millisecond periods. %Not all devices need this high purity \lar , but may need a relatively large volume for the necessary prototyping environments. A relatively fast turn-around time of approximately a week is needed for short prototyping runs. 
 
 %\begin{dunefigure}[]{fig:cisc_PAB_photo}
@@ -1405,6 +1470,32 @@ The PAB facility at \fnal houses the ICEBERG \SI {3000} {liter} cryostat which e
 The PAB facility also includes TallBo (\SI {450} {liter}), Blanche (\SI {500} {liter}), and Luke (\SI {250} {liter}) cryostats. %All these cryostats are available for outside use.
 In the recent past, Blanche has been used for \dword{hv} studies, TallBo for \dword{pd} studies, and Luke for the material test stand work. These studies have contributed to the design and testing of  \dword{pdsp} components.
 
+\subsection{Validation in ProtoDUNE}
+\label{sec:pdsp-cryo-valid}
+
+Design validation and testing of many planned \dword{cisc} systems for
+the \dword{spmod} will be done using the data from
+\dword{pdsp} and \dword{pddp} as discussed below.
+
+\begin{itemize}
+	\item {\bf Level Meters:} The same differential pressure level meters
+	      which are already validated in \dword{pdsp} will be used in \dword{spmod}. The same capacitive level meters currently used in
+	      \dword{pddp} will be used in the \dword{spmod}. These will be
+	      validated in the upcoming \dword{pddp} run.
+	\item {\bf Pressure Meters (GAr):} Same high precision pressure sensors which are already validated in \dword{pdsp} will be used in \dword{sp} \dword{fd}.
+	\item {\bf Gas Analyzers:} The same gas analyzers currently used in
+	      \dword{pdsp} will be used in the \dword{spmod} so they have already
+	      been validated.
+	\item {\bf High precision thermometer arrays in \lar:} The static
+	      and dynamic T-gradient thermometers discussed in the previous sections are validated using \dword{pdsp} data.
+	\item {\bf Purity monitors:} The same purity monitor basic design used in \dword{pdsp} will be used in the \dword{fd} \dword{spmod}. \dword{pdsp} and \dword{pddp} run 2 phase provides opportunities to
+	      test any improvements to the design.
+	\item {\bf Cameras:} various types of cameras are being actively
+	      developed in both \dword{pdsp} and \dword{pddp} so the validation of
+	      designs will be performed both at \dword{pdsp} and \dword{pddp}. Future
+	      improvements can be tested in \dword{pdsp} and \dword{pddp} run 2 phase
+	      at CERN.
+\end{itemize}
 
 
 %%%%%%%%
@@ -1413,7 +1504,7 @@ In the recent past, Blanche has been used for \dword{hv} studies, TallBo for \dw
 
 The slow controls system collects, archives, and displays data from
 a broad variety of sources and provides real-time status, alarms, and warnings for detector operators. Slow controls also provides control for %some detector components of the detector systems 
-items such as \dword{hv} systems, \dword{tpc} electronics, and \dword{pd} systems. Data is acquired via network interfaces.  Figure~\ref{fig:gen-slow-controls-diagram} shows connections between major parts of the slow controls system and other systems. Hardware, infrastructure, and software are the three main components of the slow controls system. %, each of which are described in this section.
+items such as \dword{hv} systems, \dword{tpc} electronics, and \dword{pd} systems. Data is acquired via network interfaces.  Figure~\ref{fig:gen-slow-controls-diagram} shows connections between major parts of the slow controls system and other systems. %Hardware, infrastructure, and software are the three main components of the slow controls system. %, each of which are described in this section.
 
 \begin{dunefigure}[Slow controls connections and data]{fig:gen-slow-controls-diagram}
 {Typical slow controls system connections and data flow}
@@ -1442,7 +1533,7 @@ Every rack (including those in the \dword{cuc}) should have dedicated hardware t
 
 \begin{dunefigure}[Rack monitoring box prototype for the SBND; based on MicroBooNE design]{fig:slow-controls-rack-box}
 {Rack monitoring box prototype in development for the short-baseline near detector (SBND) experiment based on the original design from MicroBooNE.}
-\includegraphics[width=0.6\textwidth]{cisc-slow-controls-rackbox}
+\includegraphics[width=0.6\textwidth]{cisc-slow-controls-rackbox.png}
 \end{dunefigure}
 
 
@@ -1478,7 +1569,9 @@ also run here. One or two additional servers should accommodate these programs.
 % on input from the LBNF cryogenics experts.)
 Replicating this setup on a per-module basis would make commissioning and independent operation easier, accommodate different module
 design (and the resulting differences in database tables), and ensure
-sufficient capacity.  These four sets of networking hardware would fit tightly into one rack or very comfortably into two. Using the requirements from \dword{cisc}, the \dword{daq} consortium will provide the cost estimates for servers and racks. 
+sufficient capacity.  These four sets of networking hardware would fit tightly into one rack or very comfortably into two. Using the requirements from \dword{cisc}, the \dword{daq} consortium will provide the needed cost 
+%estimates 
+for servers and racks. 
 
 % % % % Alec and Sowjanya
 %% \subsubsection{Slow Controls Signal Processing Hardware}
@@ -1559,11 +1652,15 @@ acknowledging alarms. A standard naming
 convention for channels will be part of the software to help handle large
 numbers of channels and subsystems.
 
+%\fixme{CP: Paragraph below modified to explain the baseline software here}
+The \dword{pdsp} detector control system software \cite{pdspdcs_proc} (NP04-DCS) provides a prototype for %this required 
+the \dword{fd} slow
+controls software. In NP04-DCS, the unified control system base is WinCC OA \cite{winccoa}, a
+commercial toolkit used extensively at CERN, with device interfaces
+supported using several standardized interface protocols. A more detailed description is in Section~\ref{sec:cisc-slow-control-pdsp} below.
 
-
-The \dword{pdsp} detector control system software \cite{pdspdcs_proc}
-provides a prototype for this required \dword{fd} slow
-controls software, as described in Section~\ref{sec:cisc-slow-control-pdsp} below.
+%provides a prototype for this required \dword{fd} slow
+%controls software, as described in Section~\ref{sec:cisc-slow-control-pdsp} below.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Ed T
@@ -1576,7 +1673,7 @@ The final set of quantities to monitor will ultimately be determined
 by the subsystems being monitored, documented in
 appropriate  interface control documents (ICDs), and continually revised based on operational
 experience.  The total number of quantities to monitor has been roughly estimated by taking the total number monitored
-in \dword{pdsp}\cite{pdspdcs_proc}, 7595 as of Nov. 19, 2018, and scaling by the detector length and the number of planes, giving approximately 200,000. %thousand. in the range of \numrange{140}{190} thousand. % let's keep just 1 digit of precision to be safe [glenn]
+in \dword{pdsp}\cite{pdspdcs_proc}, 7595 as of Nov. 19, 2018, and scaling by the detector length and the number of planes, giving approximately 150,000 per \dword{detmodule}.% in the range of \numrange{140}{190} thousand. % let's keep just 1 digit of precision to be safe [glenn]
 Quantities should update on average no more than once per minute.
 Transmitting a single update for each channel at that rate translates to a few thousand updates per second, or a few tens of thousands of bytes per second. While this is not a significant load on a network with an efficient slow controls protocol, it would correspond to approximately 1~TB per year if every timestamp and value were stored.
 
@@ -1598,6 +1695,7 @@ Purity monitors & anode and cathode charge, bias voltage and current, flash lamp
 Thermometers & temperature, position of dynamic thermometers \\ \colhline
 Liquid level & liquid level \\ \colhline
 Gas analyzers & purity level readings \\ \colhline
+Pressure meters & pressure readings \\ \colhline
 Cameras & camera voltage and current draw, temperature, heater current and voltage, lighting current and voltage \\ \toprowrule
 \multicolumn{2}{l}{\bf Other detector systems } \\ \specialrule{1.5pt}{1pt}{1pt}
 Cryogenic internal piping & \fdth gas purge flow and temperature \\ \colhline
@@ -1662,9 +1760,10 @@ Figure~\ref{fig:cisc-NP04-DCS-topology}. In addition to what
 the figure shows, data was also acquired from external cryogenic and beam
 systems.  The topology and data flow of the system matches the general
 shape shown in Figure~\ref{fig:gen-slow-controls-diagram}. In NP04-DCS,
-the unified control system base is WinCC OA \cite{winccoa}, a
-commercial toolkit used extensively at CERN, with device interfaces
-supported using several standardized interface protocols.
+the unified control system base is a
+commercial toolkit (WinCC OA) supported by CERN.
+%used extensively at CERN, with device interfaces
+%supported using several standardized interface protocols.
 
 As noted in sections \ref{sec:fdgen-slow-cryo-sw} and \ref{sec:fdgen-slow-cryo-quant},
 the %\dword{dune} 
@@ -1687,7 +1786,7 @@ consortium has five working groups:
 \begin{description}
  \item[Cryogenics Systems] gas analyzers and liquid level
   monitors; \dword{cfd} simulations
- \item[Liquid Argon Instrumentation] purity monitors, thermometers, cameras and light emitting system, and instrumentation test facility; feedthroughs; \efield simulations; instrumentation precision studies; \dword{protodune} data analysis coordination and validation 
+ \item[Argon Instrumentation] purity monitors, thermometers, pressure meters, capacitive level meters, cameras and light emitting system, and instrumentation test facility; feedthroughs; \efield simulations; instrumentation precision studies; \dword{protodune} data analysis coordination and validation 
  \item [Slow Controls Base Software and Databases]  base I/O software, alarms and archiving databases, and monitoring tools;
    variable naming conventions and slow controls quantities
  \item [Slow Controls Detector System Interfaces] signal processing software and hardware interfaces (e.g., power supplies); firmware; rack hardware and infrastructure   
@@ -1696,7 +1795,7 @@ consortium has five working groups:
 
 \begin{dunefigure}[CISC consortium organization]{fig:gen-slow-cryo-org}
 {CISC Consortium organizational chart}
-\includegraphics[width=0.8\textwidth]{cisc_org.png}
+\includegraphics[width=0.8\textwidth]{graphics/CISC_Org_9Apr2019_zoomedin.png}
 \end{dunefigure}
 
 \begin{dunetable}
@@ -1741,6 +1840,8 @@ South Dakota State University (SDSU)           &  USA            % &  Stephen Ge
 University of Tennessee at Knoxville (UTK)     &  USA           %  &  Sowjanya Gollapinni 
 \\ \colhline
 Virginia Tech (VT)                            &	USA	           % &  Camillo Mariani
+\\	\colhline
+	Boston University (BU)			      & USA % & Edward Kearns
 \\
 \end{dunetable}
 
@@ -1754,7 +1855,9 @@ will be a joint effort for \single and \dual. A single slow controls system will
 
 Design and installation of cryogenic systems (e.g., gas analyzers, liquid level monitoring) will be coordinated with \dword{lbnf}, with the consortium providing resources and effort, and expertise provided by \dword{lbnf}. \dword{protodune} designs for \lar instrumentation (e.g., purity monitors, thermometers, cameras, test facility) will be the basis for \dword{detmodule} designs. Design validation, testing, calibration, and performance will be evaluated through \dword{protodune} data.
 
-Following the conceptual funding model envisioned for the consortium, various responsibilities have been distributed across institutions within the consortium. At this stage of the project, these should be considered as ``aspirational'' responsibilities until firm funding decisions are made. Table~\ref{tab:cisc-inst-resp} shows the current institutional responsibilities for primary \dword{cisc} subsystems. Only lead institutes are listed in the table for a given effort. For physics and simulations studies, and validation efforts with \dword{protodune}, a number of institutes are involved. A detailed list of tasks and institutional responsibilities are presented in~\cite{bib:docdb5609}.
+Following the conceptual funding model envisioned for the consortium, various responsibilities have been distributed across institutions within the consortium. At this stage of the project, firm funding decisions are not made yet.
+%At this stage of the project, these should be considered as ``aspirational`` responsibilities until firm funding decisions are made.
+Table~\ref{tab:cisc-inst-resp} shows the current institutional responsibilities for primary \dword{cisc} subsystems. Only lead institutes are listed in the table for a given effort. For physics and simulations studies, and validation efforts with \dword{protodune}, a number of institutes are involved. A detailed list of tasks and institutional responsibilities are presented in~\cite{bib:docdb5609}.
 
 \begin{dunetable}
 [Institutional responsibilities in the CISC consortium ]
@@ -1767,23 +1870,28 @@ Static T-gradient monitors     &  IFIC \\ \colhline
 Dynamic T-gradient monitors & Hawaii \\ \colhline
 Individual Sensors & IFIC \\ \colhline
 Readout System for Thermometers & IFIC, Hawaii, CIEMAT \\ \colhline
+Pressure Meters & UTK \\ \colhline
 Cold Cameras & KSU, BNL \\ \colhline
 Warm Cameras & KSU, BNL \\ \colhline
 Light-emitting System (for cameras) & Drexel \\ \colhline
 Gas Analyzers & FNAL, \dword{lbnf} \\ \colhline
-Liquid Level Monitors & \dword{lbnf}, Notre Dame \\ \colhline
-Instrumentation Test Facility & FNAL, ANL \\ \colhline
+Differential Pressure Level Meters & \dword{lbnf} \\ \colhline
+Capacitive Level Meters & Notre Dame \\ \colhline
+Cryogenic Instrumentation Test Facility & FNAL, ANL \\ \colhline
 \dword{cfd} Simulations & SDSU, ANL \\ \colhline
 Other Simulation \& Validation Studies & Number of Institutes \\ \colhline
 Slow Controls Hardware & UMD, UTK, Drexel\\ \colhline
 Slow Controls Infrastructure & UMD, UTK\\ \colhline
-Slow Controls Base Software & KSU, UTK, Drexel, Warwick, UCL, ANL, IFIC\\ \colhline 
-Slow Controls Signal Processing & A number of institutes \\
+Slow Controls Base Software & KSU, UTK, BU, Drexel, Warwick, ANL, IFIC\\ \colhline 
+Slow Controls Signal Processing & A number of institutes \\ \colhline
+Slow Controls External Interfaces & VT, UTK, UMD \\
 \end{dunetable}
 
 \subsection{Cost and Labor}
 
 Table \ref{tab:cisc-cost} shows the current cost estimates for the \dword{cisc} subsystems. It also shows the quantity associated with each subsystem and a brief description of what is included in the cost estimate. The cost estimates only include materials and supplies (M\&S) and packing and shipping, but not labor and travel costs. Labor costs depend on personnel category (e.g., faculty, student, technician, post-doc, engineer) and vary by region and institution, so costs are quantified using labor hours needed to fulfill a given task. Table~\ref{tab:cisc-labor} provides estimates of labor hours for each subsystem, for a total of \num{95010} labor hours for all \dword{cisc} tasks. 
+
+\fixme{3/25 Anne: Cost and labor hour tables will be automated in early April. Info to come.}
 
 \fixme{Commenting out the cost column for submission to LBNC per Tim. Anne}
 \begin{comment}
@@ -1798,6 +1906,7 @@ Static T-gradient monitors     & 6 & \$88,340 & Includes cables, sensors and con
 Precision individual temperature sensors & 130 & \$51,512 & Includes cables, sensors and connectors, support structure, flanges \\ \colhline
 Standard individual temperature sensors & 35 & \$12,615 & Includes cables, sensors and connectors, support structure, flanges \\ \colhline
 Dynamic T-gradient monitors    & 2 & \$108,060 & Includes cables, sensors, motor drive, flanges, sensor holders \\ \colhline
+Pressure Meters (GAr) & 6 & - & Includes pressure meters and flanges \\ \colhline
 Warm cameras                   & 3 & \$294,775 & Includes material cost, computer, argon purge \& pressurization system, prototyping \& testing  \\ \colhline
 Cold cameras                   & 12 & \$38,300  & Includes material cost, computer, minor jigs \& test boards \\ \colhline
 Light system                   & 15 & \$4,900 & Cost of illuminator and light driver module    \\ \colhline
@@ -1868,6 +1977,7 @@ Purity monitors & -& -& -& -& - & - \\ \colhline
 Static T-gradient monitors & -& -& -& -& - & - \\ \colhline
 Individual temperature sensors  & -& -& -& -& - & - \\ \colhline
 Dynamic T-gradient monitors  & -& -& -& -& - & - \\ \colhline
+Pressure Meters (GAr) & & & & & & \\ \colhline
 Warm cameras  & -& -& -& -& - & - \\ \colhline
 Cold cameras  & -& -& -& -& - & - \\ \colhline
 Light system  & -& -& -& -& - & - \\ \colhline
@@ -1881,10 +1991,59 @@ Physics \& simulation  & -& -& -& -& - & - \\
 
 \subsection{Schedule}
 
-%\fixme{SG: schedule table updated and new text added. Ready for review.}
+%\fixme{Anne: Please use this new template (\ref{tab:sp-cisc-sched}) (as of late March)}
 
-Table \ref{tab:fdgen-slow-cryo-schedule} shows key construction milestones for the \dword{cisc} consortium leading to commissioning the first \dword{fd} module. \dword{cisc} construction milestones align with the overall construction milestones of the first \dword{fd} module (highlighted in bold in the table). The prototyping and testing of the final designs of \dword{cisc} systems is expected to be finished by 2020. The procurement and assembly of production units should start in 2021. Integration and testing at the \dfirst{itf} will begin in 2022. Installing instrumentation devices will start in December 2022 following the beneficial occupancy of the cryostat. Installing gas analyzers, level meters, individual temperature sensors, static T-gradient thermometers, and support structure for all instrumentation devices will finished before installing \dword{tpc}, but installing dynamic T-gradient thermometers, purity monitors, and cameras will occur afterward. \dword{cisc} will work closely with \dword{lbnf} to coordinate installation of the cryogenic systems and instrumentation devices. For slow controls, the goal is to have the full slow controls system commissioned and integrated into remote operations at least three months before the %detector 
+%This is a standard table template for the TDR schedules.  It contains overall FD dates from Eric James as of March 2019 (orange) that are held in macros in the common/defs.tex file so that the TDR team can change them if needed. Please do not edit these lines! Please add your milestone dates to fit in with the overall FD schedule. 
+
+\begin{dunetable}
+[\dword{sp} \dword{cisc} Schedule]
+{p{0.65\textwidth}p{0.25\textwidth}}
+{tab:sp-cisc-sched}
+{Key CISC construction schedule milestones leading to commissioning of the first FD module.}   
+Milestone & Date (Month YYYY)   \\ \toprowrule
+Technology Decision Dates &   September 2019   \\ \colhline
+Final Design Review Dates &   November 2019   \\ \colhline
+Start of module 0 component production for ProtoDUNE-II & March 2020  \\ \colhline
+End of module 0 component production for ProtoDUNE-II & September 2020  \\ \colhline
+\rowcolor{dunepeach} Start of \dword{pdsp}-II installation& \startpduneiispinstall      \\ \colhline
+ \dword{prr} dates &  September 2021    \\ \colhline
+Start procurement of \dword{cisc} hardware & December 2021 \\ \colhline
+\rowcolor{dunepeach} Start of \dword{pddp}-II installation& \startpduneiidpinstall      \\ \colhline
+Start of production of \dword{cisc} hardware & April 2022 \\ \colhline
+\rowcolor{dunepeach}South Dakota Logistics Warehouse available& \sdlwavailable      \\ \colhline
+\rowcolor{dunepeach}Beneficial occupancy of cavern 1 and \dword{cuc}& \cucbenocc      \\ \colhline
+\rowcolor{dunepeach} \dword{cuc} counting room accessible& \accesscuccountrm      \\ \colhline
+End of \dword{cisc} hardware production  &   July 2023   \\ \colhline
+\rowcolor{dunepeach}Top of \dword{detmodule} \#1 cryostat accessible& \accesstopfirstcryo      \\ \colhline
+%End of  (component 1) production  &      \\ \colhline
+%... & ...                       \\ \colhline
+Start integration of \dword{cisc} hardware in the cavern & March 2024   \\ \colhline
+Installation of gas analyzers & April 2024\\ \colhline
+Installation of support structure for all instrumentation devices &  May 2024 \\ \colhline
+Installation of individual sensors, static T-gradient thermometers, and level meters & June 2024\\ \colhline
+\rowcolor{dunepeach}Start of \dword{detmodule} \#1 TPC installation& \startfirsttpcinstall      \\ \colhline
+All slow controls hardware, infrastructure, \& networking installed & February 2025\\ \colhline
+Slow controls software for I/O, alarms, archiving, displays installed on production systems & May 2025 \\ \colhline
+\rowcolor{dunepeach}End of \dword{detmodule} \#1 TPC installation& \firsttpcinstallend      \\ \colhline
+Install dynamic T-gradient monitors, cameras, purity monitors & July 2025 \\\colhline
+Install all feedthroughs for instrumentation devices & July 2025 \\ \colhline
+Install slow control expert interfaces for all systems in time for testing & September 2025 \\ \colhline
+Full slow controls systems commissioned and integrated into remote operations & July 2026 \\ 
+\rowcolor{dunepeach}Top of 
+\dword{detmodule} \#2 cryostat accessible& \accesstopsecondcryo      \\ \colhline
+ \rowcolor{dunepeach}Start of \dword{detmodule} \#2 TPC installation& \startsecondtpcinstall      \\ \colhline
+\rowcolor{dunepeach}End of \dword{detmodule} \#2 TPC installation& \secondtpcinstallend      \\ 
+\end{dunetable}
+
+Table \ref{tab:sp-cisc-sched} shows key construction milestones for the \dword{cisc} consortium leading to commissioning of the first \dword{fd} module. \dword{cisc} construction milestones align with the overall construction milestones of the first \dword{fd} module (highlighted in orange in the table). The technology design decisions for \dword{cisc} systems should be made by September 2019 followed by technical design reviews. The production of improved design prototypes (if any) to be deployed at ProtoDUNE-II running should be finished by September 2020 followed by assembly, laboratory testing and deployment in ProtoDUNE-II. 
+
+Production of \dword{cisc} systems for the \dword{fd} should start in April 2022, followed by assembly of the systems underground in the detector cavern in early 2024. Installation of instrumentation devices will start in April 2024 following the beneficial occupancy of the cryostat. Installing gas analyzers, level meters, individual temperature sensors, static T-gradient thermometers, and support structure for all instrumentation devices will be finished before installing \dword{tpc}, but installing dynamic T-gradient thermometers, purity monitors, and cameras will occur afterward. \dword{cisc} will work closely with \dword{lbnf} to coordinate installation of the cryogenic systems and instrumentation devices. For slow controls, the goal is to have the full slow controls system commissioned and integrated into remote operations at least three months before the \dword{spmod} is ready for operations.  
+
+\begin{comment}
+%SG: commenting out the old text
+Table \ref{tab:sp-cisc-sched} shows key construction milestones for the \dword{cisc} consortium leading to commissioning the first \dword{fd} module. \dword{cisc} construction milestones align with the overall construction milestones of the first \dword{fd} module (highlighted in bold in the table). The prototyping and testing of the final designs of \dword{cisc} systems is expected to be finished by 2020. The procurement and assembly of production units should start in 2021. Integration and testing at the \dfirst{itf} will begin in 2022. Installing instrumentation devices will start in December 2022 following the beneficial occupancy of the cryostat. Installing gas analyzers, level meters, individual temperature sensors, static T-gradient thermometers, and support structure for all instrumentation devices will finished before installing \dword{tpc}, but installing dynamic T-gradient thermometers, purity monitors, and cameras will occur afterward. \dword{cisc} will work closely with \dword{lbnf} to coordinate installation of the cryogenic systems and instrumentation devices. For slow controls, the goal is to have the full slow controls system commissioned and integrated into remote operations at least three months before the %detector 
 \dword{spmod} is ready for operations in 2025.  
+\end{comment}
 
 %SG: I replaced the table with a different version of the table. Listing schedule WBS numbers is not needed and also it will be important to include the key milestones for the international schedule so it is easy to see that our plans align with that schedule.
 \begin{comment}
@@ -1957,40 +2116,12 @@ Full slow controls systems commissioned and integrated into remote operations   
 \end{comment}
 \fixme{Anne to add project milestones to defs file then we can use them here as needed. 1/16.}
 
-\begin{dunetable}
-[Key CISC construction milestones for commissioning of the first \dword{spmod}.]
-{p{0.10\linewidth}p{0.80\linewidth}}
-{tab:fdgen-slow-cryo-schedule}
-{Key \dword{cisc} construction schedule milestones leading to commissioning the first \dword{fd} module.}   
-Date   &  Milestone                                                                                                        \\ \toprowrule
-May 2020 &  Complete cryogenic instrumentation local test facility                                                           \\ \colhline
-Jun 2020 &  Complete production of first full system prototypes of all CISC hardware devices                                 \\ \colhline
-Oct 2020 &  Complete test of instrumentation device prototypes at the local test facility                                    \\ \colhline
-Mar 2021 &  Complete procurement of CISC hardware                                                                            \\ \colhline
-Feb 2022 &  Complete assembly \& production of CISC hardware                                                                 \\ \colhline
-Mar 2022 &  Complete local testing of CISC production hardware                                                               \\ \colhline
-Feb 2022 &  \textbf{Begin integrating and testing Detector\#1 components at \dword{itf}}                                     \\ \colhline
-Feb 2022 &  Begin integrating/testing slow controls hardware/software at \dword{itf} (as part of DAQ)                        \\ \colhline
-Apr 2022 &  Begin integrating/testing instrumentation devices in the cold box at the SURF \dword{itf}                        \\ \colhline
-Jun 2022 &  Complete procurement of gas analyzers and level meters                                                              \\ \colhline
-Dec 2022 &  \textbf{Beneficial occupancy of cryostat\#1}                                                                     \\ \colhline
-Mar 2023 &  Complete installation of gas analyzers                                                                           \\ \colhline 
-Apr 2023 &  Complete installation of support structure for all instrumentation devices                                       \\ \colhline
-May 2023 &  Complete installation of individual sensors, static T-gradient thermometers, and level meters                    \\ \colhline
-May 2023 &  \textbf{Cryostat\#1 ready for TPC installation}                                                                  \\ \colhline
-Feb 2024 &  Complete installation of slow controls hardware, infrastructure, \& networking                                   \\ \colhline
-May 2024 &  Complete installation of slow controls software for I/O, alarms, archiving and  displays on production systems   \\ \colhline
-May 2024 &  \textbf{Begin closing Cryostat\#1}                                                                               \\ \colhline
-Jul 2024 &  Complete installation of dynamic T-gradient monitors, cameras, purity monitors after installing TPC              \\ \colhline
-Jul 2024 &  Complete installation of feedthroughs for instrumentation devices                                                \\ \colhline
-Sep 2024 &  Complete install slow control expert interfaces for all systems in time for testing                              \\ \colhline
-Oct 2024 &  \textbf{Cryostat\#1 ready for filling}                                                                           \\ \colhline
-Jul 2025 &  Full slow controls systems commissioned and integrated into remote operations                                    \\ \colhline
-Oct 2025 &  \textbf{Detector\#1 ready for operations}                                                                        \\
-\end{dunetable}   
+ 
 
 \subsection{Risks}
 %\fixme{SG: Table reformatted and updated. New text added. This is now ready for review.}
+\fixme{Risk tables to be automated; Anne to send template via email. 3/25}
+
 Tables~\ref{tab:fdgen-slow-cryo-risk1}, \ref{tab:fdgen-slow-cryo-risk2}, and \ref{tab:fdgen-slow-cryo-risk3} list the possible risks identified by the \dword{cisc} consortium along with corresponding mitigation strategies. The tables list 18 risks at low and medium level. A more detailed list of risks with additional descriptions can be found in \cite{bib:docdb7192}. The tables show all risks are medium or low level, mitigated with necessary steps and precautions. Risk\#1, where the \dword{pdsp}-based designs are inadequate for \dword{fd}, is important because this requires early validation from \dword{protodune} data so R\&D of alternate designs can be timely. With \dword{pdsp} data now available, the consortium is focused on validating instrumentation designs.
 
 \begin{dunetable}
@@ -2063,7 +2194,7 @@ The best way to mitigate the degradation is to have monitors inline with the cry
 % Add additional level meters based on temperature and/or capacitive measurements, as done for \dword{pdsp}
 % \\ \toprowrule
 %****SG: remove this, this is an overkill at this point as I can't imagine not accommodating testing of alternate devices in CITF.****
-%19 & The baseline design of the Cryogenics Instrumentation Test Facility (CITF) is not suitable for some of the alternative designs mentioned in risk 1 in Table~\ref{tab:fdgen-slow-cryo-risk1}. & L & The constraints of the CIFT should be taken into account when designing new prototypes, so that such that those new designs can be easily accommodated in the CIFT.   \\ \colhline
+%19 & The baseline design of the Cryogenics Instrumentation Test Facility (CITF) is not suitable for some of the alternative designs mentioned in risk 1 in Table~\ref{tab:fdgen-slow-cryo-risk1}. & L & The constraints of the CITF should be taken into account when designing new prototypes, so that such that those new designs can be easily accommodated in the CITF.   \\ \colhline
 17 & Longevity: Gas analyzers and level meters may fail. These are commercial devices with typical warranties around one year from date of purchase. & L &
 To mitigate this, make provisions for future replacement in case of failure or loss of sensitivity. 
 \\ \colhline
@@ -2270,13 +2401,13 @@ This problem can be solved by design software deadlock to prevent PrMs from runn
 % \\ \toprowrule
 19
 &
-The baseline design of the Cryogenics Instrumentation Test Facility (CITF) is not appropriate for some of the alternative designs mentioned in risk 1
+The baseline design of the \dword{citf} is not appropriate for some of the alternative designs mentioned in risk 1
 &
-The final design of some of the instrumentation devices could differ from those described in the TP/TDR. This could have implications in the CITF design.
+The final design of some of the instrumentation devices could differ from those described in the TP/TDR. This could have implications in the \dword{citf} design.
 &
 L
 &
-The constraints of the CITF should be taken into account when designing new prototypes, so that such that those new designs can be easily accommodated in the CITF.   
+The constraints of the \dword{citf} should be taken into account when designing new prototypes, so that such that those new designs can be easily accommodated in the \dword{citf}.   
 \\ \toprowrule
 20
 &
@@ -2318,14 +2449,14 @@ The choice of HV/LV power supplies and other hardware devices that need control/
 working groups (physics, software/computing, beam instrumentation), and technical coordination, requiring interactions with all of these entities.  We also interact heavily with \dword{lbnf} beam and cryogenics groups.  
 Detailed descriptions of \dword{cisc} interfaces are maintained in \dword{dune} DocDB. A brief summary is provided in this section. Table~\ref{tab:fdgen-cisc-interfaces} lists the IDs of the different DocDB documents as well as their highlights. Descriptions of the interfaces and interactions that affect many systems are given below. 
 
-Obviously, \dword{cisc} interacts with the detector consortia because \dword{cisc} will provide status monitoring of all important detector sub-systems along with controls for some components of the detector.
+\dword{cisc} interacts with the detector consortia because \dword{cisc} will provide status monitoring of all important detector sub-systems along with controls for some components of the detector.
 %full rack monitoring (rack fans, thermometers and rack protection system), interlock status bit monitoring (not the actual interlock mechanism) and monitoring and control for all power supplies (PS).
 \dword{cisc} will also consult on selecting different power supplies to ensure monitoring and control can be established with preferred types of communication. 
 Rack space distribution and interaction between slow controls and other modules from other consortia will be managed by TC in consultation with those consortia. 
 
-If heaters/RTDs are needed on flanges, CISC will specify the heaters/RTDs and will provide the readout/control, while the responsibility for the actual hardware will be discussed with the different groups.  
+\dword{cisc} will work with \dword{lbnf} to determine whether heaters and RTDs are needed on flanges. If so, CISC will specify the heaters and RTDs, and will provide the readout and control, while the responsibility for the actual hardware will be discussed with the different groups.
 
-Installing instrumentation devices will interfere with other devices and must be coordinated with the the appropriate consortia.  
+Installing instrumentation devices will interfere with other devices and must be coordinated with the appropriate consortia.  
 On the software side, \dword{cisc} must define, in coordination with other consortia/groups, the quantities to be monitored/controlled by slow controls and the corresponding alarms,
 archiving, and GUIs. 
 
@@ -2370,7 +2501,7 @@ allowing bi-directional communications between \dword{daq} and \dword{cisc}.
 \\ \colhline
 Calibration         	       & 7072  &
 
-\dword{cisc}/CTF ports will be multi-purpose to enable deploying various devices (flange design and space share around ports must be agreed). 
+\dword{cisc}/\dword{citf} ports will be multi-purpose to enable deploying various devices (flange design and space share around ports must be agreed). 
 Calibration ports could be used to extract cables from \dword{cisc} devices. 
 %At the software level CISC will be responsible for calibration device monitoring (and control to the extent needed) and will 
 %monitor the interlock bit status for Laser and radioactive sources. (NO NEED TO REPEAT THIS SINCE IS THE SAME FOR ALL DETECTOR CONSORTIA)
@@ -2409,7 +2540,7 @@ TC Integration Facility        & 7045  & \\
 
 \end{comment}
 
-\fixme{reduced the text in the description column so that we don't have to move to longtable format. anne}
+%\fixme{reduced the text in the description column so that we don't have to move to longtable format. anne}
 \begin{dunetable}
 [\dword{cisc} system interface links]
 {p{0.15\textwidth}p{0.45\textwidth}p{0.14\textwidth}}
@@ -2452,9 +2583,9 @@ allowing bi-directional communications between \dword{daq} and \dword{cisc}.    
 \\ \colhline
 Calibration          &
 
-%\dword{cisc}/CTF ports will be multipurpose to enable deploying various devices (flange design and space share around ports must be agreed). 
+%\dword{cisc}/\dword{citf} ports will be multipurpose to enable deploying various devices (flange design and space share around ports must be agreed). 
 %Calibration ports could be used to extract cables from \dword{cisc} devices. 	  
-multifunctional \dword{cisc}/CTF ports; space sharing around ports 
+multifunctional \dword{cisc}/\dword{citf} ports; space sharing around ports 
 & \citedocdb{7072} 
 
 \\ \colhline
@@ -2556,6 +2687,7 @@ Significant interfaces at multiple levels
 
 \subsection{Installation, Integration, and Commissioning}
 
+%\fixme{SG (4/15): we are missing pressure meters under this section?}
 
 \subsubsection{Purity Monitors}
 \label{sec:fdgen-slow-cryo-install-pm}
@@ -2567,7 +2699,7 @@ cryostat
 %The assembly of the purity monitors themselves would occur outside of the cryostat and would include everything described in the previous section.  The installation of the purity monitor system can then be carried out 
 %with the fewest steps left to 
 leaving few steps to complete inside the cryostat.  The assembly itself %should
- comes into the cryostat with the three individual purity monitors mounted to support tubes, with no \dword{hv} cables or optical fibers yet installed.  The support tube at the top and bottom of the assembly %would then be 
+ comes into the cryostat with the individual purity monitors mounted to support tubes, with no \dword{hv} cables or optical fibers yet installed.  The support tube at the top and bottom of the assembly %would then be 
  is then mounted to the brackets inside the cryostat, and  %; the brackets could be 
  the brackets attached to the cables trays and/or the detector support structure.  At much the same time, the \dword{fe} electronics and light source can be installed on the top of the cryostat, and the electronics and power supplies can be installed in the electronics rack.  
 
@@ -2714,6 +2846,11 @@ are valved back in when the contaminant levels reach the upper limits of the ana
 Installing differential pressure level meters is the responsibility of \dword{lbnf}, but the capacitive level meters fall within \dword{cisc}'s scope. The exact number of capacitive level meters must still be decided. There will be at least four, located at the four corners of the cryostat. 
 They will be attached to the M10 bolts in the cryostat corners after the detector is installed. Cables will be routed to the appropriate \dword{dss} port. If additional capacitive level meters are needed in the central part of the cryostat, those will be installed before the nearby \dword{apa}s. 
 
+\subsubsection{Pressure Meters}
+\label{sec:fdgen-slow-cryo-install-press}
+%\fixme{SG: to be reviewed by experts; waiting for response}
+Installing pressure meters is the responsibility of \dword{cisc}. A total of six sensors will be mechanically installed in two dedicated flanges (three sensors each) at opposite sides of the cryostat after the detector is installed. Cables will be routed through the same dedicated port assigned for these devices. The pressure signals (absolute and relative) are read and converted to electrical signals corresponding to 4...20~mA range. A twisted pair shielded cable connects the sensors up to the slow controls PLC controller, adapting by software the conversion of electrical signals to pressure values.  
+
 \subsubsection{Cameras and light emitting system}
 \label{sec:fdgen-slow-cryo-install-c}
 %\fixme{IIC Cameras: To be reviewed}
@@ -2738,10 +2875,10 @@ during operation.  Installing the gate valves and purge system
 for instrumentation feedthroughs falls under cryogenic internal
 piping.
 
-Installing fixed lighting sources separate from the cameras would
-require similar interfaces as fixed cameras.  However, the current
-design integrates lights with the cameras, so they do not require separate
-installation.
+Installing fixed lighting sources separate from the cameras
+requires mounting on cryostat wall, cryogenic internal piping, or
+\dword{dss}, and multiconductor cables for power run through cable
+trays to flanges on assigned instrumentation feedthroughs.
 
 
 
@@ -2765,8 +2902,8 @@ with other consortia, and servers will be coordinated with the \dword{daq} group
 \subsubsection{Transport, handling, and storage}
 \label{sec:fdgen-slow-cryo-install-transport}
 
-% Commented out the "fixme" below because some ITF operations are described
-%\fixme{IIC Transport, handling, and storage: describe operations at ITF (does this need to be expanded? [gahs])}
+% Commented out the "fixme" below because some CITF operations are described
+%\fixme{IIC Transport, handling, and storage: describe operations at CITF (does this need to be expanded? [gahs])}
 
 Most instrumentation devices will be shipped in pieces to \surf via the \dword{itf} and mounted on-site. 
 Instrumentation devices are in general small, except for  %other than 
@@ -2780,6 +2917,7 @@ require a crane for the installation of the external enclosure (with preassemble
 
 \subsection{Quality Control}
 \label{sec:fdsp-slow-cryo-qc}
+%\fixme{SG (4/15): we are missing pressure meters under QC?}
 The manufacturer and the institution in charge of device assembly will conduct a series of tests to ensure the equipment can perform its intended function as part of \dword{qc}. \dword{qc} also includes post-fabrication tests and tests run after shipping and installation. For complex systems, the entire system will be tested before shipping. 
 Additional \dword{qc} procedures can be performed at the \dword{itf} and underground after installation. % as much as possible. 
 
@@ -2837,7 +2975,7 @@ as explained in Section~\ref{sec:fdsp-cryo-therm}. The main concern is reproduci
 Finally, the cable-connector assemblies are tested; sensors must measure the expected values with no additional noise introduced by either cable or connector. 
 
 %If there is a \lar test facility with sufficient height or length to test a good portion of the system and it is available for use,
-An integrated system test is conducted at the \lar test facility on site, which has sufficient linear dimension (>\SI{2}{m}) to test a good portion of the system. This %, which 
+An integrated system test is conducted at a \lar test facility on site, which has sufficient linear dimension (>\SI{2}{m}) to test a good portion of the system. This %, which 
 ensures that  the system
 operates in \lar at the required level of performance.
 The laboratory sensor calibration %will be 
@@ -2910,6 +3048,13 @@ is the responsibility of \dword{lbnf}.
 The capacitive sensors will be tested with a modest sample of \lar in the laboratory before they are installed. After installation, they are tested in situ %{\em in situ} 
 using a suitable dielectric in contact with the sensor.
 
+\subsubsection{Pressure Meters}
+\label{sec:fdgen-slow-cryo-qc-press}
+%\fixme{SG: to be reviewed by experts; waiting for response}
+The manufacturer will provide the \dword{qc} for the pressure meters; further \dword{qc} during and after installation is the responsibility of \dword{cisc}.
+
+The pressure sensors will be tested with a modest sample of gaseous argon in the laboratory before they are installed. After installation, they are tested in situ at atmospheric pressure. The whole pressure readout chain, (including slow controls PLC and WINCC conversion) will also be tested and cross-checked with LBNF pressure sensors.
+
 \subsubsection{Cameras}
 \label{sec:fdgen-slow-cryo-qc-c}
 
@@ -2920,7 +3065,7 @@ are similarly checked. Operations tests will verify correct current draw, image 
 are inspected for physical defects and checked for proper mechanical operation before shipping. A checklist %will be 
 is created for each unit, filed electronically in the \dword{dune} logbook, and a hard copy sent with each unit. 
 
-Before installation, each fixed cryogenic camera unit is inspected for physical damage or defects and checked in the cryogenics test facility  for correct operation of all features, for recovery from \SI{87}{K} non-operating mode, and for contamination of the \lar{}. Lighting systems are similarly checked. Operations tests verify correct current draw, image quality, and temperature readback and control. After installation and connection of wiring, fixed cameras and lighting are again  checked for operation. The movable inspection camera apparatus is inspected for physical defects and, after integration with a camera unit, tested in the facility for proper mechanical and electronic operation and cleanliness before being installed or stored. A checklist will be completed for each \dword{qc} check and filed electronically in the \dword{dune} logbook. 
+Before installation, each fixed cryogenic camera unit is inspected for physical damage or defects and checked in a cryogenics test facility  for correct operation of all features, for recovery from \SI{87}{K} non-operating mode, and for contamination of the \lar{}. Lighting systems are similarly checked. Operations tests verify correct current draw, image quality, and temperature readback and control. After installation and connection of wiring, fixed cameras and lighting are again  checked for operation. The movable inspection camera apparatus is inspected for physical defects and, after integration with a camera unit, tested in the facility for proper mechanical and electronic operation and cleanliness before being installed or stored. A checklist will be completed for each \dword{qc} check and filed electronically in the \dword{dune} logbook. 
 
 \subsubsection{Light-emitting System}
 \label{sec:fdgen-slow-cryo-qc-les}
