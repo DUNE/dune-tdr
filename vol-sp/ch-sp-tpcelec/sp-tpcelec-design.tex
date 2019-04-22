@@ -1936,6 +1936,34 @@ identified noise sources are subtracted~\cite{Acciarri:2017sde}.}
 \includegraphics[width=0.9\linewidth]{sp-tpcelec-microBoone_display.pdf}
 \end{dunefigure}
 
+\begin{dunefigure}
+[Signal over noise for muon tracks reconstructed in \dword{pdsp}.]
+{fig:pdsp-signalovernoise}
+        {Signal over noise for reconstructed muon tracks in \dword{pdsp}.}
+\includegraphics[width=0.85\linewidth]{sp-tpcelec-tracks-signal-over-noise.pdf}
+\end{dunefigure}
+
+The \dword{snr} has been evaluated a selected cosmic muon sample, with tracks
+crossing the \dword{lar} volume at shallow angle with respect to the anode plane and
+large angle wth respect to the direction of the wires in the plane considered
+for \dword{snr} characterization. The charge deposited on each wire in a plane is evaluated
+using the pulse height (peak) of the hit found in the raw waveform.
+A correction taking into account different relative angle between track and wire
+direction has been applied to normalize the hit response. The noise value is extracted
+from a fitted Gaussian width on the pedestal distribution of the waveform baseline of the
+wire. The electric field in the \dword{tpc} volume was at nominal level of \SI{500}{V/cm},
+and the \dword{lar} purity for the runs considered in this analysis was about \SI{5.5}{ms}
+as measured by the purity monitors, corresponding to $\sim35$\% charge loss due to
+attachment for tracks close to the cathode. No noise filtering has been applied for
+this measurement. In addition, we ignored the effect of the space charge, that introduces
+distortions of the electrical field in the \dword{tpc} volume that may locall change the
+recombination factor and therefore affect the \dword{snr} value. The distribution of
+the \dword{snr} for all the wires in the sample of muon tracks considered is shown
+in Figure~\ref{fig:pdsp-signalovernoise}. For the collection plane the mean value
+of the distribution of \dword{snr} is 38, while for the two induction planes it is
+14 (U) and 17 (V). A more accurate \dword{snr} estimate will be performed again as
+soon as the effects of space charge are fully understood.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{ProtoDUNE-SP Lessons Learned}
 \label{sec:fdsp-tpcelec-overview-lessons}
@@ -1943,7 +1971,8 @@ identified noise sources are subtracted~\cite{Acciarri:2017sde}.}
 As discussed in Section~\ref{sec:fdsp-tpcelec-overview-pdune}, the initial 
 data from \dword{pdsp} show that the \dword{spmod} can meet the noise specification. 
 The experience with the \dword{tpc} electronics in \dword{pdsp} nonetheless motivates 
-several improvements to the \dword{tpc} electronics system design. 
+several improvements to the \dword{tpc} electronics system design, some of which
+have already been implemented and discussed in the previous Sections.
 A complete list of the lessons learned from the construction, testing, integration,
 installation, commissioning of the \dword{tpc} electronics detector components
 is available~\cite{bib:docdb12367}. This reference also discusses
@@ -1974,38 +2003,11 @@ the \dword{adc} bits, independent of the input voltage. About 10\%
 of the channels having this problem need to be masked from analysis, 
 resulting in a loss of efficiency for \dword{pdsp}, 
 while in a majority of cases an approximated value for the charge can
-be obtained via interpolation. 
-
-To resolve this problem, a  \dword{bnl}-\dword{fermilab}-\dword{lbnl} collaboration 
-is developing a new \dword{adc} \dword{asic} (called the 
-\dword{coldadc} \dword{asic}), and first
-prototypes are planned to be characterized in February 2019.
-Section~\ref{sec:fdsp-tpcelec-design-femb-adc} presents a detailed design.  In parallel, two
-alternatives are being considered. %for  \dword{dune}. 
-First, the \dword{sbnd} 
-collaboration has found %demonstrated that there is also 
-a \dword{cots} 
-solution for the analog-to-digital conversion, based on the Analog 
-Devices~\cite{AnalogDevices} AD7274~\cite{AD7274} \dword{adc}, that meets 
-the \dword{dune} specifications %requirements 
-and that could be used in the \dword{spmod} in %the
-case  the custom \dword{asic} is not %developments were not successfully
-completed in time. % for the detector construction. 
-This \dword{cots}
-solution is not the baseline approach for \dword{dune} since it
-requires one chip for each readout channel (i.e., a total
-of \num{384000} chips), which would increase the cost %cause significant cost increases
-and may
-require a very extensive \dword{qc} program. The qualification
-of this \dword{cots} \dword{adc} for use in \dword{dune} is described
-in Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cots}. 
-The second alternative is a single \num{64}-channel \dword{asic}, referred to as a \dword{cryo},
-that consolidates the \dword{fe}, the analog-to-digital conversion, and the
-data serialization functions %alities 
-in a single chip. %This  development 
-It has also reached the prototype stage with \dword{asic} %that are planned to be 
-characterization planned in February 2019. %More details about this solution are discussed in 
-Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cryo} provides details.
+be obtained via interpolation. These problems prompted us to abandon
+this design and to develop the completely new \dword{coldadc}, to
+adapt the \dword{cryo} \dword{asic} for use in \dword{dune}, and to
+follow the approach of the \dword{sbnd} Collaboration and consider
+also the \dword{cots} \dword{adc} option.
 
 Initial analysis of the \dword{pdsp} data has uncovered a new problem with \dword{larasic} 
 that occurs when $>$\SI{50}{fC} is collected over a period of \SIrange{10}{50}{$\mu$s}, 
@@ -2036,16 +2038,13 @@ observed, the decision was taken to operate the \dword{ce} in \dword{pdsp}
 using the \SI{900}{mV} baseline also for the collection wires, sacrificing
 the dynamic range. Data from the wires where the problem occurs can
 be masked in analysis, resulting in a loss of efficiency. It should be
-noted that the problem occurs more often in \dword{pdsp} %compared to
-%\dword{dune} 
-than is expected in the \dword{fd}  \dword{spmod} due to the presence of cosmic rays traveling parallel
-to the \dword{apa} wires. % in the first case. 
-The problem %cannot be discounted for \dword{dune}, however, since it 
-could, however, affect the \dword{spmod}'s ability to detect
+noted that the problem occurs more often in \dword{pdsp} 
+than is expected in the \dword{fd}  \dword{spmod} due to the presence of 
+cosmic rays traveling parallel to the \dword{apa} wires.
+The problem could, however, affect the \dword{spmod}'s ability to detect
 electromagnetic showers -- one of the main physics signals.
-%The plan and the timeline for addressing this issue in a new \dword{larasic} prototype
-%of  are going to be discussed in 
-Section~\ref{sec:fdsp-tpcelec-design-femb-fe} discusses the plans and timeline for addressing this issue in a new \dword{larasic} prototype.
+Section~\ref{sec:fdsp-tpcelec-design-femb-fe} discusses the plans and timeline 
+for addressing this issue in a new \dword{larasic} prototype.
 
 \begin{dunefigure}
 [Image of a connector for the cold cables lifted from the \dword{femb}]
@@ -2054,7 +2053,7 @@ Section~\ref{sec:fdsp-tpcelec-design-femb-fe} discusses the plans and timeline f
 the \dword{femb} due to the presence of excess epoxy on the 
 connection between the cold cables and the printed circuit board
 that acts as the ``male'' part of the connector.}
-\includegraphics[width=1.0\linewidth]{sp-tpcelec-femb-problem.png}
+\includegraphics[width=0.85\linewidth]{sp-tpcelec-femb-problem.png}
 \end{dunefigure}
 
 \begin{comment}During the integration of the \dwords{femb} onto the \dword{apa}s 
