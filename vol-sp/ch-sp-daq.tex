@@ -1730,13 +1730,25 @@ at ProtoDUNE.
 
 \subsubsection{Data Selection Development}
 
-\begin{dunefigure}{fig:daq-cpu-hf-speed}{CPU core-time required to find primitives in simulated signal and noise data.  10 CPU cores are required to keep up with live ProtoDUNE data while performing both data reformatting and trigger primitive selection.}
-  \includegraphics[width=0.7\textwidth,clip,trim=4cm 16cm 4cm 2cm]{daq-primitive-cpu-speed.pdf}
+\begin{dunefigure}{fig:daq-cpu-hf-speed}{CPU core-time (left) required
+    to find primitives in simulated signal and noise data across 960
+    channels.
+    In this test the data has been pre-formatted to facilitate the use
+    of SIMD hardware accelerated functions (AVX2). 
+    CPU utilization in live data (right) for both reformatting and
+    trigger primitive generation. 10 CPU at about 65\% utilization are
+    required to keep up. 
+    The initial peak is due to faster than nominal deliver of input due
+    to startup buffering issues. 
+    The system is able to catch up with the backlog.
+    Importantly, neither of these two tests include the necessary data
+    decompression step.}
+  \includegraphics[height=5cm,clip,trim=4cm 16cm 4cm 2cm]{daq-primitive-cpu-speed.pdf}%
+  \includegraphics[height=5cm,clip,trim=0cm 0cm 0cm 0cm]{daq-hf-felix-sp-live.png}
 \end{dunefigure}
 
 \begin{dunefigure}{fig:daq-hitfinder}{Illustration of the trigger primitives found by the CPU algorithm in one nominal readout of one APA in ProtoDUNE-SP data.  Although the data was ultimately recorded due to trigger, the algorithm ran in full-stream mode.}
-    \includegraphics[width=0.45\textwidth]{daq-hitfinder-waveforms.png}%
-    \includegraphics[width=0.45\textwidth]{daq-hitfinder-primitives.png}
+    \includegraphics[width=0.9\textwidth]{daq-hitfinder-montage.pdf}
 \end{dunefigure}
 
 \begin{dunefigure}{fig:daq-tp-rates}{Trigger primitive rates in ProtoDUNE-SP as a function of threshold in four categories: all data (top left),  after removal of particularly noisy channels (top right), with HV off so no contribution to signal (bottom left) and HV off and noisy channels excluded (bottom right).}
@@ -1758,21 +1770,26 @@ at ProtoDUNE.
 \end{dunefigure}
 
 
-During early stages of design, significant effort has been dedicated on trigger primitive generation
-through MonteCarlo simulations. Specifically, charge collection efficiency and fake rates
-due to noise and radiologicals have been studied as a function of
-hitthreshold with MonteCarlo, demonstrating that requirements can be
-met, given sufficiently low electronics noise levels and radiological
-rates \cite{ref}. Ongoing efforts within DUNE's Radiologicals Task force
-aim to validate or provide more accurate background predictions, upon
-which this performance will be validated. In addition, offline emulations
-of CPU trigger primitive generation on CPU (4 cores) have been carried
-out, demonstrating the ability of software algorithms in CPU to keep
-up with expected raw data rates, as shown in Figure~\ref{fig:daq-cpu-hf-speed}. 
-Following the commissioning of ProtoDUNE, full-stream, single-APA,
-online data reformatting and trigger primitive generation on CPU (10 cores) was successfully
-demonstrated at ProtoDUNE. Trigger primitive rates were measured at
-ProtoDUNE in situ. Effort on understanding and removing contribution
+During early stages of design, significant effort has been dedicated on
+trigger primitive generation through simulations.
+Specifically, charge collection efficiency and fake rates due to noise
+and radiologicals have been studied as a function of hit threshold,
+demonstrating that requirements can be met, given sufficiently low
+electronics noise levels and radiological rates \cite{ref}.
+Ongoing efforts within DUNE's Radiologicals Task force aim to validate
+or provide more accurate background predictions, upon which this
+performance will be validated.
+In addition, offline studies demonstrate the performance of trigger
+primitive generation algorithms as a function of number of CPU cores
+used.  
+The results are summarized in Figure~\ref{fig:daq-cpu-hf-speed} and show
+that four cores as sufficient to keep up with 960 channels.
+The test does not include reformatting of the data required to put it in
+a form that allows hardware SIMD acceleration (AVX).  
+In tests with live \dword{protodune} data, it is found that ten cores at
+and average 65\% usage were enough to handle both reformatting and
+trigger primitive selection. 
+Effort on understanding and removing contribution
 from cosmics/cosmogenics and (known) noisy channels is ongoing.
 These results are summarized in Figure~\ref{fig:daq-tp-rates}
 
