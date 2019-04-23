@@ -3,9 +3,8 @@
 
 \fixme{Fix SI units throughout, and use consistent dword
   references. Brett}
-\fixme{Add missing
-  references. Georgia}
-\fixme{Add section on co-processor development. Georgia}
+\fixme{Add missing references. Georgia}
+\fixme{Add a couple of figures on co-processor. Georgia}
 
 \section{Introduction}
 \label{sec:fd-daq:introduction}
@@ -116,7 +115,7 @@ specifics of design implementation and data flow are described in Section~\ref{s
 
 The \dword{dune} \dword{fd} \dword{daq} system is designed to meet the
 \dword{dune} top-level as well as \dword{daq}-level requirements
-summarized in Table~\ref{tab:rec-specs:SP-DAQ}. The \dword{daq}-level requirements are
+summarized in Table~\ref{tab:specs:SP-DAQ}. The \dword{daq}-level requirements are
 imposed to ensure that the 
 system %is capable of 
 can record all necessary information for offline 
@@ -1569,7 +1568,7 @@ functionality. % In the following subsection we discuss important lessons learne
 
 More specifically, \dword{protodune} has demonstrated 
 \begin{itemize}
-\item Front-end Readout: successful
+\item Upstream DAQ: successful
 front-end readout hardware and data flow functionality for the readout
 of two out of the six APAs employed in protoDUNE. This was achieved
 with two TPC RU's, without co-processor boards, and only one APA read
@@ -1692,14 +1691,42 @@ a triggering chain based on the TPC data into ProtoDUNE, which will
 allow to carry out pre-design prototyping studies of the complete flow
 of data of the DUNE DAQ.  
 The FELIX based readout system will be adapted to support the
-different studies, from co-processor based hit-finding and data
-compression, to software based processing, on a single
+different studies, from co-processor based data handling in firmware
+(including trigger primitive generation, compression, and buffering) to software-based processing, on a single
 server. Benchmarking and optimization of the FELIX firmware and
 software will also continue, with the aim of further compacting the
 readout by supporting two APAs on a single server. 
 
-\fixme{Add text on co-processor development. This is coming Monday
-  from Dave and Jim. Georgia}
+\subsubsection{Co-processor Development}
+
+Upstream DAQ development efforts at protoDUNE include a parallel test 
+platform for trigger
+primitive generation, compression, and buffering firmware validation for
+the co-processor board.  The platform for these tests will initially
+use a Xilinx ZCU102 development board, which will later be replaced
+with a ``FELIX Demonstrator'' (so called because it demonstrates use
+of Xilinx Virtex-7 Ultrascale+ FPGA and Gen-4 PCIe) which has a FMC+
+connector which will be connected to a PBM. Passive optical splitters
+will be inserted into the fiber path downstream of the WIBs, providing
+duplicate data inputs for the test hardware, without disrupting the
+main readout path of ProtoDUNE. Tests using the development board will
+first focus on generation of trigger primitives, which will be read
+out over the network via IPBus\cite{ref:ipbus}. The ZCU102 board
+includes 512MBytes DDR4 RAM connected to the FPGA programmable logic,
+as well as a PCIe x4 socket which will host an NVME SSD on an adapter,
+which will allow tests of buffering and compression of readout
+data. 
+
+Tests using the development board will focus on functionality
+rather than data throughput. However, the tests will provide estimates
+of firmware resources that can be scaled up to the full system. Tests
+using the FELIX Demonstrator and PBM at ProtoDUNE will focus on
+scaling the functional tests performed using the ZCU102, to a full
+demonstration of trigger and readout functionality for a full APA. In
+addition, this platform will facilitate integration with the prototype
+data selection and back-end DAQ subsystems
+at ProtoDUNE. 
+
 
 \subsubsection{Data Selection Development}
 
@@ -1794,7 +1821,31 @@ rates up to 40 Hz and 3 ms readout window
 allows confident scaling of the protoDUNE back-end DAQ subsystem to
 that of DUNE.
 
-\fixme{Add HLF simulations. Georgia}
+In the case of the high level filter, the DAQ consortium is exploring the
+use of machine learning techniques, specifically image classification
+with the use of convolutional neural networks (CNNs) on GPUs, as a way to
+classify and down-select individual sections of TPC channel vs. time
+(``frames''), with extent of one APA's worth of collection plane
+channels by one drift length (2.25 ms, or, 4500 samples). CNNs have
+been trained on Monte Carlo simulations of frames with each of
+the following off-beam event topologies: 
+atmospheric neutrino interactions, baryon number violating
+interactions (proton decay or neutron-antineutron oscillation), cosmic
+ray interactions, supernova neutrino interactions, or no interactions at all; all
+with radiological and noise background included in the
+simulations. Preliminary studies show that a CNN can be sucessfully trained classify any
+given input frame as one of three categories: empty, containing a supernova neutrino
+interaction, or containing a high-energy (atmospheric neutrino, baryon
+number violating, or cosmic ray) interaction. Specifically, empty frames can be
+rejected with an efficiency of $>$99\%, while frames containing or
+partially containing 
+a supernova neutrino, an atmospheric/cosmic interaction, or a baryon
+number-violating interaction can be preferentially selected with efficiency
+$>$88\%, $>$92\%, or $>$99\%, respectively  \cite{docdb11311}. Such
+filter could potentially be applied to reduce the event record size by
+more than two orders of magnitude. Inference latency is under study to validate limiting event
+record throughput (from the Event Builder) through such filtering
+stage, for a reasonably sized GPU cluster. 
 
 % \subsubsubsection{Ongoing  \dword{felix}  Throughput Demonstration at \dword{protodune}}
 % \label{sec:sp-daq:validation-pdune-felix}
@@ -1880,6 +1931,7 @@ that of DUNE.
 % for region-of-interest hit finding in an \dword{fpga} \cite{NNN18}.
 % %\metainfo{Succinctly describe algorithm, include physics and computing
 % %  performance numbers.}
+
 
 % \subsubsubsection{Validation of Hierarchical Trigger Layers}
 
