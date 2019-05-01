@@ -37,9 +37,9 @@ of the \dword{dune} \dword{sp} detector module and later in
 \ref{sec:fdsp-tpcelec-overview-remaining} we conclude
 with a discussion of the design maturity and of
 the remaining prototype activities that are required prior to
-the beginning of he detector construction. Other aspects of
-the system design, pertaining to the grounding of other 
-detector components, are discussed in Section~\ref{sec:fdsp-tpcelec-interfaces}.
+the beginning of he detector construction. Other aspects of system
+design, pertaining to the interfaces with other detector components, including
+their grounding, are discussed in Section~\ref{sec:fdsp-tpcelec-interfaces}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Grounding and Shielding}
@@ -72,7 +72,7 @@ clock, control, and data readout) from one \dwords{apa} shall lead to a
 single \dword{sft};}
 \item{All \dwords{apa} shall be insulated from each other;}
 \item{The common of the \dword{fe} \dword{asic} and the rest of the 
-\dword{tpc} readout electronics should be connected to
+\dword{tpc} readout electronics shall be connected to
 the common plane of the \dword{femb};}
 \item{The return leads of the \dword{apa} power line and any shield
 for the clock. control. and data readout shall be connected
@@ -80,7 +80,10 @@ to the common plane of the \dword{femb} at one end and
 to the flange of the \dword{sft} at the other hand; this shall be 
 the only connection of the \dword{apa} frame to the cryostat;}
 \item{The mechanical suspension from the frame of the \dword{apa}
-to the cryostat should be insulated.}
+to the cryostat shall be insulated;}
+\item{The last stage of the sense wire and grid bias filters shall be
+connected to the common of all the \dword{fe} \dwords{asic} and therefore
+to the \dword{apa} frame.}
 \end{itemize}
 
 These requirements have been used already for the construction
@@ -248,7 +251,7 @@ to address the issue observed in \dword{pdsp} that will be discussed
 in Section~\ref{sec:fdsp-tpcelec-overview-lessons}. The new design,
 shown in Figure~\ref{fig:femb-connector}, foresees the addition
 of wings to the \dword{pcb} soldered to the cold cable, with 
-surface mount standoffs to ensure the planarity of the connector
+standoffs to ensure the planarity of the connector
 to the \dword{femb}, and a cutout in the \dword{pcb} to preclude %avoid
 any stresses introduced by height variations.
 
@@ -275,20 +278,13 @@ rely on characterizations performed by \dword{nasa}.
 \includegraphics[width=0.9\linewidth]{sp-tpcelec-connector.png}
 \end{dunefigure}
 
-All the components on the \dword{femb} need to have a very long lifetime
-in \dword{lar}, including commercial resistors and capacitors, the
-\dword{lv} regulators, and the micro-electromechanical system oscillator.
-In order to achieve the targeted lifetime of \dunelifetime{}, all commercial components 
-need to be qualified with %and 
-their lifetime in \dword{lar} %need to be 
-measured. 
 In the case of custom \dwords{asic}, appropriate steps must be taken prior 
 to starting the layout of the chips. Both \dword{coldata} and 
 \dword{coldadc} are implemented in the \dword{tsmc} \SI{65}{nm} \dword{cmos} 
 process~\cite{TSMC65}. The designs were done using cold transistor models 
 produced by Logix Consulting\footnote{Logix\texttrademark{} Consulting, http://www.lgx.com/.}.  Logix made measurements of 
 \dword{fnal}-supplied \dword{tsmc} \SI{65}{nm} transistors at \lntwo 
-temperature and extracted and provided to the design teams \dword{spice} 
+temperature and extracted and provided to the design teams \dword{spice}~\cite{spice}
 models valid at \lntwo temperature.  These models were used in 
 analog simulations of \dword{coldata} and \dword{coldadc} subcircuits.  
 In order to eliminate the risk of accelerated aging due to the hot-carrier
@@ -299,7 +295,7 @@ transistors was developed by members of the University
 of Pennsylvania and \dword{fnal} groups. Timing parameters were
 developed for this standard cell library using the Cadence Liberate
 tool\footnote{Cadence Liberate\texttrademark{}, \url{https://www.cadence.com/content/cadence-www/global/en_US/home/tools/custom-ic-analog-rf-design/library-characterization/liberate-characterization.html}. } 
-and the Logix \dword{spice}~\cite{spice} models. With the
+and the Logix \dword{spice} models. With the
 exception of the \dword{coldata} \dword{pll}, serializer, and
 output driver, the digital sections of \dword{coldata} and
 \dword{coldadc} were synthesized from Verilog code using this
@@ -919,7 +915,8 @@ temperature for the \dword{coldata} \SI{1.28}{Gbps} output link.}
 The \dword{sbnd} collaboration has been exploring the \dword{cots} \dword{adc} option 
 for the \dword{tpc} readout electronics development since spring
 2017~\cite{Chen:2018zic}. After a market survey, a few candidate \dwords{adc} 
-using the \dword{sar} architecture were identified with 100\% cold yield. Starting in
+using the \dword{sar} architecture were identified that would continue
+to operate correctly when immersed in \lntwo. Starting in
 July 2017, a lifetime study plan was developed to evaluate a \dword{cots} 
 \dword{adc} option in two different phases: exploratory and validation. The 
 lifetime study focused on the Analog Devices AD7274\footnote{AnalogDevices,
@@ -1297,8 +1294,8 @@ All cold cables originating inside the cryostat connect to the outside
 warm electronics through \dword{pcb} \fdth{}s installed in the signal 
 flanges that are located on the cryostat roof. The data rate from each
 \dword{femb} with four cables is sufficiently low ($\sim\SI{1}{Gbps}$)
-that \dword{lvds} signals can easily be driven over \SI{22}{m} or greater
-of copper twin-axial transmission line. Additional transmission lines
+that \dword{lvds} signals can easily be driven over more than \SI{22}{m}
+of twin-axial transmission line. Additional transmission lines
 are available to distribute \dword{lvds} clock and control signals,
 which are transmitted at a lower bit rate.
 Optical fiber is used externally from the \dwords{wib} on the signal 
@@ -1347,6 +1344,8 @@ assumption that the fast command line can be shared between the two
 like sharing the \SI{64}{MHZ} clock between the two \dwords{asic} or
 increasing the data transmission speed to \SI{2.56}{Gbps}, thereby
 reducing the number of data transmission lines to two for each \dword{femb}.
+This assumption will be tested as soon as the first prototypes of
+\dword{coldata} will become available.
 
 The \dword{lv} power is passed from the signal flange to the
 \dword{femb} by bundles of \SI{20}{AWG} twisted-pair wires, with half of
@@ -1397,13 +1396,14 @@ wire layers, three \dword{fc} terminations, and an electron diverter,
 as shown in Figure~\ref{fig:CR-board}. The voltages are supplied
 through eight \dword{shv} connectors mounted on the signal flange.
 RG-316 coaxial cables carry the voltages from the signal flange to
-a patch panel \dword{pcb} that includes noise filtering mounted on the top
-end of the \dword{apa}. From there, wire bias voltages are carried by single wires to
+a patch panel \dword{pcb} mounted on the top of the \dword{apa} that 
+includes noise filtering. From there, wire bias voltages are carried by single wires to
 various points on the \dword{apa} frame, including the \dword{cr}
 boards, a small \dword{pcb} mounted on or near the patch panel that
 houses a noise filter and termination circuits for the \dword{fc}
-voltages, and a small mounted board near the electron diverter
-that also houses wire bias voltage filters.
+voltages, and a small board mounted near the electron diverter
+that also houses the wire bias wire bias voltage filter described
+in Section~\ref{sec:fdsp-tpcelec-design-bias}.
 
 In Sections~\ref{sec:fdsp-apa-intfc-cables} and \ref{sec:fdsp-tpcelec-interfaces-apa}
 we discuss the problem of routing the cold cables (data and control, power, and
@@ -1429,7 +1429,7 @@ not require an external bias line. Six of the eight \num{20}{AWG} twisted-pair
 wires could be used to bring the low voltage power to the \dword{femb},
 while the remaining two could be used to sense the voltage on the \dword{femb}.
 This configuration would entail a small increase ($\sim14$\%) of the 
-total resistance seen on the return wires. The low-skew shielded
+total resistance seen on the return wires. The same number of low-skew shielded
 twin-axial cables are required to transmit the following differential signals
 between the \dword{wib} and the \dword{femb}:
 \begin{itemize}
@@ -1493,9 +1493,9 @@ signal flange will be very similar (with two \dword{ce} signal flanges per \fdth
 
 The \dword{wib} 
 receives the system clock and control signals from the
-timing system and provides processing and further distribution of those signals to the four
+timing system and provides processing and further distribution of those signals to four
 \dwords{femb}. 
-It also receives high-speed data signals from the four 
+It also receives high-speed data signals from the same four 
 \dwords{femb} and transmits them to the \dword{daq} system over optical
 fibers. The data signals from the \dwords{femb} are recovered on the \dword{wib} with commercial 
 equalizers. The \dwords{wib} are attached directly to the \dword{tpc}
@@ -1538,7 +1538,8 @@ necessary \SI{12}{V} \dword{dc}-\dword{dc} conversions and fans
 the \dword{lv} power out to each of the  \dwords{femb} supplied 
 by that \dword{wib}, as shown in Figure~\ref{fig:tpcelec-wib-power}. 
 The output of the \dword{wib} converters is further filtered by a 
-common-mode choke. 
+common-mode choke, and each voltage line provided to the \dwords{femb}
+is individually controlled, regulated, and monitored.
 
 \fixme{ Figure 4.31 is still the old ProtoDUNE one. It needs to be replaced.}
 \begin{dunefigure}
@@ -1619,7 +1620,7 @@ $\sim\,\SI{2}{MHz}$, as discussed in
 Section~\ref{sec:fdsp-tpcelec-overview-requirements}. This requires
 that the \dword{tpc} electronics be synchronized to a level of a few ns, which is
 much smaller than the time difference between two charge samples.
-This level of synchronization between the sampling time of different
+This level of error in the synchronization between the sampling time of different
 \dwords{femb} contributes negligibly to the expected resolution % 
 of the reconstructed space points measurement,
 both in the \dword{apa} plane and along the drift distance.
@@ -2045,7 +2046,7 @@ than is expected in the \dword{fd}  \dword{spmod} due to the presence of
 cosmic rays traveling parallel to the \dword{apa} wires.
 The problem could, however, affect the \dword{spmod}'s ability to detect
 electromagnetic showers -- one of the main physics signals.
-Section~\ref{sec:fdsp-tpcelec-design-femb-fe} discusses the plans and timeline 
+Section~\ref{sec:fdsp-tpcelec-overview-remaining} discusses the plans and timeline 
 for addressing this issue in a new \dword{larasic} prototype.
 
 \begin{dunefigure}
@@ -2219,7 +2220,7 @@ required to address the issues observed during the \dword{pdsp} operations and
 to implement a single-ended to differential converter to improve the interface
 with the newly developed \dword{coldadc}. To ensure the success of the next 
 design iteration we are investing in the development of appropriate transistor
-models for the \SI{180}{nm} \dword{cmos} technologoy for operation in \lar, such that the saturation effect observed in 
+models for the \SI{180}{nm} \dword{cmos} technology for operation in \lar, such that the saturation effect observed in 
 \dword{pdsp} can be properly addressed first in simulation and then with improvements 
 in design. It should be noted that so far approximate models, originally developed for 
 the same \SI{180}{nm} technology, but with different design rules, have been used for 
@@ -2243,58 +2244,28 @@ a fall-back solution for \dword{dune}. Custom solutions for the \dwords{asic} ar
 being developed to simplify the \dword{femb} assembly and reduce the power dissipated by the
 electronics in the \lar.
 
-\fixme{this next paragraph and bulleted list need to be updated.}
-
 The baseline solution for the \dword{adc} and the data serialization is based on two new 
 \dword{asic}s, \dword{coldadc} and \dword{coldata}.
 The first iteration of the \dword{coldadc} was submitted for fabrication
 at the end of October 2018, and the chips were delivered in January 2019.
-Test boards are being developed and results from the initial validation of the
-chip functionality are expected for spring 2019. Although this is the first version
-of the chip, we estimate that the design is already close to an advanced stage
-for the following reasons:
-\begin{itemize}
-\item{An \dword{adc} with the same architecture has already been implemented by the
-lead engineer of the \dword{bnl}-\dword{fnal}-\dword{lbnl} team that has designed the new \dword{coldadc}.
-The new design is required to ensure operation in \lar, and the appropriate
-models for the \SI{65}{nm} technology have been used, as discussed in
-Section~\ref{sec:fdsp-tpcelec-design-femb-adc}.}
-\item{The interfaces between the core of the \dword{adc} and \dword{larasic} on 
-the input side and \dword{coldata} on the output side are entirely new.
-These parts of the design have gone through an extensive verification
-program, including \dword{spice} simulations of analog blocks,
-mixed-mode simulations of the core \dword{adc} using the \dword{ams}
-extensions of Verilog, and \dword{uvm} verification of 
-all digital logic based on SystemVerilog. In addition, there are multiple 
-input options that would allow the validation of the design of the core 
-of the \dword{adc}, in the case that one of them does not function as designed.}
-\item{For some blocks of the \dword{adc} (input buffers, voltage references) the
-design includes multiple redundant options that can be selected during 
-operation.}
-\end{itemize}
-If the tests of the new \dword{coldadc} in spring 2019 are successful, the
-estimate of the status of the design should be changed at least to the 
-``Advanced'' status. One additional design iteration is planned before
-the production, and as in the case of \dword{larasic}, plans can be made for a
-further iteration without impacting the beginning of \dword{dune} operations.
+Initial results from the tests of the \dword{coldadc} prototypes have
+been discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-adc}. The
+results obtained so far are encouraging, despite the fact that some
+flaws have been identified in the design. Even if one additional design
+iteration is required, we think that the status of \dword{coldadc} can
+be characterized as having reached the ``Advanced'' status.
 
 We are also considering an alternative solution for the readout, where
 the three \dword{asic}s are replaced with a single one, the \dword{cryo}
 chip that is going through a development that is proceeding with a 
 timeline similar to that of \dword{coldadc}. Also in this case the
 chips from the first submission have been delivered in January 2019.
-They are undergoing standalone tests
-and later system tests on a timescale similar to that of \dword{coldadc}.
-The \dword{cryo} chip is more complicated than \dword{coldadc},
-since it implements the functionality of three \dword{asic}s into a
-single one, and therefore its current design maturity status is
-lower than that of \dword{coldadc}. Some of the design blocks of
-\dword{cryo} are at a more advanced level: for example the control
-and data transmission blocks have been reused from other \dword{asic}
-designs from the \dword{slac} group, and the implementation of the \dword{fe} amplifier
-is very similar to that of \dword{larasic}, except for the signal 
-shaping. Depending on the results of the tests the status of the
-\dword{cryo} design will evolve in a way similar to that of \dword{coldadc}.
+Initial results from the tests of the \dword{cryo} prototypes have
+been discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cryo}.
+Like in the case of \dword{coldadc}, the results obtained so far are
+encouraging, despite the problem observed with the digital multiplexer.
+Depending on the performance of the \dword{asic}, \dword{cryo} should
+also be characterized as having reached the ``Advanced'' status.
 
 The first complete prototype of \dword{coldata} was submitted in 
 April 2019, with the delivery of chips expected for July 2019.
