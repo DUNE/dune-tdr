@@ -42,10 +42,10 @@ Subsequently, Section~\ref{sec:daq:design}, which comprises the bulk of this
 chapter, describes the design of the \dword{fd} \dword{daq} in greater detail.
 Section~\ref{sec:daq:validation} describes design validation efforts to date,
 and future design development and validation plans.
-At the center of these efforts is the \dword{protodune} \dword{daq} system
-(described in Section~\ref{sec:daq:protodune}), which has served as a
+At the center of these efforts are the \dword{protodune} \dword{daq} systems
+(described in Section~\ref{sec:daq:protodune}), which have served as a
 demonstrator of several key aspects of the \dword{dune} \dword{daq} design, and
-continues to serve as a platform for further design development and validation
+continue to serve as a platform for further design development and validation
 toward the DUNE DAQ design. 
 Finally, the chapter finishes with two sections
 (Sections~\ref{sec:daq:production} and \ref{sec:daq:organization})
@@ -223,22 +223,24 @@ Table~\ref{tab:daq:rates}.
     given for a single \SI{10}{\kilo\tonne} module. Trigger primitives
     (see Section~\ref{sec:daq:design-data-selection})
   are not kept permanently; they are temporarily stored for 1-2 months
-  at a time.    \fixme{These numbers are for SP and must be replaced with DP numbers.}}
+  at a time.  
+%  \fixme{These numbers are for SP and must be replaced with DP numbers.}
+}
 Source  & Annual Data Volume & Assumptions \\\toprowrule
-Beam interactions & 27 TB & 10 MeV threshold in coincidence with beam
-time, including cosmic coincidence; \SI{5.4}{\milli\second} readout \\\colhline
-Cosmics and atmospheric neutrinos & 10 PB & \SI{5.4}{\milli\second} readout \\\colhline
-Radiological backgrounds & $<1$ PB & $<1$ per month fake rate for SNB
+Beam interactions & 7 TB & 10 MeV threshold in coincidence with beam
+time, including cosmic coincidence; \SI{7.5}{\milli\second} readout \\\colhline
+Cosmics and atmospheric neutrinos & 2.33 PB & \SI{7.5}{\milli\second} readout \\\colhline
+Radiological backgrounds & $<0.72$ PB & $<1$ per month fake rate for SNB
 trigger\\\colhline
 Cold Electronics calibration & 200 TB & \\\colhline
 Radioactive source calibration & 100 TB & $<10$ Hz source rate; single
-APA readout; \SI{5.4}{\milli\second} readout \\\colhline
+CRP readout; \SI{7.5}{\milli\second} readout \\\colhline
 Laser calibration & 200 TB & 10$^6$ total laser pulses; half the
 TPC channels illuminated per pulse; lossy
 compression (zero-suppression) on all channels\\\colhline
 Random triggers & 60 TB & 45 per day\\\colhline
-Trigger primitives & $13$ PB & Dominated by $^{39}$Ar (50~kHz per APA face); collection
-channels only; 20 bytes per trigger primitive \\\colhline
+Trigger primitives & $15.3$ PB & Dominated by $^{39}$Ar (150~kHz per CRP); two collection
+views; 20 bytes per trigger primitive \\\colhline
 \end{dunetable}
 
 Self-triggering on \dword{snb} activity is a unique challenge for the DUNE FD,
@@ -346,24 +348,23 @@ each \dword{fd} module.
 [Key \dword{daq} Parameters]
 {ll}
 {tab:daq:parameters}
-{Summary of important parameters driving the \dword{daq} design.  \fixme{These
-    are SP numbers and must be replaced with DP equivalents.  Note, many of
-    these numbers are already in or should be added to \texttt{common/defs.tex}}}
+{Summary of important parameters driving the \dword{daq} design.  
+%\fixme{These   are SP numbers and must be replaced with DP equivalents.  Note, many of
+%    these numbers are already in or should be added to \texttt{common/defs.tex}}
+}
 Parameter & Value \\ \toprowrule
-TPC Channel Count per Module & 384,000\\ \colhline
-TPC Collection Channel Count per Subdetector (APA) & 960\\ \colhline
-TPC Induction Channel Count per Subdetector (APA) & 1,600\\ \colhline
-PDS Channel Count per Module & TBD\\ \colhline
-PDS Channel Count per Subdetector & TBD\\ \colhline
-TPC \dword{adc} Sampling Rate & 2 MHz\\ \colhline
+TPC Channel Count per Module & 153,600\\ \colhline
+TPC Collection Channel Count per Subdetector (CRP) & 1920\\ \colhline
+PDS Channel Count per Module & 720\\ \colhline
+TPC \dword{adc} Sampling Rate & 2,5 MHz\\ \colhline
 TPC \dword{adc} Dynamic Range& 12 bits\\ \colhline
 PDS \dword{adc} Sampling Rate & TBD \\ \colhline
 PDS \dword{adc} Dynamic Range & TBD \\ \colhline
 PDS \dword{adc} Readout Length & TBD \\ \colhline
-Localized Event Record Window & \SI{5.4}{\milli\second}\\  \colhline
+Localized Event Record Window & \SI{7.5}{\milli\second}\\  \colhline
 Extended Event Record Window &  100 s\\  \colhline
-Full size of TPC Localized Event Record per Module & 6.22 GB \\  \colhline
-Full size of TPC Extended Event Record per Module & 115 TB\\  \colhline
+Full size of TPC Localized Event Record per Module (uncompressed) & 4.2 GB \\  \colhline
+Full size of TPC Extended Event Record per Module (uncompressed) & 56 TB\\  \colhline
 Full size of PDS Localized Event Record per Module & TBD \\  \colhline
 Full size of PDS Extended Event Record per Module & TBD \\  \colhline
 \end{dunetable}
@@ -393,10 +394,12 @@ facilities and underground installation are described in Section~\ref{sec:daq:pr
 [\dword{daq} System Interface Links]
 {p{0.3\textwidth}p{0.3\textwidth}p{0.2\textwidth}}
 {tab:daq:interfaces}
-{Data Acquisition System Interface Links. \fixme{Some of these are SP interface
-    documents and need to be replaced with DP versions.}}
+{Data Acquisition System Interface Links.
+
+% \fixme{Some of these are SP interface   documents and need to be replaced with DP versions.}
+}
 Interfacing System & Description & Reference \\ \toprowrule
-TPC CE & & \citedocdb{6742}{v6}\\ \colhline
+DP Electronics  & & \citedocdb{6778}\\ \colhline
 PDS Readout & &  \citedocdb{6727}{v2} \\ \colhline
 Computing &&  \citedocdb{7123} \\ \colhline
 CISC & & \citedocdb{6790}{v1} \\ \colhline
@@ -411,17 +414,19 @@ Facilities &&  \citedocdb{6988}{v1} \\ \colhline
 \item[TPC Electronics] The \dword{daq} and TPC Electronics interface is
   described in \citedocdb{6778}.
   The physical interface is in the \dword{cuc}, where optical links from the
-  \dword{cro} and \dword{lro} crates which transfer their compressed data to the
+  \dword{cro} and \dword{lro} microTCA crates which transfer their compressed data to the
   \dword{daq} \dword{fe} readout (\dword{felix}; see
   Section~\ref{sec:daq:design-upstream}).
   This ensures the \dword{daq} is electically decoupled from the detector
   cryostat.
   One \SI{10}{Gbps} link per each electronics readout is expected, and has been
-  specified as 300m OM4 multi-mode fibers from \hlfix{sfp+ at the
-    crate }{This is what WIBs use, what about DP crates?}
+  specified as 300m OM4 multi-mode fibers from sfp+ at the
+    crate 
+%{This is what WIBs use, what about DP crates?}
   to \dword{minipod} on \dword{felix}.
-  The data format is \hlfix{XXX }{specify} and the communication protocol is
-  \hlfix{XXX }{specify} which employs lossless compression.
+
+The data format employs for the charge readout lossless compression, achieved with an optimized version of the Huffman algorithm.  Compression on average reduces by a factor 10 the data volume.  The typical occupancy of a 10 Gbit/s data link is then around 2 Gbit/s. The communication protocol is UDP. Data are organized in jumbo frames with MTU 9000 bytes. Each charge readout crate includes ten AMC cards, each digitizing 64 channels. The data on the AMC are compressed on the fly, stored on a local memory buffer and continuously streamed to the DAQ.  Data are transmitted by the AMCs to the DAQ, organized in contiguous time-windows. Time-windows are exactly synchronized on the entire detector front-end, thanks to the fact  that the sampling on all AMC is absolutely aligned with respect to the UTC via the White-Rabbit system.  At the beginning of each time window the data compression sequence is reinitialized on all AMC channels starting from the absolute ADC values and the UTC time-stamp of the first sample of the frame is trasmitted in a window-header packet to the DAQ. Then each AMC performs, sequencially for its 64 channels, the transmission of the data packets corresponding to the continuous streaming of the  time-window. Given compression, the number of bytes used to transmit the time-window may change dynamically from channel to channel. An example of possible data format is described in the following, assuming a time-window lasting 3 ms and containing 4k samples per channel. The definition of the time-window lenght is flexible and may be further optimized.  In the given time window the AMC trasmits sequencially its data from channel 1 to channel 64 by exploiting multiple data frames. In order to achieve maximum packing per frame, data from several channels are transmitted in the same frame.  Each data frame starts with a header containing the AMC identifier, the frame number, the number of channels included in the frame, including the last transmitted channel  which may be truncated and have its data sequence overflowing in the next frame. Then the frame header provides the list of channel numbers included in the frame and the corresponding number of bytes to be read for each one of them.  For instance in case of a frame containing compressed data from 3 contiguous channels  (n,n+1,n+2) starting from channel number n : n,n+1,n+2,N1,N2,N3.  Where n+2 is the last channel of the frame which may have its data overflowing in the next frame. Immediately after the header the rest of the frame contains the raw compressed data:  N1 bytes for channel n,  N2 bytes for channel n+1, N3 bytes for channel n+2.  The number of channels treated in a frame may vary depending on the compression efficiency. The data format aims at the maximal  occupancy of the data frames, independently of the instantaneous compression fluctuations.
+
 
 \item[Computing] The \dword{daq} and computing interface is described in
   \citedocdb{7123}.
@@ -454,7 +459,8 @@ Facilities &&  \citedocdb{6988}{v1} \\ \colhline
 
 \item[Calibration] The \dword{daq} and calibration interface is described in
   \citedocdb{7069}.
-  \hlfix{Two calibration systems are envisioned }{Are these consistent with DP?}
+ Two calibration systems are envisioned 
+%{Are these consistent with DP?}
   for the \dword{fd}: a laser calibration
   system and a neutron generator.
   Calibration pulses will be issued by the calibration systems themselves, upon
@@ -462,13 +468,14 @@ Facilities &&  \citedocdb{6988}{v1} \\ \colhline
   the latter will be issued by the data selection system and distributed through
   the \dword{daq} timing system.
 
-\item[Timing and Synchronizationm] The timing system of the \dword{dune}
+\item[Timing and Synchronization] The timing system of the \dword{dune}
   \dword{fd} connects with almost all detector systems and with the calibration
   system and has a uniform interface to each of them. 
   A single interface document, \citedocdb{11224}, describes all these timing
   interfaces. 
   In particular, the DAQ timing system will interface with the White Rabbit
-  implementation of IEEE1588-2008 utilized by the \dword{dpmod} electronics.
+  implementation of IEEE1588-2008 utilized by the \dword{dpmod} electronics by providing the analog signals
+1PPS and  10MHz clock derived from the GPS disciplined oscillator.
 
   Accuracy of timestamps delivered to detector endpoints will be
   $\pm$\SI{500}{\nano\second} with respect to UTC.
