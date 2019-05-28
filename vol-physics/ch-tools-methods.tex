@@ -28,14 +28,14 @@ Many physics processes are simulated in the DUNE \dword{fd}; these include beam 
 To save processing time, all the \dword{fd} samples except the cosmogenics sample were simulated using a smaller version of the full \nominalmodsize far \dword{detmodule} geometry. This geometry is \SI{13.9}{m} long, \SI{12}{m} high and \SI{13.3}{m} wide, which consists of 12 \dword{apa}s and 24 \dword{cpa}s. % anne fixed TPCs. 
 %In the default configuration, the TPC wire spacing is 5 mm, the wire angle is 36$^{\circ}$ and the neutrino beam is parallel to the wire planes. 
 Figure~\ref{fig:dune_apa} shows the detailed structure of an \dword{apa}. %We also generated special samples where the wire spacing is 3 mm or the wire angle is 45$^{\circ}$ or the neutrino beam is perpendicular to the wire planes for the detector optimization studies. 
-
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=0.7\textwidth]{DUNE_APA.PNG}
-\caption{The detailed structure of the \dword{apa} is shown. Each \dword{apa} consists of four wrapped induction wire planes and two collection wire planes.
+\begin{dunefigure}
+[Detailed structure of the APA]
+{fig:dune_apa}
+{The detailed structure of the \dword{apa} is shown. Each \dword{apa} consists of four wrapped induction wire planes and two collection wire planes.
 The \dword{pd} is sandwiched between the two collection wire planes.}
-\label{fig:dune_apa}
-\end{figure}
+\includegraphics[width=0.7\textwidth]{DUNE_APA.PNG}
+\end{dunefigure}
+
 
 For the simulation chain, each sample is simulated in three steps: generation (gen), {\sc geant4} tracking (g4), TPC signal simulation, and digitization (detsim). The first step is unique for each sample while the second and the third steps are mostly identical for all samples. 
 
@@ -244,13 +244,13 @@ the charge's drifting velocity $\vec{v}_q$. The weighting field $\vec{E}_w$ depe
 the electrodes. The charge's drifting velocity $\vec{v}_q$ is a function of the external \efield, which 
 also depends on the geometry of the electrodes as well as the applied drifting and bias voltages. The current induced at a given electrode and electron drift path ($x$)
   sampled over a period of time ($t$) is called a ``field response function'' $R(x,t)$.
-
-\begin{figure}[!htp]
-\centering
+\begin{dunefigure}
+[Garfield configuration for simulating the field response functions]
+{field_resp_geometry}
+{Garfield configuration for simulating the field response functions.}
 \includegraphics[width=0.85\textwidth]{apa_cell.png}
-\caption[Garfield configuration for simulating the field response functions]{Garfield configuration for simulating the field response functions.}
-\label{field_resp_geometry}
-\end{figure}
+\end{dunefigure}
+
 
 The field response functions for a single ionization electron are simulated with Garfield~\cite{garfield}. \fixme{add to glossary?} 
 In the Garfield simulation, a region with \SI{22}{cm} (along the \efield or drift direction) $\times$ 
@@ -262,15 +262,15 @@ first two induction planes (U and V) and complete collection by the collection p
 field at \SI{500}{V/cm}. In the simulation, each wire plane contains 101 wires with \SI{150}{\micro\meter} diameter
   separated at $\sim\,$\SI{4.71}{\mm} wire pitch. The electron drift velocity as a function of electric
   field is taken from recent measurements~\cite{Li:2015rqa,larpropertiesbnl}. In this simulation, the motion of the positive ions is not included as their drift velocity is about five orders of magnitude slower than that of ionization electrons. In the underground condition, the distortion in E-field caused by the space charge (accumulated positive ions) is expected to be a factor of 100 smaller than that in the surface-operating ProtoDUNE (NP04). This  leads to the maximal position distortion to be less than 3 mm. 
-
- \begin{figure}[!htp]
-  \centering
-  \includegraphics[width=0.7\textwidth]{field_response_data.png}
-\caption[Position-dependent (long-range) field response simulated with the Garfield program]{Position-dependent (long-range) field response simulated with the Garfield program 
+\begin{dunefigure}
+[Position-dependent (long-range) field response simulated with the Garfield program]
+{field_resp}
+{Position-dependent (long-range) field response simulated with the Garfield program 
 for two induction and one collection planes in the ``Log~10'' format. The wire of interest 
-is assumed to locate at position zero. When a cloud of ionization electrons are drifting through a particular transverse position, the waveform on the wire of interest is shown in z-axis along the x-axis (drift time). Obviously, as the magnitude of transverse positions are large, the induced signal becomes small. }
-\label{field_resp}
-\end{figure}
+is assumed to locate at position zero. When a cloud of ionization electrons are drifting through a particular transverse position, the waveform on the wire of interest is shown in z-axis along the x-axis (drift time). Obviously, as the magnitude of transverse positions are large, the induced signal becomes small.}
+\includegraphics[width=0.7\textwidth]{field_response_data.png}
+\end{dunefigure}
+
 
  Given the above configuration, the field response function can then be calculated in Garfield
   for each individual wire  for an
@@ -300,17 +300,14 @@ Figure~\ref{fig:simevent_wf} shows the example waveform for minimum ionizing par
 the wire plane, but perpendicular to the wire orientation.  Figure~\ref{fig:simevent} shows one example event of 
 a \dword{mip} traveling through one \dword{apa}. 
 
-\begin{figure}[htbp]
-  \centering
-        \includegraphics[width=0.6\textwidth]{DUNE_line_source_wf.png}
-        \caption{Waveform for minimum ionizing particles traveling parallel to the wire plane. For different
-        wire plane, the corresponding track is assumed to travel perpendicular to the wire orientation. 
-        }\label{fig:simevent_wf}
-         \includegraphics[width=0.95\textwidth]{track_sim.png}
-    \caption{Simulated waveform for a \dword{mip} traveling through one \dword{apa} is displayed in two dimensions (time tick vs. wire number). The amplitude of the waveform is displayed as the z-axis with red (blue) being positive (negative). The discontinuity of the 
-    tracks in the V plane is caused by the wrapped wires.}
-  \label{fig:simevent}
-\end{figure}
+\begin{dunefigure}
+[Waveform for minimum ionizing particles traveling parallel to the wire plane]
+{fig:simevent}
+{Waveform for minimum ionizing particles traveling parallel to the wire plane. For different
+        wire plane, the corresponding track is assumed to travel perpendicular to the wire orientation.}
+\includegraphics[width=0.6\textwidth]{DUNE_line_source_wf.png}
+\end{dunefigure}
+
 
 The signal simulation, i.e., the \dword{adc} waveform on a given channel, 
 \begin{equation}
@@ -355,13 +352,14 @@ These functions are defined over broad ranges and with fine-grained resolution. 
   from MicroBooNE experiment~\cite{Acciarri:2017sde}. This value was further validated in \dword{pdsp}. % experiment.
   Figure~\ref{elec_resp} shows the expected electronics shaping functions.
 
-\begin{figure}[!h!tbp]
-\centering
-\includegraphics[width=0.7\textwidth]{elec.png}
-\caption[\dword{asic}'s electronics shaping functions]{\dword{asic}'s electronics shaping functions
+\begin{dunefigure}
+[ASIC's electronics shaping functions]
+{elec_resp}
+{\dword{asic}'s electronics shaping functions
 are shown for four shaping time settings at \SI{14}{mV/fC} gain.}
-\label{elec_resp}
-\end{figure}
+\includegraphics[width=0.7\textwidth]{elec.png}
+\end{dunefigure}
+
 
 
 The \dword{pd} electronics simulation separately generates waveform 
@@ -450,22 +448,23 @@ distribution of ionization electrons arriving at anode wire plane. The
 deconvolved signal becomes unipolar, and the long-range 
 induction effect embedded in the field response is largely removed. 
 
-
-\begin{figure}[!h!tbp]
-\centering
-\includegraphics[width=0.95\textwidth]{sample_5141_23865.pdf}
-\caption[Measured and deconvolved waveform from an induction U-plane channel of \dword{pdsp}]{An example of measured (black) and deconvolved waveform from an induction U-plane channel of \dword{pdsp}
-before and after the signal processing procedure. For measured waveform, the unit is \dword{adc}. For deconvolved
-waveform, the unit is number of electrons after scaling down by a factor of 125.
+\begin{dunefigure}
+[Measured and deconvolved waveform from an induction U-plane channel of ProtoDUNE-SP]
+{pDUNE_sp_wf}
+{An example of measured (black) and deconvolved waveform from an induction U-plane channel of \dword{pdsp}
+before and after the signal processing procedure. For measured waveform, the unit is \dword{adc}. For deconvolved waveform, the unit is number of electrons after scaling down by a factor of 125.
 Bipolar signal shape is converted into a unipolar signal shape after \twod deconvolution.}
-\label{pDUNE_sp_wf}
-\includegraphics[width=0.49\textwidth]{protodune_raw_u.pdf}
-\includegraphics[width=0.49\textwidth]{protodune_decon_u.pdf}
-\caption{Comparison of raw (left) and deconvolved induction U-plane signals (right) before and after 
+\includegraphics[width=0.95\textwidth]{sample_5141_23865.pdf}
+\end{dunefigure}
+
+\begin{dunefigure}
+[Raw  and deconvolved induction U-plane signals from a ProtoDUNE-SP event]
+{pDUNE_sp_example}
+{Comparison of raw (left) and deconvolved induction U-plane signals (right) before and after 
 the signal processing procedure from a \dword{pdsp} event. The bipolar shape with red (blue) color representing
-positive (negative) signals is converted to the unipolar shape after the \twod deconvolution. }
-\label{pDUNE_sp_example}
-\end{figure}
+positive (negative) signals is converted to the unipolar shape after the \twod deconvolution.}
+\includegraphics[width=0.49\textwidth]{protodune_raw_u.pdf}
+\includegraphics[width=0.49\textwidth]{protodune_decon_u.pdf}\end{dunefigure}
 
 
 \subsection{Hit and Space-Point Identification}
@@ -480,13 +479,14 @@ completely separated. Alternatively, a track can have a trajectory at large angl
 gaussian. If this results in candidate peak trains that are ``too long'' then special handling  breaks these into a number of evenly spaced hits and bypasses the hit-fitting stage. 
 
 Figure~\ref{pDUNE_sp_hits} displays the results of the gaussian hit finder for the case of two or three hits only barely separated in \dword{pdsp} data. In this figure the deconvolved waveform is shown in blue, the red line represents the fit of the candidate peak to two or three gaussian shapes, the crosses represent the centers of the fit peaks, the pulse heights above the waveform baseline and their fit widths. 
-\begin{figure}[!h!tbp]
-\centering
+
+\begin{dunefigure}
+[An example of reconstructed hits in ProtoDUNE-SP data]
+{pDUNE_sp_hits}
+{An example of reconstructed hits in \dword{pdsp} data. The deconvolved waveform is shown in blue, the red line represents the fit of the candidate peak to two or three gaussian shapes, the crosses represent the centers of the fit peaks, the pulse heights above the waveform baseline and their fit widths.}
 \includegraphics[width=\textwidth]{hits.png}
-\caption[An example of reconstructed hits in \dword{pdsp} data]{An example of reconstructed hits in \dword{pdsp} data. The deconvolved waveform is shown in blue, the red line represents the fit of the candidate peak to two or three gaussian shapes, the crosses represent the centers of the fit peaks, the pulse heights above the waveform baseline and their fit widths.
-}
-\label{pDUNE_sp_hits}
-\end{figure}
+\end{dunefigure}
+
 
 \subsubsection{Space Point Solver}
 
@@ -504,7 +504,7 @@ Figure~\ref{pDUNE_sp_hits} displays the results of the gaussian hit finder for t
 the fidelity of the regularized reconstruction.}
 
 \label{fig:spacepoint}
-\end{figure}
+\end{figure} % Anne left as is May 29; should become a dunefigure
 
 The SpacePointSolver algorithm aims to transform the three \twod views provided by the wire planes into a single collection of \threed ``space points.''
 
@@ -610,14 +610,18 @@ where a typical approach uses combinations of \twod clusters (from different vie
 
 \end{enumerate}
 
-\begin{figure}[!h!tbp]
-\centering
-\includegraphics[width=5cm, height=7.5cm]{./Pandora/OneInputHits.pdf}\includegraphics[width=13cm, height=7.5cm]{./Pandora/TwoPrePostTopAssoc.pdf}
-\includegraphics[width=5cm, height=7.5cm]{./Pandora/ThreeVertexCandidates.pdf}\includegraphics[width=7cm, height=7.5cm]{./Pandora/Four3DMatch.pdf}\includegraphics[width=6cm, height=7.5cm]{./Pandora/FiveTrackShower.pdf}
+\begin{dunefigure}
+[Main stages of the PANDORA pattern recognition chain]
+{reco_steps}
+{Illustration of the main stages of the \dword{pandora} pattern recognition chain: (1) Input Hits; (2) \twod track-like cluster creation and association; (3) \threed vertex reconstruction; (4) \threed track reconstruction; (5) Track/Shower separation; (6) \twod and \threed particle refinement and event building.}
+\includegraphics[width=5cm, height=7.5cm]{./Pandora/OneInputHits.pdf}
+\includegraphics[width=13cm, height=7.5cm]{./Pandora/TwoPrePostTopAssoc.pdf}
+\includegraphics[width=5cm, height=7.5cm]{./Pandora/ThreeVertexCandidates.pdf}
+\includegraphics[width=7cm, height=7.5cm]{./Pandora/Four3DMatch.pdf}
+\includegraphics[width=6cm, height=7.5cm]{./Pandora/FiveTrackShower.pdf}
 \includegraphics[width=12cm, height=7.5cm]{./Pandora/SixPrePostMopUp.pdf}
-\caption{Illustration of the main stages of the \dword{pandora} pattern recognition chain: (1) Input Hits; (2) \twod track-like cluster creation and association; (3) \threed vertex reconstruction; (4) \threed track reconstruction; (5) Track/Shower separation; (6) \twod and \threed particle refinement and event building.}
-\label{reco_steps}
-\end{figure}
+\end{dunefigure}
+
 
 The algorithms forming the stages described above can be used in different ways, thanks to the multi-algorithm approach. Currently, two \dword{pandora} reconstruction paths ({\it PandoraCosmic} and {\it PandoraNu}) have been created, using chains of tens of algorithms each (note that over 130 algorithms and tools are used in total). Although many algorithms are shared between the two paths, the overall algorithm selection results in different key features:
 \begin{enumerate}
@@ -627,12 +631,14 @@ The algorithms forming the stages described above can be used in different ways,
 
 These two chains of algorithms are harnessed together to provide a consolidated output in the case of surface detectors exposed to cosmic rays, such as MicroBooNE and \dword{pdsp} (without significant cosmic-ray background, only the PandoraNu algorithm chain is necessary for the \dword{fd}). The overall reconstruction strategy in such detectors is illustrated in Figure~\ref{consolidated_reco}. It starts by running the PandoraCosmic reconstruction on the entire collection of input hits, then identifies ``clear'' cosmic rays. This identification uses a geometrical approach to tag through-going cosmic rays and examines the consistency of the cosmic rays with the $t_{0}$ appropriate to the neutrino beam spill. Clear cosmic rays are output at this stage. For the remaining ambiguous hits, however, additional stages are required. A \textit{slicing} process is applied to the remaining hits, dividing them into smaller regions (slices) that represent separate, distinct interactions. Each slice is reconstructed using both the PandoraNu and PandoraCosmic reconstruction chains and the results are compared directly to identify whether the slice corresponds to a cosmic ray or a neutrino interaction (in the case of MicroBooNE) or test beam interaction (in the case of \dword{pdsp}). The consolidated event output is formed of three classes of reconstructed particles: (1) clear cosmic rays, (2) cosmic rays that are spatially and temporally consistent with being a neutrino interaction in the detector (remaining cosmic-rays) and (3) candidate neutrino or test beam interactions.
 
-\begin{figure}[!h!tbp]
-\centering
+\begin{dunefigure}
+[Schema of PANDORA consolidated output and reconstruction strategy for surface LArTPCs]
+{consolidated_reco}
+{Schema of the \dword{pandora} consolidated output and overall reconstruction strategy for surface \dwords{lartpc} such as \dword{microboone} and \dword{pdsp}. See text for more details.}
 \includegraphics[width=0.65\textwidth]{./Pandora/NewConsolidatedDiagram.png}
-\caption[Schema of the \dword{pandora} consolidated output and overall reconstruction strategy for surface LArTPCs]{Schema of the \dword{pandora} consolidated output and overall reconstruction strategy for surface LArTPCs such as MicroBooNE and \dword{pdsp}. See text for more details.}
-\label{consolidated_reco}
-\end{figure}
+\end{dunefigure}
+
+
 
 Of particular importance in this overall reconstruction strategy is the neutrino (MicroBooNE) or test beam particle (\dword{pdsp}) identification tool. This tool is responsible for deciding whether to output the cosmic ray or neutrino (or test beam) reconstruction outcomes for a given slice. For \dword{pdsp}, this decision is based on the output from adaptive \dwords{bdt}, trained to distinguish between cosmic-ray and test beam particles, which has proved to be highly efficient across the momentum range of \dword{pdsp} data (see Section ~\ref{sec:Pandora:ProtoDUNE}). %The variables used in this BDT model have proved to be highly efficient across the momentum range of ProtoDUNE-SP data (as it will be shown in Section ~\ref{sec:Pandora:ProtoDUNE}). These variables are: 
 
@@ -697,12 +703,13 @@ trajectory fits alone was developed. In this mode the collections of clusters fo
 
 \subsubsection{Wire Cell}
 
-\begin{figure}[!ht]
- \includegraphics[width=0.98\textwidth]{wire-cell-overview.png}
-\caption[Overview of \dword{wirecell} reconstruction paradigm]{Overview of\dword{wirecell} reconstruction paradigm, taken from~\cite{ref:wc_talk}. 
+\begin{dunefigure}
+[Overview of wire-cell reconstruction paradigm]
+{wire-cell-overview}
+{Overview of\dword{wirecell} reconstruction paradigm, taken from~\cite{ref:wc_talk}. 
 See text for more details.}
-\label{wire-cell-overview}
-\end{figure}
+\includegraphics[width=0.98\textwidth]{wire-cell-overview.png}\end{dunefigure}
+
 
 
 The \Dword{wirecell} is a new reconstruction package under development. The current 
@@ -725,18 +732,19 @@ identification in a \lartpc. %Beside these,
 Development of \threed pattern recognition also needs
 to be revisited before reaching a complete reconstruction chain. 
 
-
-\begin{figure}[!ht]
-\centering
- \includegraphics[width=0.85\textwidth]{bee_event.png}
-\caption{This \threed display shows the full size of the \dword{pdsp} detector (white box) and 
+\begin{dunefigure}
+[\threed display of interaction in ProtoDUNE-SP]
+{wire-cell-bee}
+{This \threed display shows the full size of the \dword{pdsp} detector (white box) and 
 the direction of the particle beam (yellow arrow). Particles from other sources (such as cosmic rays) 
 can be seen throughout the white box, while the red box highlights the region of interest: 
 in this case, an interaction resulting from the 7 GeV beam particle through the detector. 
 The \threed points are obtained using the Space~Point~Solver reconstruction algorithm. This event
 can be accessed through interactive web-based event display Bee at \url{https://www.phy.bnl.gov/twister/bee/set/protodune-gallery/event/0/}.}
-\label{wire-cell-bee}
-\end{figure}
+\includegraphics[width=0.85\textwidth]{bee_event.png}
+\end{dunefigure}
+
+
 
 The \dword{wirecell} team also created an advanced web-based \threed event display, ``Bee''~\cite{wire-cell-bee}, to aid the reconstruction development and provide interactive visualizations to end users.  Bee, together with \twod Magnify event 
 display tools, have played important roles in 
@@ -895,21 +903,23 @@ Using the output of this matching scheme, the following performance metrics can 
 
 The performance of the \dword{pandora} pattern recognition has been evaluated using a sample of accelerator neutrino and antineutrino interactions simulated using the reference DUNE neutrino energy spectrum and the \nominalmodsize \dword{detmodule} geometry. The breakdown of the different interaction channels as a function of the true neutrino energy in the samples used is presented in Fig. \ref{breakdown_nuenergy}, for the events in the neutrino mode in which at least one ``target'' reconstructable \dword{mcparticle} is created and therefore evaluated. The following plots show that a good efficiency has already been achieved, and indicate particular regions and channels in which improvements can be made. 
 
-\begin{figure}[!ht]
-\centering
+\begin{dunefigure}
+[Interaction channels vs true $\nu$ energy; simulated events used to assess performance]
+{breakdown_nuenergy}
+{Breakdown of the different interaction channels as a function of the true neutrino energy in the samples used in the assessment of reconstruction performance, for the simulated events in the neutrino mode in which at least one ``target'' reconstructable \dword{mcparticle} particle is created and therefore evaluated. Percentages indicate the fraction of each channel in the total number of events.}
 \includegraphics[width=0.8\textwidth]{./Pandora/MCC11_NuE.png}
-\caption[Breakdown of interaction channels vs true neutrino energy of the simulated events used to assess the reconstruction performance.]{Breakdown of the different interaction channels as a function of the true neutrino energy in the samples used in the assessment of reconstruction performance, for the simulated events in the neutrino mode in which at least one ``target'' reconstructable \dword{mcparticle} particle is created and therefore evaluated. Percentages indicate the fraction of each channel in the total number of events.}
-\label{breakdown_nuenergy}
-\end{figure}
+\end{dunefigure}
 
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_HitsEff_Tracks.png}\includegraphics[width=0.5\textwidth]{/Pandora/MCC11_ALL_BUT_DIS_HitsEff_Showers.png}
-\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_MomentumEff_Tracks.png}\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_MomentumEff_Showers.png}
+\begin{dunefigure}
+[Reconstruction efficiency of PANDORA pattern recognition for a range of final-state particles at the FD]
+{pandora_particle_efficiency}
+{The reconstruction efficiency of the \dword{pandora} pattern recognition obtained for a range of final-state particles produced in all types of accelerator neutrino interactions except deep inelastic ones at DUNE FD. The efficiency is plotted as a function of the total number of \twod hits associated with the final-state \dwords{mcparticle} (summed across all views) on the top row, and as a function of the true momentum of the particle on the bottom row. Plots are shown for track-like particles (left) and shower-like particles (right) of each type leading in the event.}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_HitsEff_Tracks.png}
+\includegraphics[width=0.5\textwidth]{/Pandora/MCC11_ALL_BUT_DIS_HitsEff_Showers.png}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_MomentumEff_Tracks.png}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_MomentumEff_Showers.png}
+\end{dunefigure}
 
-\caption[Reconstruction efficiency of \dword{pandora} pattern recognition for a range of final-state particles at the \dword{fd}]{The reconstruction efficiency of the \dword{pandora} pattern recognition obtained for a range of final-state particles produced in all types of accelerator neutrino interactions except deep inelastic ones at DUNE FD. The efficiency is plotted as a function of the total number of \twod hits associated with the final-state \dword{mcparticle}s (summed across all views) on the top row, and as a function of the true momentum of the particle on the bottom row. Plots are shown for track-like particles (left) and shower-like particles (right) of each type leading in the event.}
-\label{pandora_particle_efficiency}
-\end{figure}
 
 Figure~\ref{pandora_particle_efficiency} shows the reconstruction efficiency as a function of the number of total true \twod hits and as a function of the true momentum for a range of final-state particles. The typical reconstruction efficiencies obtained for track-like \dword{mcparticle}s ($\mu^{\pm}$, $\pi^{\pm}$, $p$) rise from \SIrange{65}{85}{\%} for simulated particles depositing 100\,hits to \SIrange{85}{100}{\%} for particles with 1000\,hits. It should be emphasized that inefficiencies almost always result from accidental merging of multiple nearby true particles, rather than an inability to cluster hits from a true particle. The reconstruction efficiency for shower-like \dword{mcparticle}s ($e^{-}$,$\gamma$) is a bit lower than the equivalent for track-like particles at lower number of hits, but comparable with $>$100 hits.
 
@@ -921,64 +931,71 @@ by comparing the number of reconstructed particles as a function of the number o
 
 Figure~\ref{pandora_vertex_resolution} shows distributions of the displacements $\Delta x$, $\Delta y$, $\Delta z$ and $\Delta R^{2} = (\Delta x)^2 + (\Delta y)^2 + (\Delta z)^2$ between the reconstructed and simulated neutrino interaction positions for all types of accelerator neutrino events. It can be seen that, for the vast majority of events, the reconstructed neutrino interaction vertex lies within $2$\,cm of the \dword{mc} truth in $x$, $y$ and $z$. While the $\Delta x$ and $\Delta y$ distributions are both symmetrical and sharply peaked around the origin, a small forward bias can be seen in the $\Delta z$ distribution. The reason for this bias comes from the fact that the neutrino interaction will be boosted in the forward $z$ direction, so vertex candidates are more likely created at $\Delta z>0$ than $\Delta z\,<\,0$.  
 
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_Completeness_Tracks.png}\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_Completeness_Showers.png}
-\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_Purity_Tracks.png}\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_Purity_Showers.png}
-\caption[Completeness (top) and purities (bottom) for a range of final-state track-like  and shower-like particles]{Distributions of completenesses (top) and purities (bottom) for a range of final-state particles divided into track-like (left) and shower-like (right), produced in all types of accelerator neutrino interactions except deep inelastic ones at DUNE FD. }
-\label{pandora_completeness_purity}
-\end{figure}
+\begin{dunefigure}
+[Completeness and purities for a range of final-state track-like  and shower-like particles]
+{pandora_completeness_purity}
+{Distributions of completenesses (top) and purities (bottom) for a range of final-state particles divided into track-like (left) and shower-like (right), produced in all types of accelerator neutrino interactions except deep inelastic ones at DUNE FD.}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_Completeness_Tracks.png}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_Completeness_Showers.png}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_Purity_Tracks.png}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_ALL_BUT_DIS_Purity_Showers.png}\end{dunefigure}
 
-\begin{figure}[!ht]
-\centering
+\begin{dunefigure}
+[Number of reconstructed particles per number of true final-state particles, CC and NC]
+{pandora_dis}
+{Distributions of number of reconstructed particles as a function of number of true final-state particles in deep inelastic events for neutral-current (left) and charged-current (middle) interactions. In addition, the number of reconstructed particles matching the leading lepton in charged-current deep inelastic interactions is also presented (right).}
 \includegraphics[width=0.315\textwidth]{./Pandora/MCC11_NCDIS.png}
 \includegraphics[width=0.315\textwidth]{./Pandora/MCC11_CCDIS.png}
 \includegraphics[width=0.315\textwidth]{./Pandora/MCC11_CCDISLeptonMatches.png}
-\caption[Number of reconstructed particles per number of true final-state particles, \dword{cc} and \dword{nc}]{Distributions of number of reconstructed particles as a function of number of true final-state particles in deep inelastic events for neutral-current (left) and charged-current (middle) interactions. In addition, the number of reconstructed particles matching the leading lepton in charged-current deep inelastic interactions is also presented (right).}
-\label{pandora_dis}
-\end{figure}
+\end{dunefigure}
 
-
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_VtxDeltaX.png}\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_VtxDeltaY.png}
-\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_VtxDeltaZ.png}\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_VtxDeltaRsq.png}
-\caption[Displacements between reconstructed and simulated $\nu$ interaction vertices]{The displacements between the reconstructed and simulated neutrino interaction vertices. The distributions are plotted for $x$ (top left), $y$ (top right), $z$ (bottom left) and $R^2$ (bottom right) and include all types of accelerator neutrino interaction (also deep inelastic events).}
-\label{pandora_vertex_resolution}
-\end{figure}
+\begin{dunefigure}
+[Displacements between reconstructed and simulated $\nu$ interaction vertices]
+{pandora_vertex_resolution}
+{The displacements between the reconstructed and simulated neutrino interaction vertices. The distributions are plotted for $x$ (top left), $y$ (top right), $z$ (bottom left) and $R^2$ (bottom right) and include all types of accelerator neutrino interaction (also deep inelastic events).}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_VtxDeltaX.png}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_VtxDeltaY.png}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_VtxDeltaZ.png}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_VtxDeltaRsq.png}
+\end{dunefigure}
 
 \subsection{Reconstruction Performance in \dword{pdsp}}
 \label{sec:Pandora:ProtoDUNE}
 
 Further examination of the performance of the \dword{pandora} pattern recognition is provided through studies of the test beam data taken by \dword{pdsp}.  Figure \ref{pandora_protodune_tbrecoeff} shows the reconstruction efficiency for triggered test beam particles as a function of the momentum recorded by the trigger.  The reconstruction efficiency metric folds in many effects, including reconstruction, removal of cosmic ray background and identification of the reconstructed particle as originating from the test beam.  An example of the \dword{pandora} reconstruction output for ProtoDUNE \dword{mc} simulations is shown in Figure~\ref{pandora_protodune_reco}.  A broad agreement between the \dword{mc} simulations and the data can be observed in Figure~\ref{pandora_protodune_tbrecoeff} across the range of momenta considered.  The exceptions to this are: (1) low-momentum events, where the low efficiency for data is due to particles interacting between the trigger and the LArTPC before reaching its active volume, and (2) high-momentum events, where the effect of test beam halo particles appears to be overestimated in the simulation.
 
-\begin{figure}[!ht]
-\centering
+\begin{dunefigure}
+[Reconstruction efficiency for  triggered test beam particle as a function of particle momentum]
+{pandora_protodune_tbrecoeff}
+{The efficiency of reconstruction for the triggered test beam particle as a function of particle momentum in data (red) and simulation (black).}
 \includegraphics[width=0.75\textwidth]{./Pandora/ProtoDUNE/BeamParticleEfficiencyVsMomentum.pdf}
-\caption[Reconstruction efficiency for the triggered test beam particle as a function of particle momentum in data and simulation.]{The efficiency of reconstruction for the triggered test beam particle as a function of particle momentum in data (red) and simulation (black).}
-\label{pandora_protodune_tbrecoeff}
-\end{figure}
+\end{dunefigure}
 
-\begin{figure}[!ht]
+
+
+
+\begin{figure}[!ht]%Anne leaving as is 5/28
 \centering
 \subfloat[]{\label{fig:reco3d}\includegraphics[width=0.75\textwidth]{./Pandora/ProtoDUNE/TDR_EventDisplay3D.pdf}} \\ 
 \subfloat[]{\label{fig:recou}\includegraphics[width=0.33\textwidth]{./Pandora/ProtoDUNE/TDR_EventDisplayU.pdf}}
 \subfloat[]{\label{fig:recov}\includegraphics[width=0.33\textwidth]{./Pandora/ProtoDUNE/TDR_EventDisplayV.pdf}}
 \subfloat[]{\label{fig:recow}\includegraphics[width=0.33\textwidth]{./Pandora/ProtoDUNE/TDR_EventDisplayW.pdf}}
-\caption[Pandora reconstruction output for \SI{7}{GeV} \dword{mc} test beam event]{An example of the \dword{pandora} reconstruction output for a 7 GeV Monte Carlo test beam event.  Figure \protect\subref{fig:reco3d} shows the \threed reconstruction output for this event where the correctly reconstructed and tagged triggered test beam particle has been highlighted.  Figures \protect\subref{fig:recou}, \protect\subref{fig:recov} and \protect\subref{fig:recow} show the \twod hits for the reconstructed test beam particle where each coloured cluster of hits represents a different particle in the reconstructed particle hierarchy.}
-\label{pandora_protodune_reco}
+\caption[Pandora reconstruction output for \SI{7}{GeV} MC test beam event]{An example of the \dword{pandora} reconstruction output for a 7 GeV Monte Carlo test beam event.  Figure \protect\subref{fig:reco3d} shows the \threed reconstruction output for this event where the correctly reconstructed and tagged triggered test beam particle has been highlighted.  Figures \protect\subref{fig:recou}, \protect\subref{fig:recov} and \protect\subref{fig:recow} show the \twod hits for the reconstructed test beam particle where each coloured cluster of hits represents a different particle in the reconstructed particle hierarchy.}
+\label{pandora_protodune_reco} 
 \end{figure}
 
 The effect of cosmic ray backgrounds and the test beam particle halo on the reconstructed test beam particle efficiency is illustrated in Figure~\ref{fig:pandora_protodune_tbrecoeffbrkdwn}, where the efficiency is shown as a function of the momentum of the triggered particle (\ref{fig:pandora_protodune_tbrecoeffbrkdwn_p}) and the number of hits produced by the triggered particle (\ref{fig:pandora_protodune_tbrecoeffbrkdwn_nhits}).  These figures indicate that the primary loss mechanisms in the test beam particle reconstruction, accounting for $\approx 70\%$ of all inefficiencies, are due to irreducible cosmic ray and test beam halo backgrounds.
 
-\begin{figure}[!ht]
+
+
+\begin{figure}[!ht] %Anne leaving as is 5/28
 \centering
 \subfloat[]{\label{fig:pandora_protodune_tbrecoeffbrkdwn_p}\includegraphics[width=0.5\textwidth]{./Pandora/ProtoDUNE/BeamParticleEfficiencyBreakdownVsMomentum.pdf}}
 \subfloat[]{\label{fig:pandora_protodune_tbrecoeffbrkdwn_nhits}\includegraphics[width=0.5\textwidth]{./Pandora/ProtoDUNE/BeamParticleEfficiencyBreakdownVsNHits.pdf}} \\
 \subfloat[]{\label{fig:pandora_protodune_tbrecoeffbrkdwn_evt}\includegraphics[width=0.6\textwidth]{./Pandora/ProtoDUNE/EventComposition.pdf}}
-\caption[Reconstruction efficiency for test beam particle in \dword{mc} per momentum and hits]{The efficiency of reconstruction for the triggered test beam particle in Monte-Carlo as a function of \protect\subref{fig:pandora_protodune_tbrecoeffbrkdwn_p} the triggered beam momenta and \protect\subref{fig:pandora_protodune_tbrecoeffbrkdwn_nhits} the number of hits made by the triggered particle.  The three curves show the reconstruction efficiency of the triggered test beam particle in isolation (black), with beam particle halo overlaid (red) and with both beam particle halo and cosmic ray backgrounds overlaid (blue).  Figure \protect\subref{fig:pandora_protodune_tbrecoeffbrkdwn_evt} shows the W plane view for a Monte-Carlo event where the triggered beam particle is shown in blue, the beam halo in red and the cosmic ray backgrounds in black.}
+\caption[Reconstruction efficiency for test beam particle in MC per momentum and hits]{The efficiency of reconstruction for the triggered test beam particle in Monte-Carlo as a function of \protect\subref{fig:pandora_protodune_tbrecoeffbrkdwn_p} the triggered beam momenta and \protect\subref{fig:pandora_protodune_tbrecoeffbrkdwn_nhits} the number of hits made by the triggered particle.  The three curves show the reconstruction efficiency of the triggered test beam particle in isolation (black), with beam particle halo overlaid (red) and with both beam particle halo and cosmic ray backgrounds overlaid (blue).  Figure \protect\subref{fig:pandora_protodune_tbrecoeffbrkdwn_evt} shows the W plane view for a Monte-Carlo event where the triggered beam particle is shown in blue, the beam halo in red and the cosmic ray backgrounds in black.}
 \label{fig:pandora_protodune_tbrecoeffbrkdwn}
-\end{figure}
+\end{figure} 
 
 Alongside the test beam particle reconstruction metrics, the \dword{pandora} cosmic ray reconstruction has been studied using \dword{pdsp} data. 
 
@@ -986,15 +1003,15 @@ Figure \ref{fig:pandora_protodune_cr_n} shows the number of distinct, i.e. that 
 
 Figure~\ref{fig:pandora_protodune_cr_tres} shows the resolution on the reconstructed $t_{0}$ for \dword{mc}, which indicates that the \dword{pandora} $t_{0}$ tagging is precise to the order of microseconds.  The shift in the mean of the distribution when applying the space charge effects is due to the effect of bowing of the tracks when space charge is applied.  Furthermore, the broadening of the distribution when applying the fluid flow model, in comparison to space charge, is due to the fact that the bowing effect is no longer correlated between tracks in the asymmetric fluid flow model.
 
-\begin{figure}[!ht]
+\begin{figure}[!ht] %Anne leaving as is 5/28
 \centering
 \subfloat[]{\label{fig:pandora_protodune_cr_n}\includegraphics[width=0.5\textwidth]{./Pandora/ProtoDUNE/NumberofReconstructedCosmicRays.pdf}}
 \subfloat[]{\label{fig:pandora_protodune_cr_recovsmc}\includegraphics[width=0.357\textwidth]{./Pandora/ProtoDUNE/CRMatchesCosmicRayEvent.pdf}} \\
-\caption[Reconstructed cosmic rays per event for data and \dword{mc}]{The number of distinct, i.e. containing at least 100 hits, reconstructed cosmic rays per event is shown in figure \protect\subref{fig:pandora_protodune_cr_n} for data and \dword{mc}.  Figure \protect\subref{fig:pandora_protodune_cr_recovsmc} shows the number of matched reconstructed cosmic rays per event as a function of the true number of reconstructable distinct cosmic rays passing through the detector per event for \dword{mc}.}
+\caption[Reconstructed cosmic rays per event for data and MC]{The number of distinct, i.e., containing at least 100 hits, reconstructed cosmic rays per event is shown in figure \protect\subref{fig:pandora_protodune_cr_n} for data and \dword{mc}.  Figure \protect\subref{fig:pandora_protodune_cr_recovsmc} shows the number of matched reconstructed cosmic rays per event as a function of the true number of reconstructable distinct cosmic rays passing through the detector per event for \dword{mc}.}
 \label{fig:pandora_protodune_cr_number}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[!ht]  %Anne leaving as is 5/28
 \centering
 \subfloat[]{\label{fig:pandora_protodune_cr_t}\includegraphics[width=0.5\textwidth]{./Pandora/ProtoDUNE/StitchedT0.pdf}}
 \subfloat[]{\label{fig:pandora_protodune_cr_tres}\includegraphics[width=0.5\textwidth]{./Pandora/ProtoDUNE/CosmicRayT0Resolution.pdf}}
@@ -1012,16 +1029,18 @@ This section presents a series of studies to illustrate the results of current e
 
 The opening angle between the reconstructed and the true \threed direction of tracks and showers is presented in Fig. \ref{fig:pandora_dunefd_highlevel_reco_angle} in simulated \dword{fd} neutrino events\footnote{The distributions in Figs. \ref{fig:pandora_dunefd_highlevel_reco_angle} and \ref{fig:pandora_dunefd_highlevel_reco_length} include only good reco-true matches, requiring a minimum of 10\% completeness and 50\% purity for the match. In addition, Fig.~\ref{fig:pandora_dunefd_highlevel_reco_length} is made using only contained tracks, by requiring that both true start and end point are within the fiducial volume. }. The reconstructed direction of tracks is obtained as the initial momentum of the track, after a \dword{pandora} sliding linear fit is performed to its reconstructed \threed points. For showers, the reconstructed direction corresponds to the primary eigenvector result of the \dword{pca} fit to its reconstructed \threed points. In both cases, the opening angle is very small, indicating a good agreement between the reconstructed and true direction of the particles. The few cases in which an opening angle of $~\pi$ is obtained are explained by a good reconstruction of the particle (hit clustering) but the particle vertex placed at its wrong end. 
 
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_Tracks_OpeningAngle_angle.png}\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_OpeningAngle_Showers.png}
-\caption[Distribution of opening angle between reconstructed and true direction for track-like and shower-like particles]{Distribution of opening angle (in radians) between reconstructed and true direction for track-like (left) and shower-like (right) particles in simulated \dword{fd} neutrino events.}
-\label{fig:pandora_dunefd_highlevel_reco_angle}
-\end{figure}
+\begin{dunefigure}
+[Opening angle between reconstructed and true direction for track- and shower-like particles]
+{fig:pandora_dunefd_highlevel_reco_angle}
+{Distribution of opening angle (in radians) between reconstructed and true direction for track-like (left) and shower-like (right) particles in simulated \dword{fd} neutrino events.}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_Tracks_OpeningAngle_angle.png}
+\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_OpeningAngle_Showers.png}
+\end{dunefigure}
+
 
 For track-like particles, another quantity that can be explored in the high-level reconstruction is the length. Figure~\ref{fig:pandora_dunefd_highlevel_reco_length1} shows the difference between reconstructed and true particle length ($\Delta L$), computed as the \threed distance between start and end positions, for simulated track-like particles of various types in the \dword{fd}. The difference in length $\Delta L$ clearly depends on the particle type: for example, $\sim$90\% ($\sim$83\%) of muons have a $\Delta L$ smaller than 10 cm (5cm), whereas for protons (pions) the fraction within 5 cm is $\sim$78\% ($\sim$54\%). $\Delta L$ depends on the true length of the particle, as shown in Fig.~\ref{fig:pandora_dunefd_highlevel_reco_length2}, which presents the mean and sigma (as marker and error bar respectively) of the $\Delta L$ distribution in different ranges of true length for different particle types\footnote{A Gaussian fit is performed to the $\Delta L$ distributions in each range of true length, except the first one (true length < 10cm) which presents a larger tail and its behaviour is better represented by a Landau distribution, of which the most probable value is given instead}. In general, small values of $\Delta L$ can be understood in terms of the efficiency of 3D points creation, and resolution of the vertex reconstruction. Particles presenting kinks due to scattering, such as pions and to a lesser extent protons, have the additional risk of merging parent and daughter particles when the scattering angle is small, increasing the value of $\Delta L$. Short pions are in particular subject to this effect, in addition to merges with other close or overlapping particles in complex topologies, which might translate into larger values of $\Delta L$. 
 
-\begin{figure}[!ht]
+\begin{figure}[!ht]   %Anne leaving as is 5/28
 \centering
 \subfloat[]{\label{fig:pandora_dunefd_highlevel_reco_length1}}\includegraphics[width=0.5\textwidth]{./Pandora/MCC11_Tracks_nu_DeltaL_50cm.png}\subfloat[]{\label{fig:pandora_dunefd_highlevel_reco_length2}}\includegraphics[width=0.5\textwidth, height=6cm]{./Pandora/MCC11_Tracks_DeltaL_vs_trueL_landau.png}
 \caption[Distribution of reconstructed-true length for different track-like particles]{Distribution of reconstructed - true length (\threed distance between start and end positions) for different track-like particles \protect\subref{fig:pandora_dunefd_highlevel_reco_length1}, and mean and sigma (as marker and error bar respectively) of the $\Delta L$ distribution in different ranges of true length\protect\subref{fig:pandora_dunefd_highlevel_reco_length2},}
@@ -1039,33 +1058,33 @@ For example, figure~\ref{fig:pandora_protodune_vertex} presents a measurement of
 %\end{figure}
 
 
-
-\begin{figure}[!ht]
-\centering
+\begin{dunefigure}
+[Resolution on test beam interaction vertex on ProtoDUNE data and MC events]
+{fig:pandora_protodune_vertex}
+{Resolution on the test beam particle interaction vertex on \dword{protodune} data and \dword{mc} events, calculated comparing the end point of the primary test beam particle track and the fitted interaction vertex.}
 \includegraphics[width=0.75\textwidth]{./Pandora/ProtoDUNE/primaryTrackVertexDiff.pdf}
-\caption[Resolution on the test beam particle interaction vertex on \dword{protodune} data and \dword{mc} events]{Resolution on the test beam particle interaction vertex on \dword{protodune} data and \dword{mc} events, calculated comparing the end point of the primary test beam particle track and the fitted interaction vertex.}
-\label{fig:pandora_protodune_vertex}
-\end{figure}
+\end{dunefigure}
+
 
 %Distributions of dEdx for stopping muons and protons are shown in Figures\ref{fig:pandora_protodune_mu} and \ref{fig:pandora_protodune_proton} respectively... 
 Cosmic ray muons in the \dword{pdsp} detector are also used to calibrate the detector nonuniformity and determine the absolute energy scale. Cathode crossing cosmic-ray muons with $t_{0}$ information are used to correct for the attenuation effect caused by impurities in the \lar. Stopping cosmic ray muons are used to determine the calorimetry constants that convert the calibrated \dword{adc} counts to the number of electrons so that the $dE/dx$ versus residual range distributions match the expectation, as shown in Figures~\ref{fig:muon_dedx_resrange_run5387} and~\ref{fig:muon_dedx_resrange_sce} for \dword{pdsp} data and \dword{mc} simulation with space charge effects after calibration. The data $dE/dx$ distribution has better resolution because the purity in data is better than in the simulation. 
 
-\begin{figure}[!ht]
+\begin{figure}[!ht]   %Anne leaving as is 5/28
 \centering
 \subfloat[]{\label{fig:muon_dedx_resrange_run5387}\includegraphics[width=0.33\textwidth]{muon_run5387_dedx.pdf}}
 \subfloat[]{\label{fig:muon_dedx_resrange_sce}\includegraphics[width=0.33\textwidth]{muon_sce_mc.pdf}}
 \subfloat[]{\label{fig:muon_comparison_dedx_sce_data}\includegraphics[width=0.33\textwidth]{muon_dEdx.pdf}}
-\caption[Stopping muon $dE/dx$ distributions for the \dword{pdsp} cosmic data and \dword{mc}]{Stopping muon $dE/dx$ distributions for the \dword{pdsp} cosmic data and \dword{mc}. The red curves in \protect\subref{fig:muon_dedx_resrange_run5387} and \protect\subref{fig:muon_dedx_resrange_sce} are the expected most probable value of $dE/dx$ versus residual range.}
+\caption[Stopping muon $dE/dx$ distributions for the ProtoDUNE-SP cosmic data and MC]{Stopping muon $dE/dx$ distributions for the \dword{pdsp} cosmic data and \dword{mc}. The red curves in \protect\subref{fig:muon_dedx_resrange_run5387} and \protect\subref{fig:muon_dedx_resrange_sce} are the expected most probable value of $dE/dx$ versus residual range.}
 \label{fig:pandora_protodune_mu}
 \end{figure}
 
 The same attenuation correction and calorimetry constants are applied to the beam proton data and \dword{mc} and the resulting $dE/dx$ distributions are shown in Figure~\ref{fig:pandora_protodune_proton}. The data and \dword{mc} $dE/dx$ distributions agree well. Discrepancy with expectation is observed in the large residual range region, which corresponds to the beam entering point on the TPC front face where space charge effects are large. Good progress is being made on the space charge effects calibration, which will lead to more accurate $dE/dx$ measurements.
-\begin{figure}[!ht]
+\begin{figure}[!ht]  %Anne leaving as is 5/28
 \centering
 \subfloat[]{\label{fig:proton_dedx_resrange_run5387}\includegraphics[width=0.33\textwidth]{proton_dedx_resrange_run5387.pdf}}
 \subfloat[]{\label{fig:proton_dedx_resrange_sce}\includegraphics[width=0.33\textwidth]{proton_dedx_resrange_sce.pdf}}
 \subfloat[]{\label{fig:proton_comparison_dedx_sce_data}\includegraphics[width=0.33\textwidth]{proton_comparison_dedx_sce_data.pdf}}
-\caption[Proton $dE/dx$ distributions for the \dword{pdsp} 1 GeV beam data and \dword{mc}]{Proton $dE/dx$ distributions for the \dword{pdsp} 1 GeV beam data and \dword{mc}. The red curves in \protect\subref{fig:proton_dedx_resrange_run5387} and \protect\subref{fig:proton_dedx_resrange_sce} are the expected most probable value of $dE/dx$ vs residual range.}
+\caption[Proton $dE/dx$ distributions for the ProtoDUNE-SP 1 GeV beam data and MC]{Proton $dE/dx$ distributions for the \dword{pdsp} 1 GeV beam data and \dword{mc}. The red curves in \protect\subref{fig:proton_dedx_resrange_run5387} and \protect\subref{fig:proton_dedx_resrange_sce} are the expected most probable value of $dE/dx$ vs residual range.}
 \label{fig:pandora_protodune_proton}
 \end{figure}
 
@@ -1101,7 +1120,8 @@ The same attenuation correction and calorimetry constants are applied to the bea
 The neutrino flux has a broad angular distribution and extends outward at the \dword{nd} hall. At an ``off-axis'' angle relative to the initial beam direction, the subsequent neutrino energy spectrum is narrower and peaked at a lower energy than the on-axis spectrum.
 The relationship between the parent pion energy and neutrino energy is shown in Figure~\ref{fig:OAAFluxFigs}.  At \SI{575}{m}, the location of the \dword{nd} hall, a lateral shift of \SI{1}{m} corresponds to approximately a \ang{0.1} change in off-axis angle.
 
-\begin{dunefigure}[$\nu$ energy as  function of parent pion energy for different angles away from the pion momentum vector]{fig:OAAFluxFigs}
+\begin{dunefigure}[$\nu$ energy as  function of parent pion energy for off-axis angles] %different angles away from the pion momentum vector]
+{fig:OAAFluxFigs}
 {(left) The neutrino energy as a function of parent pion energy for different angles away from the pion momentum vector. Figure from Ref.~\cite{Duffy:2016owt}. (right) The DUNE near detector flux predictions over a range of off-axis positions for a near detector at \SI{575}{m} downstream of the target station. }
 %is subfig package included? I don't think subfloat is working (ZP)
 %  \subfloat[C][Off-axis pion decay kinematics]{
@@ -1119,7 +1139,7 @@ The intrinsic neutrino flavor content of the beam varies with off-axis angle. Fi
 
 %\fixme{Fig~\ref{fig:OffAxisFluxes_1D_AllSpec} is partly redundant with earlier figure, nice if it can be merged? }
 %ZP: Changed previous plot. Unlike this one it shows all of the neutrino species broken by parent and it is on linear scale. Here useful to have comparison on vs offaxis and on log scale
-\begin{dunefigure}[The predicted muon neutrino energy spectra at two near detector positions, on axis and \SI{30}{m} off axis.]{fig:OffAxisFluxes_1D_AllSpec}
+\begin{dunefigure}[The predicted ND \numu energy spectra, on axis and \SI{30}{m} off axis]{fig:OffAxisFluxes_1D_AllSpec}
 {The predicted muon neutrino energy spectra at two \dword{nd} positions, on axis and \SI{30}{m} off axis. (a) The predicted neutrino flavor-content of the neutrino-mode (FHC) and anti-neutrino-mode (RHC) beam. (b) The neutrino-mode, muon-flavor predicted flux, separated by the particle that decayed to produce the neutrino. The off-axis spectrum displays a double peak structure due to charged kaon parent decay kinematics. The on-axis kaon-peak occurs at higher neutrino energy and will have a significantly broader energy spread. Top: Beam neutrino flavor content, middle: Beam neutrino flavor content; bottom: Beam neutrino decay-parent species}
    % \includegraphics[width=0.8\textwidth]{OffAxisFluxes_1D_AllSpec}
     \includegraphics[width=0.8\textwidth]{OffAxisFluxes_1D_AllSpec}
@@ -1165,10 +1185,11 @@ The nucleon decay channels simulated by \dword{genie} are listed in Table~\ref{t
 %Table~\ref{tab:genie_antineutron}.
 
 %\fixme{ TODO: replace raster version - was in table \ref{costas_table1} caption}
-\begin{table}
+
+\begin{table} % Anne leaving as is
   \includegraphics[width=\linewidth]{costas_table1}
   
-  \caption[\dword{genie} nucleon decay topologies]{Decay topologies considered in \dword{genie} nucleon decay simulation.}
+  \caption[GENIE nucleon decay topologies]{Decay topologies considered in \dword{genie} nucleon decay simulation.}
   \label{tab:genie_ndk}
 \end{table}
 
