@@ -12,8 +12,8 @@
 
 \newif\iffinal
 %% Switch between draft or final:
-\finalfalse
-%\finaltrue
+%\finalfalse
+\finaltrue
 
 % Required values and their setters
 \newcommand\thedoctitle{DRAFT Technical Design Report}
