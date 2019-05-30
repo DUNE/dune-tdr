@@ -381,8 +381,7 @@ The \dword{daq} also provides common computing and network services for other
 \dword{dune} systems, although slow control and safety functions fall outside
 \dword{daq} scope.
 
-Consequently, the \dword{dune} \dword{fd} \dword{daq} system interfaces with the TPC \dword{ce}, \dword{pds}
-readout, computing, \dword{cisc}, and calibration systems of the %\dword{dune}
+Consequently, the \dword{dune} \dword{fd} \dword{daq} system interfaces with the dual-phase TPC electronics, computing, \dword{cisc}, and calibration systems of the %\dword{dune}
 \dword{fd}, as well as with facilities and underground installation. The
  interface agreements with the \dword{fd} systems 
 are listed in Table~\ref{tab:daq:interfaces}, and described
@@ -649,11 +648,12 @@ as described in Section~\ref{sec:daq:design-run-control}.
 
 \subsubsection{Data reception}
 \label{sec:daq:upstream-receiver}
-The physical interface between the detector electronics and the \dword{daq} to
-transmit data consists of 10 Gbps \hlfix{point-to-point optical links}{Confirm
-  there is no intervening switch}, carrying messages via standard \dword{udp}.
-The number of links per \dword{dune} module varies from approximately 1000 to
-2000, depending on the detector technology adopted.
+The physical interface between the dual-phase detector electronics and the \dword{daq} to
+transmit data consists of 10 Gbps point-to-point optical links
+% {Confirm there is no intervening switch}, yes, there is no switch
+carrying messages via standard \dword{udp}.
+The number of links per dual-phase  \dword{dune} module is 240 for the charge readout system and 5 for the
+the ligh readout system.
 
 To minimize the space and power consumption footprint of the \dword{daq}, 10-20
 links are aggregated into \dword{felix} boards hosted in commercial,
@@ -662,8 +662,9 @@ off-the-shelf RU computers.
 and now proposed or already used in several experiments, including
 \dword{protodune}. 
 Existing firmware has been adopted and is being adapted to ensure
-\hlfix{decoding }{What do we say about the required decompression?} and
-format checking of incoming data and then to marshal the data to other blocks of
+decoding, format checking of incoming data and online decompression and generation of the trigger primitives
+%}{What do we say about the required decompression?}
+and then to marshal the trigger primitives and compressed data to other blocks of
 the upstream DAQ subsystem.
 
 \subsubsection{Network based I/O}
@@ -735,16 +736,17 @@ exist for as much as \snbpretime prior to the issuing of \dword{snb} trigger
 (trigger time).
 A second challenge in recording data containing extended activity is that all
 channels must be recorded for 100 seconds around the trigger time, and requires
-extracting as much as \hlfix{115 TB }{SP number} from the TPC upstream DAQ.
+extracting as much as 56 TB 
+%}{SP number} 
+from the TPC upstream DAQ.
 It is not cost effective to design the \dword{daq} to extract such extended data
 record in a fully online or streamed fashion.
 Thus, additional buffering is provided to catch the temporary backlog of data
 that an extended trigger will produce.
 
 The technology and scale of this additional buffering must satisfy several
-requirements. 
-It must accept the full data rate of the detector module (as much as \hlfix{2
-  TB/s}{SP number}). 
+requirements.  It must accept the full data rate of the detector module (as much as 0.1 TB/s).
+%}{SP number} 0.1TB/s is the flux of compressed data from DP (exact number 0.06TB:s)
 The data must then reside on nonvolatile media. 
 The media must have sufficient capacity and allow for the required extraction
 throughput so that it is unlikely to become too occupied to accept yet another
@@ -756,9 +758,8 @@ satisfied once per month, the most optimal technology is solid-state devices,
 which at the scale required to provide suitable input bandwidth, can provide a
 capacity to write the data from several extended activity triggers.
 Providing only a modest overhead to normal operations, this data can be
-extracted from such storage from the \dword{daq} in well under \hlfix{a
-  day}{More SP'ism. 
-  DP data is substantially smaller}.
+extracted from such storage from the \dword{daq} in well under one hour.
+% {More SP'ism.   DP data is substantially smaller}. yes indeed is more than a factor 20 smaller
 
 The data is input to the DAQ in (losslessly) compressed form. 
 Although some portion of it much be decompressed prior to having trigger
@@ -799,7 +800,9 @@ galactic coverage\footnote{Galactic coverage is defined as efficiency-weighted
 To meet the requirement that the \dword{dune} \dword{fd} maintain
 $<$\SI{30}{\peta\byte/\year} to permanent storage, the \dword{daqdss} subsystem
 must make \dword{daqdsn} decisions in a way that allows the \dword{daq} system
-to reduce its input data by almost \hlfix{four orders of magnitude }{SP number}without jeopardizing
+to reduce its input data by almost three orders of magnitude 
+%}{SP number}
+without jeopardizing
 the above efficiencies.
 
 To meet its requirements, the \dword{daqdss} subsystem design follows a
@@ -896,16 +899,18 @@ significantly different time ranges: localized triggers prompt readout of
 
 Viable algorithms for the low level and module level trigger already exist,
 including algorithms for a module level supernova burst trigger, and it has been
-\hlfix{demonstrated offline that the resulting efficiencies meet the DUNE
-  requirements}{Strictly speaking, only with SP. 
-  Is it acceptable to stretch this to DP?}~\cite{xx}.
+demonstrated offline that the resulting efficiencies meet the DUNE  requirements
+%{Strictly speaking, only with SP.    Is it acceptable to stretch this to DP?}, yes since the algorithms for the collection view can be applied similarly 
+~\cite{xx}.
 On the other hand, the pipelines of processing required for \dword{daqdsn} can
 be executed using different firmware and software implementations.
 Development is actively ongoing to demonstrate and compare performance of
 different implementations.
 In satisfying the philosophy and strategies of the \dword{daq} design, there is
 built-in flexibility in defining whether each element of a pipeline executes on
-\hlfix{FPGA}{Does this still hold true for DP?}, CPU, GPU, or, in principle, some other future hardware architecture.
+FPGA
+%}{Does this still hold true for DP?}, yes, the decompression and search for trigger primitives should preferably happen in the FPGA of the felix card
+CPU, GPU, or, in principle, some other future hardware architecture.
 A purely CPU implementation of data selection has been the subject of
 successful, ongoing demonstration tests at ProtoDUNE.
 An FPGA implementation of the lowest level of data selection (specifically,
@@ -993,7 +998,8 @@ candidates to the module level trigger stage, described next, via the 10 Gbps
 DAQ network.
 Studies are underway to demonstrate CPU resource utilization and latency, as are
 efforts to demonstrate online trigger candidate generation at
-\hlfix{ProtoDUNE}{True for DP?}.
+ProtoDUNE.
+%{True for DP?}. yes, see discussion with Giovanna at the May 2019 DUNE meeting and text in next paragraphs
 Trigger candidate generation performance is summarized in
 Section~\ref{sec:daq:design-validation}. 
 
@@ -1537,9 +1543,9 @@ Signals from either GPS are fed through optical single mode fibers to the
 active. 
 Differential delays between these two paths are resolved by a second pair of
 fibers, one running back from the timing system to each antenna.
-
-\fixme{Need we say something about the how the DAQ timing system connects to the
-  DP electronics timing system?}
+The GPS receiver at the  \dword{cuc} generated the 1PPS and 10MHz analog signals which are used to feed
+the White Rabbit Grand Master switch of the DP electronics timing system.
+%\fixme{Need we say something about the how the DAQ timing system connects to the DP electronics timing system?}
 
 
 \section{Design Validation and Development Plans}
@@ -2047,7 +2053,8 @@ responsible for the overall editing and delivery of the TDR document.
 Member Institute & County  \\ \toprowrule
 CERN & CERN     \\ \colhline
 Universidad Sergio Arboleda (USA) & Colombia     \\ \colhline
-Lyon & France \\ \colhline
+APC Paris & France \\ \colhline
+IPNL Lyon & France \\ \colhline
 Iwate & Japan     \\ \colhline
 KEK & Japan     \\ \colhline
 NIT Kure & Japan     \\ \colhline
