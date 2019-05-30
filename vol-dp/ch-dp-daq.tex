@@ -1936,6 +1936,13 @@ the protoDUNE demonstration of ability to keep up with rates from
 to 40 Hz and 3 ms readout window allows confident scaling of the
 protoDUNE back-end DAQ subsystem to that of DUNE.
 
+The developments described above can be also naturally deploied at the level of ProtoDUNE dual-phase. In a second run of
+protoDUNE dual-phase it will be possible to replace the Mellanox 10 Gbit ethernet cards in the level 1 event builders with Felix cards in order to fully
+test the DUNE data acquisition mode and the on the fly decompression and generation of trigger primitives. The Felix cards can also operate as standard
+network cards and should offer completely backward compatibility with the standard operation mode of protoDUNE-DP which is based on external triggers.
+and the switch for dedicated tests, switch to the DUNE mode with  continuos data streaming,  on the fly data decompression + trigger primitives generation in the Felix card,  RAM buffering of the compressed data on the LV1 event builders, writing of the data on disk after receiving the trigger from the trigger filtering machine. A trigger filtering machine can be integrated in the 40 Gbit/s network architecture of protoDUNE dual-phase in order to control the persistent data writing. The EOS online storage system of protoDUNE dual-phase provides a bandwidth of 20GB/s and it would be sufficient to ensure the data storage for a 10 kton dual-phase module. This architecture offers also the possibility to test the SNa data buffering (for 10 seconds) and data writing in dedicated tests. This test phase where the entire protoDUNE dual-phase is switched to the DUNE online trigger mode can be anticipated by simpler tests at the level of a single crate where the development chain already operating in Lyon and described in Section~\ref{sec:daq:validation-demonstrators} could be transported to protoDUNE dual-phase for the readout of a single crate.
+
+
 \subsubsection{Prototype Inter-process Communication System}
 
 A prototype of the \dword{ipc} mechanism described in
@@ -1990,6 +1997,11 @@ In addition to dedicated vertical and horizontal slice teststands, a number of
 specific component testing, as well as to other detector and
 calibration consortia to support their own development, production, and quality assurance programs. The \dword{daq} 
 kit will also form the basis for testing at construction sites beginning in 2020. 
+
+A complete demonstration system in order to test the DUNE dual-phase DAQ has been put in operation at IPNL. This system
+includes a charge readout uTCA crate with 10 AMC cards and a DAQ server including a FPGA network card (Bittware A10P3S with Altera Arria 10 FPGA,
+4 x 40 GbE QSFP interfaces which can support  x16 10 GbE channels). The purpose of this system is to test the firmware developments in the AMCs for the DUNE continous streaming DAQ operation and  to develop the backend firmware for data reception, decoding, decompression and generation of trigger primitives. The data reception and real time decompression have already been implemented with a high degree of parallelism in the Arri 10 FPGA and are already operational. The implementation of the generation of the trigger primitives at the FPGA level after decompression is in progress. The digital front-end electronics at the level of the AMCs can operate in both trigger based mode (ProtoDUNE-DP) or continous streaming mode (DUNE). This test chains allows performing all the demonstration and benchmarking steps without interferring with the ProtoDUNE-DP DAQ operation which is trigger based. This benchmarking phase is in particular useful in order to correctly dimension the DUNE DAQ for the dual-phase far detector module. The algorithms and the firmware developed on the Arria 10 FPGA could be then trasnported at the level of the Felix card or other DAQ elements of the DUNE DAQ. The Bittware A10P3S could also be at a certain point plugged in protoDUNE DP replacing one of the Mellanox ethernet cards of the level 1 event builders in order to provide a direct demonstration with real data.
+
 
 \section{Production, Assembly, Installation and Integration}
 \label{sec:daq:production}
