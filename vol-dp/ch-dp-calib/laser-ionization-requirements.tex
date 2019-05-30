@@ -1,0 +1,96 @@
+
+% KM outline
+%% Requirements we are held to from other systems -- EB table -- see Jose's early talk
+%% Targets for SN and LBL physics -- or just remind in other subsections? \fixme{KM: right now the targets for SN and LBL physics exist in the design sections.}
+%% System must operate for a long time
+    % SG: physics driven calibration requirements, need a table to connect calibration requirements to high level physics requirements, not easy, but we need to try
+
+%\fixme{guidance coming soon!}
+
+%\fixme{KM: adjusted to be specific to laser; SG: I have made some edits as well. JM: OK, signing off.}
+
+%The DUNE physics requirements and the high level specifications of other existing systems are the driving motivation for the specifications of the performance of the dedicated calibration systems, described below. From those, and the constraints due to detector dimensions, etc, derive also the engineering specifications of each calibration system, described in each system's respective section.
+
+%\paragraph{\efield measurements}
+The energy and position reconstruction requirements for physics measurements lead to requirements for precise measurements of the \efield, its spatial coverage, and its granularity using the laser. %calibration 
+ The next sections discuss the rationale behind each requirement, which we take as the \dword{dune} specification.
+%, with ALARA (or AHARA for the coverage) as goal.
+
+\paragraph{\efield precision}
+
+In the \dword{lbl} and high energy range, the \dword{dune} physics \dword{tdr} states that the calibration information must provide approximately \num{1} to \SI{2}{\%} understanding of normalization, energy, and position resolution within the detector.
+%'' (from \cite{Abi:2018dnh}, p. 4-47). 
+%The DUNE Physics \dword{tdr} also indicates that a \num{1}\% bias in the lepton energy scale is significant for the \dword{lbl} sensitivity to CPV.
+The physics volume of the \dword{dune} \dword{cdr}~\cite{Acciarri:2015uup} indicates that a \num{1}\% bias in the lepton energy scale is significant for the \dword{lbl} sensitivity to \dword{cpv}. 
+A smaller \efield leads to higher electron-ion recombination and therefore a lower collected charge, so distortions of the \efield can introduce
+%are one of the possible causes of an 
+energy scale bias. To connect this
+%that requirement 
+to a specification on the necessary precision of the \efield measurement, we note that, via recombination studies~\cite{bib:mooney2018}, we expect a \SI{1}{\%} distortion on the \efield to lead to a \SI{0.3}{\%} bias on the collected charge.
+Because other effects will contribute to the lepton energy scale uncertainty budget, one goal for the 
+%calibration 
+laser system should be to measure the \efield to a precision of $\sim$\SI{1}{\%}, so that effect on the collected charge is well below \SI{1}{\%}.
+This is also motivated by the need for consistency with the high level \dword{dune} specification for field uniformity throughout the volume due to component alignment and \dword{hv} system, set at \fielduniformity.
+As was mentioned in Section~\ref{sec:dp-calib-ov}, in \dword{dp} the long drift length and the gas phase ion feedback will lead to larger space charge \efield distortions than in \dword{sp}, up to approximately \SI{15}{\%}, making it even more important in \dword{dp} to monitor the \efield although the precision requirement should be the same (\SI{1}{\%}), as determined by the physics requirements, not by instrumentation constraints.
+
+With two other high-level \dword{dune} specifications, the \dword{crp} strip spacing (\dpstrippitch) and the front end peaking time (\fepeaktime), the effect of this \efield precision requirement on engineering parameters of the calibration laser system is discussed further %ahead, 
+in Section~\ref{sec:dp-calib-sys-las-ion-meas}.
+
+\paragraph{\efield measurement coverage:}
+
+In practice, measuring the \efield  throughout the whole volume
+%~``throughout the whole volume'' 
+of the \dword{tpc} will be difficult, 
+%hard, 
+so we must establish a goal for coverage and granularity of the measurement. 
+Until a detailed study of the propagation of the coverage and granularity into a resolution metric is available, 
+%we can already make 
+a rough estimate of the necessary coverage can be made as follows.
+%in the following way. 
+%Taking 
+Assuming \SI{15}{\%} as the maximum \efield distortion from possible compounding multiple  effects in the \dword{dune} \dword{fd},
+we can then ask what would be the maximum acceptable size of the spatial region uncovered by the calibration system, if a distortion of that magnitude (systematically biased in the same direction) were present. To keep the overall (average) \efield distortion at the \SI{1}{\%} level, then that region should be no larger than \SI{7}{\%} of the total \dword{fv}. Therefore, we need a coverage of \SI{93}{\%} or more.
+
+\paragraph{\efield measurement granularity:}
+
+The \dword{dune} \dword{cdr}~\cite{Acciarri:2015uup} states that a \dword{fv} uncertainty of \SI{1}{\%} is required. 
+%(ref.~\cite{Abi:2018dnh}, p.~4-46) and that 
+This translates to a position uncertainty of \SI{1.5}{\cm} in each coordinate %(ref.~\cite{Abi:2018alz}, p.~2-12) 
+(see Chapter~\ref{ch:dp-crp} of this \dword{tdr}). In the $y$ and $z$ coordinates, the \dword{crp} strip pitch of \dpstrippitch (even when added in quadrature to the estimated maximum lateral diffusion of \SI{4.4}{\milli\m}) meets this requirement while in the drift ($x$) direction, the position is calculated from timing, so one can claim that it should be known better.\fixme{This is not entirely clear, and I can't see how to rephrase it.}
+%Also that in the $y$ and $z$ coordinates, the wire pitch of \SI{4.7}{\mm} achieves that while in the drift ($x$) direction, the position is calculated from timing so it is claimed it should be known better.
+However, the position uncertainty also depends on the \efield, via the drift velocity. Because the position distortions accumulate over the drift path of the electron, it is not enough to specify an uncertainty on the field. We must accompany it by specifying the size of the spatial region of that distortion. For example, a \SI{10}{\%} distortion would not be relevant if it was confined to a \SI{2}{\cm} region, and the rest of the drift region was at nominal field.
+%So 
+Therefore, what matters is the product of [size of region] $\times$ [distortion]. Moreover, distortions fall into one of two types:
+\begin{enumerate}
+\item Those affecting the magnitude of the field. If this is the case, the effect on the drift velocity $v$ is also a change of magnitude. According to the function provided in \cite{Walkowiak:2000wf}, close to \SI{500}{\V\per\cm}, the variation of the velocity with the field is such that a \SI{4}{\%} variation in $E$ leads to a \SI{1.5}{\%} variation in $v$.
+\item Those affecting the direction of the field. Nominally, the field $E$ should be along $x$, so $E = E_L$ (the longitudinal component). If we consider that the distortions introduce a new transverse component $E_T$, in this case, this translates directly into the same effect in the drift velocity, gaining a $v_T$ component, $v_T=v_L  E_T/E_L $, i.e., a \SI{4}{\%} transverse distortion of the field leads to a \SI{4}{\%} transverse distortion of the drift velocity.
+\end{enumerate}
+
+Thus, a \SI{1.5}{\cm} shift comes about from a constant \SI{1.5}{\%} distortion in the velocity field over a region of \SI{1}{\m}. For the \efield, that could be from a \SI{1.5}{\%} distortion in $E_T$ over \SI{1}{\m} or a \SI{4}{\%} distortion in $E_L$ over the same distance.
+
+%From ref.~\cite{Abi:2018dnh}, page~4-53, 
+\efield distortions can be caused by space-charge effects due to accumulation of positive ions caused by \Ar39 decays (cosmic ray rate is low in \dword{fd}), or detector defects, such as \dword{crp} or \dword{fc} misalignment, \dword{fc} resistor failures (Figure~\ref{fig:efield_resistorfailure_mooney2019}), and resistivity non-uniformities, among other things.
+%~\cite{Abi:2018dnh}. 
+These effects added in quadrature can be as high as \SI{4}{\%}. 
+%From ref. ~\cite{bib:mooney2018}, 
+The space charge effects due to \Ar39~\cite{bib:mooney2018} can be \SI{0.1}{\%} for the \dword{sp} and \SI{1}{\%} for the \dword{dp}, so in practice, these levels of 
+%that kind of distortion 
+distortions must cover several meters to be relevant.
+Other effects due to \dword{cpa} or \dword{fc} imperfections can be higher than those due to space charge, but they are also much more localized. If we assume no foreseeable effects would distort the field more than \SI{15}{\%}, and considering the worst case scenario (transverse distortions), then the smallest region that would produce a \SI{1.5}{\cm} shift is \SI{1.5}{\cm}/\num{0.15}~=~\SI{10}{\cm}. This provides a target for the granularity of the measurement of the \efield distortions in $y$ to be smaller than about \SI{10}{\cm}, with of course a larger region if the distortions are smaller. Given the above considerations, then a voxel size of \num{10}$\times$\num{10}$\times$\SI{10}{\cubic\cm} appears to be enough to measure the \efield with the granularity needed for a good position reconstruction precision. 
+%In fact, since the effects that can likely cause bigger \efield distortions are the problems or alignments in the \dword{cpa} (or \dword{apa}), or in the \dword{fc}, it could be conceivable to have different size voxels for different regions, saving the highest granularity of the probing for the walls/edges of the drift volume.
+
+
+
+\begin{comment}
+\begin{dunetable}
+[Calibration Requirements]
+{p{0.5\textwidth}p{0.15\textwidth}p{0.15\textwidth}}
+{tab:calibreq}
+{Calibration Specifications and Goals}   
+Requirement & Specification & Goal \\ \toprowrule
+\efield measurement precision & < 1\% & ALARA \\ \colhline
+\efield measurement coverage & > 93\% & AHARA \\ \colhline
+\efield measurement granularity & < 10x10x10 cm & ALARA \\ \colhline
+\end{dunetable}
+\end{comment}
+
