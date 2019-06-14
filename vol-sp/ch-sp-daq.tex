@@ -155,7 +155,7 @@ activity in the detector requires a
 nominal recording of data over a time window of order \SIrange{1}{10}{\milli\second}. 
 This time scale is determined by the ionization electron drift speed in
 \lar and the detector dimension along the drift direction, and is
-nominally set to 5.4~ms, corresponding to 2.4$\times$\SI{2.25}{\milli\second}. The
+nominally set to \spreadout, corresponding to 2.4$\times$\SI{2.25}{\milli\second}. The
 latter (\SI{2.25}{\milli\second}) assumes DUNE's nominal drift electric field of 500~V/cm.
 On the other hand, the \dword{pds} measures argon scintillation light emission, which
 occurs and is detected over a timescale of multiple nanoseconds to
@@ -238,13 +238,14 @@ trigger rate requirements, are summarized in Table~\ref{tab:sp-daq:rates}.
 
 \begin{dunetable}
 [Expected DAQ Yearly Data Rates]
-{p{0.25\textwidth}p{0.1\textwidth}p{0.5\textwidth}}
+{p{0.3\textwidth}p{0.1\textwidth}p{0.5\textwidth}}
 {tab:sp-daq:rates}{Summary
-    of expected data rates. The rates assume no compression, and are
+  of expected data rates for initial single-module running.
+  The rates assume no compression, and are
     given for a single \SI{10}{\kilo\tonne} module. Trigger primitives
     (see Section~\ref{sec:sp-daq:design-data-selection})
   are not kept permanently; they are temporarily stored for 1-2 months
-  at a time.}
+  at a time.  Improved readout algorithms will be developed and evaluated with the initial data and are expected to provide about an order of magnitude reduction in data while retaining efficiency.}
 Source  & Annual Data Volume & Assumptions \\\toprowrule
 Beam interactions & 27 TB & 10 MeV threshold in coincidence with beam
 time, including cosmic coincidence; \SI{5.4}{\milli\second} readout \\\colhline
@@ -453,15 +454,15 @@ compression (zero supression) and a custom communication protocol.
   the data model described above is acceptable.}
  The computing consortium %online computing coordination 
  is responsible for the online areas of WAN connection between \surf and
-\fnal, while the \dword{daq} consortium is responsible for disk buffering
+\fnal providing on order \SI{100}{Gbps} bandwidth, while the \dword{daq} consortium is responsible for disk buffering
 to handle any temporary WAN disconnects and the infrastructure needed
 for real-time data quality monitoring.  The computing consortium 
 is also
 responsible for the offline development and operation of the tools for data
 transfers to \fnal. The primary
 constraint in defining the \dword{daq} and offline computing interface is the
-requirement to produce less than \SI{30}{PB/year} %to be transferred 
-for transfer to
+requirement to produce less than \SI{30}{PB/year} 
+into final storage at
 \fnal. \dword{daq} and %offline 
 computing consortia are jointly responsible for data
 format definition and data access libraries, as well as real-time data
@@ -527,9 +528,20 @@ ML-based Data Selecion for DUNE FD & \citedocdb{11311} \\\colhline
 \subsection{Overview}
 \label{sec:fd-daq:design-overview}
 
-The  \dword{daq} system is composed of six distinct subsystems: (1) upstream
-\dword{daq} (Section~\ref{sec:daq:design-upstream}), (2) \dword{daqdsn}
-(Section~\ref{sec:sp-daq:design-data-selection}), (3) \dword{daqbes} (Section~\ref{sec:fd-daq:design-backend}), (4) \dword{daqccm} (Section~\ref{sec:fd-daq:design-run-control}), (5) \dword{daqtss} (Section~\ref{sec:sp-daq:design-timing}), and (6) infrastructure software. The physical extent
+The  \dword{daq} system is composed of six distinct subsystems:
+%
+(1) upstream \dword{daq} (Section~\ref{sec:daq:design-upstream}),
+%
+(2) \dfirst{daqdsn} (Section~\ref{sec:sp-daq:design-data-selection}),
+%
+(3) \dfirst{daqbes} (Section~\ref{sec:fd-daq:design-backend}), 
+%
+(4) \dfirst{daqccm} (Section~\ref{sec:fd-daq:design-run-control}), 
+%
+(5) \dfirst{daqtss} (Section~\ref{sec:sp-daq:design-timing}), and 
+%
+(6) infrastructure software. The physical extent
+%
 the first five of the \dword{daq} subsystems
 can be specified in reference to Figure~\ref{fig:fd-daq:layout}: the
 upstream \dword{daq} and \dword{daqtss}  live underground in the \dword{cuc}; \dword{daqdsn} occupies
@@ -559,7 +571,7 @@ propagating cross-module and external trigger and timing
 information. The module level trigger considers trigger candidates and
 external trigger inputs in issuing a ``\dword{trigcommand}'' to the \dword{daqbes}
 subsystem. The \dword{daqbes} subsystem 
-facilitates event building in approximately ten servers and buffering for built
+facilitates event building in approximately \hlfix{ten servers}{Why 10?} and buffering for built
 events on non-volatile storage. Upon receiving a \dword{trigcommand}, the \dword{daqbes}
  queries
 data from the upstream \dword{daq} buffers and builds that into an ``event
@@ -949,7 +961,7 @@ Algorithms for generating \dwords{trigprimitive} are under continual development
 by establishing a waveform baseline
 for a given channel, subtracting this baseline from each sample, maintaining
 a measure of the noise, and searching for the waveform to cross a
-threshold defined in terms of the noise level. This thredhold crossing
+threshold defined in terms of the noise level. This threshold crossing
 represents a ``hit''. 
 Such algorithms (see, e.g.~\cite{bib:docdb11236}) have been validated
 using both Monte Carlo simulations and 
@@ -1108,7 +1120,7 @@ Section~\ref{sec:sp-daq:design-timing}).
 
 The external trigger interface is implemented in O(1) CPU server (with 100\%
 redundancy), which hosts a number of White Rabbit node cards for
-receiving accelerator and other timing inputs.
+receiving timing inputs.
 
 \subsubsection{High Level Filter}
 \label{sec:fd-daq:design-data-reduction}
@@ -1578,17 +1590,10 @@ functionality. % In the following subsection we discuss important lessons learne
 
 More specifically, \dword{protodune} has demonstrated 
 \begin{itemize}
-\item Upstream \dword{daq}: successful
-front-end readout hardware and data flow functionality for the readout
-of two out of the six \dword{apa}s employed in \dword{protodune}. This was achieved
-with two \dword{tpc} RUs, without co-processor boards, and only one \dword{apa} read
-out per \dword{felix} board. The \dword{dune} \dword{daq} design will ultimately
-accommodate readout of two \dword{apa}s per \dword{felix} board. In addition to data
-flow functionality, \dword{protodune} \dword{fe} readout also demonstrates interface to
-front-end electronics, and scalability to DUNE. It also supports
-host server requirements and specifications. Finally, it serves as
-platform for further development involving co-processor implementation
-and data selection aspects.
+\item Upstream \dword{daq}: front-end readout hardware and data flow functionality servicing two out of the six \dwords{apa} was successfully employed in \dword{protodune}.
+  The data from each APA was continuously streamed to a single FELIX board hosted in a dedicated computer which then transferred it to two other computers for buffering and readout.
+  The baseline upstream DAQ for \dword{dune} FD will retain one APA per FELIX board but place two FELIX boards and the buffering and readout functionality all together in a single \dword{fec}. 
+  In addition to data flow functionality, \dword{protodune} \dword{fe} readout also demonstrates interface to front-end electronics, and scalability to DUNE. It also supports host server requirements and specifications. Finally, it serves as platform for further development involving co-processor implementation and data selection aspects.
 \item \dword{daqbes}, \dword{daqccm} and software infrastructure:
  successful \dword{daqbes} implementation, including event builder
   farm and disk buffering, as well as \dword{daqccm}. This has allowed the
@@ -1661,8 +1666,8 @@ Gbps optical point-to-point links into commercial host memory and,
 from there, storing, dispatching or processing of the data via
 software. 
 
-In \dword{protodune}, a single \dword{apa},  \dword{felix}-based readout consists of two servers,
-with a point-to-point 100 Gbps network connection.
+In \dword{protodune}, a single \dword{apa} \dword{felix}-based readout consists of two servers
+with a point-to-point 100 Gbps network connection to the \dword{felix} host computer.
 The \dword{felix} I/O card
 interfaces with its host PC through 16-lane PCIe Gen3 (theoretical bandwidth of \SI{16}{GB/s}).
 It transfers
@@ -2370,7 +2375,7 @@ unseen if they are in distress, and an adequate hearing protection
 regime must be put in place.
 
 There are no other special safety items for the DAQ system not already covered by the more
-general safety plans referenced above. The long-term emphasis is on remote operations capability
+\hlfix{general safety plans referenced above}{not actually referenced}. The long-term emphasis is on remote operations capability
 from around the world, limiting the need for physical presence at
 SURF, and with underground access required only for urgent
 interventions or hardware replacement. 
