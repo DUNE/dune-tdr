@@ -610,8 +610,8 @@ the \dword{daqccm} as described in Section~\ref{sec:fd-daq:design-run-control}.
 The physical interface between the detector electronics and the DAQ are 10 Gbps point-to-point serial optical links running a simple (e.g., 8/10 bit encoded) protocol. 
 For each \dword{apa} there are ten such links connecting its \dwords{wib} to the DAQ.
 To reduce space and power consumption in the \dword{cuc}, high data aggregation is desired.
-In the baseline design, the 20 fibers from two \dwords{apa} are aggregate into one \dword{fec} with each \dword{apa} connected to one \dword{felix} FPGA PCIe Gen3 board. 
-If technology advances sufficiently a PCIe Gen4 version of \dword{felix} may be produced to increase the data aggregation such that each board would accept 20 links and a total of 40 links per \dword{fec} would be accomodated.
+In the baseline design, the 20 fibers from two \dwords{apa} are aggregate into one \dword{fec} with each \dword{apa} connected to one \dword{felix} FPGA PCIe 3.0 board. 
+If technology advances sufficiently a PCIe 4.0 version of \dword{felix} may be produced to increase the data aggregation such that each board would accept 20 links and a total of 40 links per \dword{fec} would be accomodated.
 The \dword{felix} board and firmware was developed initially by and for the ATLAS experiment and is now proposed or already in use by several other experiments including \dword{protodune}.
 
 \subsubsection{Network based I/O}
@@ -1093,9 +1093,6 @@ records into a pool of \dword{eb} processes.  This asynchronous, parallel readou
   \includegraphics[width=0.8\textwidth]{daq-backend.pdf}
 \end{dunefigure}
 
-\fixme{Remove egress reference from figure. Replace with Back-end
-  \dword{daq}. Do we need to show event builder idle pool? Brett}
-
 \begin{itemize}
 \item \dword{daqdfo} accepts a time ordered stream of \dwords{trigcommand} and dispatches each for execution possibly by first splitting up each command into one or more contiguous segments.
 \item Each segment will then be dispatched to an \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution.
@@ -1411,18 +1408,15 @@ development and validation studies and identify how anticipated outcomes
 will be used to finalize the \dword{daq} design.
 
 \subsection{Design Validation and Development at ProtoDUNE and Other
-  LArTPCs} % Experiments}
-
+  LArTPCs}
 \label{sec:fd-daq:protodune}
-\metainfo{Here we describe protodune, write what similarities and
-  differences there are between \dword{protodune} and \dword{dune}
-  \dword{daq} designs. Mention other related efforts at other experiments.}
+\fixme{Giovanna, please check.}
 
 The \dword{fd} \dword{daq} consortium constructed and operated the \dword{daq} system for
 \dword{protodune}, which included %facilitated two incarnations of 
 two \dword{daq} readout 
-architectures, one based on \dword{felix}, develped by ATLAS \cite{xx}, and the other on \dword{rce}, developed at
-SLAC \cite{xx}. \dword{daq} design and construction for
+architectures, one based on \dword{felix}, develped by ATLAS \cite{daq-atlas-felix}, and the other on \dword{rce}, developed at
+SLAC \cite{daq-slac-rce}. \dword{daq} design and construction for
 \dword{protodune} began in Q3 of 2016, and the system became operational at the start of the beam data run %when \dword{protodune} beam running began 
 in Q4 of 2018. The detector is
 continuing to run as of the writing of this document, recording cosmic
@@ -1440,20 +1434,20 @@ baseline design for the DUNE \dword{fd}. Instead, each %readout architecture
 qualitatively maps into one of
 two data processing approaches: one in which the data is processed
 exclusively in
-custom-designed \dword{fpga}, and the other  in which the data is processed primarily in commodity
-CPUs. The baseline system for a %DUNE FD 
+custom-designed \dword{fpga} firmware and carrier board, and the other  in which the data is processed primarily with custom software run in commodity
+servers. The baseline system for a %DUNE FD 
 \dword{detmodule} instead
-merges elements of the two approaches. Specifically, it uses  \dword{felix}  as
+merges elements of the two approaches. \hlfix{Specifically}{confusing sentence}, it uses  \dword{felix}  as
 the hardware platform for data receiving and handling, and an
 \dword{fpga}-based co-processor (analogous to the \dword{rce} platform) that
 interfaces with  \dword{felix}  to provide additional, dedicated data processing
-resources. In that sense,\dword{protodune} has provided demonstration of the
+resources.
+In that sense,\dword{protodune} has provided demonstration of the
  \dword{felix}  platform as \dword{fe} readout data receiver, and
-demonstration of \dword{fpga}-based data reduction for \dword{tpc}.
+of \dword{fpga}-based \hlfix{data reduction}{how is this demonstrated?} for \dword{tpc}.
 
-\fixme{Placeholder. Should show felix and rce architectures}
 \begin{dunefigure}[ProtoDUNE DAQ system]{fig:daq-protodune}{The \dword{protodune} \dword{daq} system.}
-%  \includegraphics[width=0.8\textwidth]{daq-protodune.pdf}
+  \includegraphics[width=0.8\textwidth]{daq-protodune-overview.png}
 \end{dunefigure}
 
 Besides overall readout architecture,
@@ -1471,7 +1465,7 @@ Second, the \dword{protodune}
 system sits at the surface with a much higher
 data occupancy 
 due to cosmic ray activity.
-Overcoming the first key difference to demonstrate \dword{daqdsn} capability for the \dword{fd} \dword{daq} design is a main component of future \dword{daq} development plans, described in Section~\ref{sec:sp-daq:design-validation}. \fixme{right sec ref? Anne}
+Overcoming the first key difference to demonstrate \dword{daqdsn} capability for the \dword{fd} \dword{daq} design is a main component of future \dword{daq} development plans, described in Section~\ref{sec:sp-daq:design-plans}. 
 
 Continuous self-tirggering of the detector is also new with respect to
 other ongoing or planned near-term \dword{lartpc} experiments, including
@@ -1491,11 +1485,12 @@ and self-triggering based on \dword{tpc} information in the timescale of 2021-20
 
 \subsection{ProtoDUNE Outcomes}
 
-Despite being designed for a much more limited scope than DUNE, the %already
+The ProtoDUNE DAQ supported a test-beam experiment. The requirements of the DUNE DAQ are substantially different.
+Yet the
 successful operation of the \dword{protodune} \dword{daq} has provided several key
 demonstrations for \dword{dune} \dword{daq}, in particular data flow
 architecture, run configuration and control, and back-end
-functionality. % In the following subsection we discuss important lessons learned.
+functionality.
 
 More specifically, \dword{protodune} has demonstrated 
 \begin{itemize}
@@ -1509,7 +1504,7 @@ More specifically, \dword{protodune} has demonstrated
   development and exercising of system partitioning, and provides a
   basis for scalability to DUNE. \dword{protodune} also serves as
   a platform for further system development, in particular in the
-  areas of \dword{daqccm} and \dword{ipc}  and for the data flow orchestrator part of the
+  areas of \dword{daqccm} and for the data flow orchestrator part of the
   \dword{daqbes}.
 \item Data selection and timing: \fixme{\dword{daqdsn} and \dword{daqtss}?} successful operation of the timing
   distribution system, and external trigger distribution to the
@@ -1519,19 +1514,20 @@ More specifically, \dword{protodune} has demonstrated
 
 Besides demonstrating end-to-end data flow, an important outcome of
 \dword{protodune} \dword{daq} has been the delineation of
-interfaces, i.e.~understanding the exact \dword{daq} scope and the interfaces to \dword{tpc}, \dword{pds}, and offline. The use of commercial off-the-shelf solutions
+interfaces, i.e.~understanding the exact \dword{daq} scope and the interfaces to \dword{tpc}, \dword{pds}, and offline. The use of commodity solutions
 where possible, and leverage of professional support from CERN IT 
 substantially expedited the development and success of the project, as
 did the strong on-site presence of experts from within the consortium during early installation and
 commissioning. 
-
 Outcomes specific to \dword{protodune} subsystems are discussed in
-greater detail in \cite{Hennessy:CDRReview}. Figure~\ref{fig:sp-daq:protodunedaqpic} shows the 
-\dword{protodune} \dword{daq} hardware as used during beam data taking.
+greater detail in~\cite{Hennessy:CDRReview}. 
 
-\begin{dunefigure}[ProtoDUNE DAQ hardware during beam data taking]{fig:daq-rates}{\dword{protodune} \dword{daq} hardware as used during beam data taking. \label{fig:sp-daq:protodunedaqpic}}
-  \includegraphics[width=0.6\textwidth]{DAQ_hardware_NP04.pdf}
-\end{dunefigure}
+% Figure~\ref{fig:sp-daq:protodunedaqpic} shows the 
+% \dword{protodune} \dword{daq} hardware as used during beam data taking.
+
+% \begin{dunefigure}[ProtoDUNE DAQ hardware during beam data taking]{fig:daq-rates}{\dword{protodune} \dword{daq} hardware as used during beam data taking. \label{fig:sp-daq:protodunedaqpic}}
+%   \includegraphics[width=0.6\textwidth]{DAQ_hardware_NP04.pdf}
+% \end{dunefigure}
 
 
 \subsection{Ongoing Development}
@@ -1562,7 +1558,7 @@ builder to facilitate self-triggering of detector;
 Below, we focus on ongoing developments related to upstream \dword{daq},
 data selection, which is a key challenge for DUNE and new with respect
 to \dword{protodune} (and other existing or planned \dword{lartpc} detectors),
-and \dword{ipc} , which is common across multiple \dword{daq} subsystems.
+and \dword{daqccm} prototyping, which is common across multiple \dword{daq} subsystems.
 
 
 \subsubsection{Upstream DAQ Development}
@@ -1578,19 +1574,21 @@ software.
 In \dword{protodune}, a single \dword{apa} \dword{felix}-based readout consists of two servers
 with a point-to-point 100 Gbps network connection to the \dword{felix} host computer.
 The \dword{felix} I/O card
-interfaces with its host PC through 16-lane PCIe Gen3 (theoretical bandwidth of \SI{16}{GB/s}).
+interfaces with its host PC through 16-lane PCIe 3.0 (theoretical bandwidth of \SI{16}{GB/s}).
 It transfers
 the incoming WIB data directly into the host PC memory using
 continuous DMA transfer. The \dword{felix} host PC runs a software process
-that publishes the data to any client subscribing to it, based on
-link identifiers. The clients of this application are the \dword{felix}
-BoardReader processes, which are part of the \dword{artdaq} framework. In
+that publishes the data to any client subscribing to it.
+\hlfix{Subscriptions may identify from which input optical links the received data stream will be sourced.}{is it correct}
+The clients consuming these streams are
+``BoardReader'' processes implemented in the \dword{artdaq} data acquisition toolkit.
+In
 order to sustain the data rate, modest modifications of the firmware
-(increased block size and chunk merging) and software (scatter-gather
+(increased \hlfix{block size}{what block size} and chunk merging) and software (scatter-gather
 publisher) were carried out specifically for \dword{protodune}: each \dword{felix}
-host receives and publishes data at ~75 Gbps. The BoardReader hosts
+host receives and publishes data at $\sim$75 Gbps. The BoardReader hosts
 are equipped with embedded Intel QuickAssist (QAT)~\footnote{Intel\textregistered QuickAssist Technology, \url{https://www.intel.com/content/www/us/en/architecture-and-technology/intel-quick-assist-technology-overview.html}.} technology for
-hardware accelerated data compression. The \dword{protodune} implementation of
+hardware accelerated data compression. The \dword{protodune} application of
 the \dword{felix} \dword{fe} readout is
 shown in Figure~\ref{fig:sp-daq:felix-pd-impl}.
 
@@ -1619,26 +1617,29 @@ different studies, from co-processor based data handling in firmware
 (including trigger primitive generation, compression, and buffering) to software-based processing, on a single
 server. Benchmarking and optimization of the \dword{felix} firmware and
 software will also continue, with the aim of further compacting the
-readout by supporting two \dword{apa}s on a single server. 
+readout by supporting two \dwords{apa} on a single server. 
 
 \subsubsection{Co-processor Development}
+
+\fixme{Cussans, please improve this text and provide a diagram showing how connections between FELIX and co-processor.}
 
 Upstream \dword{daq} development efforts at \dword{protodune} include a parallel test 
 platform for trigger
 primitive generation, compression, and buffering firmware validation for
 the co-processor board.  The platform for these tests will initially
 use a Xilinx ZCU102 development board, which will later be replaced
-with a ``\dword{felix} demonstrator'' (so called because it demonstrates use
-of Xilinx Virtex-7 Ultrascale+ \dword{fpga} and Gen-4 PCIe) which has a FMC+
-connector which will be connected to a PBM. \fixme{pbm?} Passive optical splitters
+with a ``\dword{felix} demonstrator'' which demonstrates the use
+of Xilinx Virtex-7 Ultrascale+ \dword{fpga} and \hlfix{four lane PCIe 4.0}{confirm gen and lanes} and which has a FMC+
+connector which will be connected to a \hlfix{PBM}{introduce what a PBM is}.
+Passive optical splitters
 will be inserted into the fiber path downstream of the WIBs, providing
 duplicate data inputs for the test hardware, without disrupting the
 main readout path of \dword{protodune}. Tests using the development board will
 first focus on generation of trigger primitives, which will be read
 out over the network via IPBus\cite{Larrea:2015wra}. The ZCU102 board
 includes 512MBytes DDR4 RAM connected to the \dword{fpga} programmable logic,
-as well as a PCIe x4 socket which will host an \dword{nvme} SSD on an adapter,
-which will allow tests of buffering and compression of readout
+as well as a \hlfix{four lane PCIe 4.0}{confirm gen and lanes} socket which will host an \dword{nvme} SSD on an adapter,
+which will allow tests of buffering \hlfix{and compression}{how does NVMe SSD test compression?} of readout
 data. 
 
 Tests using the development board will focus on functionality
@@ -1664,9 +1665,7 @@ at \dword{protodune}.
     required to keep up. 
     The initial peak is due to faster than nominal deliver of input due
     to startup buffering issues. 
-    The system is able to catch up with the backlog.
-    Importantly, neither of these two tests include the necessary data
-    decompression step.}
+    The system is able to catch up with the backlog.}
   \includegraphics[height=5cm,clip,trim=4cm 16cm 4cm 2cm]{daq-primitive-cpu-speed.pdf}%
   \includegraphics[height=5cm,clip,trim=0cm 0cm 0cm 0cm]{daq-hf-felix-sp-live.png}
 \end{dunefigure}
@@ -1709,7 +1708,7 @@ used.
 The results are summarized in Figure~\ref{fig:daq-cpu-hf-speed} and show
 that four cores are sufficient to keep up with 960 channels.
 The test does not include reformatting of the data required to put it in
-a form that allows hardware SIMD acceleration (AVX).  
+a form that allows hardware SIMD acceleration (AVX2).
 In tests with live \dword{protodune} data, it is found that ten cores at
 and average 65\% usage were enough to handle both reformatting and
 trigger primitive selection. 
@@ -1798,7 +1797,7 @@ a supernova neutrino, an atmospheric/cosmic interaction, or a baryon
 number-violating interaction can be preferentially selected with efficiency
 $>$88\%, $>$92\%, or $>$99\%, respectively  \cite{bib:docdb11311}. Such a 
 filter could potentially be applied to reduce the event record size by
-more than two orders of magnitude. Inference latency is under study to validate limiting event
+more than two orders of magnitude. \hlfix{Inference latency}{Georgia: please clarify} is under study to validate limiting event
 record throughput (from the \dword{eb}) through such filtering
 stage, for a reasonably sized GPU cluster. 
 
@@ -1908,46 +1907,17 @@ stage, for a reasonably sized GPU cluster.
 
 % \subsubsubsection{Validation of High Level Filter in Software}
 
-\subsubsection{Prototype Inter-process Communication System}
+\subsubsection{Prototype Trigger Message Passing}
 
-A prototype of the \dword{ipc} mechanism described in Section~\ref{sec:daq:design-ipc} is currently under development and testing at \dword{protodune}.  Goals of this prototype include evaluating throughput and rate limitations, understanding message schema and application level protocols, prototyping \dword{daqccm} functionality including \dword{daqdispre}, investigating scaling and software complexity management as well as providing functional support for other tests of the DUNE FD \dword{daq} design at \dword{protodune}.
+A prototype trigger message passing (PTMP) system using elements of the \dword{ipc} mechanism described in Section~\ref{sec:daq:design-ipc} is currently under development and testing at \dword{protodune}.
+The primary goals of this prototype is to add a self-triggering mechanism to the \dword{protodune} detector that includes many of the features needed for the far detector DAQ.
+Throughput and latency of the mechanism is being evaluated and optimized.
+Message schema and application level protocols have been designed and are being improved.
+Future work will include prototyping \dword{daqccm} functionality including \dword{daqdispre}.
 
-Initial offline prototype tests have demonstrated ZeroMQ inter-thread transport is more than sufficient for use in the highest rate \dword{daq} context (input to \dword{trigprimitive} production).
-Tests with small packets have demonstrated ZeroMQ's ability to handle the high packet rate of \dword{trigprimitive} or trigger candidate data over all three of the ZeroMQ transport mechanisms that are being considered for use (inter-thread, inter-process and network).  
-
-ZeroMQ \dword{ipc}  has been successfully exercised at \dword{protodune} as part of a practical solution to transfer the full stream of trigger primitives out of one process and in to another. 
-This tests the eventual leg between producers of trigger primitives and their consumers (trigger candidate processors). 
-The merging of multiple, asynchronous trigger primitive streams into a single ordered stream which is properly prepared for input to trigger candidate processing has been developed and tested offline.  Performance testing and integration into the self-triggering prototype at \dword{protodune} is in progress.
-
-
-
-% \subsubsection{Future \dword{protodune} \dword{daq} Demonstrator}
-% \label{sec:sp-daq:validation-pd-demonstrator}
-
-% A demonstration of the \dword{daq} system design based in \dword{protodune} is
-% planned for 2020. The key components are the front-end readout, timing
-% system, and \dword{daqdsn} systems. A full vertical slice through the
-% timing and readout system will be constructed, with
-% TPC and PDS detectors, as well as calibration systems. Although a full-scale
-% demonstration of the \dword{daqdsn} system cannot be achieved with
-% \dword{protodune}, the basic infrastructure will be demonstrated and
-% used to self-trigger \dword{protodune}.
-
-% The high-level goals will be to demonstrate and validate
-% integration of \dword{fe} with TPC and PDS electronics, 
-% data throughput for a single \dword{fe} instance 
-% readout data processing for a single \dword{fe} instance 
-% \dword{trigprimitive} generation for a single front-end instance 
-% distribution of timing and control signals to detector \dwords{fe} 
-% data selection infrastructure and self-triggering  and 
-% integration with calibration systems.
-
-% The components used in the \dword{protodune}
-% demonstrator will be assembled in 2019, and their operation will
-% be verified in standalone tests. For \dword{fpga} processing, the
-% initial version of firmware will be demonstrated in \dword{fpga} development
-% cards, and an integration test will be conducted in 2019 with a
-% prototype \dword{fpga} processing module and the  \dword{felix} \dword{fe}.
+PTMP has been successfully exercised to transfer trigger primitives from the software based hit finder.
+These trigger primitives have also successfully been aggregated across an APA and the result fed to a trigger candidate finder which identifies horizontal muons.
+\hlfix{From this output a trigger decision can be made.}{This is ongoing and hopefully can a full-chain will be tested and described before final draft.}
 
 
 \subsection{Additional Teststands}
@@ -1976,6 +1946,10 @@ specific component testing, as well as to other detector and
 calibration consortia to support their own development, production, and quality assurance programs. The \dword{daq} 
 kit will also form the basis for testing at \dword{apa} Construction sites beginning in 2020. 
 
+\subsection{Plan for Future Development}
+\label{sec:sp-daq:design-plans}
+\fixme{Giovanna and Allesandro}
+
 \section{Production, Assembly, Installation and Integration}
 \label{sec:sp-daq:production}
 
@@ -2003,6 +1977,8 @@ Development of these activities is still underway.
 \section{Organization and Project Management}
 \label{sec:sp-daq:organization}
 
+\fixme{give short intro text}
+
 \subsection{Consortium Organization}
 
 The \dword{daq} consortium was formed in 2017 as a joint single and
@@ -2027,9 +2003,10 @@ structure has been adopted to see the project through engineering
 design and construction, and this structure is expected to evolve
 further in the future in
 order to meet the needs of the consortium. This is shown in Figure~\ref{fig:daq-org}. Each working group has a designated working group
-leader. In addition to the
-working group leads, technical design report editors are responsible for the
-overall editing and delivery of this TDR document.
+coordinator.
+% In addition to the
+% working group leads, technical design report editors are responsible for the
+% overall editing and delivery of this TDR document.
 
 \fixme{This is tentative, from leadership. Needs consortium vetting. }
 \begin{dunefigure}[DAQ consortium org chart]{fig:daq-org}{Organizational chart for the \dword{daq} Consortium
@@ -2182,8 +2159,8 @@ DAQ Control & & \\
 
 Following the funding model envisioned for the consortium, various
 responsibilities have been distributed across institutions within the
-consortium. At this stage of the project, these should be considered
-as ``aspirational'' responsibilities until firm funding decisions are
+consortium. At this stage of the project, these should be \hlfix{considered
+as ``aspirational'' responsibilities}{???} until firm funding decisions are
 made. Table~\ref{tab:daq-inst-resp} shows the current institutional
 responsibilities for primary \dword{daq} subsystems. Only lead institutes are
 listed in the table for a given effort. For physics and simulation
@@ -2211,7 +2188,7 @@ Physics \& Simulation &   \\ \colhline
 
 \fixme{need text?} 
 The high-level DAQ milstones, as well as key DUNE project milestones,
-is provided in Tab.~\ref{tab:daq-sched} and illustrated in Fig.~\ref{tab:fd-daq:schedule}.
+is provided in Tab.~\ref{tab:daq-sched} and illustrated in Fig.~\ref{fig:fd-daq:schedule}.
 
 \begin{dunetable}
 [DAQ Consortium Schedule]
