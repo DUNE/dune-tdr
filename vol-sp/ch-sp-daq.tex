@@ -578,7 +578,7 @@ The upstream \dword{daq} system comprises many similar \dword{daqrou}, each
 connected to a subset of electronics from a detector module and
 interfacing with the \dword{daq} switched network. In the case of the
 \dword{tpc}, 75 functionally identical RU are each responsible for the readout of raw data from two
-\dwords{apa}. In the case of the \dword{pds}, 6-8 RU are each responsible for the
+\dwords{apa}. In the case of the \dword{pds}, 5-10 RU are each responsible for the
 readout of raw data from a collection of \dword{pds} subdetectors, where each
 collection corresponds to an optically isolated region in the
 detector. 
@@ -590,7 +590,7 @@ as illustrated in Figure~\ref{fig:daq:readout-blocks}, and are
 itemized below:
 
 \begin{enumerate}
-\item Data reception (Section~\ref{sec:fd-daq:upstream-receiver}), facilitated by two \dword{felix} cards;
+\item Data reception (Section~\ref{sec:fd-daq:upstream-receiver}), facilitated by \dword{felix} cards;
 \item Network based I/O (Section~\ref{sec:fd-daq:upstream-io}), facilitated by an embedded or commercial off-the-shelf network interface controller;
 \item Data processing (Section~\ref{sec:fd-daq:upstream-proc}), facilitated by \dword{fpga} resources on the \dword{felix}
   card and/or on-host CPU resources, or, in the case of the \dword{tpc} RU only,
@@ -601,17 +601,25 @@ itemized below:
   and SSD available on the co-processing boards.
 \end{enumerate}
 
-Each of these blocks is described below.  In addition, and like all
+In the baseline design, used also for system costing, each RU is composed of:
+\begin{enumerate}
+\item one dual socket multicores 2U server, with two 10 Gbps and two 1 Gbps ethernet ports for redundant data transmission and control, with at least 256 GB of DDR4 RAM, and sufficient PCIe lanes to host 2 TB of SSD disks,
+\item two \dword{felix} cards, with a PCIe (IIIx16) interface, supporting up to 12 9.6 Gbps serial optical links for data reception,
+\item only in case of the TPC readout, four co-processor cards mounted onto the two \dword{felix} cards, for additional processing power and data buffering.
+
+\end{enumerate}
+
+Each functional block is described below.  In addition, and like all
 other \dword{daq} subsystems, the upstream \dword{daq} uses services and implements interfaces that are provided by 
 the \dword{daqccm} as described in Section~\ref{sec:fd-daq:design-run-control}.
 
 \subsubsection{Data reception}
 \label{sec:fd-daq:upstream-receiver}
-The physical interface between the detector electronics and the DAQ are 10 Gbps point-to-point serial optical links running a simple (e.g., 8/10 bit encoded) protocol. 
+The physical interface between the detector electronics and the DAQ are 9.6 Gbps point-to-point serial optical links running a simple (e.g., 8/10 bit encoded) protocol. 
 For each \dword{apa} there are ten such links connecting its \dwords{wib} to the DAQ.
 To reduce space and power consumption in the \dword{cuc}, high data aggregation is desired.
-In the baseline design, the 20 fibers from two \dwords{apa} are aggregate into one \dword{fec} with each \dword{apa} connected to one \dword{felix} FPGA PCIe 3.0 board. 
-If technology advances sufficiently a PCIe 4.0 version of \dword{felix} may be produced to increase the data aggregation such that each board would accept 20 links and a total of 40 links per \dword{fec} would be accomodated.
+In the baseline design, the 20 fibers from two \dwords{apa} are aggregate into one \dword{fec} with each \dword{apa} connected to one \dword{felix} board. 
+If technology advances sufficiently a PCIe IV (or V) version of \dword{felix} may be produced to increase the data aggregation such that each board would accept 20 (or 40) links. Nevertheless, considerations of fault tolerance, may advice against a very large concentration of links into a single RU.
 The \dword{felix} board and firmware was developed initially by and for the ATLAS experiment and is now proposed or already in use by several other experiments including \dword{protodune}.
 
 \subsubsection{Network based I/O}
@@ -624,31 +632,13 @@ The network I/O is handled by the \dwords{daqrou} via software; dedicated hardwa
 \subsubsection{Data processing}
 \label{sec:fd-daq:upstream-proc}
 
-The data processing functional block resides either on the \dword{felix} board \dword{fpga}, or on
-an additional, dedicated co-processor (see Section~\ref{sec:sp-daq:design-validation}) providing additional \dword{fpga}
-processing resources, or both. Data processing can also be carried out in the host
-server processor. This functional block is ultimately
-responsible for identifying regions of interest in the
-detector (in the \dword{tpc} or \dword{pds}) as a function of time.
+The data processing functional block is tasked with identifying and forming \dwords{trigprimitive}, after a stage of data reorganization and noise filtering for both the \dword{tpc} or \dword{pds}.
 
-As a preliminary step, data is pre-processed, i.e., organized in a way
-that better suits subsequent data analysis. This implies, e.g.~reorganizing
-data into different streams (collection plane vs. induction plane,
-or re-arranging time and channel order and aggregating samples into frames), applying noise filtering algorithms, and compressing or zero-suppressing data.
-
-The upstream \dword{daq} system also is tasked with forming \dwords{trigprimitive}.
-They summarize time periods on a channel where the digitized waveform is no longer consistent with noise.
+\dwords{trigprimitive} summarize time periods on a channel where the digitized waveform is no longer consistent with noise.
 These regions of interest are then used as input to the \dword{daqds} sub-system where they begin the process of forming a trigger decision.
 
-\fixme{Giovanna, please rewrite this next paragraph to make it clear what is baseline and what is option.}
-This functional block in principle may be implemented via \dword{fpga}, GPU, CPU, or a
-combination of these elements. Deciding on the exact implementation is
-premature at this stage; this is central to ongoing development efforts 
-within upstream \dword{daq} and \dword{daqdsn} at \dword{protodune}. The \dword{daq} design includes both \dword{fpga} and
-CPU elements in the upstream \dword{daq}, which provides the needed
-flexibility and 
-adaptability to meet the ultimate processing needs of the detector;
-those will depend, for example, on noise levels in the detector.
+In the baseline design this functional block is implemented in \dword{fpga}.
+R&D studies are ongoing to evaluate whether alternative implementations (in GPUs or CPUs) would bring any advantages in terms of flexibility or cost.
 
 \subsubsection{Buffering}
 \label{sec:fd-daq:upstream-buf}
@@ -863,15 +853,8 @@ and compare performance of different implementations. In satisfying
 the philosophy and strategies of the \dword{daq} design, there is built-in
 flexibility in defining whether each element of a pipeline executes on
 \dword{fpga}, CPU, GPU, or, in principle, some other future hardware
-architecture. A purely software implementation of data selection has been
-the subject of successful, ongoing demonstration 
-tests at \dword{protodune}. An \dword{fpga} implementation of the lowest level of data selection
-(specifically, trigger primitive generation), 
-however, is possible within the upstream \dword{daq} design, and offers an
-opportunity to reduce CPU costs as well as costs associated with power
-consumption during detector operations. It is therefore the subject of
-ongoing development at \dword{protodune}.
-\fixme{Giovanna, please clarify the above as to the baseline and option.}
+architecture. A purely software implementation of data selection is being
+implemented for demonstration at \dword{protodune}; it will be then modified to match the baseline design in which trigger primitives are generated in \dword{fpga}.
 
 \subsubsection{Low Level Trigger: Trigger Primitive Generation}
 \label{sec:sp-daq:design-trigger-primitives}
