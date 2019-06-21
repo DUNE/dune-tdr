@@ -1,0 +1,322 @@
+#+title: notes on DAQ chapter internal review
+#+latex_header: \usepackage[margin=1.0in]{geometry}
+
+This document tracks work toward the final draft of the SP-DAQ chapter.
+
+It has two main parts:
+
+- High level "action item" check list
+- Select comments from reviewers and others collated by section.
+
+In some cases, names are suggested.  If you think you can contribute to an item, please coordinate with anyone named.
+
+Please check off items when they are completed and/or notify Brett and Georgia.  If partially addressed, please make some sub-item comment.
+
+This file is best edited in Emacs in order to make use of orgmode for indentation, checkbox accounting, etc.
+
+* [5/17] Action items from [2019-06-14 Fri]
+
+- [X] Brett: triage comments, collate by section, give ranking and opinions on who/how to address.
+
+- [ ] Giovanna: 1.2.1, improve text of the "requirement" table entries.
+
+- [-] Brett: 1.2.1, contact Tim/Sam and Anne about options to break up the table, eg into top-5, other-top, and DAQ.
+  - email sent, anne and sam out
+  - they are considering it and will take up the discussion soon.
+
+- [ ] Brett: 1.3, remove table 1.5 and assure references are properly sprinkled in the text instead.
+
+- [ ] Giovanna: 1.3.2, Upstream DAQ, make clear that DPM approach is baseline, CPU-centric is alternative.
+
+- [ ] Allesandro: 1.3.4, Back-end DAQ, generally improve and add or remove 1.3.4.5 Data Model.
+
+- [X] Brett: 1.3.5 CCM, ask Roland to provide suggested text and figures
+
+- [ ] Roland: 1.3.5 CCM, provide suggested text and figures
+
+- [X] Brett: 1.3.6 IPC, move to subsubsection.
+
+- [ ] Newbold: 1.3.7, Timing and Synchronization, make sure clock rate is consistent with current CE design.
+
+- [ ] Giovanna: 1.4.x generally make or suggest changes  as \fixme{}'s.
+
+- [X] Brett: figure 12: replace with Frank's (Giovanna sent)
+
+- [X] Brett: figure 13: remove
+
+- [ ] Giovanna&Allesandro: new 1.4.5 Plan for future development
+  - empty section added
+
+- [ ] 1.5 Production, Assembly, Installation and Integration.  In order:
+
+  - [ ] Georgia: add back Alec's text.  Maybe it was in IDR.
+  - [ ] Alec: vet/update this text
+  - [ ] Giovanna&Allesandro&Newold: iterate
+
+- [ ] Giovanna&Allesandro&Newold: 1.6 Org and PM (I didn't write an action, so I guess just make sure it's a perfect golden unicorn).
+
+- [ ] Giovanna&Allesandro: 1.6.4: generally check and also see if the risk levels can be "detuned" to not be so H.
+
+* Collated review comments 
+
+This covers input from internal reviewers:
+
+- [X] Alec
+- [X] Frank
+- [X] Pengfei
+- [X] Roland
+
+Be sure to look at the frozen version of the DAQ chapter in DocDB when referring to the comments in order to match referenced page/line/section numbers.  The version in Git has evolved.
+
+** [0/11] General
+
+This section lists items needing attention in ways not easily identified with a specific section.
+
+ - [ ] Need to manage expectations of technical level expected in this "TDR".
+
+ - [ ] Need to add QA/QC section.  (I suggest this for 1.5.3)
+
+ - [ ] Boosted Dark Matter may require less than 100 MeV threshold
+
+ - [ ] Give motivation for 5.4ms readout window, when 3ms was imposed on PDSP.  (Initially, 5.4ms was motivated to span one drift time on either side of the trigger time plus "a little extra".  The argument to use 3ms for PDSP is in part due to it being externally triggered).
+
+ - [ ] Describe how co-processor validation will be done given it requires hardware/firmware development beyond what is tested at PDSP.  Give more technical details.
+
+ - [ ] For CPU-centric hit finding and buffer, add estimate of power and space needed.
+
+ - [ ] Add plan for deciding between baseline and option.
+
+ - [ ] Almost no mention of PDS.  Should change any "TBDs" to our best understanding.
+
+ - [ ] What SNB trigger/readout prototyping/validation has been or will be done?   See notes below on the "future development" section.
+
+ - [ ] Understand why/if we need to ever read out duplicate data (Roland)
+
+ - [ ] What actually will be the TPC sampling rate?  CE chapter has ~2MHz.  Reflect changes in this chapter as needed.
+
+** [1/3] Typographical and consistencies
+
+- [X] make consistent the spelling of artDAQ via a macro (made italic via glossaries, matches artdaq publication)
+
+- [ ] Make "back-end", "front-end" consistent hyphen/abbrev
+
+- [ ] consistent use of "Fig/Figure"
+
+** [1/2] 1.1 Introduction
+
+- [X] use "main communication room (MCR)" via glossaries in text
+
+- [ ] Georgia: change Figure 1 to use "main communication room" (not "on-surface...")
+
+** [0/2] 1.2 Design overview
+
+  - [-] [1/4] Table 1.1 "Rates"
+
+    - [X] This implies more than 30PB/year.  Add explanation to caption.
+
+    - [ ] Josh: Check the SNB rate.  Maybe it is not using 100s?
+
+    - [ ] Josh: Check consistency between 10MeV and 100MeV thresholds.  We say 100MeV in table 2.
+
+    - [ ] Fill in the assumptions for CE calibration.
+
+  - [ ] [0/7] Table 1.2 "Specifications"
+
+    - [ ] Change caption.  These are more "assumptions" than specifications.  Need to coordinate with Tim/Sam.
+
+    - [ ] general confusion over why top-5 are included, explain in caption (Note, main editors are considering to remove top-5 from chapter tables)
+
+    - [ ] SP-FD-16 <0.5% deadtime needs updating and defining.  
+
+    - [ ] SP-DAQ-7 is duplicate of this.
+
+    - [ ] SP-FD-22 (30 PB/year). confusion over whether it is met or not
+
+    - [ ] add a requirement regarding under and above ground power and space
+
+    - [ ] Suggested requirement terms from Roland:
+
+      - Timing accuracy, clock speed, synchronisation precision
+      - Readout bandwidth
+      - Trigger efficiency
+      - Max trigger latency -> continuous temporary buffering
+      - SNB trigger data window -> local persistent buffering
+      - Delay for delivering SNB data to filter/FNAL
+      - Trigger data reduction (incl calibration data) -> on site persistent storage
+      - Power / space constraints
+      - DAQ uptime requirement
+
+** 1.2.1 Requirements and specifications
+
+**** 1.2.1.2 Design considerations
+
+- [ ] Georgia: Fix confusion over 4 vs 10 seconds latency vs buffer.
+
+- [ ] Alec: check power and number of racks.  Roland says 400kW and 60 racks, text has 600 kW and 52 racks.  See common/defs.tex for where the correct numbers should be set.
+
+**** Physics drives daq design
+
+- [ ] Josh: make sure SNB data rate is consistent with table 1.1
+
+*** 1.2.1 Requirements and Specifications
+
+- [X] delete "1.2.2 Summary of key parameters" section heading
+
+- [ ] Georgia: table 1.3, replace "TBD" with something PDS entries 
+
+- [ ] Add more key parameters: buffer time, latency, time to transfer SNB to offline.
+
+*** 1.2.3 Interfaces
+
+- [X] Computing: clarify 30PB/year is to tape, not necessarily what is sent to FNAL.
+
+- [ ] Cussans: Add mention of timing/sync?  
+
+- [ ] Roland: Add an "interface design" diagram 
+
+- [ ] Cussans: In T&S, why is timing +/- 500ns when the clock is 62.5MHz (? by Roland)
+
+** 1.3 Design
+
+*** 1.3.1 Overview
+
+- [ ] Kurt: why 10 BE servers? (this number may have been "invented" by me, bv).
+
+*** Figure 3
+
+- [ ] add timing system 
+
+- [ ] Roland: or, entirely replace with "component diagram"?
+
+*** Figure 4
+
+- [ ] Roland: replace this with a "deployment diagram"?
+
+*** Figure 6
+
+- [ ] Roland: replace with a component diagram?
+
+*** Figure 7
+
+- [ ] Georgia/Roland: bigger font, "much better data flow diagram or "table hierarchy diagram".
+
+*** Figure 8
+
+- [ ] Georgia/Roland: Increase font.  Replace with data flow diagram.  (bv: isn't this a DF diag?)
+
+*** 1.3.3 DS
+
+- [ ] Giovanna: clarify confusion over which is baseline tech for TP and buffering. (also 1.3.3.1) 
+
+- [ ] Josh: Check 10 MeV vs 100 MeV threshold requirements.
+
+**** 1.3.3.5 HFL
+
+- [ ] Georgia: description is confusing
+- [ ] Georgia: why is HLF in DS not BE?
+
+**** 1.3.4.1 DFO
+
+- [ ] Kurt should check in general.
+
+**** 1.3.4.2 EB
+
+- [ ] Kurt should check in general.
+
+*** 1.3.4 Timing and Sync
+
+- [ ] Cussans: more detail 
+
+*** 1.3.5 CCM
+
+- [ ] Roland: rewrite/redraw.
+
+- [X] Brett: move 1.3.6 (IPC) to 1.3.5.x
+
+*** 1.3.x Redundancy and Fault Tollerance
+
+- [ ] Roland: Add new section on redundancy and fault tolerance.
+
+** 1.4 Design validation and development
+
+*** 1.4.1 Design Validation and Development at ProtoDUNE and Other  LArTPCs
+
+- [ ] Giovanna: come up with a shorter title and restructure as needed.
+
+- [ ] fix confusion between RCE and FELIX
+
+*** 1.4.2 ProtoDUNE outcomes
+
+- [X] fix baseline density of APA/FELIX/FEC
+
+- [ ] elaborate on "several key demonstrations"
+
+- [ ] Roland? config and control in PDSP is different that DUNE, so how does PDSP test this design element?
+
+**** 1.4.3.3 Data Selection Development
+
+- [ ] Georgia: address Roland's confusion over what "latency" means in last sentence.  See hlfix marker
+
+**** 1.4.3.4 PTMP (changed name)
+
+- [X] Brett: simplified and updated to recent development and tests at PDSP
+
+- [ ] Brett: need another pass just prior to final draft to update with latest work.  An hlfix marks this
+
+*** 1.4.4 Additional test stands
+
+- [ ] Move to end of 1.4.1?
+
+- [ ] Georgia: Define what is in the "vertical slice"
+
+- [ ] Cussans/Newbold: Define what is in the "DAQ development kits"
+
+*** 1.4.5 (new) Future Development
+
+- [0/3] SNB, maybe 3 parts:
+  - [ ] SNB trigger algorithm development plan:
+    - Develop compact, low-energy (CLE) TC finder
+    - Veto CLE TCs associated with nearby/recent high-energy activity
+    - Run on PDSP, save TCs to file  
+    - Mix in CLE TCs generated using SNB simulation
+    - develop MLT level algorithm
+    - validate by replaying CLE TCs via "real" PTMP nodes (75 TC sources -> MLT)
+  - [ ] High rate dump
+    - Acquire 4x M.2 SSD adapter card and SSDs to test host RAM-SSD write speed
+    - Test using co-processor board
+  - [ ] HLF
+    - Georgia: describe HPC proposal
+
+- [ ] what else?
+
+** 1.5 Production, Assembly, and Integration
+
+- [ ] in general fill in 
+
+*** 1.5.2 Installation and integration
+
+- [ ] Georgia: Add back text Alec wrote.
+
+*** 1.5.3 Quality Assurance and Control
+
+- [ ] A new section is needed
+
+** 1.6 Org and PM
+
+- [ ] Giovanna, Allesandro, Newbold: give short intro
+
+*** Figure 20 org chart
+
+- [ ] Giovanna: add figure and words you presented at May collaboration meeting
+
+*** Table 8, Inst. responsibilities
+
+- [ ] Giovanna, Allesandro: provide
+
+*** 1.6.4 Safety and risks
+
+- [ ] Separate safety from risks. Looks like safety is completely infrastructure driven, but risks have a huge impact on the design. (from Roland)
+
+- [ ] Address various comments on content of risk table from Roland
+
+
