@@ -1634,21 +1634,16 @@ at \dword{protodune}.
 
 \subsubsection{Data Selection Development}
 
-\begin{dunefigure}[CPU core-time for primitives and CPU utilization in live data]{fig:daq-cpu-hf-speed}{CPU core-time (left) required
-    to find primitives in simulated signal and noise data across 960
-    channels.
-    In this test the data has been pre-formatted to facilitate the use
-    of SIMD hardware accelerated functions (AVX2). 
-    CPU utilization in live data (right) for both reformatting and
-    trigger primitive generation. 10 CPU at about 65\% utilization are
-    required to keep up. 
-    The initial peak is due to faster than nominal deliver of input due
-    to startup buffering issues. 
-    The system is able to catch up with the backlog.
-    Importantly, neither of these two tests include the necessary data
-    decompression step.}
-  \includegraphics[height=5cm,clip,trim=4cm 16cm 4cm 2cm]{daq-primitive-cpu-speed.pdf}%
-  \includegraphics[height=5cm,clip,trim=0cm 0cm 0cm 0cm]{daq-hf-felix-sp-live.png}
+\begin{dunefigure}[CPU core-time for primitives and CPU utilization in live data]{fig:daq-cpu-hf-speed}{CPU core-time (left) required to find primitives in simulated signal and noise data across 960 collection channels.
+    In this test, the data has been pre-formatted to facilitate the use of SIMD hardware accelerated functions (AVX2). 
+    Per thread CPU utilization (right) to process live data from a \dword{protodune} \dword{apa}.
+    Processing includes data reformatting, trigger primitive generation, and output message formation and sending.
+    Each thread, one per FELIX link, requires about 75\% CPU core utilization to keep up.
+    Variation in utilization reflects the variations in levels of ionization and noise activity in the input data and is due to output message formation and sending.
+    The peak usage at the start arises from input buffering while the process is initializing. 
+    Once operational state is achieved, this brief backlog is processed.}
+  \includegraphics[height=6cm,clip,trim=4cm 16.5cm 4cm 2cm]{daq-primitive-cpu-speed.pdf}%
+  \includegraphics[height=6cm,clip,trim=0cm 0cm 0cm 5mm]{apa5-processing-ptmp-pinning-2019-06-10-run8219-for-tdr.pdf}
 \end{dunefigure}
 
 \begin{dunefigure}[Trigger primitives, one APA  in ProtoDUNE-SP data]{fig:daq-hitfinder}{Illustration of the trigger primitives found by the CPU algorithm in one nominal readout of one \dword{apa}  in \dword{pdsp} data.  Although the data was ultimately recorded due to trigger, the algorithm ran in full-stream mode.}
