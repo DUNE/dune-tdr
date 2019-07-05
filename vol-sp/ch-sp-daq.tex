@@ -278,9 +278,20 @@ conservatism as further experience is gained with detector
 operations. At the same time, it is designed to preserve the possibility of additional capacity
 as required. The bulk of processing and buffering of raw detector data is
 done underground, in the upstream \dword{daq} part of the system (see Figure~\ref{fig:fd-daq:layout}), in order to
-control the consumption of available network bandwidth to surface. Power, cooling, and space
+control the consumption of available network bandwidth to surface.
+
+Power, cooling, and space
 constraints in the \dword{cuc} are limited to \daqpower and \daqracks (out of \cucracks total) for DAQ for all four \dword{fd}
 modules.
+%
+The underground computing required for the DAQ to service the SP detector module is expected to occupy less than ten racks in the \dword{cuc}.  Less than eight are needed for housing the FELIX host machines.  The machines hosting data selection triggering software will fill less than two racks.  A small number of 1U machines are needed to host various other services and they can fill the remaining space in the ten racks.  Allocating a quarter of the total racks to the SP module thus leaves two racks available for contingency.
+%
+The power usage by the FELIX, data selection and service host machines is expected be less than but near one quarter of the power available to the total DAQ in the CUC.
+To meet a fair share fraction, it is assumed that the FELIX hosts and data selection machines will consume less than \SI{500}{\watt}. 
+On top of that, each FELIX board may use up to the maximum allowed for PCIe x16 cards (\SI{75}{\watt}).
+The machines hosting services are not large contributors to the power budget as they are small in number and expected to run somewhat idle require no more than \SI{200}{\watt}.
+
+
 
 There are four key challenges for the DUNE \dword{fd} \dword{daq} system: 
 \begin{itemize}
@@ -674,8 +685,7 @@ Providing only a modest overhead to normal operations, this data can
 be extracted from such storage from the \dword{daq} in well under a day.
 
 For both types of activity, the buffering requirements may be reduced by employing lossless compression to the data prior to it entering the buffer.
-A factor of two-four compression is
-expected, based on MicroBooNE and \dword{protodune} experience. 
+A factor of two-four compression is expected, based on MicroBooNE and \dword{protodune} experience using a modified Huffman encoding of differential ADC values. 
 If expected noise levels are achieved, this compression would provide a factor of four to ten, depending on the detector module technology.
 Effort is currently underway to understand the costs and technology involved in exploiting this benefit.
 

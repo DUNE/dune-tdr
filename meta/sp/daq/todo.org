@@ -7,9 +7,9 @@ It has two main parts:
 
 - Links
 - High level "action item" check list
-- Select comments from reviewers and others collated by section.
+- Select comments from reviewers and others collated by chapter section.
 
-In some cases, names are suggested.  If you think you can contribute to an item, please coordinate with anyone named.
+In some cases, names are suggested to address an item.  If you think you can contribute to an item, please coordinate with anyone named.
 
 Please check off items when they are completed and/or notify Brett and Georgia.  If partially addressed, please make some sub-item comment.
 
@@ -17,7 +17,7 @@ This file is best edited in Emacs in order to make use of orgmode for indentatio
 
 * Links
 
-- Current PDF build of the chapter: https://dune.bnl.gov/docs/dune-tdr/vol-sp/vol-sp-ch-sp-daq.pdf
+- Current PDF build of the chapter: https://dune.bnl.gov/docs/dune-tdr/vol-sp/vol-sp-ch-sp-daq.pdf (DocDB user/pass now needed)
 - Chapter sent to internal reviewers (internal + LBNC): https://docs.dunescience.org/cgi-bin/private/RetrieveFile?docid=12841&filename=sp-daq-draft3-2may2019.pdf&version=3
 - Risks spread sheet: https://docs.dunescience.org/cgi-bin/private/ShowDocument?docid=7995
 - "Requirements" spread sheet: https://docs.dunescience.org/cgi-bin/private/ShowDocument?docid=11314
@@ -74,9 +74,11 @@ This covers input from internal reviewers:
 - [X] Pengfei
 - [X] Roland
 
-Be sure to look at the frozen version of the DAQ chapter in DocDB when referring to the comments in order to match referenced page/line/section numbers.  The version in Git has evolved.
+and four LBNC reviewers.  Comments from LBNC reviewers are marked with their number like ``(r1)''.
 
-** [0/11] General
+Be sure to look at the frozen version of the DAQ chapter in DocDB (see link above) when referring to the comments in order to match referenced page/line/section numbers.  The version in Git has evolved.
+
+** General [0/11] 
 
 This section lists items needing attention in ways not easily identified with a specific section.
 
@@ -102,7 +104,9 @@ This section lists items needing attention in ways not easily identified with a 
 
  - [ ] What actually will be the TPC sampling rate?  CE chapter has ~2MHz.  Reflect changes in this chapter as needed.
 
-** [1/3] Typographical and consistencies
+ - [ ] Repetitive, eg requirements repeated in a number of sections (r1)
+
+** Typographical and consistencies [1/3] 
 
 - [X] make consistent the spelling of artDAQ via a macro (made italic via glossaries, matches artdaq publication)
 
@@ -110,13 +114,13 @@ This section lists items needing attention in ways not easily identified with a 
 
 - [ ] consistent use of "Fig/Figure"
 
-** [1/2] 1.1 Introduction
+** 1.1 Introduction [1/2] 
 
 - [X] use "main communication room (MCR)" via glossaries in text
 
 - [ ] Georgia: change Figure 1 to use "main communication room" (not "on-surface...")
 
-** [0/2] 1.2 Design overview
+** 1.2 Design overview [0/2] 
 
   - [-] [1/4] Table 1.1 "Rates"
 
@@ -154,37 +158,56 @@ This section lists items needing attention in ways not easily identified with a 
       - Power / space constraints
       - DAQ uptime requirement
 
-** 1.2.1 Requirements and specifications
+*** 1.2.1 Requirements and specifications [2/10]
 
-**** 1.2.1.2 Design considerations
+ - [ ] Georgia: Fix confusion over 4 vs 10 seconds latency vs buffer.
 
-- [ ] Georgia: Fix confusion over 4 vs 10 seconds latency vs buffer.
+ - [X] Alec: check power and number of racks.  Roland says 400kW and 60 racks, text has 600 kW and 52 racks.  See common/defs.tex for where the correct numbers should be set.
+   - Alec confirms 500 kVA of usable power and at least 52 racks, of which 4 are not-DAQ.
+   - made macros for ~\cucpower~, ~\cucracks~, ~\daqpower~ and ~\daqracks~ in ~common/defs.tex~
 
-- [X] Alec: check power and number of racks.  Roland says 400kW and 60 racks, text has 600 kW and 52 racks.  See common/defs.tex for where the correct numbers should be set.
-  - Alec confirms 500 kVA of usable power and at least 52 racks, of which 4 are not-DAQ.
-  - made macros for ~\cucpower~, ~\cucracks~, ~\daqpower~ and ~\daqracks~ in ~common/defs.tex~
+ - [ ] Josh: make sure SNB data rate is consistent with table 1.1
 
-**** Physics drives daq design
+ - [X] delete "1.2.2 Summary of key parameters" section heading
 
-- [ ] Josh: make sure SNB data rate is consistent with table 1.1
+ - [ ] Georgia: table 1.3, replace "TBD" with something PDS entries 
 
-*** 1.2.1 Requirements and Specifications
+ - [ ] Add more key parameters: buffer time, latency, time to transfer SNB to offline.
 
-- [X] delete "1.2.2 Summary of key parameters" section heading
+ - [ ] Josh: Table 7.1 – how is cold elec calibration data size estimated? (r1)
+   - I (bv) think it was based on what protodune needed for gain/peaking time scans
 
-- [ ] Georgia: table 1.3, replace "TBD" with something PDS entries 
+ - [ ] Alec: 1.2.1.2 what size racks?  ATLAS using extra tall ones.  (r1)
 
-- [ ] Add more key parameters: buffer time, latency, time to transfer SNB to offline.
+ - [-] Brett: 1.2.1.2 limited by power or by space? (r1)
+   - add initial details but seeking input
 
-*** 1.2.3 Interfaces
+ - [-] 1.2.1.2 what reduction do you expect to get from lossless compression? How is this estimated? (pDUNE?) How does this interplay with &lt; 30 PB/yr limit? Ie. do you mean fully uncompressed data, or compressed? (r1)
+   - add words about using "modified Huffman".
 
-- [X] Computing: clarify 30PB/year is to tape, not necessarily what is sent to FNAL.
+*** 1.2.2 Summary of key parameters
 
-- [ ] Cussans: Add mention of timing/sync?  
+- [ ] Vague. (r2)
 
-- [ ] Roland: Add an "interface design" diagram 
+  - note, this section is already removed, table kept.  Maybe that's sufficient.
 
-- [ ] Cussans: In T&S, why is timing +/- 500ns when the clock is 62.5MHz (? by Roland)
+- [ ] Table 1.3 supply "TBDs" (r2)
+
+- [X] "BE" not defined near use. (r2)
+  - this is already fixed post v3.
+
+*** 1.2.3 Interfaces [1/4]
+
+ - [X] Computing: clarify 30PB/year is to tape, not necessarily what is sent to FNAL.
+
+ - [ ] Cussans: Add mention of timing/sync?  
+
+ - [ ] Roland: Add an "interface design" diagram 
+
+ - [ ] Cussans: In T&S, why is timing +/- 500ns when the clock is 62.5MHz (? by Roland)
+
+ - [ ] Hucheng: The data transmission to FELIX uses commercial 10 Gbps optical links. This is a rather modest rate for existing commercial links, certainly projecting a few years ahead. Would you benefit from using (fewer) higher speed links? If so, is this under consideration? (r1)
+   - sent Hucheng email
 
 ** 1.3 Design
 
@@ -213,6 +236,12 @@ This section lists items needing attention in ways not easily identified with a 
 *** Figure 8
 
 - [ ] Georgia/Roland: Increase font.  Replace with data flow diagram.  (bv: isn't this a DF diag?)
+
+*** 1.3.2 Upstream DAQ
+
+- [ ] many options being considered for processing, and it is stated it is “premature” to choose now. That is fine. However, it would be good to provide more information about what is already known (eg. lossless compression algo’s have been investigated, …), and what path will be taken to get to a better understanding and to being able to decide (and on what timescale). Eg. there are tests planned at pDUNE, or it all relies on simulation, or... It would also be nice to hear about implications of the various choices of implementations, such as on power and underground rack space. (r1)
+
+
 
 *** 1.3.3 DS
 
@@ -264,6 +293,9 @@ This section lists items needing attention in ways not easily identified with a 
 - [ ] Roland? config and control in PDSP is different that DUNE, so how does PDSP test this design element?
 
 *** 1.4.3 Ongoing Development
+
+    - [ ] says detailed scheduled can be found in ref. Would be nice to include a few dates, such as for the milestones listed here (r1)
+
 **** 1.4.3.3 Data Selection Development
 
 - [ ] Georgia: address Roland's confusion over what "latency" means in last sentence.  See hlfix marker
