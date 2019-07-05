@@ -1594,8 +1594,26 @@ at \dword{protodune}.
   \includegraphics[height=6cm,clip,trim=0cm 0cm 0cm 5mm]{apa5-processing-ptmp-pinning-2019-06-10-run8219-for-tdr.pdf}
 \end{dunefigure}
 
-\begin{dunefigure}[Trigger primitives, one APA  in ProtoDUNE-SP data]{fig:daq-hitfinder}{Illustration of the trigger primitives found by the CPU algorithm in one nominal readout of one \dword{apa}  in \dword{pdsp} data.  Although the data was ultimately recorded due to trigger, the algorithm ran in full-stream mode.}
-    \includegraphics[width=0.9\textwidth]{daq-hitfinder-montage.pdf}
+\begin{dunefigure}[Trigger primitives in ProtoDUNE-SP data]{fig:daq-hitfinder}{Example result of the trigger-primitive software (``hit finder'') applied to ADC waveform data spanning 96 collection channels that are sensitive to activity in the drift volume of \dword{pdsp}. 
+    At left, the figure shows the ADC sample values relative to pedestal which are input to the algorithm. 
+    At right, these same data are shown with a green $\times$ marking each trigger primitive found. 
+    The inset is a zoomed region showing in detail the alignment of the input waveforms and the derived trigger primitives.
+    In this test, the algorithm runs on the continuous stream of ADC waveforms prior to readout while actual readout was prompted by an external trigger.}
+  % \includegraphics[width=0.9\textwidth]{daq-hitfinder-montage.pdf}
+  \begin{tikzpicture}
+    \node[inner sep=0] (raw) at (0,0) {
+      \includegraphics[height=7cm]{raw-event-96chans-run8583-evt1.pdf}
+    };
+    \node[inner sep=0, right = 0cm of raw] (hit) at (raw.east) {
+      \includegraphics[height=7cm]{raw-event-and-hits-96chans-with-zoom-rect-run8583-evt1.pdf}
+    };
+    \node[inner sep=0] (zoom) at (4,4) {
+      \includegraphics[height=5cm]{raw-event-and-hits-zoom-run8583-evt1.pdf}
+    };
+    \draw[->, line width=0.3mm, red] (6.25, -.32) -- (1.5, 2.05);
+    \draw[->, line width=0.3mm, red] (7.01,  0.8) -- (5.65, 5.9);    
+    %\draw[step=1,black,thin,xshift=1,yshift=1] (0,0) grid (10,10);
+  \end{tikzpicture}
 \end{dunefigure}
 
 \begin{dunefigure}[Trigger primitive rates in ProtoDUNE-SP, four categories]{fig:daq-tp-rates}{Trigger primitive rates in \dword{pdsp} as a function of threshold in four categories: all data (top left),  after removal of particularly noisy channels (top right), with HV off so no contribution to signal (bottom left) and HV off and noisy channels excluded (bottom right).}
