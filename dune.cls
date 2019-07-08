@@ -327,7 +327,7 @@
 
 \iffinal
 %\presetkeys{todonotes}{disable}{}
-\newcommand{\hlfix}[2]{}
+\newcommand{\hlfix}[2]{#1}
 \newcommand{\fixme}[1]{}
 \newcommand{\fixmehl}[1]{}
 \newcommand{\metainfo}[1]{}
