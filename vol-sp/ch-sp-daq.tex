@@ -1199,25 +1199,25 @@ The mechanisms of such message passing are generally called \dword{ipc}.
 Referring to Figure~\ref{fig:fd-daq:layout}, \dword{ipc} is used for both in-band detector data flow between upstream \dword{daq} and back-end \dwords{eb} and for out-of-band messages as part of \dword{daqccm}.  The \dword{ipc} used by the \dword{daqdsn} spans both descriptions as it passes derivations of a subset of detector data (trigger primitives, candidates) and culminates in a source of out-of-band message (\dwords{trigcommand}) to direct the readout by \dword{eb} and other components of detector data that is held in the upstream \dword{daq} buffers.
 
 The ZeroMQ~\cite{zeromq} smart socket library is 
-the basis of a system being developed and evaluated for parts of both in-band and out-of-band \dword{ipc} . 
-As part of the \dword{daqccm}, this include the issuing of control and reconfiguration commands to and receiving of monitoring messages from essentially all \dword{daq} components. 
+the basis of a system being developed and evaluated for parts of both in-band and out-of-band \dword{ipc}. 
+As part of the \dword{daqccm}, this includes the issuing of control and reconfiguration commands to and receiving of monitoring messages from essentially all \dword{daq} components. 
 As part of \dword{daqdsn}, this includes the transfer of \dword{trigprimitive}, candidate and command messages. 
-In the upstream \dword{daq} this includes the \dword{daqubi} that  provides access to the upstream \dword{daq} primary buffers for queries by \dword{eb} and other components. 
+In the upstream \dword{daq} this includes the \dfirst{daqubi} that  provides access to the upstream \dword{daq} primary buffers for queries by \dword{eb} and other components. 
 \dword{ipc}  must be implemented broadly across many \dword{daq} systems and ZeroMQ allows their problems to be solved in common, shared software.  As \dword{daqccm} has the most complex \dword{ipc}  needs, this work is organizationally considered part of this system.
 
-One ZeroMQ facility in particular is worth additional description. 
-Zyre\footnote{An open source framework for proximity-based peer-to-peer applications. \url{https://github.com/zeromq/zyre}.} 
-will provide a decentralized implementation \dword{daqdispre} (see Section~\ref{sec:daq:design:ccm:control}). 
-It uses \dword{udp} broadcast beacons and a connected followup to provide peer discovery on the local network. 
-A heartbeat mechanism provides presence so that a component may discover when a peer has become unresponsive.  
-As Zyre uses the network itself, there is no central point of failure. 
-The network provides the naming service described above. 
-Zyre also allows for more centralized, connection oriented, discovery which can be used to allow the process to span networks.
+% One ZeroMQ facility in particular is worth additional description. 
+% Zyre\footnote{An open source framework for proximity-based peer-to-peer applications. \url{https://github.com/zeromq/zyre}.} 
+% will provide a decentralized implementation \dword{daqdispre} (see Section~\ref{sec:daq:design:ccm:control}). 
+% It uses \dword{udp} broadcast beacons and a connected followup to provide peer discovery on the local network. 
+% A heartbeat mechanism provides presence so that a component may discover when a peer has become unresponsive.  
+% As Zyre uses the network itself, there is no central point of failure. 
+% The network provides the naming service described above. 
+% Zyre also allows for more centralized, connection oriented, discovery which can be used to allow the process to span networks.
 
 As described in~\ref{sec:fd-daq:design-backend}, \dword{artdaq}~\cite{artdaq} utilizes \dword{ipc}  between its back-end components. 
 It has been well tested with \dword{protodune} and other experiments. 
 \dword{artdaq} may be used for some portions of the \dword{ipc}  described above. 
-For example, if the Buffer Interface Service is implemented as an \dword{artdaq} Board Reader it would necessarily use \dword{artdaq} \dword{ipc} . 
+For example, if the \dword{daqubi} is implemented as an \dword{artdaq} Board Reader it would necessarily use \dword{artdaq} \dword{ipc} . 
 This would limit the types of clients that could query for data in the buffers to be \dword{artdaq} modules. 
 Understanding how to optimally select an \dword{ipc}  for such parts of the \dword{daq} connection graph is an area of ongoing R\&D effort.
 
