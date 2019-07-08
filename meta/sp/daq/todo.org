@@ -3,8 +3,10 @@
 
 This document tracks work toward the final draft of the SP-DAQ chapter.
 
-It has two main parts:
+It has these main parts:
 
+- Deadlines
+- Guidelines
 - Links
 - High level "action item" check list
 - Select comments from reviewers and others collated by chapter section.
@@ -14,6 +16,21 @@ In some cases, names are suggested to address an item.  If you think you can con
 Please check off items when they are completed and/or notify Brett and Georgia.  If partially addressed, please make some sub-item comment.
 
 This file is best edited in Emacs in order to make use of orgmode for indentation, checkbox accounting, etc.
+
+* Deadlines
+
+- v4 draft (finalish) of SP DAQ chapter is nominally due to main editors *12 July 2019*.
+
+* Editing Guidelines
+
+To edit the chapter, either:
+
+- clone and push directly
+- fork and issue PR
+
+*DO NOT EDIT OUTSIDE OF GIT*
+
+If you are incapable of using Git, the editors will accept a marked-up PDF.
 
 * Links
 
@@ -78,21 +95,23 @@ and four LBNC reviewers.  Comments from LBNC reviewers are marked with their num
 
 Be sure to look at the frozen version of the DAQ chapter in DocDB (see link above) when referring to the comments in order to match referenced page/line/section numbers.  The version in Git has evolved.
 
-** General [0/11] 
+** General [2/12] 
 
 This section lists items needing attention in ways not easily identified with a specific section.
 
  - [ ] Need to manage expectations of technical level expected in this "TDR".
 
- - [ ] Need to add QA/QC section.  (I suggest this for 1.5.3)
+ - [ ] Giovanna: Need to add QA/QC section.  (I suggest this for 1.5.3)
 
  - [ ] Boosted Dark Matter may require less than 100 MeV threshold
 
- - [ ] Give motivation for 5.4ms readout window, when 3ms was imposed on PDSP.  (Initially, 5.4ms was motivated to span one drift time on either side of the trigger time plus "a little extra".  The argument to use 3ms for PDSP is in part due to it being externally triggered).
+ - [X] Give motivation for 5.4ms readout window, when 3ms was imposed on PDSP.  (Initially, 5.4ms was motivated to span one drift time on either side of the trigger time plus "a little extra".  The argument to use 3ms for PDSP is in part due to it being externally triggered).
+   - add to 1.2.1.1.  Note, in principle, we can readout 1 drift time (or even less) as we say we can immediately readout subsequent which follows a given readout.  I say we will study this during commissioning to optimize the nominal readout time.
 
  - [ ] Describe how co-processor validation will be done given it requires hardware/firmware development beyond what is tested at PDSP.  Give more technical details.
 
- - [ ] For CPU-centric hit finding and buffer, add estimate of power and space needed.
+ - [X] For CPU-centric hit finding and buffer, add estimate of power and space needed.
+   - this is added in general
 
  - [ ] Add plan for deciding between baseline and option.
 
@@ -158,7 +177,7 @@ This section lists items needing attention in ways not easily identified with a 
       - Power / space constraints
       - DAQ uptime requirement
 
-*** 1.2.1 Requirements and specifications [2/10]
+*** 1.2.1 Requirements and specifications [3/10]
 
  - [ ] Georgia: Fix confusion over 4 vs 10 seconds latency vs buffer.
 
@@ -179,8 +198,9 @@ This section lists items needing attention in ways not easily identified with a 
 
  - [ ] Alec: 1.2.1.2 what size racks?  ATLAS using extra tall ones.  (r1)
 
- - [-] Brett: 1.2.1.2 limited by power or by space? (r1)
+ - [X] Brett: 1.2.1.2 limited by power or by space? (r1)
    - add initial details but seeking input
+   - Add Alessandro's numbers
 
  - [-] 1.2.1.2 what reduction do you expect to get from lossless compression? How is this estimated? (pDUNE?) How does this interplay with &lt; 30 PB/yr limit? Ie. do you mean fully uncompressed data, or compressed? (r1)
    - add words about using "modified Huffman".
@@ -196,7 +216,7 @@ This section lists items needing attention in ways not easily identified with a 
 - [X] "BE" not defined near use. (r2)
   - this is already fixed post v3.
 
-*** 1.2.3 Interfaces [1/4]
+*** 1.2.3 Interfaces [2/5]
 
  - [X] Computing: clarify 30PB/year is to tape, not necessarily what is sent to FNAL.
 
@@ -206,9 +226,10 @@ This section lists items needing attention in ways not easily identified with a 
 
  - [ ] Cussans: In T&S, why is timing +/- 500ns when the clock is 62.5MHz (? by Roland)
 
- - [ ] Hucheng: The data transmission to FELIX uses commercial 10 Gbps optical links. This is a rather modest rate for existing commercial links, certainly projecting a few years ahead. Would you benefit from using (fewer) higher speed links? If so, is this under consideration? (r1)
-   - sent Hucheng email
-
+ - [X] Hucheng: The data transmission to FELIX uses commercial 10 Gbps optical links. This is a rather modest rate for existing commercial links, certainly projecting a few years ahead. Would you benefit from using (fewer) higher speed links? If so, is this under consideration? (r1)
+   - sent Hucheng email: 
+   - answer: 25 Gbps is considered but its the fiber run distance that drives the choice speed.  BNL did tests in 2018 that verify both OM3 and OM4 fiber support 10 Gbps over 300 meters.  Shorter runs may allow higher speed optical links.
+   - added text in 1.3.2.1 Data Reception
 ** 1.3 Design
 
 *** 1.3.1 Overview
