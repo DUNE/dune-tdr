@@ -209,7 +209,7 @@ making the connections from the wires to the charge amplifier
 circuits as short as possible. Each \dword{femb} receives signals 
 from \num{40} $U$ wires, \num{40} $V$ wires, and \num{48} $X$ wires.
 The baseline \dword{femb} design contains eight \num{16}-channel 
-\dword{fe} (\dword{larasic}) \dwords{asic}, eight \num{16}-channel 
+\dword{larasic} chips, eight \num{16}-channel 
 \dword{coldadc} \dwords{asic}, and two \dword{coldata} control and 
 communication \dwords{asic} (see Figure~\ref{fig:ce-scheme}).
 The \dword{femb} also contains regulators that produce the voltages 
@@ -315,28 +315,28 @@ generally valid in the \SIrange{230}{400}{K}. In the case of the \dword{cryo}
 \subsubsection{Front End \dword{asic}}
 \label{sec:fdsp-tpcelec-design-femb-fe}
 
-The analog \dword{fe} \dword{asic}~\cite{DeGeronimo:2011zz} receives 
+\dword{larasic}~\cite{DeGeronimo:2011zz} receives 
 current signals from the \dword{tpc} sense wires and provides a way to 
 amplify and shape the signals for downstream signal digitization. 
-The \dword{fe} \dword{asic} has \num{16} channels and is implemented 
+\dword{larasic} has \num{16} channels and is implemented 
 using the \dword{tsmc} \SI{180}{nm} \dword{cmos} process~\cite{TSMC180}. It 
 integrates a band-gap reference to generate all the internal bias 
 voltages and currents. This guarantees high stability of the operating 
 point over a wide range of temperatures, including cryogenic temperatures. 
-The channel schematic of the \dword{fe} \dword{asic} is shown in 
+The channel schematic of \dword{larasic} is shown in 
 Figure~\ref{fig:feasic1}. 
 
 \begin{dunefigure}
 [FE ASIC channel schematic]
 {fig:feasic1}
-{Channel schematic of \dword{fe} \dword{asic}, which includes a 
+{Channel schematic of \dword{larasic}, which includes a 
 dual-stage charge amplifier and a \num{5}$^{th}$ order semi-Gaussian 
 shaper with complex conjugate poles. Circuits in red circles are 
 programmable to allow different gain and peaking time settings.}
 \includegraphics[width=0.99\linewidth]{sp-tpcelec-feasic-channelschematic.pdf}
 \end{dunefigure}
 
-Each \dword{fe} \dword{asic} channel has a dual-stage charge amplifier 
+Each \dword{larasic} channel has a dual-stage charge amplifier 
 and a \num{5}$^{th}$ order semi-Gaussian shaper as an anti-aliasing 
 filter for the \dword{tpc} signals. It has programmable gain 
 selectable, at the \dword{asic} level, from one of \num{4.7}, \num{7.8}, \num{14}, or \SI{25}{mV/fC}
@@ -344,15 +344,15 @@ selectable, at the \dword{asic} level, from one of \num{4.7}, \num{7.8}, \num{14
 and \SI{350e3}{$e^-$}), programmable peaking time selectable from one of 
 \num{0.5}, \num{1}, \num{2}, and \SI{3}{$\mu$s}, and programmable 
 baseline for operation with either the collection ($\sim$\SI{200}{mV}) 
-or the induction ($\sim$\SI{900}{mV}) wires. The design of the
-\dword{fe} \dword{asic} has been optimized for the capacitive
+or the induction ($\sim$\SI{900}{mV}) wires. The design of
+\dword{larasic} has been optimized for the capacitive
 loads expected in the case of \dword{dune} (i.e. in the range \SIrange{170}{210}{pF}.
 Each channel has an 
 option to enable the output monitor to probe the analog signal, and 
 an option to enable a high-performance output driver that can be 
 used to drive a long cable. 
 
-Each \dword{fe} \dword{asic} channel has a built-in charge calibration 
+Each \dword{larasic} channel has a built-in charge calibration 
 capacitor that can be enabled or disabled through a dedicated register. 
 Measurements of the injection capacitance have been performed using an 
 external precisely calibrated capacitor. These measurements show that
@@ -367,7 +367,7 @@ could be characterized prior to the beginning of \dword{dune}
 data taking, using the \dword{qc} process, discussed in
 Section~\ref{sec:fdsp-tpcelec-production-qc}.
 
-Shared among the \num{16} channels in the \dword{fe} \dword{asic} are 
+Shared among the \num{16} channels in \dword{larasic} are 
 the digital interface, programming registers, a temperature monitor, 
 and a band-gap reference monitor. It is also possible to enable \dword{ac} 
 coupling as mitigation of baseline variations induced by vibrations
@@ -380,14 +380,14 @@ baseline) has allowed \dword{pdsp} to reduce the impact of the
 saturation effect discussed in Section~\ref{sec:fdsp-tpcelec-overview-lessons}, 
 at the cost of a reduction in dynamic range.
 
-The power dissipation of the \dword{fe} \dword{asic} is about \SI{5.5}{mW} 
+The power dissipation of \dword{larasic} is about \SI{5.5}{mW} 
 per channel at \SI{1.8}{V} supply voltage when the output buffer is
 disabled (the output buffer is required only for transmitting analog
 signals over long distances; it is not needed when \dword{larasic}
 is mounted close to the \dword{adc} on the \dword{femb}).
 The \dword{asic} is packaged in a commercial, fully encapsulated 
 plastic \num{80} pin \dword{qfp}. Figure~\ref{fig:feasic2} shows the 
-response of \dword{fe} \dword{asic} for all gains and peaking times 
+response of \dword{larasic} for all gains and peaking times 
 and both baselines. Note that the gain is independent of the peaking 
 time; the same amount of charge, in the impulse approximation, produces 
 the same peak voltage signal regardless of the peaking time.
@@ -395,41 +395,41 @@ the same peak voltage signal regardless of the peaking time.
 \begin{dunefigure}
 [FE ASIC response and layout]
 {fig:feasic2}
-{Response of \dword{fe} \dword{asic} for four gains, four peaking times, 
+{Response of \dword{larasic} for four gains, four peaking times, 
 and both baseline values (left, the time distance between the positive
 and negative pulse for the induction wires has been exaggerated
-for clarity reasons); layout of \num{16}-channel \dword{fe} 
-\dword{asic} version P3, where revisions with reference to version 
+for clarity reasons); layout of \num{16}-channel
+\dword{larasic} version P3, where revisions with reference to version 
 P2 are highlighted in yellow boxes (right).}
 \includegraphics[width=0.53\linewidth]{sp-tpcelec-feasic-response.pdf}
 \hspace{6mm}
 \includegraphics[width=0.42\linewidth]{sp-tpcelec-feasic-layout.pdf}
 \end{dunefigure}
 
-Prototype version P2 \dword{fe} \dwords{asic} have been evaluated and 
+Prototype version P2 \dword{larasic} chips have been evaluated and 
 characterized at room temperature and \lntwo (\SI{77}{K}) temperature. 
-\num{960} P2 \dword{fe} \dwords{asic}, totaling \num{15,360} channels, 
+\num{960} P2 chips, totaling \num{15,360} channels, 
 have been used to instrument six \dword{pdsp} \dword{apa}s successfully. 
-Excessive stress in the package of the \dword{fe} \dword{asic} at cryogenic 
+Excessive stress in the package of \dword{larasic} at cryogenic 
 temperature causes \dword{fe} channels to have a non-uniform baseline in 
 collection mode, while the baseline \dword{dc} voltage in induction mode 
 is uniform. A new prototype, version P3, was fabricated in March 2018 
 to address this issue by making \dword{dc} circuits for the collection mode 
 similar to the induction mode. At the same time, the default gain
-setting was changed to \SI{14}{mV/fC}. The layout of P3 \dword{fe} 
-\dword{asic} is also shown in Figure \ref{fig:feasic2}, with modifications 
-highlighted in yellow boxes. The P3 \dword{fe} \dwords{asic} were 
+setting was changed to \SI{14}{mV/fC}. The layout of P3
+\dword{larasic} is also shown in Figure \ref{fig:feasic2}, with modifications 
+highlighted in yellow boxes. The P3 \dword{larasic} chips were 
 received and evaluated in September 2018. We have verified that with
 the new design the \dword{fe} channels have a uniform baseline when
 operated in the collection mode, and that the new default gain setting
 is working properly.
 
-P3 \dword{fe} \dword{asic} will be further evaluated on \dwords{femb} 
+P3 \dword{larasic} will be further evaluated on \dwords{femb} 
 in various integration test stands for performance studies, including 
 the \num{40}\% \dword{apa} at \dword{bnl}, the \dword{iceberg} \dword{tpc} 
 at \dword{fermilab} and the seventh \dword{protodune} \dword{apa} 
 in the cold box at \dword{cern}. Analysis of the \dword{pdsp} data
-has highlighted a saturation problem in the design of the P2 \dword{fe} \dword{asic}
+has highlighted a saturation problem in the design of the P2 \dword{larasic}
 that we have observed also in bench tests of the P3 version. This problem,
 discussed in detail in Section~\ref{sec:fdsp-tpcelec-overview-lessons}),
 will be addressed in the design of the next version of \dword{larasic}, P4,
@@ -742,8 +742,8 @@ and Southern Methodist University. It is responsible for all communications
 between the \dwords{femb} and the electronics located outside the cryostat. 
 Each \dword{femb} contains two \dword{coldata} chips. \dword{coldata} receives 
 command-and-control information from a \dword{wib}. Each \dword{coldata} provides 
-clocks to four \dword{coldadc}s and relays commands to four \dword{larasic} 
-\dword{fe} \dwords{asic} and four \dword{coldadc}s to set operating modes and 
+clocks to four \dword{coldadc}s and relays commands to four \dword{larasic}s
+and four \dword{coldadc}s to set operating modes and 
 initiate calibration procedures.  Each \dword{coldata} receives data from four 
 \dword{coldadc}s, merges the data streams, provides 8b/10b encoding, serializes 
 the data, and transmits the data to the warm electronics over two \SI{1.28}{Gbps} 
@@ -782,7 +782,7 @@ chips and \dword{coldadc} chips use single-ended (\SI{2.25}{V}) \dword{cmos}
 signals, but the \dword{i2c} links are still non-standard since separate lines are
 used for data transmission in the two directions.
 
-The controls intended for the \dword{larasic} \dword{fe} chips are interpreted 
+The controls intended for the \dword{larasic} chips are interpreted 
 inside \dword{coldata} and transmitted to the appropriate \dword{asic} using 
 a \dword{spi}-like interface that uses single-ended (\SI{1.8}{V}) \dword{cmos} 
 signals. The configuration registers in \dword{larasic} are configured to be 
@@ -1002,8 +1002,8 @@ chip. It is based on a design developed for the \dword{nexo} experiment~\cite{nE
 and differs from it only in the design of the preamplifier, which is modified for 
 the higher capacitance of the \dword{dune} \dword{spmod} wires compared to the small 
 pads of \dword{nexo}. The \dwords{femb} constructed using this chip would use only 
-two \dwords{asic}, compared to the \num{18} (eight \dword{fe}, eight \dword{adc} and 
-two \dword{coldata}) needed in the baseline design. This drastic reduction in 
+two \dwords{asic}, compared to the \num{18} (eight \dword{larasic}s, eight \dword{coldadc}s and 
+two \dword{coldata}s) needed in the baseline design. This drastic reduction in 
 part count may significantly improve \dword{femb} reliability, reduce power 
 (\SI{40}{mW} per channel), and reduce costs related to production and testing.
 
@@ -1091,7 +1091,7 @@ SACI~\cite{SACI} protocol for configuration rather than \dword{i2c}.
 Simulation-based studies have been performed; at $\SI{1.2}{{\mu}s}$ peaking time and an 
 input capacitance of \SI{220}{pF} (similar to that expected in the \dword{spmod}), the noise 
 level is approximately $\SI{500}{e^{-}}$, similar to that expected with the baseline 
-\dword{fe} and \dword{adc} \dword{asic} design in \dword{lar} with the same input capacitance.
+\dword{larasic} design in \dword{lar} with the same input capacitance.
 
 The first iteration of the \dword{cryo} \dword{asic} design (see Figure~\ref{fig:cryo-photos}) 
 was submitted to MOSIS for fabrication in November 2018. The first prototypes were 
@@ -2221,7 +2221,7 @@ Readout and control fiber plant & Very advanced & Finalize plant layout \\ \colh
 \end{dunetable}
 
 The area that requires most work is that of the \dword{asic}s that are mounted
-on the \dwords{femb}. The \dword{fe} \dword{asic} has already gone through eight design
+on the \dwords{femb}. \dword{larasic} has already gone through eight design
 iterations, the last three directly targeted for \dword{dune}, and has already been used, 
 in one of its versions, for \dword{microboone} and for \dword{pdsp}, where it has reached the 
 noise levels specified for the \dword{dune} \dword{spmod}. At least one additional design iteration is
@@ -2234,7 +2234,7 @@ models for the \SI{180}{nm} \dword{cmos} technology for operation in \lar, such 
 in design. It should be noted that so far approximate models, originally developed for 
 the same \SI{180}{nm} technology, but with different design rules, have been used for 
 the \dword{larasic} development, and therefore it should not be a surprise
-that the \dword{fe} \dword{asic} may have limitations in some corner of the phase space.
+that the \dword{larasic} may have limitations in some corner of the phase space.
 The circuitry for the single-ended to differential converter has already been 
 developed in the \SI{65}{nm} technology and needs to be ported to the \SI{180}{nm}
 technology used for \dword{larasic}. We consider that appropriate measures have been
