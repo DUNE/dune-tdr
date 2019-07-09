@@ -245,10 +245,10 @@
 %   \arrayrulecolor{black}
 % }
 
-\RequirePackage{floatrow}   %added ddm 20190708
-\DeclareFloatFont{dunetablefontsize}{\normalfont}% 
+%%%%%\RequirePackage{floatrow}   %added ddm 20190708
+%%%%%\DeclareFloatFont{dunetablefontsize}{\normalfont}% 
 %\DeclareFloatFont{dunetablefontsize}{\footnotesize}  %uncomment to apply to all tables 
-\floatsetup[table]{font=dunetablefontsize}
+%%%%%\floatsetup[table]{font=dunetablefontsize}
 
 \newcolumntype{P}[1]{>{\hspace{0pt}}p{#1}}  %repair long words hyphenation, used in spec, risk, cost tables
 %\newcolumntype{P}[1]{p{#1}}
