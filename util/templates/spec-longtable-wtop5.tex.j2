@@ -6,8 +6,15 @@
   \rowcolor{dunesky}
        Label & Description  & Specification \newline (Goal) & Rationale & Validation \\  \colhline
 
-~{ for num in selected -}~
+~{ if ischapter -}~
+~{ for num in [1,2,3,4,5] -}~
 \input{generated/req-~{{topcode}}~-~{{ "%02d"|format(num) }}~.tex}
+~{ endfor -}~
+~{ endif -}~
+~{ for num in selected -}~
+~{- if num > 5 -}~
+\input{generated/req-~{{topcode}}~-~{{ "%02d"|format(num) }}~.tex}
+~{ endif -}~
 ~{ endfor }~
 ~{ for req in subsys -}~
 \input{generated/req-~{{ code }}~-~{{ "%02d"|format(req.ssid) }}~.tex}

@@ -223,14 +223,20 @@ def regenerate(bld):
             target=[all_targ])
 
         # This one generates a longtable for each category/chapter
-        # that includes any "top level" specs.
-        # Fixme: this currently will break once DP-FD is a thing.
+        # and does not implicitly include the "top 5"
         tmpl = bld.path.find_resource("util/templates/spec-longtable.tex.j2")
         out = gen_dir.make_node("req-longtable-%s.tex"%name)
         bld(rule="${DUNEGEN} reqs %s ${SRC} ${TGT}"%(name,),
             source=[docid_tagfile, tmpl],
             target=[out])
 
+        # This one is as above but implicitly includes includes the "top 5"
+        tmpl = bld.path.find_resource("util/templates/spec-longtable-wtop5.tex.j2")
+        out = gen_dir.make_node("req-longtable-wtop5-%s.tex"%name)
+        bld(rule="${DUNEGEN} reqs %s ${SRC} ${TGT}"%(name,),
+            source=[docid_tagfile, tmpl],
+            target=[out])
+        
 
         # This one generates defs
         tmpl = bld.path.find_resource("util/templates/reqdefs.tex.j2")
