@@ -657,9 +657,13 @@ temperature.  An error has been discovered in the input buffer block intended to
 chip as fabricated does not include level shifters for the control bits that are used in the input buffer
 circuit block.  These are required since the input buffers use bias voltages that are nominally \SI{2.25}{V}
 for both analog and digital functions, whereas all of the digital logic in the back end of the chip is designed
-to operate at \SI{1.1}{V}.  This omission is a serious error because it prevents input signals from being
+to operate at \SI{1.2}{V}.  This omission is a serious error because it prevents input signals from being
 connected correctly to the input buffers and it prevents signals (either the output of the input buffers or
-the \dword{larasic} signals) from being input correctly to the sample-and-hold amplifiers.
+the \dword{larasic} signals) from being input correctly to the sample-and-hold amplifiers. To overcome this
+problem we have operated \dword{coldadc} with the digital voltage set at \SI{2.1}{V}, at which point the
+absence of the level shifters becomes irrelevant. We have measured the chip performance in these conditions
+and checked, in a chip modified with a focused ion beam to hardwire the configuration of the input buffers,
+that the performance measurement is not affected by the change in the digital voltage value.
 
 To summarize, three problems have been revealed during functional testing of \dword{coldadc}:
 \begin{itemize}
@@ -2040,12 +2044,12 @@ while these \dwords{asic} were being tested prior to their installation
 on the \dwords{femb}. The ``domino'' architecture~\cite{dominoADC} used in this design relies on
 excellent transistor matching, which unfortunately 
 is worse at \dword{lar} temperature. In \dword{pdsp} this problem
-results a fraction of the readout channels having a fixed value for some of
-the \dword{adc} bits, independent of the input voltage. About 10\%
-of the channels having this problem need to be masked from analysis, 
-resulting in a loss of efficiency for \dword{pdsp}, 
-while in a majority of cases an approximated value for the charge can
-be obtained via interpolation. These problems prompted us to abandon
+results a fraction (about \num{3.2}\%) of the readout channels having a fixed value for some of
+the \dword{adc} bits, independent of the input voltage. In a majority
+of the cases an approximate value for the charge can be obtained via
+interpolation. For about \num{0.9}\% of the channels the problem is
+so severe that the only solution is to remove the channels from the
+analysis, resulting in a loss of efficiency. This problem prompted us to abandon
 this design and to develop the completely new \dword{coldadc}, to
 adapt the \dword{cryo} \dword{asic} for use in \dword{dune}, and to
 follow the approach of the \dword{sbnd} Collaboration and consider
@@ -2079,7 +2083,11 @@ After the problem and this difference between the two baselines were
 observed, the decision was taken to operate the \dword{ce} in \dword{pdsp} 
 using the \SI{900}{mV} baseline also for the collection wires, sacrificing
 the dynamic range. Data from the wires where the problem occurs can
-be masked in analysis, resulting in a loss of efficiency. It should be
+be masked in analysis, resulting in a loss of efficiency. This problem 
+affected a very small fraction of the events: with the \SI{200}{mV}
+baseline about \num{0.1}\% of the waveforms were affected, and this
+number became almost completely negligible after switching to the 
+\SI{900}{mV} baseline. It should be
 noted that the problem occurs more often in \dword{pdsp} 
 than is expected in the \dword{fd}  \dword{spmod} due to the presence of 
 cosmic rays traveling parallel to the \dword{apa} wires.
