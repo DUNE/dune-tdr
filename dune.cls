@@ -252,6 +252,7 @@
 
 \newcolumntype{P}[1]{>{\hspace{0pt}}p{#1}}  %repair long words hyphenation, used in spec, risk, cost tables
 %\newcolumntype{P}[1]{p{#1}}
+\newcolumntype{x}[1]{>{\hspace{0pt}}p{#1}}  %repair long words hyphenation, used in spec, risk, cost tables
 
 \newcommand{\dunetabtablabel}{}% stores the label
 \newcommand{\dunetabcaption}{}% stores the caption
