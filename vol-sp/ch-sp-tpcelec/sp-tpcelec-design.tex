@@ -448,8 +448,8 @@ in Section~\ref{sec:fdsp-tpcelec-overview-remaining}.
 \dword{coldadc} is a low-noise \dword{adc} \dword{asic} designed to digitize
 \num{16} input channels at a rate of $\sim\SI{2}{MHz}$, as required for the
 \dword{dune} \dword{spmod}. \dword{coldadc} was designed to operate with 
-an external \SI{64}{MHz} clock and an external digitization signal at
-\SI{2}{MHz}.The \SI{2}{MHz} signal is aligned on the rising edge of one of
+an external \SI{64}{MHz} clock and an external \SI{2}{MHz} digitization clock.
+The \SI{2}{MHz} clock is aligned on the rising edge of one of
 the \SI{64}{MHz} transitions, as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-coldata}.
 For the remainder of this section we assume that the main clock is operating
 at \SI{64}{MHz}, but in the \dword{dune} \dword{spmod} this external clock will operate at \SI{62.5}{MHz}
@@ -461,7 +461,7 @@ industry-standard design including digital calibration.  Each \dword{coldadc}
 receives \num{16} voltage outputs from a single \dword{larasic} chip.  The voltages
 are buffered, multiplexed by \num{8}, and input to two \num{15}-stage pipelined \dwords{adc}
 operating at \SI{16}{MHz}. The \SI{16}{MHz} clock is generated internally in
-\dword{coldadc} and share its rising edge with the \SI{2}{MHz} clock. 
+\dword{coldadc} and shares its rising edge with the \SI{2}{MHz} clock. 
 The \dword{adc} uses the well-known pipelined architecture
 with redundancy~\cite{PipelinedADC}.  Digital logic is used to correct non-linearity
 introduced by non-ideal amplifier gain and offsets in each pipeline
@@ -470,13 +470,10 @@ implemented to determine the constants used in this logic.  The \dword{adc} prod
 \num{16}-bit output which is expected to be truncated to \num{12} bits.
 
 The \dword{adc} is highly programmable to optimize performance at different
-temperatures.  In order to maximize the probability that the first prototype
-\dword{coldadc} will perform well, many circuit blocks can be bypassed, such
-that the performance of the core digitization engine can be evaluated even
-if some of the ancillary circuits (input buffers, sample-and-hold, voltage or current 
-references, digital output) do not operate as designed. A block
-diagram of the chip is shown in Figure~\ref{fig:COLDADC_Block_Diagram}. Each of
-the major blocks is described below.
+temperatures.  Many circuit blocks can be bypassed, allowing the performance 
+of the core digitization engine to be evaluated separately from the ancillary 
+circuits. A block diagram of the chip is shown in Figure~\ref{fig:COLDADC_Block_Diagram}. 
+Each of the major blocks is described below.
 
 \begin{dunefigure}
 [ColdADC block diagram]
@@ -486,31 +483,39 @@ the major blocks is described below.
 \end{dunefigure}
 
 All required reference voltages and currents are generated on-chip by programmable
-circuit blocks. The most accurate reference voltage circuit is a band-gap reference
+circuit blocks. Independently adjustable bias voltage levels and currents are provided for the
+input buffers, sample-and-hold amplifiers, \dwords{adc}, and \dword{adc}
+reference buffers.
+The most accurate reference voltage circuit is a band-gap reference
 based on a \dword{pnp} transistor.  However, measurements made at \dword{bnl} and
 \dword{lbnl} of a large \dword{pnp} transistor indicate that the foundry-provided \dword{spice} model
 does not adequately describe the device operation at \lar temperature.  Thus,
 a \dword{cmos}-based voltage reference has also been included in \dword{coldadc}.
-In the event that both on-chip reference generation circuits fail, an external voltage
-reference can be used.
-
-Independently adjustable bias voltage levels and currents are provided for the
-input buffers, sample-and-hold amplifiers, \dwords{adc}, and \dword{adc}
-reference buffers.
+As discussed below, bench tests of \dword{coldadc} prototypes show that both reference blocks 
+perform well and meet requirements.
 
 \dword{coldadc} has four possible ways to interface with \dword{larasic}.  It
 can accept either single-ended inputs (provided by existing \dword{larasic}
 chips) or differential inputs (foreseen for the future \dword{larasic} P4 upgrade).
-In either case, to mitigate the risk that the input buffer circuits do not perform
-well, it is also possible to bypass the input buffers and apply the inputs directly
+In either case, it is also possible to bypass the input buffers and apply the inputs directly
 to the sample-and-hold amplifiers. The role of the input buffers is to present a well-defined
-and easy-to-drive load to \dword{larasic}. Without the buffer, \dword{larasic} would
-have to drive a switched-capacitor input and absorb the subsequent voltage
-kickback from the sample-and-hold sampling process. The sample-and-hold amplifiers are separated
+and easy-to-drive load to \dword{larasic}.  The sample-and-hold amplifiers are separated
 into two groups of eight. They sample the waveform at the rising edge of the
-(\SI{2}{MHz}) sampling clock. An internally generated \SI{16}{MHz} clock is then
+(\SI{2}{MHz}) sampling clock. The \SI{16}{MHz} clock is then
 used to clock an \num{8}-to-\num{1} multiplexer that presents eight samples in 
 turn to one of the two \dword{adc} pipelines.
+
+\begin{dunefigure}
+[Circuit blocks in each ADC pipeline stage]
+{fig:pipelinestage}
+{Circuit blocks in each \dword{adc} pipeline stage. MUX selects one of three values
+as the digitized output of the current stage and presents it to the ADD circuit, which 
+adds it to the result calculated by previous pipeline stages.
+SHA is a sample-and-hold, and
+ADCS and DASC are low resolution 1.5 bit analog-to-digital and digital-to-analog 
+subconverters, respectively.}
+\includegraphics[width=0.9\linewidth]{sp-tpcelec-Pipelinestage.pdf}
+\end{dunefigure}
 
 A block diagram of an \dword{adc} pipeline is shown in
 Figure~\ref{fig:pipelinestage}. Each of the \num{15} stages contains a low-resolution
@@ -535,17 +540,6 @@ provided by the pipelined architecture it is necessary to include at least one
 implemented as \num{15}-stage pipelines.
 
 \begin{dunefigure}
-[Circuit blocks in each ADC pipeline stage]
-{fig:pipelinestage}
-{Circuit blocks in each \dword{adc} pipeline stage. MUX is a circuit that controls
-which weight is applied to the result of the previous stage, that is then subtracted
-in the ADD circuit from the input of the previous stage. SHA is a sample and hold and
-ADCS and DASC are low resolution 1.5 bit analog-to-digital and digital-to-analog 
-subconverters, respectively.}
-\includegraphics[width=0.9\linewidth]{sp-tpcelec-Pipelinestage.pdf}
-\end{dunefigure}
-
-\begin{dunefigure}
 [ADC stage transfer function]
 {fig:ADCXFERFN}
 {\num{1.5}-bit stage transfer function and digital output. The voltage 
@@ -553,7 +547,7 @@ range of the \dword{adc} as a whole, and of each individual stage
 is $[-V_r,V_r]$.  Note that the voltage passed to the subsequent 
 stage will not exceed the stage range even if a comparator threshold 
 is wrong by up to $V_r/4$.}
-\includegraphics[width=1.0\linewidth]{sp-tpcelec-ADCXFERFN.pdf}
+\includegraphics[width=0.90\linewidth]{sp-tpcelec-ADCXFERFN.png}
 \end{dunefigure}
 
 The calibration logic allows the correction of errors caused by imperfections
@@ -575,17 +569,6 @@ stored and used as two of the three possible digital outputs of the stage being
 calibrated (the third possible output being \num{0}).  This procedure is then repeated
 for the next most significant pipeline stage until stage \num{15} has been calibrated.
 
-The main weakness of the \num{1.5}-bit per stage pipeline architecture as presented
-is that it requires a precise interstage gain of two.  If the gain is greater
-than two, then when the input voltage to a stage is close enough to the limits
-of the voltage range of the stage, the voltage passed to the next stage will be
-out of range.  This will result in skipped \dword{adc} codes.  For this reason,
-the interstage gain of \dword{coldadc} is designed to be $\sim$\num{1.998}.  The
-calibration procedure recovers the linearity that would be lost due to
-non-binary stage weighting.  A small number of \dword{adc} codes near two
-extremes of the voltage range are unused, but no skipped codes appear in the
-range of codes used. Simulations of \dword{coldadc} including layout parasitics 
-indicate that $\sim$\num{150} \num{16}-bit codes will be unused at the extremes.
 The number of \dword{adc} bits that are useful depends on the effective
 noise of the various subcircuits of the \dword{adc}.  The noise of the first few
 pipeline stages (associated with the most significant bits) contributes more
@@ -595,7 +578,7 @@ is reduced by a factor of two, relative to that of the sample-and-hold, for each
 of the first three stages, and then kept constant. The total
 effective noise expected is \SI{\sim130}{$\mu$V}-RMS.  This is similar to the
 quantization error of an ideal \num{12}-bit \dword{adc} with a voltage range of
-\SI{1.5}{V} (matching the output range of \dword{larasic}, \SIrange{0.2}{1,4}{V})
+\SI{1.5}{V} (slightly larger than the output range of \dword{larasic}, \SIrange{0.2}{1.6}{V})
 for which the bin width is \SI{366}{$\mu$V} and the quantization
 error is \SI{\sim106}{$\mu$V}.
 
@@ -616,130 +599,82 @@ into the most significant \num{15} bits of two \num{16}-bit words, broken into n
 output in the same manner as normal data.
 
 Ten differential output drivers are used for the \SI{64}{MHz} output clock, frame
-marker, and \dword{adc} data.  The output drivers source and sink a current whose
-value can be digitally controlled.  The minimum current is \SI{165}{$\mu$A},
+marker, and \dword{adc} data. The output drivers source and sink a current whose
+value can be digitally controlled. The minimum current is \SI{165}{$\mu$A},
 which corresponds to approximately \SI{3}{mV} peak-to-peak with \SI{100}{$\Omega$}
-termination.  Seven additional levels spaced by \SI{275}{$\mu$A} can be selected.
+termination. Seven additional levels spaced by \SI{275}{$\mu$A} can be selected.
 The maximum current is \SI{2.07}{mA}, about \num{2/3} of the \dword{lvds} standard of
 \SI{3.5}{mA}.
 
 The operation of \dword{coldadc} is controlled by a number of \num{8}-bit registers.
 These registers can be written to and read back using either an \dword{i2c}
-interface~\cite{bib:I2C} or a \dword{uart}. \dword{coldata} will use the \dword{i2c} interface.  The
+interface~\cite{bib:I2C} or a \dword{uart}. \dword{coldata} will use the \dword{i2c} interface. The
 \dword{uart} is included in the first \dword{coldadc} prototype to facilitate chip testing
 and for risk mitigation.
 
-\dword{coldadc} was received at the end of January 2019.  Bench tests are being performed at
-\dword{bnl}, \dword{fnal}, and \dword{lbnl}.  These tests use \dword{adc} chips mounted directly
-on printed circuit boards, and are being done at both room temperature and cryogenic temperature.
-Functional testing is largely complete and the focus is beginning to switch to performance measurements.
+\dword{coldadc} was received at the end of January 2019.  Bench tests were performed at
+\dword{bnl}, \dword{fnal}, and \dword{lbnl}. These tests used \dword{adc} chips mounted directly
+on printed circuit boards, and were done at both room temperature and cryogenic temperature.
+The tests concentrated first on functionality and later on performance.
+A small number of problems were found during bench testing and will be described below. These problems
+will not prevent system tests from being done with prototype \dword{coldadc} chips.
 
-Both control interfaces (\dword{i2c} and \dword{uart}) operate as designed.  All of the digital control
-bits can be written and read.  The \dword{lvds} I/O operates as designed and the drive current of the
-\dword{lvds} can be selected as designed.  The debug mode of the data formatter has not yet been tested,
-but in its normal mode, the data formatter operates as designed.  The \dword{adc} pipeline functions as
-designed.  The operation of the digital logic that selects which weights to sum and does the arithmetic
-to produce the \dword{adc} output has been validated; this has been done using a test mode that uses bits
-stored in programmable registers to represent the output of each analog-to-digital subconverter.  The automatic
-calibration logic does not work, but the pipelines can be calibrated ``by hand'' using register-controlled
-debugging modes to force all of the steps of the calibration procedure.  The sample-and-hold amplifiers and the
-multiplexer that connects SHA outputs to the \dword{adc} pipelines operate correctly.  The \dword{cmos}
-reference generation block operates as designed.  The band-gap circuit itself operates as designed and produces
-a stable band-gap reference voltage both at room temperature and at cryogenic temperature.  However, there is a
-problem in the band-gap reference block that has not yet been understood.  Three debugging pads can be used to
-monitor the reference voltages and currents generated by the band-gap reference block.  The reference voltages
-and current sinks can be monitored, but the current sources cannot be reliably monitored unless the analog bias
-voltage, nominally \SI{2.25}{V}, is set to a higher value.  At room temperature, the current sources produced
-by the three chips tested so far can be monitored if this bias voltage is set to \SI{2.5}{V}, but as the
-temperature decreases, the required voltage increases.  The one chip that has had this function tested cold
-requires the analog bias to be close to \SI{2.7}{V} in order to monitor the current sources at \lntwo
-temperature.  An error has been discovered in the input buffer block intended to provide the interface with
-\dword{larasic}.  One circuit block in the design hierarchy was unintentionally omitted, and as a result, the
-chip as fabricated does not include level shifters for the control bits that are used in the input buffer
-circuit block.  These are required since the input buffers use bias voltages that are nominally \SI{2.25}{V}
-for both analog and digital functions, whereas all of the digital logic in the back end of the chip is designed
-to operate at \SI{1.2}{V}.  This omission is a serious error because it prevents input signals from being
-connected correctly to the input buffers and it prevents signals (either the output of the input buffers or
-the \dword{larasic} signals) from being input correctly to the sample-and-hold amplifiers. To overcome this
-problem we have operated \dword{coldadc} with the digital voltage set at \SI{2.1}{V}, at which point the
-absence of the level shifters becomes irrelevant. We have measured the chip performance in these conditions
-and checked, in a chip modified with a focused ion beam to hardwire the configuration of the input buffers,
-that the performance measurement is not affected by the change in the digital voltage value.
+Both control interfaces (\dword{i2c} and \dword{uart}) operate as designed. All of the digital control
+bits can be written and read. The \dword{lvds} I/O operates as designed and the drive current of the
+\dword{lvds} can be selected as designed. The \dword{adc} pipeline functions as
+designed, as does the data formatter. The automatic calibration logic does not work, but the pipelines 
+can be calibrated off-chip using register-controlled debugging modes to force all of the steps of the 
+calibration procedure. The sample-and-hold amplifiers and the multiplexer that connects the sample-and-hold 
+outputs to the \dword{adc} pipelines operate correctly. Both the \dword{cmos} reference generation 
+block and the band-gap reference block operate as designed, although a minor error in
+a digital-to-analog converter in the band-gap reference block means that it must operate with the 
+(nominally \SI{2.3}{V}) analog voltage set to \SI{2.7}{V}. Another error was discovered in the input 
+buffer block. Level shifters intended to translate control bits in the \SI{1.2}{V} domain to the 
+\SI{2.5}{V} domain were omitted. As a result, the \SI{1.2}{V} digital supply must be set to 
+\SI{2.1}{V}. All of these design errors (including the auto-calibration failure) have been understood
+and are easily corrected. Bench tests have proven that the \dword{coldadc} prototypes can be run at the 
+required elevated voltage settings for many days without damage to the chips.
 
-To summarize, three problems have been revealed during functional testing of \dword{coldadc}:
-\begin{itemize}
-\item The automatic calibration procedure does not work as designed.  Efforts to understand this problem have
-begun, but calibration can be done under external control if necessary.
-\item At least the current source monitor function of the band-gap reference block requires that the analog bias
-voltage be higher than designed.  This problem is also under study.  If necessary, the \dword{cmos} reference
-block can be used.
-\item Finally, because of missing level shifters, switches in the input buffer block do not reliably close
-unless the digital voltage that is nominally \SI{1.1}{V} is raised significantly.  At room temperature, this
-voltage must be increased to approximately \SI{1.7}{V}.  At \lntwo temperature, the digital voltage must be
-raised to \SI{2.05}{V} for reliable operation\footnote{We are investigating the option of using a focused ion
-beam to cut one of the lines carrying an input buffer control bit and tie it to the \SI{2.25}{V} digital
-power rail.  This would ``hardwire'' one option, input from \dword{larasic} to the single-ended to differential
-input buffer.}.
-\end{itemize}
+Performance measurements of \dword{coldadc} have also been done. The performance of many of 
+the sub-circuits have been measured separately as well as the performance of the entire \dword{adc}.  
+Here we present two measurements made at \lntwo temperature.
 
-Performance measurements of \dword{coldadc} have also begun.  Figure~\ref{fig:ADCpipelinenoise} shows the
-distribution of raw 16-bit output codes produced (at room temperature) using the debug mode that selects a
-differential test input to the pipelines with the inputs connected to ground through a $\SI{50}{\Omega}$
-resistor.  The standard deviation of the distribution is 3.2 units.  Since the reference voltage is \SI{3}{V}
-peak-to-peak, the least significant bit = $3V$/${2^{16}} = \SI{45.8}{\mu V}$. The input referred noise of the
-\dword{adc} alone is thus $3.2 * 48.5 \mu V = 146.5 \mu V$ RMS.
+\fixme{Figure 4.11 will be replaced with a new one to be provided by Cheng-Ju Lin on 7/16.}
 
 \begin{dunefigure}
-[Noise distribution in the ColdADC at room temperature]
-{fig:ADCpipelinenoise}
-{Distribution of 16-bit output codes produced with grounded test inputs to an \dword{adc} pipeline.}
-\includegraphics[width=0.6\linewidth]{sp-tpcelec-ADCpipelinenoise.png}
+[Static linearity of ColdADC]
+{fig:ADCStaticLinearity}
+{\dword{dnl} (top) and \dword{inl} distributions as a function of \dword{adc} code for \dword{coldadc}.}
+\includegraphics[width=0.9\linewidth]{sp-tpcelec-ADCStaticLinearity.pdf}
 \end{dunefigure}
 
-Figure~\ref{fig:ADCpipelinedeviationfromlinear} shows the deviation from a linear fit to the \dword{adc}
-output produced (at slightly below \lntwo temperature) with a slow ramp input to the differential test
-input to the \dword{adc} pipelines.  This is essentially the \dword{inl} of the uncalibrated
-pipeline, the difference being that the deviation from linearity is plotted as a function of time rather than
-as a function of the \dword{adc} output code.  This result is very close in magnitude to the \dword{inl} expected from
-simulation (see Figure~\ref{fig:ADCUncalib-INL-sim}).
+Static linearity was measured using a filtered sine wave input to the single-ended input buffer 
+of one channel of \dword{coldadc}. The measured histogram of \dword{adc} codes was fit to the 
+probability density function for a sine wave.  The deviations to the fit yields the \dword{dnl}
+as a function of \dword{adc} code and the integral of \dword{dnl} is the \dword{inl}. These two
+diistributions are shown in Figure ~\ref{fig:ADCStaticLinearity}, which was obtained using a sine 
+wave of amplitude of \SI{1.4}{V} peak-to-peak (matching the \dword{larasic} dynamic range) and 
+the nominal reference voltage settings (corresponding to a \SI{1.5}{V} dynamic range).
+
+Dynamic linearity was also measured using a filtered sine wave. In this case, \dword{adc} codes were
+collected for an integer number of sine wave cycles and a \dword{fft} was performed on the data. 
+The \dword{sndr}, \dword{enob}, \dword{sfdr}, and the \dword{thd} were extracted from the \dword{fft}.
+An example of the \dword{fft} is shown in Figure ~\ref{fig:ADCDynamicLinearity}, which was obtained 
+using a sine wave of amplitude \SI{1.5}{V} (matching the full range of the \dword{adc}).
+The extracted \dword{enob} is over 11, despite the non-linearity evident in 
+Figure~\ref{fig:ADCStaticLinearity}, because the \dword{adc} noise is very low.
+The dominant source of non-linearity has been demonstrated to be insufficient 
+open-loop gain of the operational amplifier used in each pipeline stage. 
+The design has already been modified to address this deficiency.
 
 \begin{dunefigure}
-[Deviation from a linear fit to the ColdADC output]
-{fig:ADCpipelinedeviationfromlinear}
-{Deviation from a linear fit to the \dword{coldadc} output with a linear ramp input to the test inputs of the
-  \dword{adc} pipeline (measured cold).}
-\includegraphics[width=0.7\linewidth]{sp-tpcelec-uncal-testin-cold-CMOS.pdf}
+[Dynamic Linearity]
+{fig:ADCDynamicLinearity}
+{Fourier transform of \dword{adc} codes collected with a coherently sampled sine wave input to a 
+single-ended input buffer.}
+\includegraphics[width=0.9\linewidth]{sp-tpcelec-ADCDynamicLinearity.pdf}
 \end{dunefigure}
 
-\begin{dunefigure}
-[Simulated integral nonlinearity of an uncalibrated ADC pipeline]
-{fig:ADCUncalib-INL-sim}
-{Simulated integral non-linearity of an uncalibrated \dword{adc} pipeline.}
-\includegraphics[width=0.7\linewidth]{sp-tpcelec-ADCUncalib-INL-sim.pdf}
-\end{dunefigure}
-
-A preliminary measurement (made at room temperature) of the static linearity of the \dword{adc} pipeline is
-shown in Figure~\ref{fig:ADC-static-linearity-warm}.  For this measurement a low-distortion sine wave was
-input to the test inputs and a large number of output samples were collected.  The distribution of output
-codes was fit to the expected distribution for a sine wave.  The deviation from the fit is the \dword{dnl}.
-A cumulative sum of deviations yields \dword{inl}. The \dword{dnl} is reasonably close to expectation,
-but the \dword{inl} indicates that the \dword{adc} is not yet fully calibrated.
-
-\begin{dunefigure}
-[Static linearity of an ADC pipeline]
-{fig:ADC-static-linearity-warm}
-{Static linearity of an \dword{adc} pipeline.  This measurement was made at room temperature with a
-\SI{17}{kHz} sine wave input to the test inputs.}
-\includegraphics[width=0.7\linewidth]{sp-tpcelec-ADC-static-linearity-warm.pdf}
-\end{dunefigure}
-
-Initial measurements of the power consumption of \dword{coldadc} have also been
-performed, indicating a total power consumption of $\sim\SI{35}{mW}$ per channel.
-This figure will be used as an upper limit in the design of the cable plant 
-connecting the \dword{femb} to the \dword{ce} flange.
-
-\forlbnc{Additional results on the performance of the ColdADC ASIC will be added prior to the
-final submission of the TDR in July.}
 
 %%%%%%%%%%%%%%%%%%
 \subsubsection{COLDATA \dword{asic}}
@@ -1169,7 +1104,7 @@ and \dword{inl} obtained from these measurements are shown in Figure~\ref{fig:cr
 The maximum deviations of the \dword{dnl} and \dword{inl} from the reference
 signal are \num{0.74} and \num{1.27} \dword{adc} counts, respectively, within
 a usable dynamic range of $\sim\num{3000}$ \dword{adc} counts. From these
-distributions the values for the \dword{sinad} of \SI{65.75}{dB} and for
+distributions the values for the \dword{sndr} of \SI{65.75}{dB} and for
 the \dword{enob} of \SI{10.63}{bits} are estimated. These results indicate
 that from a static point of view the \dword{adc} block of \dword{cryo}
 meets the required performance for the \dword{dune} \dword{tpc} readout.
