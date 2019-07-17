@@ -962,15 +962,13 @@ processing required by the \dword{fd}.
 \subsection{Back-End DAQ}
 \label{sec:fd-daq:design-backend}
 
-The functionality of the \dfirst{daqbes} is comprised of the \dfirst{daqdfo}, \dfirst{eb} and storage buffer blocks in Figure~\ref{fig:fd-daq:layout}. 
-It accepts \dwords{trigcommand} produced by the \dfirst{daqdss} as described in Section~\ref{sec:sp-daq:design-data-selection}. 
-It queries the upstream \dword{daq} buffers and accepts returned data as described in Section~\ref{sec:daq:design-upstream}. 
-Finally, it records \dwords{trigcommand} and the corresponding detector data to the output storage buffer. 
-After application of the high level filter, the data is finally transferred to \fnal for offline storage.
+The functionality of the \dfirst{daqbes} is comprised of the \dfirst{daqdfo}, \dfirst{eb} and storage buffer blocks in Figure~\ref{fig:fd-daq:layout}. It accepts \dwords{trigcommand} produced by the \dfirst{daqdss} as described in Section~\ref{sec:sp-daq:design-data-selection}. 
+It queries the upstream \dword{daq} buffers and accepts returned data as described in Section~\ref{sec:daq:design-upstream}. Finally, it records \dwords{trigcommand} and the corresponding detector data to the output storage buffer. After application of the high level filter, the data is finally transferred to \fnal for offline storage.
 
 \subsubsection{Data Flow Orchestration}
 
 \fixme{Kurt, please check, especially against Roland's comments.}
+
 
 To minimize the latency in the readout of the data from the upstream
 \dword{daq} buffers, the \dword{daqbes} will support parallel readout of event
@@ -981,15 +979,11 @@ records into a pool of \dword{eb} processes.  This asynchronous, parallel readou
 \end{dunefigure}
 
 \begin{itemize}
-\item \dword{daqdfo} accepts a time ordered stream of \dwords{trigcommand} and dispatches each for execution possibly by first splitting up each command into one or more contiguous segments.
-\item Each segment will then be dispatched to an \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution.
-\item Execution entails interpreting the \dword{trigcommand} segment and querying the appropriate \dword{fe} buffer interfaces to request data from the period of time. 
-\item Requests and their replies may be sent synchronously, and
-  replies are expected even if data has already been purged from the
-  \dword{fe} buffer. (In that case, an error message would be sent out.)
-\item The data received may then undergo processing and aggregation
-  until finally it is saved to one or more files on the output storage
-  system before it is transferred offline.
+\item \dword{daqdfo} accepts a stream of \dwords{trigcommand} and dispatches each for execution possibly by first splitting up each command into one or more contiguous segments.
+\item Each trigger segment will then be dispatched to an \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution.
+\item Execution entails interpreting the \dword{trigcommand} segment and querying the appropriate upstream \dword{daq} units to request data from the period of time. 
+\item Requests and their replies may be sent synchronously, and replies are expected even if data has already been purged from the upstream \dword{daq} units. (In that case, an error message would be sent out.)
+\item The received data then processed and aggregated, is finally saved to one or more files on the output storage system before it is transferred offline.
 \item In atypical situations in which there are insufficient event builder resources available to handle the rate of triggers produced by the data selection sub-system, the DFO will alert the DS sub-system that the rate of triggers needs to be reduced.  When such reductions are requested, the DS sub-system will update the calculation of the module-level DAQ live time appropriately.
 \item The DFO will provide relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. Given its central role and knowledge of the state of available event builder buffers, it will be able to provide important information about the health and performance of the system.
 
@@ -1003,8 +997,6 @@ records into a pool of \dword{eb} processes.  This asynchronous, parallel readou
 \label{sec:fd-daq:design-event-builder}
 %\fixme{module-generic}
 %\metainfo{Explain art\dword{daq}, handling of trigger commands by asynchronous, parallel queries to front end Data Selector (but take care not to duplicate between here and in the overview).}
-
-\fixme{Kurt, please check.}
 
 The \dword{daqbes} will provide the instances of the \dfirst{eb} most likely as \dword{artdaq}~\cite{artdaq} components of the same name.
 As described above, each EB instance will request selected data from
