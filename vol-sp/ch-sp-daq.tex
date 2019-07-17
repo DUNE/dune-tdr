@@ -990,6 +990,9 @@ records into a pool of \dword{eb} processes.  This asynchronous, parallel readou
 \item The data received may then undergo processing and aggregation
   until finally it is saved to one or more files on the output storage
   system before it is transferred offline.
+\item In atypical situations in which there are insufficient event builder resources available to handle the rate of triggers produced by the data selection sub-system, the DFO will alert the DS sub-system that the rate of triggers needs to be reduced.  When such reductions are requested, the DS sub-system will update the calculation of the module-level DAQ live time appropriately.
+\item The DFO will provide relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. Given its central role and knowledge of the state of available event builder buffers, it will be able to provide important information about the health and performance of the system.
+
 \end{itemize}
 %\fixme{Add time order requirement on DS above}
 %\fixme{Add return-empty-response requirement to buffer above}
@@ -1009,6 +1012,7 @@ the appropriate \dfirst{daqubi}, as addressed by a received \dword{trigcommand}.
 An \dword{eb} will aggregate the selected data and record it the output storage buffer.
 %%The final output files shall use data schema and file formats as described in Section~\ref{sec:fd-daq:design-data-model}.
 
+As part of this, the EB sub-system will provide book-keeping functionality for the raw data.  This will include the documentating of simple mappings, such as which trigger is stored in which raw data file, as well as more sophisticated quality checks. For example, it will know which time windows and geographic regions of the detector are requested for each trigger, and in the unlikely event that some fraction of the requested detector data can not be stored in the event record, it will document that mismatch.
 
 
 \subsubsection{Data Quality Monitoring}
@@ -1039,11 +1043,13 @@ conservative storage capacity value.
 \label{sec:fd-daq:design-data-model}
 \fixme{Add reference to live document. Georgia}
 
-\metainfo{Describe the data model. 
-  This isn't a strict schema just things like how various parts of the
-  detector readout map to files, etc.}
+% \metainfo{Describe the data model. 
+%   This isn't a strict schema just things like how various parts of the
+%   detector readout map to files, etc.}
 
+The data model for the DUNE far detector describes the format and characteristics of the triggered data at each stage in the analysis chain, the grouping of the data into logical units such as runs, and the characteristics of ancillary data such as detector configuration parameters and calibration results.
 
+The requirements that these place on the DAQ are primarily in the areas of flexibility and traceability.  The DAQ will have the flexibility to handle the readout of triggers that have a time window that is on the order of a single TPC drift time (for example a trigger associated with a beam gate window), triggers that have a time window of many seconds (such as for a supernova burst trigger), and windows between those two extremes (for detector and electronics studies).  In the area of traceability, the DAQ system will provide the necessary level of detail regarding the conditions that triggered each event, the expected and actual regions of the detector that contributed raw data to each event, the conditions of the detector and electronics during data taking, the version and configuration of the software components used in the DAQ chain, etc.
 
 \subsection{Control, Configuration, and Monitoring}
 \label{sec:fd-daq:design-run-control}
