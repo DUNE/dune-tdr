@@ -643,9 +643,9 @@ Providing only a modest overhead to normal operations, this data can
 be extracted from such storage from the \dword{daq} in well under a day.
 
 For both types of activity, the buffering requirements may be reduced by employing lossless compression to the data prior to it entering the buffer.
-A factor of two-four compression is expected, based on MicroBooNE and \dword{protodune} experience using a modified Huffman encoding of differential ADC values. 
+A factor of at least two to four compression is expected, based on MicroBooNE and \dword{protodune} experience using a modified Huffman encoding of differential ADC values. 
 If expected noise levels are achieved, this compression would provide a factor of four to ten, depending on the detector module technology.
-Effort is currently underway to understand the costs and technology involved in exploiting this benefit.
+Efforts are currently underway to understand the costs and technology requirements in exploiting this benefit.
 
 \subsection{Data Selection}
 \label{sec:sp-daq:design-data-selection}
@@ -657,17 +657,17 @@ From that input, as well as external inputs provided, for example, by
 the accelerator or detector calibration systems, the \dword{daqdss} must form a \dword{trigdecision},
 which in turn produces a \dword{trigcommand}.
 This command summarizes the observed activity that led to the decision
-and provides addresses (in channel-time space) of the data in the
+and provides addresses (in channel--time space) of the data in the
 upstream \dword{daq} buffers that capture information about the activity.
 This command is sent to and then consumed and executed by the \dfirst{daqbes} as described in Section~\ref{sec:fd-daq:design-backend}. 
 It may also be propagated to the \dword{etl} and from there it may be
 distributed to other \dwords{detmodule} or other detector systems
 (e.g. calibration) for consideration.
 
-The \dword{daqdss} must select data associated with calibration
+The \dword{daqdss} must select with high efficiency ($>$99\%) data associated with calibration
 signals, as well as beam interactions,
 atmospheric neutrinos, rare baryon-number-violating events, and cosmic
-ray events that deposit visible energy in excess of 100 MeV with high efficiency ($>$99\%). 
+ray events that deposit visible energy in excess of 100 MeV. 
 It must also select data associated with potential galactic \dwords{snb}, with galactic coverage
 of $>$90\%. Galactic coverage is defined as efficiency-weighted probability of an intra-galactic \dword{snb}. 
 To meet the requirement that the \dword{dune} \dword{fd} maintain
@@ -682,9 +682,9 @@ At the lowest level, trigger primitives are formed on a per-channel basis, and r
 \Dwords{trigprimitive} are aggregated into \dwords{trigcandidate}, which represent information associated with higher-level constructs derived from trigger primitives, for example ``clusters of hits''. 
 \dword{trigcandidate} information is subsequently used to inform a module-level trigger decision, which generates a \dword{trigcommand}; this takes the form of either a localized high energy trigger or an extended SNB trigger, and each prompts readout of an event record. 
 Post-event-building, further data selection is carried out in the form of down-selection of event records, through a high level filter. 
-The data selection strategy is applicable to both \dword{pds} and \dword{tpc} indistinguishably, up to the module level trigger stage, where \dword{pds} and \dword{tpc} information can be combined to form a module level trigger decision. 
+The data selection strategy is applicable to both \dword{pds} and \dword{tpc}, operating in parallel up to the module level trigger stage, where \dword{pds} and \dword{tpc} information can be combined to form a module level trigger decision. 
 Data selection design efforts have taken the approach of validating and demonstrating a \dword{tpc}-based data selection.
-An additional \dword{pds}-based data selection component can be accommodated within the same data selection design and may augment data selection capabilities and efficiencies.
+An additional \dword{pds}-based data selection component can be accommodated within the same data selection design and will augment data selection capabilities, efficiency and robustness.
 
 The subsystem structure is illustrated in
 Figure~\ref{fig:daq:data-selection}. The structure
@@ -763,7 +763,7 @@ Each trigger type furthermore prompts readout
 
 Viable data selection algorithms for the low level and module level trigger already exist, including
 algorithms for a module level \dword{snb} trigger.  It has
-been demonstrated offline with Monte Carlo simulations that the resulting efficiencies meet the DUNE
+been demonstrated through Monte Carlo simulations that the resulting efficiencies meet the DUNE
 requirements \cite{bib:docdb11215}. On the other hand, the pipelines of processing required
 for \dword{daqdsn} can be executed using different firmware and software
 implementations. Development is actively ongoing to demonstrate
@@ -827,7 +827,7 @@ rate providing trigger candidates as described next.
 At the trigger candidate generation stage of the low level trigger,
 \dwords{trigprimitive} from individual, contiguous fragments of the
 detector 
-module are cross-channel and -time correlated, and further selection
+module are cross-channel and time correlated, and further selection
 criteria are applied. This may result in the
 output of trigger candidates. 
 More specifically, once activity is localized in time and channel
@@ -852,7 +852,7 @@ In particular, $^{39}$Ar decays would provide \SI{50}{\kilo\hertz} of
 trigger candidates per \dword{apa} face if the threshold was set very low, ie at
 \SI{0.1}{\MeV}.
 Next, activity from the $^{42}$Ar decay chain would be substantial for a
-threshold well below about \SI{3.5}{\MeV}.
+threshold below \SI{3.5}{\MeV}.
 Nominally, individual candidates, or groups of candidates nearby in
 detector space and time, with measures of energy greater than these two
 types of decays, will be passed to the module level trigger. 
@@ -915,7 +915,7 @@ The \dword{daqeti} is also responsible for forming a coincidence between module-
 Information about beam spill times can be received from the accelerator by the \dword{daqeti}. 
 These times can drive a model of the beam timeline to predict when beam spills will occur. 
 These predictions can then be distributed to components of the calibration system so that they may avoid producing activity in the detector that may interfere with activity from beam neutrinos.
-The beam time information can also be sent to the \dwords{mtl} so that they may either alter trigger decision criteria or merely include the information in contemporaneous trigger decisions.
+The beam time information can also be sent to the \dwords{mlt} so that they may either alter trigger decision criteria or merely include the information in contemporaneous trigger decisions.
 
 
 
@@ -947,8 +947,7 @@ contamination.
 Furthermore, it can also reduce the triggered data set by further identifying
 and localizing interesting activity. A likely candidate hardware
 implementation of this level of \dword{daqdsn} is a GPU-based system
-residing on surface at SURF\cite{georgia-add-something}.
-\fixme{Give a reference to details on this idea.}
+residing on surface at SURF.
 
 To fully understand how much and what type of data reduction may be
 beneficial, simulation studies are ongoing \cite{bib:docdb11311} and will
@@ -962,7 +961,7 @@ processing required by the \dword{fd}.
 \subsection{Back-End DAQ}
 \label{sec:fd-daq:design-backend}
 
-The functionality of the \dfirst{daqbes} is comprised of the \dfirst{daqdfo}, \dfirst{eb} and storage buffer blocks in Figure~\ref{fig:fd-daq:layout}. 
+The functionality of the \dfirst{daqbes} comprises the \dfirst{daqdfo}, \dfirst{eb} and storage buffer blocks shown in Figure~\ref{fig:fd-daq:layout}. 
 It accepts \dwords{trigcommand} produced by the \dfirst{daqdss} as described in Section~\ref{sec:sp-daq:design-data-selection}. 
 It queries the upstream \dword{daq} buffers and accepts returned data as described in Section~\ref{sec:daq:design-upstream}. 
 Finally, it records \dwords{trigcommand} and the corresponding detector data to the output storage buffer. 
@@ -981,7 +980,7 @@ records into a pool of \dword{eb} processes.  This asynchronous, parallel readou
 \end{dunefigure}
 
 \begin{itemize}
-\item \dword{daqdfo} accepts a time ordered stream of \dwords{trigcommand} and dispatches each for execution possibly by first splitting up each command into one or more contiguous segments.
+\item \dword{daqdfo} accepts a time-ordered stream of \dwords{trigcommand} and dispatches each for execution possibly by first splitting up each command into one or more contiguous segments.
 \item Each segment will then be dispatched to an \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution.
 \item Execution entails interpreting the \dword{trigcommand} segment and querying the appropriate \dword{fe} buffer interfaces to request data from the period of time. 
 \item Requests and their replies may be sent synchronously, and
@@ -1027,13 +1026,13 @@ This system will be designed to allow it to evolve as the detector and its data 
 The output buffer system is a hardware resource provided by \dword{daq}.
 It has two primary purposes. 
 First, the buffer decouples the production of data by the DAQ from the transfer of this output data to offline storage.
-Second, it provides local storage sufficient for uninterrupted \dword{daq} operation in the unlikely event that the network connection between the \dword{fd} and \fnal is lost. 
+Second, it provides local storage sufficient for uninterrupted \dword{daq} operation in the  event that the network connection between the \dword{fd} and \fnal is temporarily lost. 
 A capacity of at least \SI{0.5}{\peta\byte} is envisioned,
-sufficient buffer the nominal output of the entire \dword{fd} for about one week.
+sufficient to buffer the nominal output of the entire \dword{fd} for about one week.
 Based on prior experience
-of the consortium with unusual losses of 
+of the consortium with losses of 
 connectivity at other far detector experiment sites, this is a
-conservative storage capacity value.
+conservative capacity value.
 
 \subsubsection{Data Model}
 \label{sec:fd-daq:design-data-model}
@@ -1057,7 +1056,7 @@ conservative storage capacity value.
 %   Describe how RC will configure partitioning, initiate reconfiguration, handle ``run'' changes, node discovery, configuration, logging, startup, shutdown and failures are handled. Describe how RC will support detector electronics configuration.}
 
 The \dfirst{daqccm} subsystem, illustrated in Figure~\ref{fig:daq-ccm-subsys}, encompasses, as its name suggests, the software needed to control, configure, and monitor the rest of the \dword{daq}, as well as itself. 
-It provides a center for the highly distributed \dword{daq} components, allowing them to be treated and managed as a single, coherent system. 
+It provides a coherent software view of the distributed and sometimes redundant \dword{daq} components, allowing them to be treated and managed as a single tightly coupled system. 
 Figure~\ref{fig:daq-conceptual-overview} shows the central role of the \dword{daqccm} within the complete \dword{daq} system.
 The following sections describe each of the three \dword{daqccm} subsystems. 
 Details on potential designs patterns that may be followed can be found in~\citedocdb{10482} 
@@ -1083,12 +1082,12 @@ In the figure, ``partition'' refers to a logical segmentation of the \dword{daq}
 The segmentation applies to the portion of detector electronics that provides input to the partition's \dword{daqdsn} and readout. 
 The largest partition %would be 
 is that of one \dword{detmodule}. 
-The functional blocks in the figure represent one or more semi-autonomous agents, each with defined roles, capabilities, and access. 
-Although drawn as single blocks, they typically are implemented as multiple peer agents to assure redundancy and fail-over. 
-The blocks at partition scope are first described.
+The functional blocks in the figure represent one or more semi-autonomous agents, each with defined roles, capabilities, and access restrictions. 
+Although drawn as single blocks, they typically are implemented as multiple peer agents to permit redundancy and fail-over. 
+The blocks in partition scope are first described.
 
 \begin{itemize}
-\item Partition naming service provides \dword{daqdispre} for the components of a \dword{daqpart}. 
+\item Partition naming service provides \dword{daqdispre} services for the components of a \dword{daqpart}. 
   That is, it allows one component to be made aware of the creation and continued operation of other components (discovery) or that others have recently become unresponsive (presence). 
 
 \item Run control provides a central director;  its creation is the first step in initiating a \dword{daqpart}. 
@@ -1131,15 +1130,15 @@ Additional UI elements will be developed as described in sections~\ref{sec:daq:d
 \label{sec:daq:design:ccm:configuration}
 
 The \dword{daq} configuration subsystem provides persistent data storage for all historic, current, and future configuration information applicable to the \dword{daq}.
-It provides a singular point (via high-availability, redundant services) for the allocation of unique and monotonically increasing \dwords{daqrunnum}.
+It provides a single point (via high-availability, redundant services) for the allocation of unique and monotonically increasing \dwords{daqrunnum}.
 The configuration data stores operate in an ``insert-only'' mode so that no prior information may be overwritten. 
 The following types of information will be managed:
 
 \begin{itemize}
 
-\item Partition structure contains descriptions of the multiplicity and connectivity of \dword{daq} components for any partition.   Eg, this describes the overall connectivity of ``nodes'' in the \dword{daq} ``graph''.
+\item Partition structure contains descriptions of the multiplicity and connectivity of \dword{daq} components for any partition. This describes the overall connectivity of ``nodes'' in the \dword{daq} ``graph''.
 
-\item Component parameters comprise configuration information associated with any given \dword{daq} component.  Eg, thresholds in a trigger candidate processor or gains and peaking times of a FE amplifier.
+\item Component parameters comprise configuration information associated with any given \dword{daq} component; for example, thresholds in a trigger candidate processor or gains and peaking times of a FE amplifier.
 
 \item Run number provides a monotonically increasing sequence of \dwords{daqrunnum} that are allocated upon request to assure that each is unique.
 
@@ -1227,11 +1226,11 @@ synchronized to a common \SI{62.5}{MHz} clock.
 This rate is chosen in order for this common clock to satisfy the requirements of the detector electronics of both the single-phase and the dual-phase far detector modules.
 %
 To make full use of the information from the \dword{pds}, the common clock must be aligned within a single detector %unit 
-module with an accuracy of \bigo{\SI{1}{\nano\second}}. 
+module with an accuracy of \bigo{\SI{10}{\nano\second}}. 
 For a common trigger for a \dword{snb} between modules, the timing must have an accuracy of order \SI{1}{\milli\second}.
-However, a tighter constraint is the need to calibrate the common clock to universal time derived from \dword{gps} so the \dword{daqdsn} algorithm can be adjusted inside an accelerator spill, which again requires an absolute accuracy of order \SI{1}{\micro\second}.
+However, a tighter constraint is the need to calibrate the common clock to universal time derived from \dword{gps} so the \dword{daqdsn} algorithm can be adjusted inside an accelerator spill, which again requires an absolute accuracy of order \SI{1}{\micro\second}. The design of the timing system allows for an order-of-magnitude better synchronization precision than these requirements, allowing a substantial margin of safety and the possibility for future upgrades to front-end electronics.
 
-The \dword{dune} \dword{fd} uses a version of the \dword{protodune} timing
+The \dword{dune} \dword{fd} uses a improved version of the \dword{protodune} timing
 system, where a design principle is to transmit synchronization messages over
 a serial data stream with the clock embedded in the data. The format
 is described in \citedocdb{1651}. The timing system design is
@@ -1241,7 +1240,7 @@ Central to the timing system are four types of signals:
 \begin{itemize}
 \item a \SI{10}{\mega\hertz} reference used to discipline a stable master clock,
 \item a \dfirst{pps} from the GPS,
-\item a \dword{ntp} signal providing an absolute time for each \dword{pps}, and
+\item a \dword{ptp} signal providing an absolute time for each \dword{pps}, and
 \item an \dfirst{irig} time code signal
   used to set the timing system 64-bit time stamp.
 \end{itemize}
@@ -1253,15 +1252,15 @@ All custom electronic components of the timing system are contained in two \dwor
 The \SI{10}{MHz} reference clock and the \dword{pps} signal are received through a single-width \dword{amc} at the center of the \dword{utca} shelf.
 This master timing \dword{amc} is a custom board and produces the timing system signals, encoding them onto a serial data stream.
 This serial data stream is distributed over a backplane to a number of fanout \dwords{amc}.
-The fanout \dword{amc} is an off-the-self board with two custom \dwords{fmc}.
+The fanout \dword{amc} is an off-the-shelf board with two custom \dwords{fmc}.
 Each \dword{fmc} has four \dword{sfp} cages where fibers connect the timing system to each detector component (e.g., \dword{apa}) or where direct attach cables connect to other systems in the \dword{cuc}.
 
 To provide redundancy, two independent GPS systems are used,
-one with an antenna at the surface of the Ross shaft, and the other
-with an antenna at the surface of the Yates shaft. Signals from either
-GPS are fed through optical single mode fibers to the \dword{cuc}, where
+one with an antenna at the surface at the Ross shaft, and the other
+with an antenna at the surface at the Yates shaft. Signals from either
+GPS are fed through single-mode optical fibers to the \dword{cuc}, where
 either GPS signal can act as a hot spare while the other is active. 
-Differential delays between these two paths are resolved by a second pair of fibers, one running back from the timing system to each antenna.
+Differential delays between these two paths are resolved by a second pair of fibers, one running back from the timing system to each antenna, allowing closed-loop delay estimation.
 
 
 \section{Design Validation and Development Plans}
