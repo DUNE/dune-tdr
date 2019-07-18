@@ -992,25 +992,20 @@ The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes 
 \item The DFO will provide relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. Given its central role and knowledge of the state of available event builder buffers, it will be able to provide important information about the health and performance of the system.
 \end{itemize}
 
-
-
 \subsubsection{Event builder}
 \label{sec:fd-daq:design-event-builder}
 %\fixme{module-generic}
 %\metainfo{Explain art\dword{daq}, handling of trigger commands by asynchronous, parallel queries to front end Data Selector (but take care not to duplicate between here and in the overview).}
 
 The \dword{daqbes} will provide the instances of the \dfirst{eb} most likely as
-\dword{artdaq}~\cite{artdaq} components of the same name. As described above, each EB instance will
-request selected data from the appropriate \dfirst{daqubi}, as addressed by a received
-\dword{trigcommand}.  An \dword{eb} will aggregate the selected data and record it the output
-storage buffer.
+\dword{artdaq}~\cite{artdaq} components of the same name. The 
+As described above, each EB instance will
 
 \begin{itemize}
-  \item Each readout segment is then received by an available \dword{eb} process for execution. Execution entails interpreting the \dword{trigcommand} segment and querying the appropriate upstream \dword{daq} units to request data from the period of time. 
+  \item Receive a readout segment for execution. Execution entails interpreting the \dword{trigcommand} segment and querying the appropriate upstream \dword{daq} units to request data from the period of time. 
   \item Requests and their replies may be sent synchronously, and replies are expected even if data has already been purged from the upstream \dword{daq} units. (In that case, and empty fragment will be generated with appropriate error flags set).
-\item The received data then processed and aggregated, is finally saved to one or more files on the output storage system before it is transferred offline.
+  \item The received data then processed and aggregated, is finally saved to one or more files on the output storage system before it is transferred offline.
 \end{itemize}
-
 
 %%The final output files shall use data schema and file formats as described in Section~\ref{sec:fd-daq:design-data-model}.
 
