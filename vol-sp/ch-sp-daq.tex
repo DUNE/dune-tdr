@@ -962,31 +962,38 @@ processing required by the \dword{fd}.
 \subsection{Back-End DAQ}
 \label{sec:fd-daq:design-backend}
 
-The functionality of the \dfirst{daqbes} is comprised of the \dfirst{daqdfo}, \dfirst{eb} and storage buffer blocks in Figure~\ref{fig:fd-daq:layout}. It accepts \dwords{trigcommand} produced by the \dfirst{daqdss} as described in Section~\ref{sec:sp-daq:design-data-selection}. 
-It queries the upstream \dword{daq} buffers and accepts returned data as described in Section~\ref{sec:daq:design-upstream}. Finally, it records \dwords{trigcommand} and the corresponding detector data to the output storage buffer. After application of the high level filter, the data is finally transferred to \fnal for offline storage.
+The  \dfirst{daqbes} is responsible for moving data of interest identified by the data-selection system from the readout DAQ buffers, serving them to the High-Level Filter and storing the filtered data into the output buffer, from where they will be transferred to permanent storage off-site.
+
+The \dword{daqbes} system accepts \dwords{trigcommand} produced by the \dfirst{daqdss} as described
+in Section~\ref{sec:sp-daq:design-data-selection}.  It queries the upstream \dword{daq} buffers and
+accepts returned data as described in Section~\ref{sec:daq:design-upstream}. Finally, it records
+\dwords{trigcommand} and the corresponding detector data to the output storage buffer.
+
+The principal components of the \dword{daqbes} are the \dfirst{daqdfo}, \dfirst{eb} and the output
+storage buffer (OB) in Figure~\ref{fig:fd-daq:layout}.
+
+% The functionality of the \dfirst{daqbes} is comprised of the \dfirst{daqdfo}, \dfirst{eb} and storage buffer blocks in Figure~\ref{fig:fd-daq:layout}. It accepts \dwords{trigcommand} produced by the \dfirst{daqdss} as described in Section~\ref{sec:sp-daq:design-data-selection}. 
+% It queries the upstream \dword{daq} buffers and accepts returned data as described in Section~\ref{sec:daq:design-upstream}. Finally, it records \dwords{trigcommand} and the corresponding detector data to the output storage buffer. After application of the high level filter, the data is finally transferred to \fnal for offline storage.
 
 \subsubsection{Data Flow Orchestration}
 
-\fixme{Kurt, please check, especially against Roland's comments.}
+The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes to maximize the system tolerance to faults and to handle the readout of long SNB events in parallel tonominal readout request. This asynchronous, parallel readout will be coordinated by a \dword{daqdfo}.  Its operation is illustrated in Figure~\ref{fig:daq:backend} and is discussed here:
 
-
-To minimize the latency in the readout of the data from the upstream
-\dword{daq} buffers, the \dword{daqbes} will support parallel readout of event
-records into a pool of \dword{eb} processes.  This asynchronous, parallel readout will be coordinated by a \dword{daqdfo}.  Its operation is illustrated in Figure~\ref{fig:daq:backend} and is discussed here:
+% To minimize the latency in the readout of the data from the upstream
+% \dword{daq} buffers, the \dword{daqbes} will support parallel readout of event
+% records into a pool of \dword{eb} processes.  This asynchronous, parallel readout will be coordinated by a \dword{daqdfo}.  Its operation is illustrated in Figure~\ref{fig:daq:backend} and is discussed here:
 
 \begin{dunefigure}[DUNE DAQ back-end operation]{fig:daq:backend}{Illustration of \dword{dune} \dword{daqbes} operation.}
   \includegraphics[width=0.8\textwidth]{daq-backend.pdf}
 \end{dunefigure}
 
 \begin{itemize}
-\item \dword{daqdfo} accepts a stream of \dwords{trigcommand} and dispatches each for execution possibly by first splitting up each command into one or more contiguous segments.
-\item Each trigger segment will then be dispatched to an \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution.
-\item Execution entails interpreting the \dword{trigcommand} segment and querying the appropriate upstream \dword{daq} units to request data from the period of time. 
+\item \dword{daqdfo} accepts a stream of \dwords{trigcommand} and dispatches each for execution. If required, the \dword{daqdfo} splits the command in multiple contiguous readout segments.
+\item Each trigger segment is then dispatched to an available \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution. Execution entails interpreting the \dword{trigcommand} segment and querying the appropriate upstream \dword{daq} units to request data from the period of time. 
 \item Requests and their replies may be sent synchronously, and replies are expected even if data has already been purged from the upstream \dword{daq} units. (In that case, an error message would be sent out.)
 \item The received data then processed and aggregated, is finally saved to one or more files on the output storage system before it is transferred offline.
 \item In atypical situations in which there are insufficient event builder resources available to handle the rate of triggers produced by the data selection sub-system, the DFO will alert the DS sub-system that the rate of triggers needs to be reduced.  When such reductions are requested, the DS sub-system will update the calculation of the module-level DAQ live time appropriately.
 \item The DFO will provide relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. Given its central role and knowledge of the state of available event builder buffers, it will be able to provide important information about the health and performance of the system.
-
 \end{itemize}
 %\fixme{Add time order requirement on DS above}
 %\fixme{Add return-empty-response requirement to buffer above}
@@ -998,38 +1005,30 @@ records into a pool of \dword{eb} processes.  This asynchronous, parallel readou
 %\fixme{module-generic}
 %\metainfo{Explain art\dword{daq}, handling of trigger commands by asynchronous, parallel queries to front end Data Selector (but take care not to duplicate between here and in the overview).}
 
-The \dword{daqbes} will provide the instances of the \dfirst{eb} most likely as \dword{artdaq}~\cite{artdaq} components of the same name.
-As described above, each EB instance will request selected data from
-the appropriate \dfirst{daqubi}, as addressed by a received \dword{trigcommand}. 
-An \dword{eb} will aggregate the selected data and record it the output storage buffer.
+The \dword{daqbes} will provide the instances of the \dfirst{eb} most likely as
+\dword{artdaq}~\cite{artdaq} components of the same name. As described above, each EB instance will
+request selected data from the appropriate \dfirst{daqubi}, as addressed by a received
+\dword{trigcommand}.  An \dword{eb} will aggregate the selected data and record it the output
+storage buffer.
+
 %%The final output files shall use data schema and file formats as described in Section~\ref{sec:fd-daq:design-data-model}.
 
 As part of this, the EB sub-system will provide book-keeping functionality for the raw data.  This will include the documentating of simple mappings, such as which trigger is stored in which raw data file, as well as more sophisticated quality checks. For example, it will know which time windows and geographic regions of the detector are requested for each trigger, and in the unlikely event that some fraction of the requested detector data can not be stored in the event record, it will document that mismatch.
 
-
-\subsubsection{Data Quality Monitoring}
-\label{sec:fd-daq:design-data-quality}
-
-While the \dword{daqccm} contains an element of monitoring (Section~\ref{sec:daq:design:ccm:monitoring}), here \dfirst{dqm} refers to a subsystem that quickly analyzes the data in order to determine the general quality of the detector and DAQ operation.
-This is in order to allow operators to promptly detect and respond to any unexpected changes and assure high exposure times for later physics analyses. 
-A \dword{daq} \dfirst{dqm} 
-will be developed (including necessary infrastructure, visualization,
-and algorithms), which will process a subset of detector data in order
-to provide prompt feedback to the detector operators. 
-This system will be designed to allow it to evolve as the detector and its data is understood during commissioning and early operation and to cope with any evolution of detector conditions.
-
 \subsubsection{Output Buffer}
 
-The output buffer system is a hardware resource provided by \dword{daq}.
-It has two primary purposes. 
-First, the buffer decouples the production of data by the DAQ from the transfer of this output data to offline storage.
-Second, it provides local storage sufficient for uninterrupted \dword{daq} operation in the unlikely event that the network connection between the \dword{fd} and \fnal is lost. 
-A capacity of at least \SI{0.5}{\peta\byte} is envisioned,
-sufficient buffer the nominal output of the entire \dword{fd} for about one week.
-Based on prior experience
-of the consortium with unusual losses of 
-connectivity at other far detector experiment sites, this is a
-conservative storage capacity value.
+The output buffer system is composed by the physical harware resource to host the incoming data and by the software services handling the final processing stages through the High-Level Filter and the transfer off-site to permanent storage.
+
+It has two primary purposes.  First, it decouples the production of data from filtering and the
+transfer of filtered data offline. It provides the elasticity needed by the DAQ to deal with
+perturbations in the flow of data, therefore minimizing the impact of temporary loss in filtering
+performance due to hardware or software issues. Second, it provides local storage sufficient for
+uninterrupted \dword{daq} operation in the unlikely event that the network connection between the
+\dword{fd} and \fnal is lost.  A capacity of at least a few \si{\peta\byte} is envisioned,
+sufficient buffer the nominal output of the entire \dword{fd} for about one week even in the case of SNB events. Based on prior experience of the consortium with unusual losses of  connectivity at
+other far detector experiment sites, this is a conservative storage capacity value.
+
+The output buffer system will provide the relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. The knowledge of the health and performace of the of the buffer system will enable to promtly identify and address developing faults before they can have an impact on data taking.
 
 \subsubsection{Data Model}
 \label{sec:fd-daq:design-data-model}
@@ -1042,6 +1041,17 @@ conservative storage capacity value.
 The data model for the DUNE far detector describes the format and characteristics of the triggered data at each stage in the analysis chain, the grouping of the data into logical units such as runs, and the characteristics of ancillary data such as detector configuration parameters and calibration results.
 
 The requirements that these place on the DAQ are primarily in the areas of flexibility and traceability.  The DAQ will have the flexibility to handle the readout of triggers that have a time window that is on the order of a single TPC drift time (for example a trigger associated with a beam gate window), triggers that have a time window of many seconds (such as for a supernova burst trigger), and windows between those two extremes (for detector and electronics studies).  In the area of traceability, the DAQ system will provide the necessary level of detail regarding the conditions that triggered each event, the expected and actual regions of the detector that contributed raw data to each event, the conditions of the detector and electronics during data taking, the version and configuration of the software components used in the DAQ chain, etc.
+
+\subsection{Data Quality Monitoring}
+\label{sec:fd-daq:design-data-quality}
+
+While the \dword{daqccm} contains an element of monitoring (Section~\ref{sec:daq:design:ccm:monitoring}), here \dfirst{dqm} refers to a subsystem that quickly analyzes the data in order to determine the general quality of the detector and DAQ operation.
+This is in order to allow operators to promptly detect and respond to any unexpected changes and assure high exposure times for later physics analyses. 
+A \dword{daq} \dfirst{dqm} 
+will be developed (including necessary infrastructure, visualization,
+and algorithms), which will process a subset of detector data in order
+to provide prompt feedback to the detector operators. 
+This system will be designed to allow it to evolve as the detector and its data is understood during commissioning and early operation and to cope with any evolution of detector conditions.
 
 \subsection{Control, Configuration, and Monitoring}
 \label{sec:fd-daq:design-run-control}
