@@ -727,34 +727,54 @@ prioritize trigger decisions. The details for forming this
 command are described next and the operation of the \dword{daqbes} is
 described in Section~\ref{sec:fd-daq:design-backend}.
 
-The first stage of DUNE FD operations will have two general classes of trigger
-decisions that are categorized in terms of the distribution of activity
-in time and channel (mapped to physical) space from which they are derived: 
-\begin{itemize}
-\item Any given far detector module will make a 
-  trigger decision with $>$99\% efficiency for any given particle
-  type (electron, muon, photon, etc.) 
-  that deposits more than 100 MeV of visible energy in a locally
-  confined region (e.g.~a single \dword{apa}, or between two neighboring \dword{apa}s). To achieve this
-  goal, data selection algorithms are targeting a trigger threshold of
-  \SI{10}{\MeV} in visible energy, ensuring $>99$\% efficiency or better
-  at \SI{100}{\MeV}. 
-  This type of trigger is referred to as localized high
-  energy trigger.
-\item Localized activity associated with low deposited energy (as low as below 10 MeV). 
-  Individually, such activity can be caused by neutrinos from burst or relic supernova as well as from the Sun.
-  Collectively, information on these interactions is input to a different type of trigger,
-  referred to as extended low energy trigger, which intended for
-  capturing \dword{snb}.
-  It differs from localized high
-  energy triggers in that it considers the coincidence of localized
-  activity across the entire module, and over an integration period of up to 10
-  seconds.
-\end{itemize}
-Each trigger type furthermore prompts readout
-    of the entire module but over significantly different time
-    ranges: localized triggers prompt readout of \spreadout event records; extended
-    triggers prompt readout of \SI{100}{\second} event records. 
+The first stage of DUNE FD operations will trigger on two general
+classes of physics, each handled differently at the trigger level:
+
+\begin{description}
+\item[High-energy interactions] These include cosmic muons, neutrino beam interactions, atmospheric neutrinos, and nucleon decays. 
+  Our efficiency for these interactions will be $>$ 99\% for any given particle type (electron,muon, photon, etc.) that has a localized (confined to a few contiguous APAs) visible energy deposition above 100 MeV.
+  To achieve this requirement, algorithms for creating high-energy trigger candidates are targeting a trigger effiiency of 50\% at 10 MeV visible energy, thus ensuring >99\% efficiency or better at 100 MeV.
+  This type of trigger is referred to as localized high energy trigger. 
+  Pushing the high-energy threshold lower could enable detection of diffuse supernova neutrinos and solar neutrinos, if radiological and neutron backgrounds are low enough.
+
+\item[Low-energy interactions] The primary physics target here is a neutrino burst from a nearby supernova. 
+  Low-energy trigger candidates (with threshold at or below 10 MeV visible energy) are generated and are input to an ``extended low-energy trigger'' that looks for bursts inconsistent with fluctuations in low-energy background events. 
+  The time window for detecting such bursts is tuned to ensure efficiency out to the galactic edge, and the pre-burst buffers are sized to handled the associated latency for detection.
+
+\end{description}
+
+
+% The first stage of DUNE FD operations will have two general classes of trigger
+% decisions that are categorized in terms of the distribution of activity
+% in time and channel (mapped to physical) space from which they are derived: 
+% \begin{itemize}
+% \item Any given far detector module will make a 
+%   trigger decision with $>$99\% efficiency for any given particle
+%   type (electron, muon, photon, etc.) 
+%   that deposits more than 100 MeV of visible energy in a locally
+%   confined region (e.g.~a single \dword{apa}, or between two neighboring \dword{apa}s). To achieve this
+%   goal, data selection algorithms are targeting a trigger threshold of
+%   \SI{10}{\MeV} in visible energy, ensuring $>99$\% efficiency or better
+%   at \SI{100}{\MeV}. 
+%   This type of trigger is referred to as localized high
+%   energy trigger.
+% \item Localized activity associated with low deposited energy (as low as below 10 MeV). 
+%   Individually, such activity can be caused by neutrinos from burst or relic supernova as well as from the Sun.
+%   Collectively, information on these interactions is input to a different type of trigger,
+%   referred to as extended low energy trigger, which intended for
+%   capturing \dword{snb}.
+%   It differs from localized high
+%   energy triggers in that it considers the coincidence of localized
+%   activity across the entire module, and over an integration period of up to 10
+%   seconds.
+% \end{itemize}
+
+\noindent Each trigger type furthermore prompts readout
+of the entire module but over significantly different time
+ranges: localized triggers prompt readout of \spreadout event records; extended
+triggers prompt readout of \SI{100}{\second} event records. 
+
+
 
 Viable data selection algorithms for the low level and module level trigger already exist, including
 algorithms for a module level \dword{snb} trigger.  It has
