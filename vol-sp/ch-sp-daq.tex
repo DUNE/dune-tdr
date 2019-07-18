@@ -983,19 +983,14 @@ The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes 
 % records into a pool of \dword{eb} processes.  This asynchronous, parallel readout will be coordinated by a \dword{daqdfo}.  Its operation is illustrated in Figure~\ref{fig:daq:backend} and is discussed here:
 
 \begin{dunefigure}[DUNE DAQ back-end operation]{fig:daq:backend}{Illustration of \dword{dune} \dword{daqbes} operation.}
-  \includegraphics[width=0.8\textwidth]{daq-backend.pdf}
+  \includegraphics[width=\textwidth]{daq-backend.pdf}
 \end{dunefigure}
 
 \begin{itemize}
-\item \dword{daqdfo} accepts a stream of \dwords{trigcommand} and dispatches each for execution. If required, the \dword{daqdfo} splits the command in multiple contiguous readout segments.
-\item Each trigger segment is then dispatched to an available \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution. Execution entails interpreting the \dword{trigcommand} segment and querying the appropriate upstream \dword{daq} units to request data from the period of time. 
-\item Requests and their replies may be sent synchronously, and replies are expected even if data has already been purged from the upstream \dword{daq} units. (In that case, an error message would be sent out.)
-\item The received data then processed and aggregated, is finally saved to one or more files on the output storage system before it is transferred offline.
+\item \dword{daqdfo} accepts a stream of \dwords{trigcommand} and dispatches each to an available \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution.
 \item In atypical situations in which there are insufficient event builder resources available to handle the rate of triggers produced by the data selection sub-system, the DFO will alert the DS sub-system that the rate of triggers needs to be reduced.  When such reductions are requested, the DS sub-system will update the calculation of the module-level DAQ live time appropriately.
 \item The DFO will provide relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. Given its central role and knowledge of the state of available event builder buffers, it will be able to provide important information about the health and performance of the system.
 \end{itemize}
-%\fixme{Add time order requirement on DS above}
-%\fixme{Add return-empty-response requirement to buffer above}
 
 
 
@@ -1009,6 +1004,13 @@ The \dword{daqbes} will provide the instances of the \dfirst{eb} most likely as
 request selected data from the appropriate \dfirst{daqubi}, as addressed by a received
 \dword{trigcommand}.  An \dword{eb} will aggregate the selected data and record it the output
 storage buffer.
+
+\begin{itemize}
+  \item Each readout segment is then received by an available \dword{eb} process for execution. Execution entails interpreting the \dword{trigcommand} segment and querying the appropriate upstream \dword{daq} units to request data from the period of time. 
+  \item Requests and their replies may be sent synchronously, and replies are expected even if data has already been purged from the upstream \dword{daq} units. (In that case, and empty fragment will be generated with appropriate error flags set).
+\item The received data then processed and aggregated, is finally saved to one or more files on the output storage system before it is transferred offline.
+\end{itemize}
+
 
 %%The final output files shall use data schema and file formats as described in Section~\ref{sec:fd-daq:design-data-model}.
 
@@ -1041,17 +1043,6 @@ The data model for the DUNE far detector describes the format and characteristic
 
 The requirements that these place on the DAQ are primarily in the areas of flexibility and traceability.  The DAQ will have the flexibility to handle the readout of triggers that have a time window that is on the order of a single TPC drift time (for example a trigger associated with a beam gate window), triggers that have a time window of many seconds (such as for a supernova burst trigger), and windows between those two extremes (for detector and electronics studies).  In the area of traceability, the DAQ system will provide the necessary level of detail regarding the conditions that triggered each event, the expected and actual regions of the detector that contributed raw data to each event, the conditions of the detector and electronics during data taking, the version and configuration of the software components used in the DAQ chain, etc.
 
-\subsection{Data Quality Monitoring}
-\label{sec:fd-daq:design-data-quality}
-
-While the \dword{daqccm} contains an element of monitoring (Section~\ref{sec:daq:design:ccm:monitoring}), here \dfirst{dqm} refers to a subsystem that quickly analyzes the data in order to determine the general quality of the detector and DAQ operation.
-This is in order to allow operators to promptly detect and respond to any unexpected changes and assure high exposure times for later physics analyses. 
-A \dword{daq} \dfirst{dqm} 
-will be developed (including necessary infrastructure, visualization,
-and algorithms), which will process a subset of detector data in order
-to provide prompt feedback to the detector operators. 
-This system will be designed to allow it to evolve as the detector and its data is understood during commissioning and early operation and to cope with any evolution of detector conditions.
-
 \subsection{Control, Configuration, and Monitoring}
 \label{sec:fd-daq:design-run-control}
 
@@ -1068,7 +1059,7 @@ corresponding interfaces. The detector components and infrastructure elements ac
 subsystems through their provided interfaces. 
 
 \begin{dunefigure}[DAQ CCM subsystem interaction]{fig:daq-ccm-subsys}{Main interaction among the three \dword{daqccm} subsystems.}
-  \includegraphics[width=0.8\textwidth]{daq-ccm-subsys.pdf}
+  \includegraphics[width=0.9\textwidth]{daq-ccm-subsys.pdf}
 \end{dunefigure}
 
 The following sections describe each \dfirst{daqccm} subsystem, covering internal functions and dependencies between each other.
@@ -1206,6 +1197,19 @@ It has been well tested with \dword{protodune} and other experiments.
 For example, if the \dword{daqubi} is implemented as an \dword{artdaq} Board Reader it would necessarily use \dword{artdaq} \dword{ipc} . 
 This would limit the types of clients that could query for data in the buffers to be \dword{artdaq} modules. 
 Understanding how to optimally select an \dword{ipc}  for such parts of the \dword{daq} connection graph is an area of ongoing R\&D effort.
+
+
+\subsection{Data Quality Monitoring}
+\label{sec:fd-daq:design-data-quality}
+
+While the \dword{daqccm} contains an element of monitoring (Section~\ref{sec:daq:design:ccm:monitoring}), here \dfirst{dqm} refers to a subsystem that quickly analyzes the data in order to determine the general quality of the detector and DAQ operation.
+This is in order to allow operators to promptly detect and respond to any unexpected changes and assure high exposure times for later physics analyses. 
+A \dword{daq} \dfirst{dqm} 
+will be developed (including necessary infrastructure, visualization,
+and algorithms), which will process a subset of detector data in order
+to provide prompt feedback to the detector operators. 
+This system will be designed to allow it to evolve as the detector and its data is understood during commissioning and early operation and to cope with any evolution of detector conditions.
+
 
 \subsection{Timing and Synchronization}
 \label{sec:sp-daq:design-timing}
@@ -1641,18 +1645,18 @@ kit will also form the basis for testing at \dword{apa} Construction sites begin
 \section{Production, Assembly, Installation and Integration}
 \label{sec:sp-daq:production}
 
-Development of these activities is still underway.
-\fixme{This will be completed at a later time.}
+The \dword{daq} system relies largely on commercial off the shelf components, with the exception of the timing system and the first stage of the upstream \dword{daq}.
+Therefore, the production and assembly aspects are simpler than for other systems, while of course the installation and integration stages are very important and have to be planned carefully, due to the large number of interfaces of the \dword{daq} system with other parts of the experiment.
 
 \subsection{Production and Assembly}
-\metainfo{Describe how hardware, firmware and software will produced. }
+\subsubsection{Timing System}
+A prototype of the timing system already exists and has been used at ProtoDUNE-SP. The final hardware prototype will be used in the second run of ProtoDUNE-SP in 2021 and production is planned right afterwards, allowing detector communities to have an early integration with the timing hardware and firmware.
 
-\subsubsection{Computing Hardware}
+\subsubsection{Upstream DAQ}
+The upstream \dword{daq} will have FPGA mezzanine cards connecting to the detector electronics readout fibres, and processing and storing data temporarily. Prototype cards implementing parts of the required functionality exist already, but more prototypes are planned before the production readiness review planned in December 2022. While the hardware design will be done at the institutions working in this area, the production of prototypes and final cards will be outsourced to companies, allowing for early identification of those companies that can guarantee a high quality cards production.
 
-\subsubsection{Custom Hardware Fabrication}
-
-\subsubsection{Software and Firmware Development}
-\metainfo{Processes and practices.}
+\subsubsection{Racks, Servers, Storage and Network}
+While commercial devices do not need to be produced or assembled, enough time has to be planned, once the proper devices are identified, for the tendering and procurement procedures. Racks and fibers will be procured in order to be available early in 2023, servers and switches will be purchased in two batches, one to be ready for supporting the installation and commissioning of the detector components and \dword{daq} infrastructure and one to reach nominal performance, in time for the start of data taking.
 
 \subsection{Installation and Integration}
 
@@ -1662,10 +1666,10 @@ Development of these activities is still underway.
  % individual processes and in emergent behavior of the system as a
  % whole?}
 
-The DAQ will be installed in an enclosure in the west end of the Central
+The \dword{daq} will be installed in an enclosure in the west end of the Central
 Utilities Cavern (\dword{cuc}) (Figure~\ref{fig:cavern-layout}).  Roughly
 half of this space will be office space (including control
-workstations) and the other will be a computer room to hold the DAQ
+workstations) and the other will be a computer room to hold the \dword{daq}
 front-end computing and network equipment (Figure~\ref{fig:install-cuc}). Further details of the interface of \dword{daq} with underground facilities
 may be found in \citedocdb{6988}, and the installation interface document for \dword{daq} in \citedocdb{7015}.
 
@@ -1682,8 +1686,8 @@ will be installed, plumbed into cooling water, and connected to power
 and networking.  The network connection from this data room to the fiber
 trunks going up the shaft will also be made, as will preparations to
 receive the multi-mode fiber connections from the \dword{wib} to the
-\dword{felix} cards housed in servers in these racks.  There is space
-for sixty racks, with four set aside for other consortia, twelve per
+\dword{felix} cards housed in servers in these racks. There is space
+for \cucracks racks, with 4 set aside for other consortia, 12 per
 module for upstream DAQ electronics, and the remaining space for
 networking and other DAQ computing needs. An initial engineering design of the computer room is shown in Figure~\ref{fig:daq-room}, which meets all requirements for capacity, cooling, safety and installation schedule.
 
@@ -1714,7 +1718,6 @@ implications, which are discussed in Section~\ref{sec:fd-daq:safety}.
 
 \section{Organization and Project Management}
 \label{sec:sp-daq:organization}
-
 
 
 \subsection{Consortium Organization}
@@ -1912,7 +1915,7 @@ The high-level DAQ milestones are listed in Tab.~\ref{tab:daq-sched}, interleave
 \begin{dunetable}
 [DAQ Consortium Schedule]
 {p{0.65\textwidth}p{0.25\textwidth}}
-{tab:daq-sched}
+{tab:daq-sched}ane 
 {\dword{daq} Consortium Schedule}   
 Milestone & Date (Month YYYY)   \\ \toprowrule
 
