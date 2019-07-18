@@ -1,11 +1,6 @@
 \chapter{Data Acquisition}
 \label{ch:sp-daq}
 
-\fixme{Fix SI units throughout, and use consistent dword
-  references. Brett}
-\fixme{Add missing references. Georgia}
-\fixme{Add a couple of figures on co-processor. Georgia}
-
 \section{Introduction}
 \label{sec:fd-daq:introduction}
 
@@ -1260,38 +1255,37 @@ Differential delays between these two paths are resolved by a second pair of fib
 \label{sec:fd-daq:validation}
 
 The following strategy will be followed in order to validate and
-develop the \dword{dune} \dword{fd} \dword{daq} design:
+develop the \dword{dune} \dword{fd} \dword{daq}:
 \begin{itemize}
-\item Use of \dword{protodune} as a design demonstration and
-  development platform. 
-\item Use of vertical slice teststands for further development and testing of
-  individual \dword{daq} subsystems and for key aspects of the
-  overall \dword{daq}
-\item Use of horizontal slice tests to demonstrate scalability of the design
-  where the multiplicity of components in subsystem layers is important.
-\item Use of \dword{fd} \dword{mc} simulations and emulations in order
-  to augment actual hardware demonstrations at \dword{protodune} and teststands.
-\item Engagement with  developments and measurements in other ongoing
-  \dword{lartpc} experiments, including MicroBooNE, SBND, and ICARUS.
+\item Use \dword{protodune} and other teststands as a basis for prototyping, development and validation
+of the DAQ design.
+\item Use Monte Carlo simulations and emulations in order to augment actual hardware
+demonstrations and validate triggering schemes in the FD environment.
 \end{itemize}
 
-This strategy reflects the current \dword{daq} project schedule,
-provided in Section~\ref{sec:fd-daq:schedule}, which
-comprises several phases, including an intense development phase
-through 2020 that culminates in an engineering design
-review (EDR) in Q1 of 2021. At this milestone, the system design will be
-finalized and demonstrated to be capable of meeting the requirements of the
-final \dword{daq} system. After the development phase, a
-pre-production phase will begin and will end with a production readiness
-review (PRR). By then, final designs of all components
-will be complete.
+% This strategy reflects the current \dword{daq} project schedule,
+% provided in Section~\ref{sec:fd-daq:schedule}, which
+% comprises several phases, including an intense development phase
+% through 2020 that culminates in an engineering design
+% review (EDR) in Q1 of 2021. At this milestone, the system design will be
+% finalized and demonstrated to be capable of meeting the requirements of the
+% final \dword{daq} system. After the development phase, a
+% pre-production phase will begin and will end with a production readiness
+% review (PRR). By then, final designs of all components
+% will be complete.
+
+The design and implementation of the DAQ is being carried out using an iterative prototyping model, which is well suited for a system that largely relies on commercial off the shelf hardware components, on communication and information technologies that are rapidly evolving, and that mainly requires software and firmware development effort.
+The advantage of the prototyping model is also that it facilitates the identification of and collaboration among experts from a large number of institutions, thanks to the focussed effort of achieving the short term objectives established through each prototyping iteration.
+
+Once the identification of convenient technologies will have been completed and the overall system requirements will have been refined, the project will switch to an iterative incremental model, ensuring that, step-by-step, functional and performance requirements will be met by each of the sub-components individually and by the DAQ system globally.
+The overall schedule, summarised in Section~\ref{sec:fd-daq:schedule}, reflects the different development and production time scales that are envisioned for the DAQ various components.
+
 
 The following subsections summarize past, ongoing, and planned
 development and validation studies and identify how anticipated outcomes
 will be used to finalize the \dword{daq} design.
 
-\subsection{Design Validation and Development at ProtoDUNE and Other
-  LArTPCs} % Experiments}
+\subsection{ProtoDUNE Test Beam}
 
 \label{sec:fd-daq:protodune}
 
@@ -1311,21 +1305,21 @@ First, the \dword{protodune} \dword{daq} is externally triggered (and at a trigg
 Second, the \dword{protodune} system sits at the surface with a much higher data occupancy due to cosmic ray activity.
 Overcoming the first key difference in order to demonstrate \dword{daqdsn} capability for the \dword{fd} \dword{daq} design is a main component of future \dword{daq} development plans.
 
-Continuous self-tirggering of the detector is also new with respect to
-other ongoing or planned near-term \dword{lartpc} experiments, including
-MicroBooNE, SBND, and ICARUS. Both MicroBooNE and ICARUS have demonstrated
-self-triggering in coincidence with external gates, which effectively
-limits both data and trigger rates, and is not a viable solution for
-DUNE's off-beam physics program, as it would effectively limit
-exposure and therefore physics sensitivity. %On the other hand, ICARUS
-%has ...
-MicroBooNE has demonstrated successful continuous readout of a \dword{lartpc},
-via use of dynamic and fixed-baseline zero-supression implemented in
-firmware for both \dword{tpc} and \dword{pds} readout. SBND, which utilizes the same readout
-system as MicroBooNE, will investigate trigger primitive generation
-and self-triggering based on \dword{tpc} information in the timescale of 2021-2023.
+% Continuous self-tirggering of the detector is also new with respect to
+% other ongoing or planned near-term \dword{lartpc} experiments, including
+% MicroBooNE, SBND, and ICARUS. Both MicroBooNE and ICARUS have demonstrated
+% self-triggering in coincidence with external gates, which effectively
+% limits both data and trigger rates, and is not a viable solution for
+% DUNE's off-beam physics program, as it would effectively limit
+% exposure and therefore physics sensitivity. %On the other hand, ICARUS
+% %has ...
+% MicroBooNE has demonstrated successful continuous readout of a \dword{lartpc},
+% via use of dynamic and fixed-baseline zero-supression implemented in
+% firmware for both \dword{tpc} and \dword{pds} readout. SBND, which utilizes the same readout
+% system as MicroBooNE, will investigate trigger primitive generation
+% and self-triggering based on \dword{tpc} information in the timescale of 2021-2023.
 
-\subsection{ProtoDUNE Outcomes}
+\subsubsection{ProtoDUNE Outcomes}
 
 The ProtoDUNE DAQ supported a test-beam experiment, and the requirements of the DUNE DAQ are substantially different in scale and performance.
 However, the successful operation of the \dword{protodune} \dword{daq} has provided several key demonstrations for final system, in particular the data flow architecture, run configuration and control, and back-end functionality.
@@ -1607,35 +1601,41 @@ Future work will include prototyping \dword{daqccm} functionality including \dwo
 
 PTMP has been successfully exercised to transfer trigger primitives from the software based hit finder. The short-term goal will be to successfully aggregate information from across an APA and feed the result to a trigger candidate finder which identifies horizontal muons. From this output a trigger decision can be made.
 
-\subsection{Additional Teststands}
-\label{sec:sp-daq:validation-demonstrators}
-%\fixme{single-phase module}
-%\metainfo{Describe VST demonstrators and why we must build them.}
+% \subsection{Additional Teststands}
+% \label{sec:sp-daq:validation-demonstrators}
 
-Concurrently with \dword{pdsp} operation and development, a number of
-``vertical slice'' teststands will be built to allow 
-development and testing of individual parts of the \dword{daq} system
-as well as testing of key aspects of the design and overall
-scalability. A data selection subsystem vertical slice teststand will be
-constructed and operated on fake-generated data, to assist in the
-development of data selection, exercise the system for a variety of
-configurations, perform small-scale tests that stress the critical
-parts of the corresponding infrastructure, 
-and identify likely failure points and/or bottlenecks. The subsystem
-will also be deployed and exercised on existing HPC clusters of
-comparable resources and specifications as planned for the final
-production system for ``horizontal slice'' tests of similar nature. The
-\dword{daqbes} will be developed and tested in a similar way.
+% Concurrently with \dword{pdsp} operation and development, a number of
+% ``vertical slice'' teststands will be built to allow 
+% development and testing of individual parts of the \dword{daq} system
+% as well as testing of key aspects of the design and overall
+% scalability. A data selection subsystem vertical slice teststand will be
+% constructed and operated on fake-generated data, to assist in the
+% development of data selection, exercise the system for a variety of
+% configurations, perform small-scale tests that stress the critical
+% parts of the corresponding infrastructure, 
+% and identify likely failure points and/or bottlenecks. The subsystem
+% will also be deployed and exercised on existing HPC clusters of
+% comparable resources and specifications as planned for the final
+% production system for ``horizontal slice'' tests of similar nature. The
+% \dword{daqbes} will be developed and tested in a similar way.
 
-In addition to dedicated vertical and horizontal slice teststands, a number of
-\dword{daq} development kits will be available for the consortium for
-specific component testing, as well as to other detector and
-calibration consortia to support their own development, production, and quality assurance programs. The \dword{daq} 
-kit will also form the basis for testing at \dword{apa} Construction sites beginning in 2020. 
+% In addition to dedicated vertical and horizontal slice teststands, a number of
+% \dword{daq} development kits will be available for the consortium for
+% specific component testing, as well as to other detector and
+% calibration consortia to support their own development, production, and quality assurance programs. The \dword{daq} 
+% kit will also form the basis for testing at \dword{apa} Construction sites beginning in 2020. 
 
-% \subsection{Plan for Future Development}
-% \label{sec:sp-daq:design-plans}
-% \fixme{Giovanna and Allesandro}
+\subsection{Plan for Future Development}
+\label{sec:sp-daq:design-plans}
+
+As mentioned in the introduction of this section, at present the development model chosen for the DAQ system is the one of iterative prototyping.
+This model is widely used in projects in which requirements are still being refined and for systems relying on rapidly evolving technologies, such as today’s information and computing sector. 
+This model will be used throughout 2019, making use of the \dword{protodune} setup to explore architectural options, software solutions, etc.
+At a later stage the DAQ development will move to a more streamlined incremental model, ensuring that careful design precedes the final implementation of individual components.
+Most of the development will be carried out emulating the data inputs.
+On the other hand, regularly the DAQ will be validated via test stand integration with detectors, such as \dword{protodune} or pre-installation sites.
+The overall development schedule with the main DAQ milestones is shown in Section~\ref{sec:fd-daq:schedule}.
+
 
 \section{Production, Assembly, Installation and Integration}
 \label{sec:sp-daq:production}
