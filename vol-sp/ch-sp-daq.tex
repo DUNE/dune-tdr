@@ -34,7 +34,7 @@ HEP experiments across the world.
 The system is designed to service all \dword{fd} \dword{detmodule} designs interchangeably. 
 However, some aspects of the \dword{daq} design described in this chapter are tailored to meet the specific needs of the single-phase detector module technology. 
 Adaptations to detector technology are implemented in the upstream part of the DAQ leaving the remainder generic.
-The individual modules are serviced essentially independently and only loosely coupled though a cross-module triggering mechanism.
+The individual modules are serviced essentially independently and only loosely coupled through a cross-module triggering mechanism.
 
 The chapter begins with an overview of the \dword{daq} design (Section~\ref{sec:fd-daq:overview}),
 including requirements that the design must meet, and specification of
@@ -1054,36 +1054,43 @@ This system will be designed to allow it to evolve as the detector and its data 
 
 \subsection{Control, Configuration, and Monitoring}
 \label{sec:fd-daq:design-run-control}
-% \fixme{module-generic}
 
-% \metainfo{Describe run control and \dword{daq} operation monitoring. 
-%   How it makes use of the Message Passing System. 
-%   What is an ``epoch''.
-%   How Epoch Change Requests lead to zero downtime reconfiguration. 
-%   Public key based ``iron'' authentication between run control processes and the controlled processes. 
-%   Describe how RC will configure partitioning, initiate reconfiguration, handle ``run'' changes, node discovery, configuration, logging, startup, shutdown and failures are handled. Describe how RC will support detector electronics configuration.}
-
-The \dfirst{daqccm} subsystem, illustrated in Figure~\ref{fig:daq-ccm-subsys}, encompasses, as its name suggests, the software needed to control, configure, and monitor the rest of the \dword{daq}, as well as itself. 
-It provides a coherent software view of the distributed and sometimes redundant \dword{daq} components, allowing them to be treated and managed as a single tightly coupled system. 
-Figure~\ref{fig:daq-conceptual-overview} shows the central role of the \dword{daqccm} within the complete \dword{daq} system.
-The following sections describe each of the three \dword{daqccm} subsystems. 
-Details on potential designs patterns that may be followed can be found in~\citedocdb{10482} 
+The \dfirst{daqccm}, illustrated in Figure~\ref{fig:daq-ccm-subsys}, consist of the software
+subsystems to control, configure, and monitor the DAQ system, as well as the detector components
+participating to datataking. It provides a central access point for the highly distributed DAQ
+components, allowing them to be treated and managed as a single, coherent system, though their
+corresponding subsystem interfaces. It is responsible for error handling and recovery, which is
+achieved by designing a robust and autonomous fault-tolerant control system. The main goal is to
+maximize system up-time, data-taking efficiency and data quality when the system faces programmatic
+(i.e. calibrations) and unforeseen (hardware failures or software faults) change of data-taking
+conditions. The \dfirst{daqccm} provides an access point, which is delegating user’s actions to the
+corresponding interfaces. The detector components and infrastructure elements access the \dfirst{daqccm}
+subsystems through their provided interfaces. 
 
 \begin{dunefigure}[DAQ CCM subsystem interaction]{fig:daq-ccm-subsys}{Main interaction among the three \dword{daqccm} subsystems.}
   \includegraphics[width=0.8\textwidth]{daq-ccm-subsys.pdf}
 \end{dunefigure}
 
+The following sections describe each \dfirst{daqccm} subsystem, covering internal functions and dependencies between each other.
+
+\subsubsection{Access}
+\label{sec:daq:design:ccm:access}
+Actions are defined as any kind of human interaction with the \dfirst{daqccm}. The access subsystem is responsible for the action delegation to internal function calls and procedures. It’s implementation is driven by the control, configuration and monitoring interface specifications, and protects the direct access to detector and infrastructural resources. It also controls authentication and authorization, which locks different functionalities to certain actor groups and subsystems. As an example, only the detector experts can modify frontend configuration through the configuration interfaces, or only an expert user can exclude an APA’s readout from data taking. 
+
+
 \subsubsection{Control}
 \label{sec:daq:design:ccm:control}
 
-
-The \dword{daq} control subsystem actively manages \dword{daq} software process lifetimes, asserts access control policies, executes commands, initiates configuration changes, detects and handles exceptions, and provides an interface for human operators.
-
-% \fixme{I (bv) redrew this from Giovanna's to get vector PDF and match \dword{dune} color palette.  I made two content changes: 1: move UI out of partition as it can't both initiate a partition and be inside it and likely will allow for creation/viewing of more than just one partition.  2: I had to guess on how garbage collection might go and so addded a line from RM to PM. }
+The control subsystem consists of several components and utilities, and also has additional subsystems to carry out dedicated roles. It enforces the implementation of required interfaces and actively manages DAQ process lifetimes. It operates in a distributed, fault-tolerant manner due to protocols that will drive the FSM for state sharing. 
 
 \begin{dunefigure}[DAQ control subsystem roles and services]{fig:daq-ccm-control}{Roles and services that compose the \dword{daq} control subsystem.}
   \includegraphics[width=0.8\textwidth]{daq-ccm-control.pdf}
 \end{dunefigure}
+
+
+
+
+
 
 The control subsystem comprises a number of functional blocks of either global or partition scope as illustrated in Figure~\ref{fig:daq-ccm-control}. 
 In the figure, ``partition'' refers to a logical segmentation of the \dword{daq} where each segment operates to some extent independently from others. 
@@ -1137,27 +1144,20 @@ Additional UI elements will be developed as described in sections~\ref{sec:daq:d
 \subsubsection{Configuration}
 \label{sec:daq:design:ccm:configuration}
 
-The \dword{daq} configuration subsystem provides persistent data storage for all historic, current, and future configuration information applicable to the \dword{daq}.
-It provides a single point (via high-availability, redundant services) for the allocation of unique and monotonically increasing \dwords{daqrunnum}.
-The configuration data stores operate in an ``insert-only'' mode so that no prior information may be overwritten. 
-The following types of information will be managed:
+The configuration subsystem provides several key elements for the configuration management of \dword{daq} components and detector front-end electronics. It provides a description of system configurations, the ability to define and modify configurations, and graphical user interfaces for the human user to access the data. Data access libraries will hide the technology used for the databases implementation. The subsystem is also responsible for the serialization, persistency, and bookkeeping of configurations. 
 
+\begin{dunefigure}[DAQ CCM subsystem interaction]{fig:daq-ccm-config}{Main components of the \dword{daqccm} configuration subsystem.}
+  \includegraphics[width=0.8\textwidth]{daq-ccm-config.pdf}
+\end{dunefigure}
+
+The main components of the configuration subsystem are the following:
 \begin{itemize}
-
-\item Partition structure contains descriptions of the multiplicity and connectivity of \dword{daq} components for any partition. This describes the overall connectivity of ``nodes'' in the \dword{daq} ``graph''.
-
-\item Component parameters comprise configuration information associated with any given \dword{daq} component; for example, thresholds in a trigger candidate processor or gains and peaking times of a FE amplifier.
-
-\item Run number provides a monotonically increasing sequence of \dwords{daqrunnum} that are allocated upon request to assure that each is unique.
-
-\item Partition instances associate a \dword{daqrunnum} and the set of component parameters that were used to initiate a \dword{daqpart} or which are used to reconfigure an existing \dword{daqpart}.  
-
-\item Constraints define rules that must be held true by resource management servicing requests for process allocations.  This information store also includes which constraints were used by resource management over time.
+\item Configuration Manager - It consists of the three main components of configuration management systems. The Identification Engine is a set of functionalities that are responsible for the definition of DAQ components and their corresponding configuration specification. The Change Manager is responsible for providing control over altering the configuration specifications of components. The Status Engine is providing status and information about configuration specifications of individual, or set of DAQ elements.
+\item Audit System - This important subsystem is supporting the experts and decision making systems to verify the consistency of configuration specifications against the DAQ and detector components. It provides results on mis-configurations and potential problems on configuration alignment and dependencies between components.
+\item Persistency Engine - This component provides a single and uniform serialization module, which is strictly followed by every DAQ component. Also responsible for configuration schema evolution and communication with the configuration database. The storage engine privileges will be only read and write operations, not allowing updates and removal of configurations. It also provides a redundant session layer for high-availability and load distribution.
 \end{itemize}
 
-
-Access to configuration information is via a service that hides the choice of storage technology from any client queries.
-This interface will also be used by editors run by human operators or by  generators run as part of an expert system.
+The configuration system will mainly consist of standard configuration management components, with a high emphasis on the audit system, in order to verify that the global configuration of the DAQ complies with the detector, physics and operational requirements.
 
 \subsubsection{Monitoring}
 \label{sec:daq:design:ccm:monitoring}
