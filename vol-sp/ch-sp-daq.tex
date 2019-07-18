@@ -1157,38 +1157,24 @@ The main components of the configuration subsystem are the following:
 \item Persistency Engine - This component provides a single and uniform serialization module, which is strictly followed by every DAQ component. Also responsible for configuration schema evolution and communication with the configuration database. The storage engine privileges will be only read and write operations, not allowing updates and removal of configurations. It also provides a redundant session layer for high-availability and load distribution.
 \end{itemize}
 
-The configuration system will mainly consist of standard configuration management components, with a high emphasis on the audit system, in order to verify that the global configuration of the DAQ complies with the detector, physics and operational requirements.
+The configuration system will mainly consist of standard configuration management components, with a high emphasis on the audit system, in order to verify that the global configuration of the \dword{daqccm} complies with the detector, physics and operational requirements.
 
 \subsubsection{Monitoring}
 \label{sec:daq:design:ccm:monitoring}
 
-The \dword{daq} monitoring subsystem will help both humans and expert systems in detecting, diagnosing, and correcting anomalous activity, observing intended operation, and providing a historical record.
-This subsystem will accept required information produced by any \dword{daq} component (here called status).
-
-The precise implementation of the production, acceptance, store, post-processing, querying, and visualization of monitored status requires additional work. 
-However, a publish-subscribe (PUB/SUB) network communication pattern is expected to be adopted for transport of monitoring messages. 
-This will decouple production and consumption and facilitate development of a variety of status viewers, expert systems, debugging tools, etc. 
-The types of messages include but are not limited to the following:
+Highly-scalable and efficient operational monitoring is essential during data-taking periods. Any malfunctioning component of the experiment must be identified and reported as soon as possible. Therefore, the aim of the monitoring subsystem is probing and notifying the status of \dword{daqccm} components, services, and resources. There is also a requirement of \dword{daqccm} infrastructure monitoring and log aggregation. The types of monitoring information vary greatly depending on operational complexity, which require flexibility from the monitoring infrastructure for seamless additions, modifications and aggregated view on service degradation.
+It consists of the following main components:
 
 \begin{itemize}
-\item Common to all will be a ``header'' holding a message type indicator, a sender address and the associated detector data time and the recent host computer time.
- 
-\item Logging messages add an importance label (e.g., debug, info, warning, error) and a succinct, human-readable information string providing an explanation of what occurred.
-  
-\item Metrics will provide structured data carrying specific information about predefined aspects of the sender. 
-  This is similar to logging, but the messages support automated consumption and reaction by expert systems.  
-
-\item Quality messages summarize information derived from the detector data (e.g., from waveforms) or its metadata (e.g., timestamps, error codes) while that data is ``in flight'' through the \dword{daq}.
-
+  \item Metric Manager - It is responsible for the registration of metric data streams and corresponding aggregator functions. This central element is the collection of features and services that provides support for configurable operational monitoring of \dword{daqccm} services. \dword{daqccm} components and services that are registered via the Metric Manager, are reporting monitoring data to the State and the Storage Engines in a publish-subscribe fashion. 
+  \item State Engine - This engine is responsible for providing the global state of the system at the current time. It subscribes to a set of registered metrics in the Metric Manager, and records the actual global state of the set for decision making systems (supervision, notification, and visualization).
+  \item Storage Engine - Metrics may have different persistency requirements, for which the engine is responsible to archive the data with the settings of interval, smoothing, etc. It also provides an implementation for the most common communication protocols for the database backends (SQL, REST, etc.).
+  \item Notification System - It is a rule-based system of scheduled and aimed notifications that occur in the case of state combinations. It defines soft and hard states of events and grace periods of alarms.
+  \item User Interfaces - Provides graphical and command line user interfaces for monitoring configuration management and visualization of metric data.
 \end{itemize}
 
-In general, the \dword{daq} will retain all status records at least long enough to allow for any offline data quality validation procedures to be performed. 
-However, some status feeds may be processed prior to storage if their raw form requires prohibitive amount of storage. 
-In particular, the quality stream data rate may be too substantial for long term storage. 
-Such streams will be summarized into histograms or other statistical representations prior to storing for longer term use.
+Monitoring being a key requirement in the industry for computer clusters and their applications, the proposed solution is the adaptation of mature, robust, and open-source third party tools, with the extension of DUNE \dword{daqccm} specific interface implementations and configurations of these monitoring systems. 
 
-In addition to this \dword{daq} \dword{daqccm} monitoring subsystem, a separate system must be used to monitor in depth the quality of the detector data content itself. 
-See Section~\ref{sec:fd-daq:design-data-quality} for the description of this data quality monitoring system.
 
 \subsubsection{Inter-Process Communication}
 \label{sec:daq:design-ipc}
@@ -1738,7 +1724,7 @@ dual phase consortium, with a consortium leader and a technical
 leader. The organization of the consortium is shown in
 Figure~\ref{fig:daq-org}. The \dword{daq} institution board currently comprises
 representatives from 34 institutions as shown in Table~\ref{tab:daq-ib}. The consortium leader is the spokesperson for the consortium and responsible for the overall scientific program and management of the group. The technical leader of the consortium is responsible for
-managing the project for the group. The leadership is assisted in its dutied by the Project Office, populated of the Resource Manager, the Software and Firmware coordinator and the Integration and Support Coordinator, providing support in the corresponding areas. 
+managing the project for the group. The leadership is assisted in its duties by the Project Office, populated of the Resource Manager, the Software and Firmware coordinator and the Integration and Support Coordinator, providing support in the corresponding areas. 
 The consortium is organized into working groups addressing the design, R\&D integration, and in the future, commissioning and installation of the key DAQ systems. The Physics Performance and Facility working groups are not associated to a specific system but provide oversight of the general DAQ performance in the physics context and the on the interface with the facility infrastructure. The DAQ working group mandates are detailed in~\citedocdb{14938}.
 
 \begin{dunefigure}[DAQ consortium org chart]{fig:daq-org}{Organizational chart for the \dword{daq} Consortium
