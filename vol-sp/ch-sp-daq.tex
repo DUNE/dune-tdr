@@ -525,7 +525,7 @@ namely the \dword{daqdsn} and the \dword{daqbes}.
   \includegraphics[width=0.8\textwidth]{daq-readout.pdf}
 \end{dunefigure}
 
-\begin{dunefigure}[DUNE upstream DAQ subsystem functional blocks.]{fig:daq:readout-blocks}{\dword{dune} upstream
+\begin{dunefigure}[Flow diagram of the DUNE upstream DAQ subsystem.]{fig:daq:readout-blocks}{\dword{dune} upstream
     \dword{daq} subsystem functional blocks.}
   \includegraphics[width=0.8\textwidth]{daq-ud-func-blocks}
 \end{dunefigure}
@@ -540,22 +540,7 @@ collection corresponds to an optically isolated region in the
 detector. 
 Each RU is comprised of a \dword{fec} which is a commodity server that hosts a
 collection of custom hardware, 
-firmware, and software that collectively form four functional blocks,
-which work together 
-as illustrated in Figure~\ref{fig:daq:readout-blocks}, and are
-itemized below:
-
-\begin{enumerate}
-\item Data reception (Section~\ref{sec:fd-daq:upstream-receiver}), facilitated by \dword{felix} cards;
-\item Network based I/O (Section~\ref{sec:fd-daq:upstream-io}), facilitated by an embedded or commercial off-the-shelf network interface controller;
-\item Data processing (Section~\ref{sec:fd-daq:upstream-proc}), facilitated by \dword{fpga} resources on the \dword{felix}
-  card and/or on-host CPU resources, or, in the case of the \dword{tpc} RU only,
-  additional \dword{fpga} resources in the form of two dedicated co-processing
-  boards (interfacing directly with the \dword{felix} card); 
-\item Buffering (Section~\ref{sec:fd-daq:upstream-buf}), facilitated by host RAM and SSD, or, in
-  the case of the \dword{tpc} RU only, RAM
-  and SSD available on the co-processing boards.
-\end{enumerate}
+firmware, and software that collectively implement a set of functional blocks.
 
 In the baseline design, used also for system costing, each RU is composed of:
 \begin{enumerate}
@@ -565,43 +550,37 @@ In the baseline design, used also for system costing, each RU is composed of:
 
 \end{enumerate}
 
-Each functional block is described below.  In addition, and like all
-other \dword{daq} subsystems, the upstream \dword{daq} uses services and implements interfaces that are provided by 
-the \dword{daqccm} as described in Section~\ref{sec:fd-daq:design-run-control}.
+In the following we describe the main functional blocks of the upstream \dword{daq}.
 
-\subsubsection{Data reception}
-\label{sec:fd-daq:upstream-receiver}
-The physical interface between the detector electronics and the DAQ are 9.6 Gbps point-to-point serial optical links running a simple (e.g., 8/10 bit encoded) protocol. 
-For each \dword{apa} there are ten such links connecting its \dwords{wib} to the DAQ.
-To reduce space and power consumption in the \dword{cuc}, high data aggregation is desired.
-In the baseline design, the 20 fibers from two \dwords{apa} are aggregate into one \dword{fec} with each \dword{apa} connected to one \dword{felix} FPGA PCIe 3.0 board. 
-If technology advances sufficiently a PCIe 4.0 version of \dword{felix} may be produced to increase the data aggregation such that each board would accept 20 links and a total of 40 links per \dword{fec} would be accomodated.
-Tests were performed to verify \dword{om3} and \dword{om4} fibers support \SI{10}{Gbps} links over a run of \SI{300}{\meter}.
-Higher speed fiber optic links may be employed in order to reduce the number of fibers if run lengths can be reduced.
-The \dword{felix} board and firmware was developed initially by and for the ATLAS experiment and is now proposed or already in use by several other experiments including \dword{protodune}.
-
-\subsubsection{Network based I/O}
-\label{sec:fd-daq:upstream-io}
-
-The upstream \dword{daq} subsystem provides access to the \dword{daqdsn} and \dword{daqbes} through a commodity switched network as illustrated in Figure~\ref{fig:daq:readout}).
+\begin{itemize}
+  
+  \item The physical interface between the detector electronics and the DAQ are 9.6 Gbps
+point-to-point serial optical links running a simple (e.g., 8/10 bit encoded) protocol.  For each
+\dword{apa} there are ten such links connecting its \dwords{wib} to the DAQ. To reduce space and
+power consumption in the \dword{cuc}, high data aggregation is desired. In the baseline design, the
+20 fibers from two \dwords{apa} are aggregated into one \dword{fec} with each \dword{apa} connected
+to one \dword{felix} FPGA PCIe 3.0 board.  If technology advances sufficiently a PCIe 4.0 version of
+\dword{felix} may be produced to increase the data aggregation such that each board would accept 20
+links and a total of 40 links per \dword{fec} would be accomodated. Tests were performed to verify
+\dword{om3} and \dword{om4} fibers support \SI{10}{Gbps} links over a run of \SI{300}{\meter}.
+Higher speed fiber optic links may be employed in order to reduce the number of fibers if run
+lengths can be reduced. The \dword{felix} board and firmware was developed initially by and for the
+ATLAS experiment and is now proposed or already in use by several other experiments including
+\dword{protodune}.
+  
+  \item The upstream \dword{daq} subsystem provides access to the \dword{daqdsn} and \dword{daqbes} through a commodity switched network as illustrated in Figure~\ref{fig:daq:readout}).
 The network communication protocol is as described in Section~\ref{sec:daq:design-ipc}.
 The network I/O is handled by the \dwords{daqrou} via software; dedicated hardware or firmware development is not required.
 
-\subsubsection{Data processing}
-\label{sec:fd-daq:upstream-proc}
+\item The data processing functional block is tasked with identifying and forming \dwords{trigprimitive}, after a stage of data reorganization and noise filtering for both the \dword{tpc} or \dword{pds}.
 
-The data processing functional block is tasked with identifying and forming \dwords{trigprimitive}, after a stage of data reorganization and noise filtering for both the \dword{tpc} or \dword{pds}.
-
-\Dwords{trigprimitive} summarize time periods on a channel where the digitized waveform is no longer consistent with noise.
+\item \Dwords{trigprimitive} summarize time periods on a channel where the digitized waveform is no longer consistent with noise.
 These regions of interest are then used as input to the \dword{daqds} sub-system where they begin the process of forming a trigger decision.
 
 In the baseline design this functional block is implemented in \dword{fpga}.
 R\&D studies are ongoing to evaluate whether alternative implementations (in GPUs or CPUs) would bring any advantages in terms of flexibility or cost.
 
-\subsubsection{Buffering}
-\label{sec:fd-daq:upstream-buf}
-
-In \dword{dune}, the upstream \dword{daq} system is in charge of buffering all
+\item In \dword{dune}, the upstream \dword{daq} system is in charge of buffering all
 detector data until the \dword{daqdss} has issued a \dword{trigcommand}
 (see Section~\ref{sec:sp-daq:design-data-selection}) and until the
 \dword{daqbes} (Section~\ref{sec:fd-daq:design-backend}) has requested
@@ -641,6 +620,9 @@ For both types of activity, the buffering requirements may be reduced by employi
 A factor of at least two to four compression is expected, based on MicroBooNE and \dword{protodune} experience using a modified Huffman encoding of differential ADC values. 
 If expected noise levels are achieved, this compression would provide a factor of four to ten, depending on the detector module technology.
 Efforts are currently underway to understand the costs and technology requirements in exploiting this benefit.
+\end{itemize}
+
+Figure~\ref{fig:daq:readout-blocks} shows the flow diagram of data and control messages within the upstream \dword{daq} as well as the main interaction of the upstream \dword{daq} with other subsystems.
 
 \subsection{Data Selection}
 \label{sec:sp-daq:design-data-selection}
@@ -1088,54 +1070,14 @@ The control subsystem consists of several components and utilities, and also has
   \includegraphics[width=0.8\textwidth]{daq-ccm-control.pdf}
 \end{dunefigure}
 
-The control subsystem comprises a number of functional blocks of either global or partition scope as illustrated in Figure~\ref{fig:daq-ccm-control}. 
-In the figure, ``partition'' refers to a logical segmentation of the \dword{daq} where each segment operates to some extent independently from others. 
-The segmentation applies to the portion of detector electronics that provides input to the partition's \dword{daqdsn} and readout. 
-The largest partition %would be 
-is that of one \dword{detmodule}. 
-The functional blocks in the figure represent one or more semi-autonomous agents, each with defined roles, capabilities, and access restrictions. 
-Although drawn as single blocks, they typically are implemented as multiple peer agents to permit redundancy and fail-over. 
-The blocks in partition scope are first described.
-
+It contains the following core components:
 \begin{itemize}
-\item Partition naming service provides \dword{daqdispre} services for the components of a \dword{daqpart}. 
-  That is, it allows one component to be made aware of the creation and continued operation of other components (discovery) or that others have recently become unresponsive (presence). 
-
-\item Run control provides a central director;  its creation is the first step in initiating a \dword{daqpart}. 
-  The \dword{rc} accepts, interprets, and validates input commands that may come either from a human via a user interface, or from other blocks (expert systems). 
-  The commands describe a desired state of the \dword{daqpart}. 
-  \dword{rc} will query other blocks to validate commands and then execute the commands by allocating processes through process management. 
-  Once successfully allocated, their lifetimes are managed by \dword{rc}. 
-  Throughout its lifetime, \dword{rc} will reconfigure an existing process, destroy it, or allocate additional processes. 
-
-\item Supervisor provides a locus of expert system automation. 
-  This block is instantiated by the \dword{rc} in order to augment or facilitate human commands with automated ones. 
-  For example, it is expected that some set of commonly occurring exceptions or errors will be cataloged as the operators gain experience with the \dword{daq}.   Where possible, appropriate responses to these will be codified in the form of \dword{rc} commands.  The supervisor then will be charged with issuing these commands when one of the known exceptions are raised.
-
+\item Supervision System - It is responsible for manual and automated control and supervision of DAQ components at any given time. In autonomous mode, the system makes attempts for fault-recovery, failover to backup instances of subsystems, and isolation of problematic regions of the control tree. This is carried out by a hierarchical rule-based planning or fuzzy logic system.
+\item DAQ Application - The CCM provides interfaces in order to communicate with processes of the DAQ, and the ability to control and communication with the CCM. The Inter Process Communication (IPC) supports a mechanism to interact with all actors participating to data taking. The Finite State Machine (FSM) enforces the possible states and transitions that are specific to the experiment’s components, and also describes them in a uniform way.
+\item Run Control - This part of the control subsystem coherently steers the data taking operations. It interacts with all actors participating to data taking in a given partition. It consists of a hierarchical control tree, which can subdivide the DAQ components into separated regions that may be acted upon independently.
+\item Resource Management - Provides a global scope of available resources for the DAQ components. This includes the mapping between the detector front-end readout units, processes, servers where they are spawned and required resources for the processes.
+\item Process Management - It is responsible to manage process lifetime.
 \end{itemize}
-
-Global scope controls \dword{daq} components for all \dwords{daqpart} across all \dwords{detmodule}.  It consists of the following blocks:
-
-
-\begin{itemize}
-\item Global naming service aggregates the \dword{daqdispre} information across partitions.  
-
-\item Process management allocates and may reclaim sets of processes on behalf of a requesting component (specifically \dword{rc} and resource management). 
-  Process management only allocates processes if their requester has appropriate access privileges as determined by access management and if resource management determines sufficient resources exist. 
-  
-\item Resource management determines whether any process allocation can proceed.  It also enacts process garbage collection to reap any processes which have outlived a controlled shutdown command.
-
-  
-\item Access management is responsible for providing authentication and authorization for all \dword{daq} functions which require some level of access control. 
-
-\end{itemize}
-
-The last block in Figure~\ref{fig:daq-ccm-control} represents a number of different applications that provide a human-machine interface (UI) to the control subsystem.
-At least one UI will be developed to allow a trained operator to construct and issue commands required to initiate, configure, potentially reconfigure, and finally terminate \dwords{daqpart}. 
-UIs may enact access control in issuing commands but this does not replace access control inside the RC when accepting commands.
-Any UI used for nominal operation or monitoring of the DUNE FD \dword{daq} (``shift work'') will be usable remotely from any DUNE institution and from a variety of personal computing platforms.  
-Additional UI elements will be developed as described in sections~\ref{sec:daq:design:ccm:configuration} and~\ref{sec:daq:design:ccm:monitoring}.
-
 
 \subsubsection{Configuration}
 \label{sec:daq:design:ccm:configuration}
