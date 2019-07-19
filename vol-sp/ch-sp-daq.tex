@@ -1050,54 +1050,14 @@ The control subsystem consists of several components and utilities, and also has
   \includegraphics[width=0.8\textwidth]{daq-ccm-control.pdf}
 \end{dunefigure}
 
-The control subsystem comprises a number of functional blocks of either global or partition scope as illustrated in Figure~\ref{fig:daq-ccm-control}. 
-In the figure, ``partition'' refers to a logical segmentation of the \dword{daq} where each segment operates to some extent independently from others. 
-The segmentation applies to the portion of detector electronics that provides input to the partition's \dword{daqdsn} and readout. 
-The largest partition %would be 
-is that of one \dword{detmodule}. 
-The functional blocks in the figure represent one or more semi-autonomous agents, each with defined roles, capabilities, and access restrictions. 
-Although drawn as single blocks, they typically are implemented as multiple peer agents to permit redundancy and fail-over. 
-The blocks in partition scope are first described.
-
+It contains the following core components:
 \begin{itemize}
-\item Partition naming service provides \dword{daqdispre} services for the components of a \dword{daqpart}. 
-  That is, it allows one component to be made aware of the creation and continued operation of other components (discovery) or that others have recently become unresponsive (presence). 
-
-\item Run control provides a central director;  its creation is the first step in initiating a \dword{daqpart}. 
-  The \dword{rc} accepts, interprets, and validates input commands that may come either from a human via a user interface, or from other blocks (expert systems). 
-  The commands describe a desired state of the \dword{daqpart}. 
-  \dword{rc} will query other blocks to validate commands and then execute the commands by allocating processes through process management. 
-  Once successfully allocated, their lifetimes are managed by \dword{rc}. 
-  Throughout its lifetime, \dword{rc} will reconfigure an existing process, destroy it, or allocate additional processes. 
-
-\item Supervisor provides a locus of expert system automation. 
-  This block is instantiated by the \dword{rc} in order to augment or facilitate human commands with automated ones. 
-  For example, it is expected that some set of commonly occurring exceptions or errors will be cataloged as the operators gain experience with the \dword{daq}.   Where possible, appropriate responses to these will be codified in the form of \dword{rc} commands.  The supervisor then will be charged with issuing these commands when one of the known exceptions are raised.
-
+\item Supervision System - It is responsible for manual and automated control and supervision of DAQ components at any given time. In autonomous mode, the system makes attempts for fault-recovery, failover to backup instances of subsystems, and isolation of problematic regions of the control tree. This is carried out by a hierarchical rule-based planning or fuzzy logic system.
+\item DAQ Application - The CCM provides interfaces in order to communicate with processes of the DAQ, and the ability to control and communication with the CCM. The Inter Process Communication (IPC) supports a mechanism to interact with all actors participating to data taking. The Finite State Machine (FSM) enforces the possible states and transitions that are specific to the experiment’s components, and also describes them in a uniform way.
+\item Run Control - This part of the control subsystem coherently steers the data taking operations. It interacts with all actors participating to data taking in a given partition. It consists of a hierarchical control tree, which can subdivide the DAQ components into separated regions that may be acted upon independently.
+\item Resource Management - Provides a global scope of available resources for the DAQ components. This includes the mapping between the detector front-end readout units, processes, servers where they are spawned and required resources for the processes.
+\item Process Management - It is responsible to manage process lifetime.
 \end{itemize}
-
-Global scope controls \dword{daq} components for all \dwords{daqpart} across all \dwords{detmodule}.  It consists of the following blocks:
-
-
-\begin{itemize}
-\item Global naming service aggregates the \dword{daqdispre} information across partitions.  
-
-\item Process management allocates and may reclaim sets of processes on behalf of a requesting component (specifically \dword{rc} and resource management). 
-  Process management only allocates processes if their requester has appropriate access privileges as determined by access management and if resource management determines sufficient resources exist. 
-  
-\item Resource management determines whether any process allocation can proceed.  It also enacts process garbage collection to reap any processes which have outlived a controlled shutdown command.
-
-  
-\item Access management is responsible for providing authentication and authorization for all \dword{daq} functions which require some level of access control. 
-
-\end{itemize}
-
-The last block in Figure~\ref{fig:daq-ccm-control} represents a number of different applications that provide a human-machine interface (UI) to the control subsystem.
-At least one UI will be developed to allow a trained operator to construct and issue commands required to initiate, configure, potentially reconfigure, and finally terminate \dwords{daqpart}. 
-UIs may enact access control in issuing commands but this does not replace access control inside the RC when accepting commands.
-Any UI used for nominal operation or monitoring of the DUNE FD \dword{daq} (``shift work'') will be usable remotely from any DUNE institution and from a variety of personal computing platforms.  
-Additional UI elements will be developed as described in sections~\ref{sec:daq:design:ccm:configuration} and~\ref{sec:daq:design:ccm:monitoring}.
-
 
 \subsubsection{Configuration}
 \label{sec:daq:design:ccm:configuration}
