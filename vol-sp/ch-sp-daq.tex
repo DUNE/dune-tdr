@@ -303,10 +303,6 @@ A programmable trigger priority scheme ensures that the readout for the main phy
 
 \end{itemize}
 
-% \subsection{Delete this subsection, kept now to retain section numbering used by reviewers}
-% %\label{sec:sp-daq:parameters}
-% \fixme{Delete this section heading (keep content) once we've responded to reviewers comments.}
-
 Table~\ref{tab:sp-daq:parameters} summarizes the important parameters driving the \dword{daq} design. These parameters set the scale of data buffering, processing, and transferring resources which must be built into the design of each \dword{fd} module. 
 
 \begin{dunetable}
@@ -352,7 +348,6 @@ are listed in Table~\ref{tab:sp-daq:interfaces}, and described
 briefly in the following subsections. Interface agreements with
 facilities and underground installation are described in Section~\ref{sec:sp-daq:production}.
 
-\fixme{Add summaries in table. Georgia}
 \begin{dunetable}
 [DAQ System Interface Links]
 {p{0.3\textwidth}p{0.3\textwidth}p{0.2\textwidth}}
@@ -492,10 +487,10 @@ filter/data reduction stage, which is part of overall data selection,
   \includegraphics[width=0.9\textwidth,clip,trim=0 0 0 20mm]{daq-toplevel-conceptual-nebot.pdf}
 \end{dunefigure}
 
-\begin{dunefigure}[DAQ deployment]{fig:daq-deployment}{\dword{daq} Deployment}
-%   \includegraphics[width=0.8\textwidth]{daq-overview.pdf}
-\fixme{Someone draw this.  Roland?}
-\end{dunefigure}
+% \begin{dunefigure}[DAQ deployment]{fig:daq-deployment}{\dword{daq} Deployment}
+% %   \includegraphics[width=0.8\textwidth]{daq-overview.pdf}
+% \fixme{Someone draw this.  Roland?}
+% \end{dunefigure}
 
 Key to the implementation of the \dword{daq} design is the requirement that
 the system is partitionable. Specifically, the system can operate in
@@ -510,7 +505,6 @@ detector without interruption of normal data-taking.
 
 \subsection{Upstream DAQ}
 \label{sec:daq:design-upstream}
-%\fixme{module-generic}
 
 The upstream \dword{daq} provides the first link in the data flow chain of
 the \dword{daq} system and is where raw data from detector electronics
@@ -991,8 +985,6 @@ The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes 
 
 \subsubsection{Event builder}
 \label{sec:fd-daq:design-event-builder}
-%\fixme{module-generic}
-%\metainfo{Explain art\dword{daq}, handling of trigger commands by asynchronous, parallel queries to front end Data Selector (but take care not to duplicate between here and in the overview).}
 
 The \dword{daqbes} will provide the instances of the \dfirst{eb} most likely as
 \dword{artdaq}~\cite{artdaq} components of the same name. The 
@@ -1025,11 +1017,6 @@ The output buffer system will provide the relevant data flow status and statisti
 
 \subsubsection{Data Model}
 \label{sec:fd-daq:design-data-model}
-\fixme{Add reference to live document. Georgia}
-
-% \metainfo{Describe the data model. 
-%   This isn't a strict schema just things like how various parts of the
-%   detector readout map to files, etc.}
 
 The data model for the DUNE far detector describes the format and characteristics of the triggered data at each stage in the analysis chain, the grouping of the data into logical units such as runs, and the characteristics of ancillary data such as detector configuration parameters and calibration results.
 
@@ -1165,9 +1152,6 @@ This system will be designed to allow it to evolve as the detector and its data 
 
 \subsection{Timing and Synchronization}
 \label{sec:sp-daq:design-timing}
-%\fixme{single-phase module}
-%\fixme{Is it indeed still single-phase specific?}
-%\metainfo{Hardware, consumers, links.}
 
 All components of the \dword{fd} use clocks derived from a single
 \dfirst{gps} disciplined source, and all module components are
@@ -1194,8 +1178,6 @@ Central to the timing system are four types of signals:
 \item an \dfirst{irig} time code signal
   used to set the timing system 64-bit time stamp.
 \end{itemize}
-%The timing system associates the \dword{gps} time to its master clock by using the latter to stamp the arrival time of the \dword{pps} of the former. To provide an absolute time to the nearest second the information from \dword{ntp} is used.
-%\fixme{This may no longer be correct.  Will NTP be used and the host computer clock consulted for the absolute time?  Will PTP used in its stead?  How does IRIG fit in?  Finally, this sentence, however it needs to be written, is redundant with the itemized list.}
 
 The timing system synchronization codes are distributed to the \dword{daq} readout components in the \dfirst{cuc} and the readout components on the cryostat via single mode fibers and passive splitters/combiners.
 All custom electronic components of the timing system are contained in two \dword{utca} shelves; at any time, one is active while the other serves as a hot spare.
@@ -1317,8 +1299,6 @@ greater detail in~\cite{Hennessy:CDRReview}.
 \subsection{Ongoing Development}
 \label{sec:sp-daq:design-validation}
 
-%\fixme{this section and onward still needs work}
-
 Subsystem development is ongoing at \dword{protodune} at the time of
 writing. A detailed schedule for 2019 is available
 in \cite{bib:docdb14095}. Major development plan milestones are:
@@ -1390,7 +1370,6 @@ readout by supporting two \dwords{apa} on a single server.
 
 \subsubsection{Co-processor Development}
 
-\fixme{Cussans, please improve this text and provide a diagram showing how connections between FELIX and co-processor.}
 
 Upstream \dword{daq} development efforts at \dword{protodune} include a parallel test platform for trigger primitive generation, compression, and buffering firmware validation for the \dword{fpga} co-processor board. The platform for these tests will initially be a Xilinx ZCU102 development board. Passive optical splitters will be inserted into the fiber path downstream of the WIBs, providing duplicate data inputs for the test hardware, without disrupting the main readout path of \dword{protodune}. Tests using the development board will first focus on generation of trigger primitives, which will be read out over the network via IPBus\cite{Larrea:2015wra}. The ZCU102 includes 512MBytes of DDR4 RAM connected to the \dword{fpga} programmable logic, as well as a four lane PCIe Gen 2 socket which will host an \dword{nvme} SSD on an adapter. This combination of hardware will allow tests of buffering and compression of readout data, in parallel with trigger primitive generation. The ZCU102 will subsequently be replaced with a ``\dword{felix} demonstrator'' using a Xilinx Virtex-7 Ultrascale+ \dword{fpga}, connected to a custom \dword{fpga} co-processor board via an FMC+ connector. These boards represent the first prototypes for the final system hardware.
 
@@ -1633,8 +1612,6 @@ may be found in \citedocdb{6988}, and the installation interface document for \d
 % TDR refs DocDB, not EDMS.  EDMS is only a "working area".
 % \fixme{Docdb 7105 is obsolete, refers to https://edms.cern.ch/document/2145183}
 
-\fixme{The installation interface document is also missing from Table 7.4}
-
 Infrastructure in the \dword{cuc} will be installed starting in Q4~2022
 (Figure~\ref{fig:high-level-schedule}).  At that point, CF will have
 handed the DAQ group an empty room with cooling water and power
@@ -1732,137 +1709,6 @@ South Dakota School of Mines and Technology (SDSMT) & USA     \\ \colhline
 Stanford Linear Accelerator Lab (SLAC) & USA     \\ \colhline
 \end{dunetable}
 
-% \subsection{Cost and Labor}
-% \label{sec:sp-daq:cost}
-
-% Table~\ref{tab:daq-cost} shows the current cost estimates for the \dword{daq}
-% subsystems major components necessary to serve the first DUNE FD
-% module. Costs are expected to be reduced for subsequent modules, since
-% a number of components are common across modules. %When appropriate, the quantities of
-% %components are shown, along with the total cost and a brief description of
-% %what is included in the cost estimate. 
-% The cost estimates include
-% materials and supplies (M\&S) for production, and packing and
-% shipping to SURF, but not 
-% spares. 
-
-% Table~\ref{tab:daq-cost} also provides estimates of
-% labor hours for construction. Labor depends on personnel category (e.g., faculty, student,
-% technician, post-doc, engineer), and vary by region and
-% institution. As such, costs are quantified using labor hours needed to
-% fulfil a given task. Signficant physics and simulation
-% effort is needed in particular for data selection related studies; those
-% labor resources are included as part of Design and R\&D.
-
-% \begin{dunetable}
-% [DAQ System Cost Summary]
-% {p{0.5\textwidth}p{0.2\textwidth}p{0.2\textwidth}}
-% {tab:daq-cost}
-% {DAQ System Cost Summary}
-% Cost Item & M\&S (k\$ US) & Labor Hours \\ \toprowrule
-% \rowcolor{dunepeach} Design, Engineering and R\&D & & \\ \colhline
-% Facility & & \\ \colhline
-% Timing & & \\ \colhline
-% Detector Readout & & \\ \colhline
-% Trigger & & \\ \colhline
-% Data Flow & & \\ \colhline
-% Event Filter & & \\ \colhline
-% DAQ Control & & \\ \colhline
-% \rowcolor{dunepeach} Production Setup & & \\ \colhline
-% \rowcolor{dunepeach} Production & & \\ \colhline
-% Facility & & \\ \colhline
-% Timing & & \\ \colhline
-% Detector Readout & & \\ \colhline
-% Trigger & & \\ \colhline
-% Data Flow & & \\ \colhline
-% Event Filter & & \\ \colhline
-% DAQ Control & & \\ \colhline
-% \rowcolor{dunepeach} DUNE FD Integration \& Installation & & \\ \colhline
-% Facility & & \\ \colhline
-% TIming & & \\ \colhline
-% Detector Readout & & \\ \colhline
-% Trigger & & \\ \colhline
-% Data Flow & & \\ \colhline
-% Event Filter & & \\ \colhline
-% DAQ Control & & \\ 
-% \end{dunetable}
-% \begin{dunetable}
-% [DAQ System Cost Summary]
-% {p{0.15\textwidth}p{0.1\textwidth}p{0.15\textwidth}p{0.4\textwidth}}
-% {tab:daq-cost}
-% {Cost estimates for different DAQ subsystems. All cost estimates
-%   include M\&S for construction only. Packing and shipping costs are
-%   included; spares are not included. }   
-% System & Quantity & Cost (under development) (k\$ US) & Description \\ \toprowrule
-% TPC Front-end Readout & 150 & - & Detector links  \\ \colhline
-% TPC Front-end Readout & 75 & - & Felix, host server (CPU), and networking  \\ \colhline
-% TPC Front-end Readout & 150 & - & Co-processor  \\ \colhline
-% PDS Front-end Readout & 6-8 & - & Felix, host server (CPU), and networking  \\ \colhline
-% Low level TPC Data Selection & 75 & - & Server (CPU), and networking \\ \colhline
-% Low level PDS Data Selection & 6-8 & - & Server (CPU), and networking \\ \colhline
-% Trigger Primitive local storage & 1 & - & 1PB hard drive storage \\ \colhline
-% Module Level Trigger & 1+1 & - & Server (CPU), networking \\ \colhline
-% External Trigger Interface & 1+1 & - & Server (CPU), networking, and
-% interface boards \\ \colhline
-% High-Level Filter & 5 & - &  Server (GPU), and networking \\ \colhline
-% Back-end DAQ & 30 & - & Event Builder servers, and networking \\
-% \colhline 
-% Back-end DAQ Buffer & 1 & - & 1PB hard drive storage \\
-% \colhline 
-% CCM configuration, run control, databases & 4 & - & Server (CPU), and networking \\
-% \colhline 
-% CCM data management and transfer & 4 & - & Server (CPU), and networking \\
-% \colhline 
-% Timing \& Synchronization & 1 & - & Timing system, GPS \\ \colhline
-% Facilities & 16 & - & Racks, professional installation \\ \colhline
-% Infrastructure & - & - & IT \\ \colhline
-% \end{dunetable} 
-
-
-% \begin{dunetable}
-% [DAQ System Labor]
-% {p{0.25\textwidth}p{0.15\textwidth}p{0.1\textwidth}p{0.08\textwidth}p{0.08\textwidth}p{0.1\textwidth}p{0.08\textwidth}}
-% {tab:daq-labor}
-% {Estimate of labor hours for each category of personnel for different DAQ subsystems.}
-% System  & Faculty/Scientist & Post-doc & Student & Engineer & Technician  &  \textbf{Total}\\ \toprowrule
-% & (hours) & (hours)& (hours)& (hours)& (hours)& (hours)\\ \toprowrule
-% Upstream DAQ & - & -& -& -& - & - \\ \colhline
-% Data Selection & - & -& -& -& - & - \\ \colhline
-% Back-end DAQ & - & -& -& -& - & - \\ \colhline
-% Software Infrastructure & -& -& -& -& - & - \\ \colhline
-% CCM & -& -& -& -& - & - \\ 
-% Physics \& Simulation & -& -& -& -& - & - \\ \colhline
-% \end{dunetable}
-
-
-% Following the funding model envisioned for the consortium, various responsibilities are being distributed across institutions within the consortium.
-% At this stage of the project firm founding decisions are still being made, but the aspirational institutional responsibilities identified so far indicate that sufficient core funding and resources are available for the implementation of the first SP DUNE detector module.
-
-% Following the funding model envisioned for the consortium, various
-% responsibilities have been distributed across institutions within the
-% consortium. At this stage of the project, these should be \hlfix{considered
-% as ``aspirational'' responsibilities}{???} until firm funding decisions are
-% made. Table~\ref{tab:daq-inst-resp} shows the current institutional
-% responsibilities for primary \dword{daq} subsystems. Only lead institutes are
-% listed in the table for a given effort. For physics and simulation
-% studies, and validation efforts at \dword{pdsp}, wider institutional effort is
-% involved. A detailed list of tasks and institutional responsibilities
-% is provided in the project WBS \cite{WBS}.
-
-% \begin{dunetable}
-% [DAQ System Institutional Responsibilities]
-% {p{0.65\textwidth}p{0.25\textwidth}}
-% {tab:daq-inst-resp}
-% {Institutional responsibilities in the DAQ Consortium}
-% DAQ Subsystem  & Institutional Responsibility\\ \toprowrule
-% Upstream DAQ &  \\ \colhline
-% Data Selection &  \\ \colhline
-% Back-end DAQ &   \\ \colhline
-% Software Infrastructure &  \\ \colhline
-% CCM &   \\ \colhline
-% Infrastructure and Facilities &   \\ \colhline
-% Physics \& Simulation &   \\ \colhline
-% \end{dunetable}
 
 \subsection{Schedule and Milestones}
 \label{sec:fd-daq:schedule}
