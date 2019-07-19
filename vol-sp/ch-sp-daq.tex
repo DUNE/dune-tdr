@@ -29,7 +29,7 @@ HEP experiments across the world.
 The system is designed to service all \dword{fd} \dword{detmodule} designs interchangeably. 
 However, some aspects of the \dword{daq} design described in this chapter are tailored to meet the specific needs of the single-phase detector module technology. 
 Adaptations to detector technology are implemented in the upstream part of the DAQ leaving the remainder generic.
-The individual modules are serviced essentially independently and only loosely coupled though a cross-module triggering mechanism.
+The individual modules are serviced essentially independently and only loosely coupled through a cross-module triggering mechanism.
 
 The chapter begins with an overview of the \dword{daq} design (Section~\ref{sec:fd-daq:overview}),
 including requirements that the design must meet, and specification of
@@ -527,7 +527,7 @@ namely the \dword{daqdsn} and the \dword{daqbes}.
 
 \begin{dunefigure}[DUNE upstream DAQ subsystem functional blocks.]{fig:daq:readout-blocks}{\dword{dune} upstream
     \dword{daq} subsystem functional blocks.}
-  \includegraphics[angle=-90,width=0.8\textwidth]{daq_functional_blocks_upstream.pdf}
+  \includegraphics[width=0.8\textwidth]{daq-ud-func-blocks}
 \end{dunefigure}
 
 The upstream \dword{daq} system comprises many similar \dword{daqrou}, each
@@ -998,21 +998,14 @@ The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes 
 % records into a pool of \dword{eb} processes.  This asynchronous, parallel readout will be coordinated by a \dword{daqdfo}.  Its operation is illustrated in Figure~\ref{fig:daq:backend} and is discussed here:
 
 \begin{dunefigure}[DUNE DAQ back-end operation]{fig:daq:backend}{Illustration of \dword{dune} \dword{daqbes} operation.}
-  \includegraphics[width=0.8\textwidth]{daq-backend.pdf}
+  \includegraphics[width=\textwidth]{daq-backend.pdf}
 \end{dunefigure}
 
 \begin{itemize}
-\item \dword{daqdfo} accepts a stream of \dwords{trigcommand} and dispatches each for execution. If required, the \dword{daqdfo} splits the command in multiple contiguous readout segments.
-\item Each trigger segment is then dispatched to an available \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution. Execution entails interpreting the \dword{trigcommand} segment and querying the appropriate upstream \dword{daq} units to request data from the period of time. 
-\item Requests and their replies may be sent synchronously, and replies are expected even if data has already been purged from the upstream \dword{daq} units. (In that case, an error message would be sent out.)
-\item The received data then processed and aggregated, is finally saved to one or more files on the output storage system before it is transferred offline.
+\item \dword{daqdfo} accepts a stream of \dwords{trigcommand} and dispatches each to an available \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution.
 \item In atypical situations in which there are insufficient event builder resources available to handle the rate of triggers produced by the data selection sub-system, the DFO will alert the DS sub-system that the rate of triggers needs to be reduced.  When such reductions are requested, the DS sub-system will update the calculation of the module-level DAQ live time appropriately.
 \item The DFO will provide relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. Given its central role and knowledge of the state of available event builder buffers, it will be able to provide important information about the health and performance of the system.
 \end{itemize}
-%\fixme{Add time order requirement on DS above}
-%\fixme{Add return-empty-response requirement to buffer above}
-
-
 
 \subsubsection{Event builder}
 \label{sec:fd-daq:design-event-builder}
@@ -1020,10 +1013,14 @@ The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes 
 %\metainfo{Explain art\dword{daq}, handling of trigger commands by asynchronous, parallel queries to front end Data Selector (but take care not to duplicate between here and in the overview).}
 
 The \dword{daqbes} will provide the instances of the \dfirst{eb} most likely as
-\dword{artdaq}~\cite{artdaq} components of the same name. As described above, each EB instance will
-request selected data from the appropriate \dfirst{daqubi}, as addressed by a received
-\dword{trigcommand}.  An \dword{eb} will aggregate the selected data and record it the output
-storage buffer.
+\dword{artdaq}~\cite{artdaq} components of the same name. The 
+As described above, each EB instance will
+
+\begin{itemize}
+  \item Receive a readout segment for execution. Execution entails interpreting the \dword{trigcommand} segment and querying the appropriate upstream \dword{daq} units to request data from the period of time. 
+  \item Requests and their replies may be sent synchronously, and replies are expected even if data has already been purged from the upstream \dword{daq} units. (In that case, and empty fragment will be generated with appropriate error flags set).
+  \item The received data then processed and aggregated, is finally saved to one or more files on the output storage system before it is transferred offline.
+\end{itemize}
 
 %%The final output files shall use data schema and file formats as described in Section~\ref{sec:fd-daq:design-data-model}.
 
@@ -1056,45 +1053,36 @@ The data model for the DUNE far detector describes the format and characteristic
 
 The requirements that these place on the DAQ are primarily in the areas of flexibility and traceability.  The DAQ will have the flexibility to handle the readout of triggers that have a time window that is on the order of a single TPC drift time (for example a trigger associated with a beam gate window), triggers that have a time window of many seconds (such as for a supernova burst trigger), and windows between those two extremes (for detector and electronics studies).  In the area of traceability, the DAQ system will provide the necessary level of detail regarding the conditions that triggered each event, the expected and actual regions of the detector that contributed raw data to each event, the conditions of the detector and electronics during data taking, the version and configuration of the software components used in the DAQ chain, etc.
 
-\subsection{Data Quality Monitoring}
-\label{sec:fd-daq:design-data-quality}
-
-While the \dword{daqccm} contains an element of monitoring (Section~\ref{sec:daq:design:ccm:monitoring}), here \dfirst{dqm} refers to a subsystem that quickly analyzes the data in order to determine the general quality of the detector and DAQ operation.
-This is in order to allow operators to promptly detect and respond to any unexpected changes and assure high exposure times for later physics analyses. 
-A \dword{daq} \dfirst{dqm} 
-will be developed (including necessary infrastructure, visualization,
-and algorithms), which will process a subset of detector data in order
-to provide prompt feedback to the detector operators. 
-This system will be designed to allow it to evolve as the detector and its data is understood during commissioning and early operation and to cope with any evolution of detector conditions.
-
 \subsection{Control, Configuration, and Monitoring}
 \label{sec:fd-daq:design-run-control}
-% \fixme{module-generic}
 
-% \metainfo{Describe run control and \dword{daq} operation monitoring. 
-%   How it makes use of the Message Passing System. 
-%   What is an ``epoch''.
-%   How Epoch Change Requests lead to zero downtime reconfiguration. 
-%   Public key based ``iron'' authentication between run control processes and the controlled processes. 
-%   Describe how RC will configure partitioning, initiate reconfiguration, handle ``run'' changes, node discovery, configuration, logging, startup, shutdown and failures are handled. Describe how RC will support detector electronics configuration.}
-
-The \dfirst{daqccm} subsystem, illustrated in Figure~\ref{fig:daq-ccm-subsys}, encompasses, as its name suggests, the software needed to control, configure, and monitor the rest of the \dword{daq}, as well as itself. 
-It provides a coherent software view of the distributed and sometimes redundant \dword{daq} components, allowing them to be treated and managed as a single tightly coupled system. 
-Figure~\ref{fig:daq-conceptual-overview} shows the central role of the \dword{daqccm} within the complete \dword{daq} system.
-The following sections describe each of the three \dword{daqccm} subsystems. 
-Details on potential designs patterns that may be followed can be found in~\citedocdb{10482} 
+The \dfirst{daqccm}, illustrated in Figure~\ref{fig:daq-ccm-subsys}, consist of the software
+subsystems to control, configure, and monitor the DAQ system, as well as the detector components
+participating to datataking. It provides a central access point for the highly distributed DAQ
+components, allowing them to be treated and managed as a single, coherent system, though their
+corresponding subsystem interfaces. It is responsible for error handling and recovery, which is
+achieved by designing a robust and autonomous fault-tolerant control system. The main goal is to
+maximize system up-time, data-taking efficiency and data quality when the system faces programmatic
+(i.e. calibrations) and unforeseen (hardware failures or software faults) change of data-taking
+conditions. The \dfirst{daqccm} provides an access point, which is delegating user’s actions to the
+corresponding interfaces. The detector components and infrastructure elements access the \dfirst{daqccm}
+subsystems through their provided interfaces. 
 
 \begin{dunefigure}[DAQ CCM subsystem interaction]{fig:daq-ccm-subsys}{Main interaction among the three \dword{daqccm} subsystems.}
-  \includegraphics[width=0.8\textwidth]{daq-ccm-subsys.pdf}
+  \includegraphics[width=0.9\textwidth]{daq-ccm-subsys.pdf}
 \end{dunefigure}
+
+The following sections describe each \dfirst{daqccm} subsystem, covering internal functions and dependencies between each other.
+
+\subsubsection{Access}
+\label{sec:daq:design:ccm:access}
+Actions are defined as any kind of human interaction with the \dfirst{daqccm}. The access subsystem is responsible for the action delegation to internal function calls and procedures. It’s implementation is driven by the control, configuration and monitoring interface specifications, and protects the direct access to detector and infrastructural resources. It also controls authentication and authorization, which locks different functionalities to certain actor groups and subsystems. As an example, only the detector experts can modify frontend configuration through the configuration interfaces, or only an expert user can exclude an APA’s readout from data taking. 
+
 
 \subsubsection{Control}
 \label{sec:daq:design:ccm:control}
 
-
-The \dword{daq} control subsystem actively manages \dword{daq} software process lifetimes, asserts access control policies, executes commands, initiates configuration changes, detects and handles exceptions, and provides an interface for human operators.
-
-% \fixme{I (bv) redrew this from Giovanna's to get vector PDF and match \dword{dune} color palette.  I made two content changes: 1: move UI out of partition as it can't both initiate a partition and be inside it and likely will allow for creation/viewing of more than just one partition.  2: I had to guess on how garbage collection might go and so addded a line from RM to PM. }
+The control subsystem consists of several components and utilities, and also has additional subsystems to carry out dedicated roles. It enforces the implementation of required interfaces and actively manages DAQ process lifetimes. It operates in a distributed, fault-tolerant manner due to protocols that will drive the FSM for state sharing. 
 
 \begin{dunefigure}[DAQ control subsystem roles and services]{fig:daq-ccm-control}{Roles and services that compose the \dword{daq} control subsystem.}
   \includegraphics[width=0.8\textwidth]{daq-ccm-control.pdf}
@@ -1152,58 +1140,42 @@ Additional UI elements will be developed as described in sections~\ref{sec:daq:d
 \subsubsection{Configuration}
 \label{sec:daq:design:ccm:configuration}
 
-The \dword{daq} configuration subsystem provides persistent data storage for all historic, current, and future configuration information applicable to the \dword{daq}.
-It provides a single point (via high-availability, redundant services) for the allocation of unique and monotonically increasing \dwords{daqrunnum}.
-The configuration data stores operate in an ``insert-only'' mode so that no prior information may be overwritten. 
-The following types of information will be managed:
+The configuration subsystem provides several key elements for the configuration management of \dword{daq} components and detector front-end electronics. It provides a description of system configurations, the ability to define and modify configurations, and graphical user interfaces for the human user to access the data. Data access libraries will hide the technology used for the databases implementation. The subsystem is also responsible for the serialization, persistency, and bookkeeping of configurations. 
 
+\begin{dunefigure}[DAQ CCM subsystem interaction]{fig:daq-ccm-config}{Main components of the \dword{daqccm} configuration subsystem.}
+  \includegraphics[width=0.8\textwidth]{daq-ccm-config.pdf}
+\end{dunefigure}
+
+The main components of the configuration subsystem are the following:
 \begin{itemize}
-
-\item Partition structure contains descriptions of the multiplicity and connectivity of \dword{daq} components for any partition. This describes the overall connectivity of ``nodes'' in the \dword{daq} ``graph''.
-
-\item Component parameters comprise configuration information associated with any given \dword{daq} component; for example, thresholds in a trigger candidate processor or gains and peaking times of a FE amplifier.
-
-\item Run number provides a monotonically increasing sequence of \dwords{daqrunnum} that are allocated upon request to assure that each is unique.
-
-\item Partition instances associate a \dword{daqrunnum} and the set of component parameters that were used to initiate a \dword{daqpart} or which are used to reconfigure an existing \dword{daqpart}.  
-
-\item Constraints define rules that must be held true by resource management servicing requests for process allocations.  This information store also includes which constraints were used by resource management over time.
+\item Configuration Manager - It consists of the three main components of configuration management systems. The Identification Engine is a set of functionalities that are responsible for the definition of DAQ components and their corresponding configuration specification. The Change Manager is responsible for providing control over altering the configuration specifications of components. The Status Engine is providing status and information about configuration specifications of individual, or set of DAQ elements.
+\item Audit System - This important subsystem is supporting the experts and decision making systems to verify the consistency of configuration specifications against the DAQ and detector components. It provides results on mis-configurations and potential problems on configuration alignment and dependencies between components.
+\item Persistency Engine - This component provides a single and uniform serialization module, which is strictly followed by every DAQ component. Also responsible for configuration schema evolution and communication with the configuration database. The storage engine privileges will be only read and write operations, not allowing updates and removal of configurations. It also provides a redundant session layer for high-availability and load distribution.
 \end{itemize}
 
-
-Access to configuration information is via a service that hides the choice of storage technology from any client queries.
-This interface will also be used by editors run by human operators or by  generators run as part of an expert system.
+The configuration system will mainly consist of standard configuration management components, with a high emphasis on the audit system, in order to verify that the global configuration of the \dword{daqccm} complies with the detector, physics and operational requirements.
 
 \subsubsection{Monitoring}
 \label{sec:daq:design:ccm:monitoring}
 
-The \dword{daq} monitoring subsystem will help both humans and expert systems in detecting, diagnosing, and correcting anomalous activity, observing intended operation, and providing a historical record.
-This subsystem will accept required information produced by any \dword{daq} component (here called status).
+\begin{dunefigure}[DAQ monitoring subsystem roles and services]{fig:daq-ccm-monitoring}{Roles and services that compose the \dword{daq} monitoring subsystem.}
+  \includegraphics[width=0.8\textwidth]{daq-ccm-monitoring.pdf}
+\end{dunefigure}
 
-The precise implementation of the production, acceptance, store, post-processing, querying, and visualization of monitored status requires additional work. 
-However, a publish-subscribe (PUB/SUB) network communication pattern is expected to be adopted for transport of monitoring messages. 
-This will decouple production and consumption and facilitate development of a variety of status viewers, expert systems, debugging tools, etc. 
-The types of messages include but are not limited to the following:
+Highly-scalable and efficient operational monitoring is essential during data-taking periods. Any malfunctioning component of the experiment must be identified and reported as soon as possible. Therefore, the aim of the monitoring subsystem is probing and notifying the status of \dword{daqccm} components, services, and resources. There is also a requirement of \dword{daqccm} infrastructure monitoring and log aggregation. The types of monitoring information vary greatly depending on operational complexity, which require flexibility from the monitoring infrastructure for seamless additions, modifications and aggregated view on service degradation.
+It consists of the following main components, also shown in Figure~\ref{fig:daq-ccm-monitoring}:
+
 
 \begin{itemize}
-\item Common to all will be a ``header'' holding a message type indicator, a sender address and the associated detector data time and the recent host computer time.
- 
-\item Logging messages add an importance label (e.g., debug, info, warning, error) and a succinct, human-readable information string providing an explanation of what occurred.
-  
-\item Metrics will provide structured data carrying specific information about predefined aspects of the sender. 
-  This is similar to logging, but the messages support automated consumption and reaction by expert systems.  
-
-\item Quality messages summarize information derived from the detector data (e.g., from waveforms) or its metadata (e.g., timestamps, error codes) while that data is ``in flight'' through the \dword{daq}.
-
+  \item Metric Manager - It is responsible for the registration of metric data streams and corresponding aggregator functions. This central element is the collection of features and services that provides support for configurable operational monitoring of \dword{daqccm} services. \dword{daqccm} components and services that are registered via the Metric Manager, are reporting monitoring data to the State and the Storage Engines in a publish-subscribe fashion. 
+  \item State Engine - This engine is responsible for providing the global state of the system at the current time. It subscribes to a set of registered metrics in the Metric Manager, and records the actual global state of the set for decision making systems (supervision, notification, and visualization).
+  \item Storage Engine - Metrics may have different persistency requirements, for which the engine is responsible to archive the data with the settings of interval, smoothing, etc. It also provides an implementation for the most common communication protocols for the database backends (SQL, REST, etc.).
+  \item Notification System - It is a rule-based system of scheduled and aimed notifications that occur in the case of state combinations. It defines soft and hard states of events and grace periods of alarms.
+  \item User Interfaces - Provides graphical and command line user interfaces for monitoring configuration management and visualization of metric data.
 \end{itemize}
 
-In general, the \dword{daq} will retain all status records at least long enough to allow for any offline data quality validation procedures to be performed. 
-However, some status feeds may be processed prior to storage if their raw form requires prohibitive amount of storage. 
-In particular, the quality stream data rate may be too substantial for long term storage. 
-Such streams will be summarized into histograms or other statistical representations prior to storing for longer term use.
+Monitoring being a key requirement in the industry for computer clusters and their applications, the proposed solution is the adaptation of mature, robust, and open-source third party tools, with the extension of DUNE \dword{daqccm} specific interface implementations and configurations of these monitoring systems. 
 
-In addition to this \dword{daq} \dword{daqccm} monitoring subsystem, a separate system must be used to monitor in depth the quality of the detector data content itself. 
-See Section~\ref{sec:fd-daq:design-data-quality} for the description of this data quality monitoring system.
 
 \subsubsection{Inter-Process Communication}
 \label{sec:daq:design-ipc}
@@ -1235,6 +1207,19 @@ It has been well tested with \dword{protodune} and other experiments.
 For example, if the \dword{daqubi} is implemented as an \dword{artdaq} Board Reader it would necessarily use \dword{artdaq} \dword{ipc} . 
 This would limit the types of clients that could query for data in the buffers to be \dword{artdaq} modules. 
 Understanding how to optimally select an \dword{ipc}  for such parts of the \dword{daq} connection graph is an area of ongoing R\&D effort.
+
+
+\subsection{Data Quality Monitoring}
+\label{sec:fd-daq:design-data-quality}
+
+While the \dword{daqccm} contains an element of monitoring (Section~\ref{sec:daq:design:ccm:monitoring}), here \dfirst{dqm} refers to a subsystem that quickly analyzes the data in order to determine the general quality of the detector and DAQ operation.
+This is in order to allow operators to promptly detect and respond to any unexpected changes and assure high exposure times for later physics analyses. 
+A \dword{daq} \dfirst{dqm} 
+will be developed (including necessary infrastructure, visualization,
+and algorithms), which will process a subset of detector data in order
+to provide prompt feedback to the detector operators. 
+This system will be designed to allow it to evolve as the detector and its data is understood during commissioning and early operation and to cope with any evolution of detector conditions.
+
 
 \subsection{Timing and Synchronization}
 \label{sec:sp-daq:design-timing}
@@ -1675,29 +1660,18 @@ The overall development schedule with the main DAQ milestones is shown in Sectio
 \section{Production, Assembly, Installation and Integration}
 \label{sec:sp-daq:production}
 
-The DAQ system relies largely on commercial off the shelf components, with the exception of the timing system and the first stage of the upstream DAQ.
-Therefore, the production and assembly aspects are simpler than for other systems, while of course the installation and integration stages are very important and have to be planned carefully, due to the large number of interfaces of the DAQ system with other parts of the experiment.
-
+The \dword{daq} system relies largely on commercial off the shelf components, with the exception of the timing system and the first stage of the upstream \dword{daq}.
+Therefore, the production and assembly aspects are simpler than for other systems, while of course the installation and integration stages are very important and have to be planned carefully, due to the large number of interfaces of the \dword{daq} system with other parts of the experiment.
 
 \subsection{Production and Assembly}
-
 \subsubsection{Timing System}
-
-A prototype of the timing system already exists and has been used at \dword{pdsp}.
-The final hardware prototype will be used in the second run of \dword{pdsp} in 2021 and production is planned right afterwards, allowing detector communities to have an early integration with the timing hardware and firmware.
+A prototype of the timing system already exists and has been used at ProtoDUNE-SP. The final hardware prototype will be used in the second run of ProtoDUNE-SP in 2021 and production is planned right afterwards, allowing detector communities to have an early integration with the timing hardware and firmware.
 
 \subsubsection{Upstream DAQ}
-
-The upstream DAQ will have FPGA mezzanine cards receiving, processing and storing the full data temporarily.
-Prototype cards implementing parts of the required functionality exist already, but more prototypes are planned before the production readiness review planned in December 2022.
-While the hardware design will be done at the institutions working in this area, the production of prototypes and final cards will be outsourced to companies, allowing for early identification of those companies that can guarantee a high quality cards production.
-
+The upstream \dword{daq} will have FPGA mezzanine cards connecting to the detector electronics readout fibres, and processing and storing data temporarily. Prototype cards implementing parts of the required functionality exist already, but more prototypes are planned before the production readiness review planned in December 2022. While the hardware design will be done at the institutions working in this area, the production of prototypes and final cards will be outsourced to companies, allowing for early identification of those companies that can guarantee a high quality cards production.
 
 \subsubsection{Racks, Servers, Storage and Network}
-
-While commercial devices do not need to be produced or assembled, enough time has to be planned, once the proper devices are identified, for the tendering and procurement procedures.
-Racks and fibers will be procured in order to be available early in 2023, servers and switches will be purchased in two batches, one to be ready for supporting the installation and commissioning of the detector components and DAQ infrastructure and one to reach nominal performance, in time for the start of data taking.
-
+While commercial devices do not need to be produced or assembled, enough time has to be planned, once the proper devices are identified, for the tendering and procurement procedures. Racks and fibers will be procured in order to be available early in 2023, servers and switches will be purchased in two batches, one to be ready for supporting the installation and commissioning of the detector components and \dword{daq} infrastructure and one to reach nominal performance, in time for the start of data taking.
 
 \subsection{Installation and Integration}
 
@@ -1707,10 +1681,10 @@ Racks and fibers will be procured in order to be available early in 2023, server
  % individual processes and in emergent behavior of the system as a
  % whole?}
 
-The DAQ will be installed in an enclosure in the west end of the Central
+The \dword{daq} will be installed in an enclosure in the west end of the Central
 Utilities Cavern (\dword{cuc}) (Figure~\ref{fig:cavern-layout}).  Roughly
 half of this space will be office space (including control
-workstations) and the other will be a computer room to hold the DAQ
+workstations) and the other will be a computer room to hold the \dword{daq}
 front-end computing and network equipment (Figure~\ref{fig:install-cuc}). Further details of the interface of \dword{daq} with underground facilities
 may be found in \citedocdb{6988}, and the installation interface document for \dword{daq} in \citedocdb{7015}.
 
@@ -1727,8 +1701,8 @@ will be installed, plumbed into cooling water, and connected to power
 and networking.  The network connection from this data room to the fiber
 trunks going up the shaft will also be made, as will preparations to
 receive the multi-mode fiber connections from the \dword{wib} to the
-\dword{felix} cards housed in servers in these racks.  There is space
-for sixty racks, with four set aside for other consortia, twelve per
+\dword{felix} cards housed in servers in these racks. There is space
+for \cucracks racks, with 4 set aside for other consortia, 12 per
 module for upstream DAQ electronics, and the remaining space for
 networking and other DAQ computing needs. An initial engineering design of the computer room is shown in Figure~\ref{fig:daq-room}, which meets all requirements for capacity, cooling, safety and installation schedule.
 
@@ -1761,7 +1735,6 @@ implications, which are discussed in Section~\ref{sec:fd-daq:safety}.
 \label{sec:sp-daq:organization}
 
 
-
 \subsection{Consortium Organization}
 
 The \dword{daq} consortium was formed in 2017 as a joint single and
@@ -1769,7 +1742,7 @@ dual phase consortium, with a consortium leader and a technical
 leader. The organization of the consortium is shown in
 Figure~\ref{fig:daq-org}. The \dword{daq} institution board currently comprises
 representatives from 34 institutions as shown in Table~\ref{tab:daq-ib}. The consortium leader is the spokesperson for the consortium and responsible for the overall scientific program and management of the group. The technical leader of the consortium is responsible for
-managing the project for the group. The leadership is assisted in its dutied by the Project Office, populated of the Resource Manager, the Software and Firmware coordinator and the Integration and Support Coordinator, providing support in the corresponding areas. 
+managing the project for the group. The leadership is assisted in its duties by the Project Office, populated of the Resource Manager, the Software and Firmware coordinator and the Integration and Support Coordinator, providing support in the corresponding areas. 
 The consortium is organized into working groups addressing the design, R\&D integration, and in the future, commissioning and installation of the key DAQ systems. The Physics Performance and Facility working groups are not associated to a specific system but provide oversight of the general DAQ performance in the physics context and the on the interface with the facility infrastructure. The DAQ working group mandates are detailed in~\citedocdb{14938}.
 
 \begin{dunefigure}[DAQ consortium org chart]{fig:daq-org}{Organizational chart for the \dword{daq} Consortium
@@ -1952,12 +1925,12 @@ Stanford Linear Accelerator Lab (SLAC) & USA     \\ \colhline
 \subsection{Schedule and Milestones}
 \label{sec:fd-daq:schedule}
 
-The high-level DAQ milestones are listed in Tab.~\ref{tab:daq-sched}, interleaved with the top-level DUNE project milestones, and illustrated in in Fig.~\ref{fig:fd-daq:schedule}. Since the DAQ project is largely based on commercial off-the-shelf components, it can be seen in the overall timeline that many of the components are procured relatively in the project schedule.
+The high-level DAQ milestones are listed in Tab.~\ref{tab:daq-sched}, interleaved with the top-level DUNE project milestones, and illustrated in in Fig.~\ref{fig:fd-daq:schedule}. Since the DAQ project is largely based on commercial off-the-shelf components, it can be seen in the overall timeline that many of the components are procured relatively late in the project schedule.
 
 \begin{dunetable}
 [DAQ Consortium Schedule]
 {p{0.65\textwidth}p{0.25\textwidth}}
-{tab:daq-sched}
+{tab:daq-sched}ane 
 {\dword{daq} Consortium Schedule}   
 Milestone & Date (Month YYYY)   \\ \toprowrule
 
