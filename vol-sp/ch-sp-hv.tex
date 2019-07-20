@@ -19,13 +19,13 @@ electrons from particle interactions to sensor planes.  To achieve this, the DUN
 
 The \single \dword{tpc} configuration is shown in Figure~\ref{fig:dune_sp_fd}.
 The  drift fields transport the ionization electrons 
-towards the \dwords{apa} at the sides and center.
+towards the \dword{apa}s at the sides and center.
 
 \begin{dunefigure}[SP module schematic with one unit of top and bottom FC modules]
 %[One unit of the \dword{spmod}]
 {fig:dune_sp_fd}
 {A schematic of a \dword{spmod} showing the three \dword{apa} arrays (at the far left and right and in the center, all of which span the entire \sptpclen \dword{detmodule} length) and the two \dword{cpa} arrays, occupying the intermediate second and fourth positions. The top and bottom \dword{fc} modules are shown with ground planes in blue. 
-On the right, the front top and bottom \dword{fc} modules are shown folded up against the \dword{cpa} panels to which they connect, as they are positioned for shipping and insertion into the cryostat.  The \dwords{cpa}, \dwords{apa}, and \dwords{fc} together define the four drift volumes of the \dword{spmod}. The sizes and quantities of the \dword{fc} and \dword{cpa}-array components are listed in Tables~\ref{tab:cpaparts} and~\ref{tab:fcparts} and represented in this image.}
+On the right, the front top and bottom \dword{fc} modules are shown folded up against the \dword{cpa} panels to which they connect, as they are positioned for shipping and insertion into the cryostat.  The \dword{cpa}s, \dword{apa}s, and \dword{fc} together define the four drift volumes of the \dword{spmod}. The sizes and quantities of the \dword{fc} and \dword{cpa}-array components are listed in Tables~\ref{tab:cpaparts} and~\ref{tab:fcparts} and represented in this image.}
 \includegraphics[width=0.95\textwidth]{dune_sp_fd.jpg}
 \end{dunefigure}
 
@@ -41,7 +41,7 @@ The \dword{hv} system consists of components both exterior and interior to the c
  effectively bound the  fiducial volume of the %experiment 
  \dword{detmodule}. %The \dword{hv} system plays a key role in determining the event rate for all DUNE physics processes.
 
-The \dword{hv} system consists of
+The \dword{sp} \dword{hv} system consists of
 \begin{itemize}
 \item \dword{hv} power supplies, cables, filters, and feedthrough;
 \item \dword{cpa} array;
@@ -49,15 +49,20 @@ The \dword{hv} system consists of
 \item \dword{ewfc}.
 \end{itemize}
 
+\fixme{Test: REMOVE THIS!!!}
+\begin{itemize}
+\item \Dword{topfc}, \Dword{botfc}, and \Dwords{gp}; and
+\item \Dword{ewfc}.
+\end{itemize}
 
 \fixme{for Brett: when I used Dword for topfc I got all caps; not true for ewfc. Anne}
 The system operates at the full range of voltages, %all voltages, from the highest 
 %maximum 
 $-$\sptargetdriftvoltpos to ground, inside the \dword{tpc} volume. 
 
-The \single and \dual modules will implement similar designs for some
+The  \dword{sp} and  \dword{dp} modules will implement similar designs for some
  of the \dword{hv} system components, %including the \dwords{fc} profiles and supporting FRP beams, and the voltage divider boards. More details can be found in   
- in particular, aspects of the \dwords{fc} and its supporting beams. The single phase versions are described in this chapter. 
+ in particular, aspects of the \dword{fc} and its supporting beams. This chapter describes the  \dword{sp} versions. 
  %\fixme{for Anne  let's list sections where these components are described. Anne}.
  
  
@@ -65,109 +70,63 @@ The \single and \dual modules will implement similar designs for some
 \subsection{Design Specifications}
 \label{sec:fdsp-hv-des-consid}
 
-%\fixme{Table of Requirements goes in this section.}
-%\input{/files/generated/hv7fields-test}
 
-%The working principle of the \dword{tpc} relies on the application of a very uniform strong electric field in ultra pure liquid argon. Several detector performance parameters benefit from such an E-field.
+The working principle of the \dword{lartpc} relies on the application of a very uniform strong \efield in ultra-pure liquid argon.  A number of detector performance parameters benefit from such an \efield in ways that directly support the core components of the DUNE physics program.  Some of these are examined in detail in Volume~\volnumberphysics{}, \voltitlephysics{}.  Here we present a qualitative description of \efield impacts on physics to set context.
 
-%Since free electron drift velocity in LAr is a function of electric field, a uniform E-field leads to a simple time vs position mapping along the drift direction, allowing for precise 3D event reconstruction and a sharp definition of fiducial volume.
+Since free electron drift velocity in \dword{lar} is a function of \efield, a uniform \efield leads to a simple time versus position mapping along the drift direction, enabling precise and efficient \threed reconstruction.  This allows, for example, the establishment of a well defined fiducial volume for beam neutrino events reconstructed in the \dword{fd}.  Since a neutrino \dword{cpv} measurement or neutrino \dword{mh} test at root consists of the comparison of normalized spectra for electron and muon neutrino and antineutrinos interactions in the fiducial volume of the \dword{fd} as projected from the \dword{nd}, fiducial volume characterization is critical.   
 
-%A strong E-field in the LArTPC significantly aids in the identification of ionization events such as tracks and showers. Together with the high LAr purity, this requirement allows the drift of ionization electrons over large distances.
-%\begin{itemize}
-%\item A shortened drift time for a given position, due to higher drift velocity, improves the spatial resolution, which is dominated by $\sqrt t$ dependent diffusion effects.
-
-%\item More free ionization electrons are produced along tracks due to lower recombination, thus improving the signal-to-noise ratio at the anode plane.   This allows for lowered detection thresholds on components of electromagnetic showers,  extending the physics reach of DUNE for very low energy  signatures.
-
-%\item Recombination is furthermore non-linear with the E-field: heavily ionizing tracks such as slow protons suffer less saturation of free charge production at high specific energy loss at higher fields.  This in turn provides better particle identification which, when combined with better spatial resolution and signal-to-noise, leads to better overall energy resolution. An optimized high electric field conveys many physics benefits.
-%All DUNE physics benefits from the highest possible electric field.
-%\end{itemize}
-
-%Conversely, some detector performance parameters will degrade at higher electric fields:  
-%\begin{itemize}
-%\item The scintillation light production is reduced since it is proportional to the electron-ion recombination rate; 
-%\item Resolving track separation along the drift trajectory will be less effective, given the same waveform sampling frequency and wire cell geometry,  due to  the faster  drift velocity;
-%\item A higher electric field in the drift volume requires that the distance from the field cage to the cryostat walls has also to increase to keep the electric field below a safe threshold.
-%%% maybe we don't want to introduce the 30kV/cm requirement here -BY
-%%% maintain the electric field in this region below the safe  value of 30 kV/cm, above which it is more likely that electric discharges could occur. 
-%As a consequence the active and the fiducial LAr volume have to decrease for a given cryostat total volume;
-
-
-%\item Technical limitations on electric field  are also set by electrostatic conditions inside the cryostat; high electric fields imply the need of challenging developments of dedicated non-commercial cryogenic HV feed-throughs, ripple reduction RC filters and HV cables able to  stand very High Voltages in stable conditions for decades.
-
-%\end{itemize}
-
-%begin insert
-The working principle of the \dword{lartpc} relies on the application of a very uniform strong \efield in ultra-pure liquid argon.  A number of detector performance parameters benefit from such an \efield in ways that directly support the core components of the DUNE physics program.  Some of these are examined in detail in Vol. 2, the Physics TDR.  Here we present a qualitative description of \efield impacts on physics to set context.
-
-Since free electron drift velocity in \dword{lar} is a function of \efield, a uniform \efield leads to a simple time versus position mapping along the drift direction, enabling precise and efficient \threed reconstruction.  This allows, for example, the establishment of a well defined fiducial volume for beam neutrino events reconstructed in the Far Detector.  Since a neutrino \dword{cpv} measurement or neutrino \dword{mh} test at root consists of the comparison of normalized spectra for electron and muon neutrino and antineutrinos interactions in the fiducial volume of the \dword{fd} as projected from the Near Detector, fiducial volume characterization is critical.   
-
-The optimal electric field range at which to operate the \dword{lartpc} is a trade-off  of detector performances that improve with increasing field against others that degrade. For instance, spectral information is necessary to separate \dword{cp} and \dword{mh} effects, necessitating efficient tracking and shower reconstruction and good energy resolution. To accomplish this, higher E field strength is generally better - more free charge is created at the ionization points, as electron-ion recombination decreases at higher fields, improving \dword{s/n} and calorimetry. 
+The optimal \efield range at which to operate the \dword{lartpc} is a trade-off  of detector performances that improve with increasing field against others that degrade. For instance, spectral information is necessary to separate \dword{cp} and \dword{mh} effects, necessitating efficient tracking and shower reconstruction, and good energy resolution. To accomplish this, higher E field strength is generally better -- more free charge is created at the ionization points, as electron-ion recombination decreases at higher fields, improving \dword{s/n} and calorimetry. 
 
 %Spectral information is necessary to separate CP and mass hierarchy effects, necessitating efficient tracking and shower reconstruction and good energy resolution. Towards these ends, higher is generally better for \efield strength.  More free charge is created at the ionization points, as recombination decreases at higher fields, improving signal-to-noise and calorimetry. 
 
-Drift times are reduced, resulting in less free electron capture from residual electro-negative impurities hence better signal-to-noise, even under less than optimal purity conditions.  Spatial resolution improves, as free electron diffusion (proportional to the square root of the drift time) lessens. 
+Drift times are reduced, resulting in less free electron capture from residual electronegative impurities hence better \dword{s/n}, even under less than optimal purity conditions.  Spatial resolution improves, as free electron diffusion (proportional to the square root of the drift time) lessens. 
 
-Higher free charge production and lower electron capture allows for lower detection thresholds for components of electromagnetic showers, improving shower energy reconstruction. Lower detection thresholds also lead to higher detection efficiency for MeV-scale electron, photon, and neutron signatures of low energy $\nu_e$ interactions from supernova neutrino burst events.  
+Higher free charge production and lower electron capture allows for lower detection thresholds for components of electromagnetic showers, improving shower energy reconstruction. Lower detection thresholds also lead to higher detection efficiency for MeV-scale electron, photon, and neutron signatures of low-energy $\nu_e$ interactions from \dword{snb} events.  
 
 The electron-ion recombination more strongly affects highly ionizing particles, usually protons.  With decreased recombination, less saturation of free charge production occurs,  leading to better particle identification and more precise energy measurements.  Lower recombination particularly aids in proton-kaon separation by $dEdx$, a key component of a search for $p\rightarrow K^+ \nu$ baryon decay events. 
 
-However, the \efield should not be raised beyond certain limits. For example, while free charge production increases with \efield, scintillation photon production decreases, resulting in less photons available for triggering and determination of $t_0$. Two-track separation can degrade, if the drift velocity is increased while keeping the anode wire separation and electronic wave form sampling frequency fixed. The distance between the \dword{tpc} boundaries and the cryostat walls might  need to be increased for very high \efield{}s to prevent electrostatic discharge. This would in turn reduce the fraction of liquid argon in the fiducial volume. The impacts of the first two effects are modest, and all effects are subsidary to technical challenges in the delivery of high voltage to the cryostat and the maintenance of highly stable high voltage surfaces for multiple decades of operation. These challenges require development of non-commercial cryogenic \dword{hv} feedthrough, \dword{hv} ripple-repression through custom \dword{hv} \dword{r-c} circuits, careful construction and deployment of \dword{hv} cables, redundant \dword{hv} connections, high precision monitoring, and best practices at all stages of design, installation, and operation.
+However, the \efield should not be raised beyond certain limits. For example, while free charge production increases with \efield, scintillation photon production decreases, resulting in less photons available for triggering and determination of $t_0$. Two-track separation can degrade if the drift velocity is increased while keeping the anode wire separation and electronic wave form sampling frequency fixed. The distance between the \dword{tpc} boundaries and the cryostat walls might  need to be increased for very high \efield{}s to prevent electrostatic discharge. This would in turn reduce the fraction of \dword{lar} in the \dword{fv}. The impacts of the first two effects are modest, and all effects are subsidiary to technical challenges in the delivery of high voltage to the cryostat and the maintenance of highly stable  \dword{hv}  surfaces for multiple decades of operation. These challenges require development of non-commercial cryogenic \dword{hv} feedthroughs, \dword{hv} ripple-repression through custom \dword{hv} \dword{r-c} circuits, careful construction and deployment of \dword{hv} cables, redundant \dword{hv} connections, high-precision monitoring, and best practices at all stages of design, installation, and operation.
 %end insert
 
 %More quantitative result will be provided by the Physics WG.
 
-To the best of present common knowledge, the response and stability of a \dword{lartpc} to \dword{hv} is strongly dependent on many boundary conditions that are not fully related to the  \dword{hv} design. There are for instance hints and tests that suggest that gas bubble formation as well as residual dust circulating in the \dword{lar} are a primary source of \dword{hv} instability.  Insulator charging up can also affect \dword{hv} performance in the long term. Finally, since no experience at all was available concerning the application of \SI{-180}{\kV} in a \dword{lar} detector, the approach in the \dword{hv} system design was to rely as much as possible on past experience, applying sufficient safety margin from previous designs.  The experience and the understanding of \dword{hv} behavior that it is built up  with the \dword{protodune} operation, is giving us confidence that the upgraded design documented in the TDR is appropriate for underground long term operation.  
+To the best of present common knowledge, the response and stability of a \dword{lartpc} to \dword{hv} is strongly dependent on many boundary conditions that are not fully related to the  \dword{hv} design. There are for instance hints and tests that suggest that gas bubble formation as well as residual dust circulating in the \dword{lar} are a primary source of \dword{hv} instability.  Insulator charging up can also affect \dword{hv} performance in the long term. Finally, since no experience at all was available concerning the application of \SI{-180}{\kV} in a \dword{lar} detector, the approach in the \dword{hv} system design was to rely as much as possible on past experience, applying sufficient safety margin from previous designs.  The experience and the understanding of \dword{hv} behavior that has been built up  with the \dword{pdsp} operation is giving us confidence that the upgraded design documented in this \dword{tdr} is appropriate for underground long-term operation.  
 
-Two decades of design and operational experience that began with ICARUS have established that a 500 V/cm field is an appropriate trade-off value that can be realistically achieved through utilization of cost-effective design and construction methods. In practice, achieving this design goal has been challenging as the drift distance has been progressively increased to the 
-\SI{3.5}{m} foreseen for the \dword{spmod}, and overall detector optimization has proved to be important. For example, \dword{microboone} operates  at 273 V/cm (lower that its nominal value of 500 V/cm), and is able to operate well by exploiting its very high argon purity, (characterized by an electron lifetime in excess of 15 ms), as well as an excellent signal-to noise ratio from the front end cold electronics.  %The latter allows hit identification even for signals attenuated by diffusion and lifetime. 
+Two decades of design and operational experience that began with \dword{icarus} have established that a 500 V/cm field is an appropriate trade-off value that can be realistically achieved through utilization of cost-effective design and construction methods. In practice, achieving this design goal has been challenging as the drift distance has been progressively increased to the 
+\SI{3.5}{m} foreseen for the \dword{spmod}, and overall detector optimization has proved to be important. For example, \dword{microboone} operates  at \SI{273}{V/cm} (lower that its nominal value of 500 V/cm), and is able to operate well by exploiting its very high argon purity, (characterized by an electron lifetime in excess of 15 ms), as well as an excellent \dword{s/n} ratio from the \dword{fe} \dword{ce}.  %The latter allows hit identification even for signals attenuated by diffusion and lifetime. 
 %due to the larger electron diffusion and the finite lifetime,
-\dword{microboone} (and a number of other liquid noble \dwords{tpc}) compensated for electrostatic instability problems by achieving higher purity, and DUNE might well operate in this mode during its run. 
+\dword{microboone} (and a number of other noble liquid \dwords{tpc}) compensated for electrostatic instability problems by achieving higher purity, and \dword{dune} might well operate in this mode during its run. 
 
-In DUNE, the minimum requirement of the drift electric field has been set to 250 V/cm, with a goal 
-%in the design of the \dword{hv} system is to reach an electric field
-of 500 V/cm for long term stable operation. With good free electron lifetime (>10 ms), and the electronics signal-to-noise demonstrated in \dword{pdsp}, experience shows that DUNE will be able to operate above E=250 V/cm. The advantage of running at higher electric field is that the lower electron-ion recombination rate and the higher electron drift velocity can compensate for any lower purity conditions that could arise during the planned operation period.
+In \dword{dune}, the minimum requirement of the drift \efield has been set to \mindriftfield, with a goal 
+of \mindriftfieldgoal for long-term stable operation. With good free electron lifetime (>\SI{10}{ms}), and the electronics \dword{s/n} demonstrated in \dword{pdsp}, experience shows that \dword{dune} will be able to operate above \SI{250}{V/cm}. The advantage of running at higher electric field is that the lower electron-ion recombination rate and the higher electron drift velocity can compensate for any lower purity conditions that could arise during the planned operation period.
 %under stable conditions. This can compensate for unexpected low purity conditions that could arise over the two decades of planned operations. 
 %Indeed, attempts to 
- Running \dword{pdsp} at a higher \dword{hv} value (as allowed by \dword{hv} cables and filtering systems) is under consideration to gain better understanding of the \dword{hv} stabilty issues.
+ Running \dword{pdsp} at a higher \dword{hv} value (as allowed by \dword{hv} cables and filtering systems) is under consideration to gain better understanding of the \dword{hv} stability issues.
 
-
-%Based on experience, we expect that DUNE will be %be able to operate above E=250 V/cm, 
-%half the design goal, 
-%as long as electron lifetimes exceeding 10 ms can be established and maintained, %during the lifetime of the experiment 
-%and that the electronics signal-to noise ratio is comparable to that achieved in \dword{pdsp}. 
-%\fixme{(It would be better if we could cite ProtoDUNE)} 
-Positive \dword{protodune} experience (see "Lessons Learned" section) indicates that the 500 V/cm \efield goal is within reach.This goal, combined with high \dword{lar} purity and a large signal-to-noise ratio, will allow  a wide range of possible operating points to optimize detector performance for maximum physics potential over decades of stable conditions and very high live-time. 
+Positive \dword{protodune} experience (see  Section~\ref{sec:fdsp-hv-protodune-lessons}) indicates that the \SI{500}{V/cm} \efield goal is within reach.This goal, combined with high \dword{lar} purity and a large \dword{s/n} ratio, will allow  a wide range of possible operating points to optimize detector performance for maximum physics potential over decades of stable conditions and very high live-time. 
 %\fixme{some duplications in the paragraph above and below - BY}
 %The specifications for the DUNE SP \dword{hv} system thus have the goal of 500 V/cm, pointed  towards the highest possible detector performance and widest span of operating points, and a 
-The specification minimum of 250 V/cm, will provide adequate detector performance, assuming achievable purity and electronics parameters. 
+The specification minimum of \SI{250}{V/cm}, will provide adequate detector performance, assuming achievable purity and electronics parameters. 
 
-The \dword{hv} system is designed to meet the physics requirements of the DUNE experiment,  both physical  (e.g., \efield{}s that allow robust event reconstruction) and operational (e.g., avoiding over-complication that could affect %so as to maximize 
-the time available for collecting neutrino events). %An important collection of the requirements affecting \dword{hv} is 
+The \dword{hv} system is designed to meet the physics requirements of the \dword{dune} experiment,  both physical  (e.g., \efield{}s that allow robust event reconstruction) and operational (e.g., avoiding over-complication that could affect 
+the time available for collecting neutrino events). 
 The important requirements and specifications for the \dword{hv} system are given in Table~\ref{tab:specs:SP-HV}. 
-%Table~\ref{tab:hvphysicsreqs}.
-%\fixme{the most important requirements? Could there be multiple important collections of them? Also, the way some are worded they are impossible to verify (maximize, adequate...RKP: Language here was chosen carefully. AH: prev sentence didn't read unambiguously}
 
-%\input{generated/req-longtable-SP-HV-edited}  
 \input{generated/req-longtable-SP-HV}
+\fixme{Anne - looks like they need top level 1 and 2 in their spreadsheet now that the top five are no longer auto-included; labels are { spec:min-drift-field } and { spec:system-noise }, resp}
 
+We note that SP-FD-1 is discussed in the text above the table. SP-FD-2  is met in case of stable \dword{hv} operation (lessons from \dword{pdsp}). The noise contribution from \dword{hv} instabilities is unclear and under investigation with \dword{pdsp}. The remaining requirements specific to the \dword{hv} system are all addressed and referred to in the remainder of this document. Here is a summary. 
 
-%\begin{dunetable}
-%[HV system requirements]
-%{p{0.05\textwidth}p{0.2\textwidth}p{0.35\textwidth}p{0.15\textwidth}p{0.15\textwidth}}
-%{tab:hvphysicsreqs}
-%{\dword{hv} system requirements TO BE REPLACED BY STANDARDIZED TABLES}   
-%No. & Requirement & Physics Requirement Driver & Requirement & Goal \\ \toprowrule
-%1 & Establish uniform minimum \efield{} in \dword{tpc} drift volume. & Limit recombination, diffusion, and space charge impacts $e$, $\mu$, $p$ particle ID.  Establish constant drift velocity and adequate \dword{s/n} on induction planes for tracking. & >\SI{250}{V/cm} & \spmaxfield \\ \colhline
-% 2 & Do not exceed maximum \efield{} in \dword{lar} volume. %; subsystems that have been validated under working conditions in pure \lar may exceed cited limit. 
-% & Avoid damage to detector to enable data collection over long periods. & \SI{30}{kV/cm} & \dword{alara} \\  \colhline
-%3 & Minimize power supply ripple & Keep readout electronics free from external noise, which confuses event reconstruction.  & 0.9~mV & 0.9~mV\\ \colhline
-%4 &  Maximize power supply stability. & Maintain ability to reconstruct data taken over long period.  Maintain high operational uptime to maximize experimental statistics. \\ \colhline
-%5 & Provide adequate resistivity to create acceptable decay constant for discharge of the cathode surface and \dword{fc}.  & Avoid discharge damage to \dword{detmodule} or electronics to enable data collection over long periods. %Value is set to allow extraction of stored energy over periods of seconds. Maintain high operational uptime to maximize experimental statistics.  
-%& \SI{1}{\mega\ohm}/sq & \SI{1}{\giga\ohm}/sq \\ \colhline
-%6 & Provide redundancy in all \dword{hv} connections. & Avoid single point failures in \dword{detmodule} that interrupt data collection. & Two-fold & Four-fold \\ 
-%\end{dunetable}
-We note that SP-FD-1 is discussed in the text above the table. SP-FD-2  is met in case of stable \dword{hv} operation (lessons from protoDUNE). The noise contribution from \dword{hv} instabilities is unclear and under investigation with protoDUNE. The remaining requirements specific to the \dword{hv} system are all addressed and referred to in the remainder of this document. Here is a summary. SP-FD-11: Non-uniformity could be due to defects in resistor chains; muon and laser calibrations will mitigate this effect. SP-FD-12: Lessons learned from ProtoDUNE demonstrate that the present filtering scheme is adequate. SP-FD-16: This down time requirement is already met in ProtoDUNE; the much lower ionization density in underground operation and optimization in the design (\dword{fc} to \dword{gp} distance) will ensure meeting the requirement even in the case of the much wider detector surface. SP-FD-17: The \dword{cpa} design is based on few MOhm/square resistivity surfaces. Such surfaces have been demonstrated in ProtoDUNE to be adequate to prevent fast discharges that could potentially damage \dword{ce} and the cryostat (no event was ever recorded). Underground operation will allow higher resistivity thus slowing further down the potential release of stored energy. SP-FD-24 is met by calculation in ProtoDUNE. In the present design  the E-field in the critical region between \dword{fc} and \dword{gp} is further reduced. SP-HV-1: The \dword{hv} distribution and filtering has been tested in ProtoDUNE; the design of these items will be revised to minimize long term degradation and maintenance requirements. SP-HV-2: Two point connections to the \dword{cpa} are foreseen. The \dword{hv} feed through and its connection to the \dword{cpa} is designed in such a way that it could be extracted and replaced even with the detector filled with \dword{lar} (based on ICARUS experience).
-
+\fixme{if time, substitute in all the actual references. anne}
+\begin{itemize}
+\item SP-FD-11: Non-uniformity could be due to defects in resistor chains; muon and laser calibrations will mitigate this effect. 
+\item SP-FD-12: Lessons learned from \dword{pdsp} demonstrate that the present filtering scheme is adequate. 
+\item SP-FD-16: This downtime requirement is already met in \dword{pdsp}; the much lower ionization density in underground operation and optimization in the design (\dword{fc} to \dword{gp} distance) will ensure meeting the requirement even in the case of the much wider detector surface. 
+\item SP-FD-17: The \dword{cpa} design is based on few \si{\mega\ohm}/square resistivity surfaces. Such surfaces have been demonstrated in \dword{pdsp} to be adequate to prevent fast discharges that could potentially damage \dword{ce} and the cryostat (no event was ever recorded). Underground operation will allow higher resistivity, thus further slowing down the potential release of stored energy. 
+\item SP-FD-24 is met by calculation in \dword{pdsp}. In the present design  the \efield in the critical region between \dword{fc} and \dword{gp} is further reduced. 
+\item SP-HV-1: The \dword{hv} distribution and filtering has been tested in \dword{pdsp}; the design of these items will be revised to minimize long-term degradation and maintenance requirements. 
+\item SP-HV-2: Two point connections to the \dword{cpa} are foreseen. The \dword{hv} feedthrough and its connection to the \dword{cpa} is designed in such a way that it could be extracted and replaced even with the detector filled with \dword{lar} (based on \dword{icarus} experience). \fixme{two connections of the type ``point'' or one two-point connection?}
+\end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Design Overview}
 \label{sec:fdsp-hv-des}
@@ -181,7 +140,7 @@ We note that SP-FD-1 is discussed in the text above the table. SP-FD-2  is met i
 Two \dword{cpa} arrays span the length and height of the \dword{spmod}, as shown in Figure~\ref{fig:dune_sp_fd}. %Given the modular design, 
 Each array is assembled from a set of \num{25} adjacent full-height \dword{cpa} planes, %which in turn are constructed of smaller pieces.  Each plane is a set 
 each of which consists of two adjacent full-height panels. % (full height, half length, as measured along the \dword{detmodule} length). 
-Each panel consists of three stacked units, approximately \SI{4}{\m} in y by \SI{1.2}{\meter} in the z-coordinate. %long.
+Each panel consists of three stacked units, approximately \SI{4}{\m} in $y$ by \SI{1.2}{\meter} in the $z$-coordinate. %long.
 A unit consists of two %half-height 
 vertically stacked \dwords{rp} framed by  \frfour\footnote{NEMA grade designation for flame-retardant glass-reinforced epoxy laminate material, multiple vendors, National Electrical Manufacturers Association\texttrademark{},  \url{https://www.nema.org/pages/default.aspx}.} members. 
 The \dword{hv} cathode components are listed in Table~\ref{tab:cpaparts} and will hereby be referred to by their names as defined in this table.
@@ -206,7 +165,7 @@ An  installation rail supports the \dword{cpa} panels from above through a singl
 %\fixme{panel vs resistive panel is confusing. Which is supported by link?  For SRM. Anne}
 %\fixme{Capitalized the defined parts of the CPA - a CPA Panel is as defined in the table a panel is just a flat sheet - SRM}
 
-The cathode bias is provided by an external \dword{hv} power supply through an \dword{hv} \fdth connecting to the \dword{cpa} Array %plane 
+The cathode bias is provided by an external \dword{hv} power supply through an \dword{hv} \fdth connecting to the \dword{cpa} array %plane 
 inside the cryostat. 
  
 %%%%%%%%%%%%%%
@@ -219,15 +178,16 @@ boundary conditions to ensure a uniform \efield, unaffected by the presence of t
 The \dword{fc} is made of adjacent extruded aluminum open profiles (electrodes) running perpendicular to the drift field and set at increasing potentials along the \spmaxdrift drift distance from the \dword{cpa} \dword{hv} (\SI{-180}{kV}) to ground potential at the \dword{apa} sensor arrays. %planes. 
 
 The \dword{fc} modules come in two distinct types: the identical top and bottom modules, which are assembled to run the full length of the \dword{detmodule}, and the \dwords{ewfc} modules, 
-which are assembled to complete the detector at either end. Both types of modules are constructed of extruded aluminum open profiles  supported by \dword{frp}\footnote{Fiber-reinforced plastic, a composite material made of a polymer matrix reinforced with fibers, many vendors.} (fiber-reinforced plastic) structural beams.  
+which are assembled to complete the detector at either end. %Both types of modules are constructed of extruded aluminum open 
+The profiles in both types of modules are supported by \dword{frp}\footnote{Fiber-reinforced plastic, a composite material made of a polymer matrix reinforced with fibers, many vendors.} (fiber-reinforced plastic) structural beams.  
 
-The \dword{topfc} and \dword{botfc} modules extend nominally  \SI{2.3}{\meter} in z and \SI{3.5}{\meter} in x; the top and bottom of the \dword{spmod} each requires 25 modules lengthwise in z and four across in x.  The \dword{ewfc} modules are \SI{3.5}{\meter} wide by \SI{1.5}{\meter} in height; each endwall requires four adjacent stacks, eight units high. A \dlong{gp} consisting of modular %tiled, 
+The \dword{topfc} and \dword{botfc} modules extend nominally  \SI{2.3}{\meter} in $z$ and \SI{3.5}{\meter} in $x$; the top and bottom of the \dword{spmod} each requires 25 modules lengthwise in $z$ and four across in $x$.  The \dword{ewfc} modules are \SI{3.5}{\meter} wide by \SI{1.5}{\meter} in height; each endwall requires four adjacent stacks, eight units high. A \dword{gp} consisting of modular %tiled, 
 perforated stainless steel sheets % panels %is mounted on 
 runs along the outside surface of each of the %top and bottom \dword{fc} modules 
-\dword{topfc} and \dword{botfc}, with a \SI{30}{\centi\meter} clearance. The \dword{ewfc} modules do not require a ground plane because the distance to cryostat wall is sufficient, approximately \SI{2}{\meter}.
+\dword{topfc} and \dword{botfc}, with a \SI{30}{\centi\meter} clearance. The \dword{ewfc} modules do not require a \dword{gp} because the distance to the cryostat wall is sufficient, approximately \SI{2}{\meter}.
 
 To provide a linear voltage gradient within each drift volume %between each set of facing %cathode and anode planes \dword{cpa} and \dword{apa} arrays, 
-a chain of resistive divider boards connects the adjacent pairs of Al profiles along each \dword{fc} module. 
+a chain of resistive divider boards connects the adjacent pairs of aluminum profiles along each \dword{fc} module. 
 %\fixme{should we change 'around each drift volume' to 'along each FC module'? -BY Done - RKP}
 
 Table~\ref{tab:fcparts} lists the \dword{fc} components.
@@ -252,33 +212,13 @@ Profiles per \dword{ewfc} module & 57 & - & - & 1.5 m & - & 3648 \\
 
 \end{dunetable}
 
-% \begin{dunetable}
-% [HV \dword{fc} components]
-% {p{0.37\textwidth}p{0.13\textwidth}p{0.07\textwidth}p{0.07\textwidth}p{0.07\textwidth}
-% p{0.1\textwidth}p{0.08\textwidth}}
-% {tab:fcparts}{\dword{hv} Field Cage Components}
-% Component & Count & Length (z) & Width (x) & Height (y) & Submodules & Grand Total \\ \toprowrule
-% %\dword{fc} (Top/Bottom Field Cage) & 200 & 2.3 m & 3.5 m & - & 57 & 200 \\ \colhline
-% \Dword{topfc} modules & 100 (4$\times$25) & 2.3 m & 3.5 m & - & - & 100 \\ \colhline
-% \Dword{botfc} modules & 100 (4$\times$25) & 2.3 m & 3.5 m & - & - & 100 \\ \colhline
-% %\dword{fc}-Profiles (per \dword{fc}) & 57 & 2.3 m & - & - & - & 11400 \\ \colhline
-% Profiles per module \\(all top and bottom module types) & 57 & 2.3 m & - & - & - & 11400 \\ \colhline
-% \Dword{gp} modules per top or bottom \\ \dword{fc} module & 5 & 2.3 m & 0.7 m & - & - & 1000 \\ \colhline
-% %EW-Plane (Endwall Field Cage) & 2 & - & 14.4 m & 12 m & 4 & 2 \\ \colhline
-% \Dword{ewfc} plane & 2 & - & 14.4 m & 12 m & 4 & 2 \\ \colhline
-% %EW (per EW-Plane) & 4 & - & 3.5 m & 12 m & 8 & 8 \\ \colhline
-% \Dwords{ewfc} per \dword{ewfc} plane  & 4 & - & 3.5 m & 12 m & 8 & 8 \\ \colhline
-% \Dword{ewfc} modules per \dword{ewfc} & 8 & - & 3. m & 1.5 m & - & 64 \\ \colhline
-% Profiles per \dword{ewfc} module & 57 & - & - & 1.5 m & - & 3648 \\
-% \end{dunetable}
-
 
 
 %%%%%%%%%%%%%%
 \subsubsection{Electrical Considerations}
 \label{sec:fdsp-hv-des-elec}
 
-As shown in Figure~\ref{fig:dune_sp_fd}, the outer \dword{apa} arrays face the cryostat walls and the \dword{cpa} arrays are installed between them in the two interior positions (A-C-A-C-A).
+As shown in Figure~\ref{fig:dune_sp_fd}, the outer \dword{apa} arrays face the cryostat walls and the \dword{cpa} arrays are installed between the \dword{apa} arrays in two of the three interior positions (A-C-A-C-A).
 In this configuration, as opposed to C-A-C-A-C,  most of the cathode plane surfaces are far away from the grounded cryostat walls, reducing electrostatic breakdown risks and decreasing the total energy stored in the \efield to \SI{800}{J}.
 
 \begin{dunefigure}[Electric field distribution in the TPC]
@@ -288,8 +228,8 @@ In this configuration, as opposed to C-A-C-A-C,  most of the cathode plane surfa
 \includegraphics[width=0.9\textwidth]{graphics/E_Field_Distribution.png} 
 \end{dunefigure}
 
-Figure~\ref{fig:e-field-distribution} maps out the electric field strength over a cross section of a drift volume.  
-The energy is stored mostly in the high \efield{} region between the \dword{fc} and the facing ground planes.  In the case of an unexpected \dword{hv} breakdown, the entire \SI{400}{J} associated with one \dword{cpa} array could be discharged to ground,
+Figure~\ref{fig:e-field-distribution} maps out the \efield strength over a cross section of a drift volume.  
+The energy is stored mostly in the high \efield{} region between the \dword{fc} and the facing \dwords{gp}.  In the case of an unexpected \dword{hv} breakdown, the entire \SI{400}{J} associated with one \dword{cpa} array could be discharged to ground,
 potentially causing physical damage.
 Given the difficulty of predicting the distribution of energy along a discharge path, we treat the possibility of discharged energy, conservatively, as a risk to the TPC components and the cryostat membrane. 
 
@@ -298,13 +238,14 @@ however, a continuous electrode in a DUNE \dword{detmodule} would need to be at 
 
 Subdividing the \dword{fc} into electrically isolated modules limits the stored energy in each \dword{fc} module, thereby minimizing the risk of damage. Each \dword{fc} module must have its own voltage divider network to create a linear voltage gradient. Dividing the \dword{fc} into mechanically and electrically independent modules also eases the construction and assembly of the \dword{fc} and greatly restricts the extent of drift field distortion caused by a resistor failure on the divider chain of a \dword{fc} module.
 
-A \dword{hv} discharge on a metallic cathode could cause the electrical potential of the entire cathode surface to swing from its nominal bias (e.g., $-$\sptargetdriftvoltpos) to \SI{0}{V} in a few nanoseconds, inducing a large current into the analog \dword{fe} amplifiers connected to the sensing wires on the \dwords{apa} (mostly to the first induction wire plane channels). 
-An internal study\cite{bib:docdb1320} has shown that with a metallic cathode structure, an \dword{hv} discharge could swing the outer wire plane by nearly \SI{100}{V}, and inject \SI{0.9}{A} current into the input of the front end amplifiers connected to the first induction plane, possibly overwhelming the internal electrostatic discharge (\dword{esd}) protection in the \dword{fe} \dwords{asic}.  
+A \dword{hv} discharge on a metallic cathode could cause the electrical potential of the entire cathode surface to swing from its nominal bias (e.g., $-$\sptargetdriftvoltpos) to \SI{0}{V} in a few nanoseconds, inducing a large current into the analog \dword{fe} amplifiers connected to the sensing wires on the \dword{apa}s (mostly to the first induction wire plane channels). 
+An internal study\cite{bib:docdb1320} has shown that with a metallic cathode structure, an \dword{hv} discharge could swing the outer wire plane by nearly \SI{100}{V}, and inject \SI{0.9}{A} current into the input of the \dword{fe} amplifiers connected to the first induction plane, possibly overwhelming the internal electrostatic discharge (\dword{esd}) protection in the \dword{fe} \dwords{asic}.  
 
 
-On the other hand, a highly resistive cathode structure can significantly delay the change in its potential distribution in a discharge event due to its large distributed \dword{r-c} time constant. Such delay reduces both the current flowing through the discharge path and the current induced on the anode readout amplifiers.  The upper limit in the cathode surface resistivity is determined by the voltage drop between the center and the edges of the cathode array driven by the ionization current flowing to the cathode.  For example, a surface resistivity of \SI{1}{\giga\ohm}/square 
-\fixme{why not "per unit area"? NO: it is per square, it is adimensional!} will have a voltage drop less than \SI{1}{V} from the $^{39}$Ar ionization flux at the underground site. Figure~\ref{fig:cpa-frame-discharge} illustrates the two main benefits in such a design in an event of \dword{hv} discharge at the edge of the cathode: 1) reducing the rate of transfer of the stored energy in the cathode plane to reduce the risk of damage to the \dword{hvs} and cryostat membrane; 2) slowing down the change in cathode voltage distribution that capacitively injects charge into the readout electronics.
-With a surface resistivity of \SI{1}{\giga\ohm}/square on the entire cathode, the time constant of a discharge is of the order of few seconds. An \dword{hv} discharge on the edge of the cathode would only inject a maximum current of about 50\,$\mu$A into the front end ASICs without causing damage.
+On the other hand, a highly resistive cathode structure can significantly delay the change in its potential distribution in a discharge event due to its large distributed \dword{r-c} time constant. Such a delay reduces both the current flowing through the discharge path and the current induced on the anode readout amplifiers.  The upper limit in the cathode surface resistivity is 
+determined by the voltage drop between the center and the edges of the cathode array driven by the ionization current flowing to the cathode.  For example, a surface resistivity of \SI{1}{\giga\ohm}/square  will have a voltage drop less than \SI{1}{V} from the $^{39}$Ar ionization flux at the underground site. Figure~\ref{fig:cpa-frame-discharge} illustrates the two main 
+benefits in such a design in an event of \dword{hv} discharge at the edge of the cathode: 1) reducing the rate of transfer of the stored energy in the cathode plane to reduce the risk of damage to the \dword{hvs} and cryostat membrane; 2) slowing down the change in cathode voltage distribution that capacitively injects charge into the readout electronics.
+With a surface resistivity of \SI{1}{\giga\ohm}/square on the entire cathode, the time constant of a discharge is on the order of a few seconds. An \dword{hv} discharge on the edge of the cathode would only inject a maximum current of about 50\,$\mu$A into the \dword{fe} \dwords{asic} without causing damage.
 
 
 
@@ -328,13 +269,13 @@ are restrained at only one location.
 %Cold testing of a \dword{cpa}, with monitoring of its geometry and electrical resistance is documented in DocDB 2338. In addition, Docdb 1504 documents the testing at cryogenic temperatures of kapton/\frfour laminates and the shrinkage of the detector was examined in Docdb 6011.
 %Each \dword{topfc} and \dword{botfc} module is nominally \SI{2.3}{\m} wide by  \SI{3.5}{\m} long (along the \dword{detmodule} length). 
 
-The \dwords{cpa} and \dwords{apa} support the \dword{topfc} and \dword{botfc} modules, whereas
-%The \dword{topfc} and \dword{botfc} modules are supported by the \dwords{cpa} and \dwords{apa}. 
+The \dword{cpa}s and \dword{apa}s support the \dword{topfc} and \dword{botfc} modules, whereas
+%The \dword{topfc} and \dword{botfc} modules are supported by the \dword{cpa}s and \dword{apa}s. 
 %The \dwords{ewfc} modules are \SI{1.5}{\meter} tall by \SI{3.5}{\meter} long. They are stacked eight units high to cover the \SI{12}{\meter} height of the \dword{tpc}.  
-installation rails above the \dwords{apa} and \dwords{cpa} support the \dword{ewfc} modules. 
-%are supported by the installation rails above  the \dwords{apa} and \dwords{cpa}, which are part of the \dword{dss}. 
+installation rails above the\dword{cpa}s and \dword{apa}s support the \dword{ewfc} modules. 
+%are supported by the installation rails above  the \dword{apa}s and \dword{cpa}s, which are part of the \dword{dss}. 
 
-All structural members of the \dwords{cpa} and \dwords{fc} are made of either \frfour or \dword{frp} with very similar \dwords{cte}. However, the structures supporting the \dwords{cpa} and \dwords{fc} are made of stainless steel, whose \dwords{cte} is about 50\% greater.  To accommodate the mismatch in the \dwords{cte}, small expansion gaps are added between \dwords{cpa} at installation time. These gaps are set during installation between \dword{cpa} panels by adjusting the distance between the \dword{cpa} hanger bars and between \dword{cpa} planes at the top of the \dword{tpc} on the \dword{cpa} beam -- a total of 49 - 3 mm gaps which will disappear once the \dword{tpc} is submerged in \lar at operating temperature.
+All structural members of the \dword{cpa}s and \dwords{fc} are made of either \frfour or \dword{frp} with very similar \dwords{cte}. However, the structures supporting the \dword{cpa}s and \dwords{fc} are made of stainless steel, whose \dwords{cte} is about 50\% greater.  To accommodate the mismatch in the \dwords{cte}, small expansion gaps are added between \dword{cpa}s at installation time. These gaps are set during installation between \dword{cpa} panels by adjusting the distance between the \dword{cpa} hanger bars and between \dword{cpa} planes at the top of the \dword{tpc} on the \dword{cpa} beam -- a total of 49 - 3 mm gaps which will disappear once the \dword{tpc} is submerged in \lar at operating temperature.
  
 %%%%%%%%%%%%%%
 \subsubsection{Design Validation}
@@ -529,7 +470,7 @@ There are at least two instances of electrical connections on the \dword{cpa} ar
 %\fixme{deleted plane here after cathode since it was not the defined Plane - SRM}
 
 %\fixme{Idea: move next bit to an assembly or qc section?}
-Visual inspection of these items during the assembly process ensures that no accidental sharp points or edges have been introduced. The surface resistivity of the \dword{cpa} \dwords{rp} and the \dword{fss} are checked multiple times during assembly -- first when the resistive panels and strips are received and after assembly into \dword{cpa} units on the table.  Coated parts that do not meet the minimum surface resistivity requirement are replaced.  This ensures that requirement TOP-17 is satisfied. No discharges were observed in ProtoDUNE, so no additional cryogenic tests are planned for the \dwords{cpa} for DUNE.
+Visual inspection of these items during the assembly process ensures that no accidental sharp points or edges have been introduced. The surface resistivity of the \dword{cpa} \dwords{rp} and the \dword{fss} are checked multiple times during assembly -- first when the resistive panels and strips are received and after assembly into \dword{cpa} units on the table.  Coated parts that do not meet the minimum surface resistivity requirement are replaced.  This ensures that requirement TOP-17 is satisfied. No discharges were observed in ProtoDUNE, so no additional cryogenic tests are planned for the \dword{cpa}s for DUNE.
 
 
 
@@ -539,7 +480,7 @@ Visual inspection of these items during the assembly process ensures that no acc
 %\subsubsection{Overview} %General Considerations}
 %\label{sec:fdsp-hv-des-fc-ov}
 
-%A uniform \efield{} is required to drift ionization electrons towards the \dwords{apa}. To define the required uniform field, the top, bottom and sides of each drift volume are covered by a \dfirst{fc}.  
+%A uniform \efield{} is required to drift ionization electrons towards the \dword{apa}s. To define the required uniform field, the top, bottom and sides of each drift volume are covered by a \dfirst{fc}.  
 The \dword{fc} is introduced in Section~\ref{sec:fdsp-hv-des-fc}. Its function, basic characteristics and components are described there. 
 
 The \dword{fc} %have been 
@@ -646,7 +587,7 @@ breakdown in the liquid near cryogenic pipings and other sensors with sharp feat
 
 %As discussed in Section~\ref{sec:fdsp-hv-intro}, the field cage modules are of two types: the similar top and bottom \dword{fc} and the \dword{ewfc}, both of which are described below. 
 
-%A resistive divider chain interconnects all the aluminum profiles to provide a linear voltage gradient between the cathode and anode planes.  The top and bottom modules are nominally \SI{2.3}{\m} wide by \SI{3.5}{\m} long. A \dword{gp}, in the form of tiled, perforated stainless steel sheet panels, is mounted on the outside surface of the T/B field cage module with a \SI{20}{\cm} clearance. The top and bottom \dword{fc} modules are supported by the \dwords{cpa} and \dwords{apa}. The \dword{ewfc} modules are \SI{1.5}{\m} tall by \SI{3.5}{\m} long. They are stacked eight units high (\SI{12}{\m}), and are supported by the installation rails above the \dwords{apa} and \dwords{cpa}.
+%A resistive divider chain interconnects all the aluminum profiles to provide a linear voltage gradient between the cathode and anode planes.  The top and bottom modules are nominally \SI{2.3}{\m} wide by \SI{3.5}{\m} long. A \dword{gp}, in the form of tiled, perforated stainless steel sheet panels, is mounted on the outside surface of the T/B field cage module with a \SI{20}{\cm} clearance. The top and bottom \dword{fc} modules are supported by the \dword{cpa}s and \dword{apa}s. The \dword{ewfc} modules are \SI{1.5}{\m} tall by \SI{3.5}{\m} long. They are stacked eight units high (\SI{12}{\m}), and are supported by the installation rails above the \dword{apa}s and \dword{cpa}s.
 
 %%%%%%%%%%%%%%%
 \subsection{Maximum Field Distortions}
@@ -675,11 +616,11 @@ and modules in the center of the active volume.
 
 Five \dwords{gp} are connected to the outside (i.e., the non-drift side) of each \dword{topfc} and \dword{botfc} module. The \dwords{gp} are positioned $\sim$\SI{30}{\cm} away from the profiles, and begin at the \dword{cpa} end of the module, leaving the last 14 profiles (\SI{88}{\cm}) on the \dword{apa} end of the module exposed. Between the \dwords{gp} and the \SI{15}{\cm} I-beams, standoffs made of short sections of \SI{10.2}{\cm} (4\,in)  \dword{frp} I-beams are connected with \dword{frp} threaded rods and slip nuts. The electrical connection between the \dwords{gp} is made with copper strips.
 
-The connections between the top and bottom modules and the \dwords{cpa} are made with aluminum hinges, \SI{2.54}{\cm} (1\,in) in thickness, that allow the modules to be folded in on the \dword{cpa} during installation. The hinges are electrically connected to the second profile from the \dword{cpa}. The connections to the \dwords{apa} are made with stainless steel latches that are engaged once the top and bottom \dword{fc} modules are unfolded and fully extended toward the \dword{apa}.
+The connections between the top and bottom modules and the \dword{cpa}s are made with aluminum hinges, \SI{2.54}{\cm} (1\,in) in thickness, that allow the modules to be folded in on the \dword{cpa} during installation. The hinges are electrically connected to the second profile from the \dword{cpa}. The connections to the \dword{apa}s are made with stainless steel latches that are engaged once the top and bottom \dword{fc} modules are unfolded and fully extended toward the \dword{apa}.
 
 The voltage drop between adjacent profiles is established by voltage divider boards screwed into the drift-volume side of the profiles. A custom-machined nut plate %is used that can be 
 is inserted into the open slot of each profile and twisted \SI{90}{\degree} %$^\circ$ 
-to lock into position. Two additional boards to connect the modules to the \dwords{cpa} %were screwed 
+to lock into position. Two additional boards to connect the modules to the \dword{cpa}s %were screwed 
 screw into the last profile on the \dword{cpa} end of the module. This system is %also 
 more fully described in Section~\ref{sec:fdsp-hv-design-interconnect}. A fully assembled module is pictured in Figure~\ref{fig:tbfc1-2}.
 
@@ -756,7 +697,7 @@ The effect of the non-uniformity in resistor values can also be scaled from this
 
 Electrical interconnections are needed among the \dword{hv} delivery system, \dword{cpa} panels, \dword{fc} modules, and termination
 boards on the \dword{apa} modules, as well as between resistive dividers and
-the field-forming elements on the \dwords{cpa} and \dwords{fc}.  %\fixme{Assuming the 'field-forming elements' don't have other specific names, element is ok here. Anne RKP-refers to more than one kind of thing.}
+the field-forming elements on the \dword{cpa}s and \dwords{fc}.  %\fixme{Assuming the 'field-forming elements' don't have other specific names, element is ok here. Anne RKP-refers to more than one kind of thing.}
 Redundancy is
 needed to avoid single points of failure. 
 Some connections must be
@@ -764,7 +705,7 @@ insulated in order to avoid creating a discharge path that might
 circumvent the discharge mitigation provided by the resistive \dword{cpa}
 surface and \dword{fc} partitioning.  Certain connections must be
 flexible in order to allow for \dword{fc} deployment, thermal
-contraction, and motion between separately supported \dwords{cpa} components.  Figure~\ref{fig:fdsp-hv-design-interconnect-concept} shows a high-level
+contraction, and motion between separately supported \dword{cpa}s components.  Figure~\ref{fig:fdsp-hv-design-interconnect-concept} shows a high-level
 overview of the interconnections between the \dword{hv}, \dword{cpa}, and \dword{fc} modules.
 
 \begin{dunefigure}[HV interconnection topology]{fig:fdsp-hv-design-interconnect-concept}
@@ -777,7 +718,7 @@ overview of the interconnections between the \dword{hv}, \dword{cpa}, and \dword
 %% connections between major elements (\dword{hv}, \dword{cpa}, \dword{fc}, \dword{apa})
 High voltage feedthrough connect to cups mounted on the \dword{cpa} frame
 %\cite the \dword{hv} delivery section
-that attach to a \dword{hv} bus running through the \dwords{cpa}.  \Dword{hv} bus connections
+that attach to a \dword{hv} bus running through the \dword{cpa}s.  \Dword{hv} bus connections
 between \dword{cpa} panels are made by flexible wires through holes in the
 \dword{cpa} frame. The \dword{hv} bus is a loop in order to mitigate risk of a single
 point failure; feedthrough at each end of each \dword{cpa} panel mitigate
@@ -807,7 +748,7 @@ is connected to its upper neighbor at its first and last profiles
 using metal strips.
 
 %% added by BY
-Each \dword{fc} didvider chain connects to a \dword{fc} termination board in parallel to a grounded failsafe circuit at the \dword{apa} end.  The \dword{fc} termination boards are mounted on the top of the upper \dwords{apa} and bottom of lower \dwords{apa}.  Each board provides a default termination resistance, and a SHV cable connection to the outside of the cryostat, via the \dword{ce} signal feedthrough flange, through which we can either supply a different termination voltage to the \dword{fc}, or monitor the current flowing through the divider chain.
+Each \dword{fc} didvider chain connects to a \dword{fc} termination board in parallel to a grounded failsafe circuit at the \dword{apa} end.  The \dword{fc} termination boards are mounted on the top of the upper \dword{apa}s and bottom of lower \dword{apa}s.  Each board provides a default termination resistance, and a SHV cable connection to the outside of the cryostat, via the \dword{ce} signal feedthrough flange, through which we can either supply a different termination voltage to the \dword{fc}, or monitor the current flowing through the divider chain.
 
 %% Regarding wire terminals and screws
 All flexible wires have ring or spade terminals and are secured by
@@ -901,7 +842,7 @@ At this point two top and two bottom \dword{fc} modules were brought to the clea
 %\fixme{same question. Anne}
 %\fixme{what is the question here? -- krw} 
 %Once the load was transfered onto the \dword{cpa}, 
-To fit through the \dword{tco} the top \dwords{fc} were suspended from their support at the top of the \dwords{cpa} plane to hang vertically, and the bottom \dwords{fc} were folded up and temporarily attached to their top \dword{fc} counterparts.
+To fit through the \dword{tco} the top \dwords{fc} were suspended from their support at the top of the \dword{cpa}s plane to hang vertically, and the bottom \dwords{fc} were folded up and temporarily attached to their top \dword{fc} counterparts.
 The resulting \dword{cpa}-\dword{fc} assemblies were rolled onto the central bridge beam inside the cryostat and subsequently deployed. 
 
 Also in the \dword{pdsp} clean room, the preassembled \dwords{ewfc} %panels 
@@ -919,10 +860,10 @@ modules tall.
 The load of the assembled endwall was then transfered to a trolley on a transport beam, which allowed it to be pushed into the cryostat onto the appropriate bridge beam.
 
 The \dword{tpc} components of \dword{pdsp} were installed first for the drift space to the right of the delivered beam (beam-right), and then for the beam-left drift space.
-The \dwords{apa} and the \dword{cpa} array were locked into position along their respective bridge beams, then the bridge beams were locked into their positions along the drift direction.
+The \dword{apa}s and the \dword{cpa} array were locked into position along their respective bridge beams, then the bridge beams were locked into their positions along the drift direction.
 Next, the two \dwords{ewfc} were moved and rotated into their upstream and downstream positions to bridge the gap between the vertical edges of the corresponding \dword{apa} and \dword{cpa}.
 The \dwords{ewfc} loads were transfered onto the \dword{apa} and \dword{cpa}  bridge beams, which freed the intermediate bridge beam for top and bottom \dword{fc} deployment.
-Two mechanical hoists were used to lower (raise) the bottom (top) \dword{fc} to bridge the gap between the horizontal edges of the \dwords{apa} and \dwords{cpa}.
+Two mechanical hoists were used to lower (raise) the bottom (top) \dword{fc} to bridge the gap between the horizontal edges of the \dword{apa}s and \dword{cpa}s.
 Finally, the \dword{hv} cup was connected on the downstream \dword{cpa}, and the \dword{hv} feedthrough was lowered through the cryostat penetration to make contact with the cup.
 
 \subsection{HV Commissioning and Operation}
@@ -1138,9 +1079,9 @@ understanding the source of instabilities or exposing any design weaknesses woul
 
 The \dword{hvs} has the largest surface area on the \dword{tpc} and interfaces with many other systems.  Table~\ref{tab:HVinterfaces} summarizes the interfaces with other consortia, highlights the key elements, and provides the links to the existing interface documents.
 
-The two most important mechanical interfaces are with the DSS and the \dword{apa}.  The entire weight of the \dwords{cpa}, \dword{ewfc},  and half the weight of the top and bottom \dword{fc} is supported by rails provided by the DSS.  The other half of the top and bottom \dword{fc} weight is transferred to the \dwords{apa} through latches mounted on the \dwords{apa}. All \dwords{cpa} and most of the \dword{fc} modules are also transported along the DSS rails to their final positions. The DSS rails ultimately determine the final locations of the \dwords{cpa} and \dwords{fc} on the \dword{tpc}.
+The two most important mechanical interfaces are with the DSS and the \dword{apa}.  The entire weight of the \dword{cpa}s, \dword{ewfc},  and half the weight of the top and bottom \dword{fc} is supported by rails provided by the DSS.  The other half of the top and bottom \dword{fc} weight is transferred to the \dword{apa}s through latches mounted on the \dword{apa}s. All \dword{cpa}s and most of the \dword{fc} modules are also transported along the DSS rails to their final positions. The DSS rails ultimately determine the final locations of the \dword{cpa}s and \dwords{fc} on the \dword{tpc}.
 
-Electrically, since the \dwords{apa} are at the detector ground, all \dword{hvs} field cage termination and failsafe circuits are connected to the \dwords{apa}.  All cables used for the \dword{fc} termination pass through the \dword{apa} frame, to connect to the SHV cables provided by the \dword{ce} through the \dword{ce} signal flanges.  The \dword{tpc} electronics consortium also provide \dword{hvs} the \dword{fc} termination power supplies.
+Electrically, since the \dword{apa}s are at the detector ground, all \dword{hvs} field cage termination and failsafe circuits are connected to the \dword{apa}s.  All cables used for the \dword{fc} termination pass through the \dword{apa} frame, to connect to the SHV cables provided by the \dword{ce} through the \dword{ce} signal flanges.  The \dword{tpc} electronics consortium also provide \dword{hvs} the \dword{fc} termination power supplies.
 
 
 
@@ -1160,7 +1101,7 @@ Interfacing System & Description & Linked Reference \\ \toprowrule
 \\ \colhline
 \dword{ce} & \dword{fc} termination wire connectors on CE feedthrough flange, \dword{fc} termination wires routed with CE cables & \citedocdb{6739} 
  \\ \colhline
-\dword{pds} & Mounting of PD calibration flash diffusers and routing of their fibers to \dwords{cpa}; Possible \dword{tpc} coated reflector foil on \dwords{cpa}. & \citedocdb{6721} 
+\dword{pds} & Mounting of PD calibration flash diffusers and routing of their fibers to \dword{cpa}s; Possible \dword{tpc} coated reflector foil on \dword{cpa}s. & \citedocdb{6721} 
  \\ \colhline
 facility & Locations and specifications of the \dword{hv} \fdth ports; gas and \dword{lar} flow velocities and patterns. & \citedocdb{6985}  
 \\ \colhline
@@ -1244,7 +1185,7 @@ In addition to the frames and \dwords{rp},
 %\fixme{"top (and bottom) of the upper (and) lower"?} 
 and cables are attached to the \dwords{rp} to form segments of the \dword{hv} bus.  
 
-The \dword{cpa} units are assembled horizontally on a smooth, flat table to provide a highly stable surface. There is one table per factory with up to 3 factories making \dwords{cpa}. The single table is needed to ensure flatness and straightness of the entire panel before units are pinned together.
+The \dword{cpa} units are assembled horizontally on a smooth, flat table to provide a highly stable surface. There is one table per factory with up to 3 factories making \dword{cpa}s. The single table is needed to ensure flatness and straightness of the entire panel before units are pinned together.
 
 A \SI{6}{\m} \dword{pdsp} \dword{cpa} panel and a \SI{12}{\m} \dword{pdsp} \dword{cpa} panel are shown at \dword{ashriver} Laboratory in Minnesota, USA,  in Figure~\ref{fig:12m-cpa}.
 %\fixme{end Anne's rewrite = This has too much cut - RKP - discuss}
@@ -1485,19 +1426,21 @@ The modules are removed from their crates starting with the topmost unit and pro
 is hanging vertically from its support beam.  This is repeated for the remaining three assemblies, making up the full downstream \dword{ewfc}. %; in all, four eight-module assemblies.  
 Figure~\ref{fig:EndwallInstall} shows a completed \dword{pdsp} endwall. 
 
-Next, the first of the 25 rows (counted lengthwise along the \dword{detmodule}) of \dword{apa}s and \dword{cpafc} assemblies are positioned in the order \dword{apa}, \dword{cpafc}, \dword{apa}, \dword{cpafc}, \dword{apa}.  Electrical and mechanical connections between the \dword{ewfc} and \dword{apa}s and the \dword{ewfc} and \dword{cpa} arrays are made.  At this point, deployment (unfolding) of the \dwords{topfc} and \dwords{botfc} %attached to the \dword{cpa} Planes 
+Next, the first of the 25 rows of \dword{apa}s and \dword{cpafc} assemblies (counted lengthwise along the \dword{detmodule}) are positioned in the order \dword{apa}, \dword{cpafc}, \dword{apa}, \dword{cpafc}, \dword{apa}.  Electrical and mechanical connections between the \dword{ewfc} and \dword{apa}s and the \dword{ewfc} and \dword{cpa} arrays are made.  At this point, deployment (unfolding) of the \dwords{topfc} and \dwords{botfc} %attached to the \dword{cpa} Planes 
 occurs.  Once they % Top and Bottom FCs 
-are latched at the \dword{apa} ends, and the \dword{fc} termination connections are made and verified on the \dwords{apa}, this \dword{tpc} row is complete.  Subsequent rows of \dword{apa}s and \dword{cpafc} assemblies are positioned sequentially, using the same procedure, completing the 25 rows. % of the TPC volume.  
+are latched at the \dword{apa} ends and the \dword{fc} termination connections are made and verified on the \dword{apa}s, this \dword{tpc} row is complete.  Subsequent rows of \dword{apa}s and \dword{cpafc} assemblies are positioned sequentially, using the same procedure, completing the 25 rows. % of the TPC volume.  
 Once the 25th row is in place, its \dword{topfc} %are 
 is deployed, latching to the \dword{apa}s.  Before the \dword{topfc} is deployed, the upstream \dword{ewfc} crates are brought into the cryostat 
 and the \dwords{ewfc} are built up from their crates in the same manner as the downstream ones. % - four 8-module Endwall assemblies between APAs and \dword{cpa} Planes.  
 Once they %endwalls 
-are in place and the \dwords{botfc} are deployed, the \dword{tpc} volume is enclosed. %finishing the TPC field cage volume of the detector. 
-%\fixme{different from tpc volume?}
+are in place and the \dwords{botfc} are deployed, the \dword{tpc} volume is enclosed. 
 Finally, electrical and mechanical connections between \dwords{ewfc} and \dword{apa}s and between \dwords{ewfc} and \dword{cpa} arrays are made, completing all field cage connections in the \dword{tpc}.
 
 %% added by BY
-Compared with the time needed to install and verify the \dwords{apa}, the \dword{cpa}-\dword{fc} modules installation is relatively simple, using installation procedures documented in~\cite{bib:docdb10452}.  The  procedures are based on the successful \dword{pdsp} experience. These use definite installations steps with associated checklists.  Since the deployment of the top and bottom \dwords{fc} blocks physical access to the interior volumes, the installation scheme described above limits the access to the installed \dword{tpc} components to only the outer row being installed.  An alternative installation scheme is being considered, which offers accessibility for much long period of time.  In this scheme, after the far \dword{ewfc} is completed, both \dwords{apa} and \dword{cpa}/\dwords{fc} are installed into position along their DSS rails at their natural pace without deploying the \dwords{fc}. This leaves the aisles between the \dwords{cpa} and \dwords{apa} free with floor in place in case access to previously installed \dword{tpc} modules is needed.  Once nearly all \dwords{apa} are installed, the floor boards are removed and \dwords{fc} are deployed.   
+Compared with the time needed to install and verify the \dword{apa}s, the \dword{cpa}-\dword{fc} modules installation is relatively simple, using
+the step-by-step installation procedures with associated checklists documented in~\cite{bib:docdb10452}.  The  procedures are based on the successful \dword{pdsp} experience. %These use definite installations steps with associated checklists. 
+ Since the deployment of the top and bottom \dwords{fc} blocks physical access to the %interior 
+ enclosed volumes, the installation scheme described above limits the access to the installed \dword{tpc} components to only the outermost row being installed.  An alternative installation scheme that offers accessibility for a much longer period of time is under consideration.  In this scheme, after the far \dword{ewfc} is completed, both \dword{apa}s and \dword{cpa}/\dwords{fc} are installed into position along their DSS rails at their natural pace without deploying the \dwords{fc}. This leaves the aisles between the \dword{cpa}s and \dword{apa}s free with the floor in place in case access to previously installed \dword{tpc} modules is needed.  Once nearly all \dword{apa}s are installed, the floor boards are removed and \dwords{fc} are deployed.   
 
 
 
@@ -1510,8 +1453,8 @@ Compared with the time needed to install and verify the \dwords{apa}, the \dword
 \includegraphics[width=0.45\textwidth]{2cpas-in-cryostat}
 \end{dunefigure}
 
-\begin{dunefigure}[ProtoDUNE-SP endwall FC installation]{fig:EndwallInstall}{Completed endwall %in process of being 
-during installation into \dword{pdsp} cryostat. In %the case of 
+\begin{dunefigure}[ProtoDUNE-SP endwall FC installation]{fig:EndwallInstall}{Completed \dword{ewfc} %in process of being 
+during installation into the \dword{pdsp} cryostat. In %the case of 
 \dword{pdsp}, the individual endwall modules were connected to form the wall in the clean room before being pushed into the cryostat. %In the case of DUNE, 
 For the \dword{spmod} the \dword{ewfc} will be built up inside the cryostat near its final position.}
 \includegraphics[width=0.65\textwidth]{endwall_and_tco.jpg}
@@ -1528,38 +1471,39 @@ For the \dword{spmod} the \dword{ewfc} will be built up inside the cryostat near
 \subsection{Institutional Responsibilities}
 \label{sec:fdsp-hv-org-consortium}
 The \dword{hvs} consortium %has consolidated 
-includes all the institutions that have participated in the design, construction and assembly of the \dword{hv} systems for both \dword{pdsp}  and \dword{pddp}. They are listed in Table~\ref{tab:instit}. 
+includes all the institutions that have participated in the design, construction and assembly of the \dword{hv} systems for both \dword{pdsp}  and \dword{pddp}. They are listed in 
+Table~\ref{tab:instit}. 
 %
 %The consortium 
 It currently comprises several USA institutions and \dword{cern}, %presently 
 the only non-USA participant.  
  
   
- As %in the case of 
-for \dword{protodune}, \dword{cern} is heavily committed to a significant role in terms of funding, personnel, 
+ As it has been %in the case of 
+for \dword{protodune}, \dword{cern} is heavily committed to a significant role in the  \dword{fd} in terms of funding, personnel, 
  and the provision of infrastructure for R\&D and detector optimization. Moreover, \dword{cern} will be responsible for a significant fraction of subsystem deliverables; as such  \dword{cern} is actively in search of additional European institutions to attract into the consortium. 
  
 At present, in the \dword{hv} current consortium organization, each institution is naturally assuming the same responsibilities that it assumed for %the developments of 
 \dword{pdsp} and \dword{pddp}. The %present 
-consortium organizational structure includes a scientific lead (from \dword{cern}), a technical lead (from BNL), a \dword{tdr} editor (from \fnal), and a \dword{hvs} design and integration lead (from ANL). 
+consortium organizational structure includes a scientific lead (from \dword{cern}), a technical lead (from BNL), a \dword{tdr} editor (from \dword{fnal}), and a \dword{hvs} design and integration lead (from \dword{anl}). 
 %  \fixme{structure or leadership? Anne. Refrased: FP}
 
-The successful experience gained with the \dword{pdsp} detector has demonstrated that the present \dword{hvs} consortium organization and the number of institutions are appropriate for the construction of the \dword{hv} system of the SP far detector. Funding and the predominant participation of US institutions are presently open issues. The extension to European institutions would be beneficial for both of these issues.
+The successful experience gained with the \dword{pdsp} detector has demonstrated that the present \dword{hvs} consortium organization and the number of institutions are appropriate for the construction of the \dword{hv} system of the \dword{spmod}. Funding and the predominant participation of USA institutions are presently open issues. The extension to European institutions would be beneficial for both of these issues. \fixme{what about beyond EU? anne}
 
 %\fixme{I removed all the "currently"s -- it's the current consortium org. anne}
- The consortium is organized into working groups addressing the design and  R\&D phases of development, and the hardware production and installation.
+ The consortium is organized into working groups (``WG,'' below) addressing the design and  R\&D phases of development, and the hardware production and installation.
 
 \begin{itemize}
-\item WG1. Design optimization for \dword{spmod} and \dword{dpmod}; assembly, system integration, detector simulation, physics requirements for monitoring and calibrations. %Conveners: Jeff Nelson, Vic Guarino, Bo Yu
-\item WG2. R\&D activities, R\&D facilities. %Conveners: Francesco Pietropaolo, Ting Miao
-\item WG3. \dword{sp}-\dword{cpa}: Procurement of resistive panels, frame strips, electrical connections of planes; assembly, \dword{qc} at all stages, and shipment of these parts. %Convener: Stephen Magill
+\item WG1: Design optimization for \dword{spmod} and \dword{dpmod}; assembly, system integration, detector simulation, physics requirements for monitoring and calibrations; %Conveners: Jeff Nelson, Vic Guarino, Bo Yu
+\item WG2: R\&D activities, R\&D facilities; %Conveners: Francesco Pietropaolo, Ting Miao
+\item WG3: \dword{sp}-\dword{cpa}: Procurement of resistive panels, frame strips, electrical connections of planes; assembly, \dword{qc} at all stages, and shipment of these parts; %Convener: Stephen Magill
 %\fixme{too many QC's. And confusing. Procurement, assembly, QC at all stages, and shipment of these parts? Anne - Done RKP}
 %\fixme{Not sure where this came from - do you want detailed list of duties or should it just be the name of the group? - SRM; Simplified: FP}
-\item WG4. \dword{dp} cathode and ground plane:  material procurement; construction, assembly, shipment to \dword{sdwf} %ITF 
-\dword{qa}, \dword{qc}.% Convener: Jae Yu
-\item WG5.  modules: \dword{sp}-Top/Bottom-\dword{fc} module, \dword{sp}-EndWall modules, \dword{dp}-\dword{fc} modules: procurement of mechanical and electrical components, assembly and shipping to \dword{sdwf}. %ITF. %Conveners: Thomas Kutter, Michael Wilking, Jeff Nelson, Jae Yu
+\item WG4: \dword{dp} cathode and \dword{gp}:  material procurement; construction, assembly, shipment to \dword{sdwf} %ITF 
+\dword{qa}, \dword{qc}; % Convener: Jae Yu
+\item WG5:  modules: \dword{sp}-Top/Bottom-\dword{fc} module, \dword{sp}-endwall modules, \dword{dp}-\dword{fc} modules: procurement of mechanical and electrical components, assembly and shipping to \dword{sdwf}; and  %ITF. %Conveners: Thomas Kutter, Michael Wilking, Jeff Nelson, Jae Yu
 %\fixme{ditto. Anne}
-\item WG6. \dword{hv} supply and filtering, \dword{hv} power supply and cable procurement, R\&D tests, filtering and receptacle design and tests. %Conveners: Franco Sergiampietri, Sarah Lockwitz
+\item WG6: \dword{hv} supply and filtering, \dword{hv} power supply and cable procurement, R\&D tests, filtering and receptacle design and tests. %Conveners: Franco Sergiampietri, Sarah Lockwitz
 \end{itemize}
 
 %Merging of \dword{sp} and \dword{dp} activities is performed for the working groups where synergies have been identified: 
@@ -1599,16 +1543,17 @@ College of William and Mary& USA \\ %(Jeff Nelson; jknels@wm.edu)
 %\fixme{Some text must accompany the table. The "ID" in the table refers to the ID in the Risk Register.}
 %Most of t
 %Table~\ref{tab:HVrisks}  
-Table~\ref{tab:risks:SP-FD-HV} presents a summary of the risk items identified for the \dword{hv} system of  the far \dword{spmod}. 
+Table~\ref{tab:risks:SP-FD-HV} presents a summary of the risk items identified for the \dword{hv} system of  the \dword{fd} \dword{spmod}. 
 
 \input{generated/risks-longtable-SP-FD-HV.tex}
 
-In the table, the first five risks refer to the construction and operation phases; 6 and 7 apply only to the installation phase; 8 to 12 apply only to the  detector operation phase; and finally, risks 13 and 14 are related to schedule and funding.
+The first five risks refer to the construction and operation phases; risks 6 and 7 apply only to the installation phase; and risks 8 to 12 apply only to the  detector operation phase. %; and finally, risks 13 and 14 relate to the schedule and funding. 
+\fixme{removed funding stuff (and therefore risks 13-14; schedule risk should still be here? anne}
 
 Most of the cited risks have already been addressed during the construction, commissioning, and operation of \dword{pdsp}. 
 None have caused significant problems, with the partial exception of risk 9. %item [ID09]. 
 %Item [ID08] 
-Risk 8 requires an accurate analysis of collected muon data (this activity is in-progress), and the disentangling of space charge effects.
+Risk 8 requires an accurate analysis of collected muon data (this activity is in progress), and the disentangling of space charge effects. \fixme{check risk numbers; 8 seems wrong. anne}
 
 \begin{comment}
 
@@ -1637,49 +1582,75 @@ ID & Risk  & Probability & Impact\\ \toprowrule
 12 & Underground installation is more labor intensive or slower than expected  & L & L  \\ 
 \end{dunetable}f
 \end{comment}
-The listed risks still persist for the \dwords{detmodule}, given the much larger detector scale and the more complex underground installation environment. However, the positive experience gained with \dword{protodune}, justifies the low risk probabilities assigned to most of the items. The same is true for their impact on the cost and schedule. To better justify these statements, brief explanations are given below, together with the identified mitigation actions.
+Given the much larger detector scale and the more complex underground installation environment, the listed risks still %persist for 
+apply to the \dwords{detmodule}. However, the positive experience gained with \dword{protodune} justifies the low risk probabilities assigned to most of the items. The same is true for their impact on the cost and schedule. \fixme{remove prev sentence?} To better justify these statements, brief explanations are given below, together with the identified mitigation actions.
 
 
-Risk 1: An open circuit on the \dword{fc} could happen if a resistor in the conventional voltage dividers fails in the open condition. Such a scenario could result in \dword{hv} discharges across the open circuit gap. Mitigation: Perform stringent component selection and cryogenic testing. Use parallel resistors chains to provide redundancy. Varistors, capable of withstand several thousand amperes of current impulses, have been added in parallel with the resistor chains to protect them from large current surges. Resistances will be checked several times during \dword{fc} fabrication and assembly phases, including once after the \dword{fc} deployment.   
+Risk 1: An open circuit on the \dword{fc} could occur if a resistor in the conventional voltage dividers were to fail in the open condition, which %. Such a scenario 
+could result in \dword{hv} discharges across the open circuit gap. Mitigation: Perform stringent component selection and cryogenic testing. Use parallel resistor chains to provide redundancy. Varistors, capable of withstanding several thousand amperes of current impulses, have been added in parallel with the resistor chains to protect them from large current surges. Check resistances %will be checked 
+several times during \dword{fc} fabrication and assembly phases, including once after the \dword{fc} deployment.   
 
-Risk 2: Limited, local scratches could possibly occur, due to accidental contacts during module assembly or installation. No mitigation is required if a scratch is limited in size. For larger scratches that can induce delamination, the mitigation is to replace the panel with a spare. 
+Risk 2: Limited, local scratches could %possibly 
+occur from accidental contacts during module assembly or installation. No mitigation is required if a scratch is limited in size. For larger scratches that can induce delamination, the mitigation is to replace the panel with a spare. 
 
-Risk 3: About 12 rolls of resistive kapton are needed (4ft wide, 300m per roll)  for the \dword{cpa}'s panels of one SP module.  The cost is 20k\$ per roll from the only vendor available up to now. Mitigation: Recently another source of resistive kapton has become available and is being investigated. An early purchase is also under consideration in case of a single source condition.
+Risk 3: About 12 rolls of resistive kapton are needed (\SI{4}{ft} wide, \SI{300}{m} per roll)  for the \dword{cpa} panels of one \dword{spmod}.  The cost is 20k\$ per roll from the only vendor available up to now. Mitigation: Recently another source of resistive kapton has become available and is being investigated. An early purchase is also under consideration in case of a single source condition.
 
-Risk 4: Poor shipping techniques could cause damage (broken \dword{cpa} panels, bent or heavily scratched aluminum profiles...) that would cause the modules to fail QC tests. Delicate components can be damaged if adequate provisions are not made. Repairs to detector components (heavier that those listed in 1 to 4) would require replacements.   Mitigation: An adequate number of spare elements is to be planned for, as well as a documented QA program for shipment packing, and for the method and detailed reviewing of shipping procedures, shipping containers, and testing in crates after arrival.
+Risk 4: Poor shipping techniques could cause damage to delicate components (e.g., broken \dword{cpa} panels, bent or heavily scratched aluminum profiles) that would cause the modules to fail \dword{qc} tests. %Delicate components can be damaged if adequate provisions are not made. 
+Repairs to detector components (heavier that those listed in 1 to 4) would require replacements.   Mitigation: Plan for an adequate number of spare elements and implement %a documented \dword{qa} program for shipment packing and for the method and detailed review of shipping procedures, shipping containers, and testing in crates after arrival.
+a documented \dword{qa} program for shipment packing with detailed review of shipping procedures, shipping containers, and testing in crates after arrival.
 
-Risk 5: The surface of the aluminum profiles is very delicate and deep scratches could locally increase the \efield to close to the critical field of \SI{30}{\kV}/cm. The surface can be damaged during transport or manipulation in the assembly area. In case of significant damage, it cannot be repaired due to its conductive coating. For mitigation, sufficient spare profiles are required  on-site to allow last-minute substitutions. Alternatively, a local coating with epoxy resin could be used.
+Risk 5: The surface of the aluminum profiles is very delicate and deep scratches could locally increase the \efield to close to the critical field of \SI{30}{\kV}/cm. The surface can be damaged during transport or manipulation in the assembly area. In case of significant damage, it cannot be repaired due to its conductive coating. For mitigation, ensure the availability of sufficient spare profiles %are required  
+on-site to allow last-minute substitutions. Alternatively, use a local coating with epoxy resin. % could be used.
 
-Risk 6: Unexpected changes in \dword{fc} resistor values, cathode/\dword{fc} non-planarity or movement, and surface or space charge buildup can distort the electric field. As a consequence, the momentum of non-contained muons,  measured by estimating the multiple scattering rate for the observed track segments, could be mis-estimated. This would degrade the momentum resolution for non-contained muons.  ${\nu}_{\mu}$ disappearance analyses and three-flavor fits could be affected and there can be feed-down of high-energy neutrino backgrounds to low-energy reconstructed categories.  Mitigation: Addition of a laser calibration will be considered if calibration with cosmic crossing muons is not sufficient. 
+Risk 6: Unexpected changes in \dword{fc} resistor values, cathode/\dword{fc} non-planarity or movement, and surface or space charge buildup can distort the \efield. As a consequence, the momentum of non-contained muons,  measured by estimating the multiple scattering rate for the observed track segments, could be incorrectly estimated, thereby degrading %. This would degrade 
+the momentum resolution for non-contained muons.  ${\nu}_{\mu}$ disappearance analyses and three-flavor fits could be affected %and there can be 
+leading to feed-down \fixme{flow down?} of high-energy neutrino backgrounds to low-energy reconstructed categories.  Mitigation: Consider addition of a laser calibration %will be considered 
+if calibration with cosmic crossing muons is not sufficient. 
 
-Risk 7:  In \dword{protodune}, \dword{hv} instabilities appeared as current streams occurring at intervals of several hours, and localized on  a specific \dword{fc} module. These required a several minute ramp-down of the \dword{hv}, from the nominal \SI{-180}{kV} to a lower value, typically \SI{-140}{kV}; see Section~\ref{sec:fdsp-hv-protodune}.
-Investigations are under way to characterize and mitigate this risk. Recently, understanding of this risk has significantly progressed thanks to the 
-long term operation of \dword{pdsp} in 2019, exposed to cosmic rays only. 
-There are strong hints confirming that the instabilities are due to charging up processes on insulators. In addition, there is confirmation that the "current streamers" are localized mainly on a single ground plane (out of 12). No degradation of the detector performance due to HV instabilities is observed. On the contrary, these instabilities appear gradually to decrease in rate and intensity. At present the detector down time due to these instabilities is smaller that 1\%.  
+Risk 7:  In \dword{protodune}, \dword{hv} instabilities appeared as current streams occurring at intervals of several hours, and localized on  a specific \dword{fc} module. These required a several-minute ramp-down of the \dword{hv} from the nominal \SI{-180}{kV} to a lower value, typically \SI{-140}{kV}; see Section~\ref{sec:fdsp-hv-protodune}.
+Investigations are underway to characterize and mitigate this risk. Recently, understanding of this risk has significantly progressed thanks to the 
+long-term operation of \dword{pdsp} in 2019 while exposed only to cosmic rays. 
+There are strong hints %confirming  (Anne: strong hints do not confirm ;-)  )
+that the instabilities are due to charging-up processes on insulators. In addition, %there is confirmation that 
+the ``current streamers'' are confirmed to have been localized mainly on %a single 
+one \dword{gp} (of 12). No degradation of the detector performance due to \dword{hv} instabilities has been observed. %On the contrary, 
+Moreover, these instabilities appear to decrease gradually in rate and intensity. At present the detector down-time due to these instabilities is less than 1\%.  
 
-\dword{protodune} long term operation is also indicating that \dword{lar} purity does not seem to play a significant role for the onset of the \dword{hv} instability (for free electron lifetime above ~1 ms).  The impact of the HV instabilities on \dword{apa}/\dword{ce} and photo detectors is also under investigation and at the moment appears to be negligible.
+\dword{protodune} long-term operation is also indicating that \dword{lar} purity does not %seem 
+to play a significant role in the onset of the \dword{hv} instability (for free electron lifetime above $\sim\,$\SI{1}{ms}).  The impact of the \dword{hv} instabilities on \dword{apa}/\dword{ce} and \dwords{pd} is also under investigation and at the moment appears to be negligible.
 
-The mitigation involves improvement at the design level to increase as much as possible the distance between the field cage and ground planes, and to avoid high field regions by smoothing all electrodes exposed at \dword{hv}. ProtoDUNE NP02, with a comparable design, will help understanding the validity of these improvements.
+The mitigation for risk 7 involves improvement at the design level to increase as much as possible the distance between the \dword{fc} and \dwords{gp}, and to avoid high-field regions by smoothing all electrodes exposed at \dword{hv}. \fixme{to or at?} %ProtoDUNE NP02, 
+\dword{pddp}, with a comparable design, will help determine %understanding 
+the validity of these improvements.
 
-Risk 8: A sudden discharge on the \dword{hv} system injects charge to the front end ASICs, overwhelming the protection circuits and causing permanent damage. Mitigation: Key aspects of the \dword{hvs} design were aimed at reducing the charge injection to a safe level for the \dword{ce}, such as segmenting the \dword{fc}, and making the cathode planes resistive.  We are still searching for higher resistive material on the cathode to increase the safety factor. 
+Risk 8: A sudden discharge on the \dword{hv} system would inject charge to the \dword{fe} \dwords{asic}, overwhelming the protection circuits and causing permanent damage. Mitigation: Key aspects of the \dword{hvs} design were aimed at reducing the charge injection to a safe level for the \dword{ce}, such as segmenting the \dword{fc}, and making the cathode planes resistive.  We are still searching for higher-resistivity material on the cathode to increase the safety factor. 
 
-Risk 9:  Each cathode is made of lightweight non-porous material with an area of 58\,m $\times$ 12\,m.  It could move under the \dword{lar}'s convectional flow.  Mitigation: The \dword{cpa} structure is designed to withstand pressure from \dword{lar} flow based on fluid model predictions. Static deformation can be calibrated by lasers or cosmic rays.
+Risk 9:  Each cathode is made of lightweight, non-porous material with an area of \SI{58x12}{m} and could move under the \dword{lar}'s convectional flow.  Mitigation: The \dword{cpa} structure is designed to withstand pressure from \dword{lar} flow based on fluid model predictions. Static deformation can be calibrated by lasers or cosmic rays.
 
-Risk 10: Ageing of insulator components in \dword{lar} could be an issue,  but  experience in Atlas (Kapton \& PCB, 20+ years), Icarus (G10, feedthrough 4+ years; feedthrough exchangeable) is trending favorably. Mitigation: More experience will be gained with liquid argon \dword{tpc}'s. Make feedthrough exchangeable.
+Risk 10: Ageing of insulator components in \dword{lar} could %be an issue
+pose a problem,  but  experience in \dword{atlas} (Kapton \& PCB, $20+$ years), \dword{icarus} (G10, feedthrough $4+$ years; feedthrough exchangeable) is trending favorably. Mitigation: %More experience will be gained . 
+Continue to gain experience with \dwords{lartpc}. Make feedthrough exchangeable.
 
-Risk 11: Current costings suggest that International funding could be a potential issue. Mitigation: Cost reduction through design optimization and scaling. Make efforts to include more international collaboration institutes. 
+Risk 11: Current costing suggests that international funding could be %a potential issue.
+insufficient. Mitigation: Implement cost reduction through design optimization and scaling. Make efforts to include more international %collaboration 
+institutions. 
 
-Risk 12: Add SWF contingency. Carry out full-scale installation trials at \dword{ashriver} site prior to installation. The estimates are based on \dword{protodune} experience. With the present knowledge, the \dword{hv} system is not on the critical path for installation.
+Risk 12: Underground installation is more labor-intensive or slow than expected. Mitigation: Add SWF \fixme{swf?} contingency. Carry out full-scale installation trials at the  \dword{ashriver} site prior to installation. The estimates are based on \dword{protodune} experience. With the present knowledge, the \dword{hv} system is not on the critical path for installation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{High-level Schedule}
 \label{sec:fdsp-hv-org-cs}
 
 
-Table~\ref{tab:HVsched} gives the most high level milestones for the design, test, production and installation of the \dword{hvs} of the \dword{spmod}. Dates in this tentative schedule are based on the assumed start of installation of the first \dword{spmod} at \surf. The dates for the \dword{hvs} production of a second \dword{spmod} are also included as a reference.
+Table~\ref{tab:HVsched} lists the most high-level milestones for the design, testing, production and installation of the \dword{spmod} \dword{hvs}. Dates in this tentative schedule are based on the assumed start of installation of the first \dword{spmod} at \dword{surf}. The dates for the \dword{hvs} production of a second \dword{spmod} are %also 
+included as a reference.
 
- The production scenario assumed for the schedule presented in Table~\ref{tab:HVsched} is based on two factory sites for the \dword{cpa} construction, two for the top/bottom \dword{fc} modules and one for \dword{fc} end wall modules. Given the present starting date for installation underground of the first \dword{spmod}, this assumption is fully compatible with the time available after the operation of the \dword{protodune2} prototype.
- A more detailed insight on the production and installation schedule for the first \dword{spmod} is found in the Gantt chart provided in Figure~\ref{fig:tasks}.
+ The production scenario %assumed 
+ for the schedule presented in Table~\ref{tab:HVsched} assumes %is based on 
+ two factory sites for the \dword{cpa} construction, two for the top/bottom \dword{fc} modules and one for \dword{ewfc} modules. Given the present starting date % for installation underground of
+ for  the first \dword{spmod} installation, this assumption is fully compatible with the time available after the operation of the \dword{protodune2} prototype.
+ A more detailed insight on the production and installation schedule for the first \dword{spmod} is found in %the Gantt chart provided in 
+ Figure~\ref{fig:tasks}.
 
 \begin{dunetable}
 [HVS Consortium Schedule]
@@ -1689,34 +1660,34 @@ Table~\ref{tab:HVsched} gives the most high level milestones for the design, tes
 Milestone & Date (Month YYYY)   \\ \toprowrule
 Technology Decision &      \\ \colhline
 CPA/FC/EndWall 60\% Design Review & June 2019 \\ \colhline
-CPA/FC/EndWall Mod 0 (for tests at Ash River) & June 2019 - June 2020 \\ \colhline
+CPA/FC/EndWall Mod 0 (for tests at \dshort{ashriver}) & June 2019 - June 2020 \\ \colhline
 Final Design Review & June 2020     \\ \colhline
-Start of module 0 component production for \dword{protodune2} & June 2020     \\ \colhline
-End of module 0 component production for \dword{protodune2} &  March 2021    \\ \colhline
-\rowcolor{dunepeach} Start of \dword{protodune2} installation& \startpduneiispinstall      \\ \colhline
-\rowcolor{dunepeach} Start of \dword{protodune2} installation& \startpduneiidpinstall      \\ \colhline
+Start of module 0 component production for  \dshort{protodune2} & June 2020     \\ \colhline
+End of module 0 component production for  \dshort{protodune2} &  March 2021    \\ \colhline
+\rowcolor{dunepeach} Start of  \dshort{protodune2} installation& \startpduneiispinstall      \\ \colhline
+\rowcolor{dunepeach} Start of  \dshort{protodune2} installation& \startpduneiidpinstall      \\ \colhline
 \rowcolor{dunepeach}South Dakota Logistics Warehouse available& \sdlwavailable      \\ \colhline
-\rowcolor{dunepeach}Beneficial occupancy of cavern 1 and \dword{cuc}& \cucbenocc      \\ \colhline
-\rowcolor{dunepeach} \dword{cuc} counting room accessible& \accesscuccountrm      \\ \colhline
- Top/Bottom FC \dword{prr} & July 2023    \\  \colhline
+\rowcolor{dunepeach}Beneficial occupancy of cavern 1 and \dshort{cuc}& \cucbenocc      \\ \colhline
+\rowcolor{dunepeach}  \dshort{cuc} counting room accessible& \accesscuccountrm      \\ \colhline
+ Top/Bottom FC  \dshort{prr} & July 2023    \\  \colhline
  Start of Top/Bottom FC production  & September 2023     \\ \colhline
-CPA \dword{prr} &  October 2023    \\ \colhline
-Start of \dword{cpa} production  & December 2023     \\ \colhline
-\rowcolor{dunepeach}Top of \dword{detmodule} \#1 cryostat accessible& \accesstopfirstcryo      \\ \colhline
- EndWall FC \dword{prr} & February 2024     \\  \colhline
+CPA  \dshort{prr} &  October 2023    \\ \colhline
+Start of  \dshort{cpa} production  & December 2023     \\ \colhline
+\rowcolor{dunepeach}Top of  \dshort{detmodule} \#1 cryostat accessible& \accesstopfirstcryo      \\ \colhline
+ EndWall FC  \dshort{prr} & February 2024     \\  \colhline
 Start of EndWall FC production  & April 2024     \\ \colhline
-End of \dword{cpa} production Detector \#1 & August 2024     \\ \colhline
+End of  \dshort{cpa} production Detector \#1 & August 2024     \\ \colhline
 End of Top/Bottom FC production Detector \#1 & August 2024  \\ \colhline
 End of EndWall FC production  Detector \#1 & August 2024  \\ \colhline
-\rowcolor{dunepeach}Start of \dword{detmodule} \#1 TPC installation& \startfirsttpcinstall      \\ \colhline
-\rowcolor{dunepeach}Start of \dword{detmodule} \#1 TPC installation& \startfirsttpcinstall      \\ \colhline
-\rowcolor{dunepeach}Top of \dword{detmodule} \#2 accessible& \accesstopsecondcryo      \\ \colhline
-\rowcolor{dunepeach}End of \dword{detmodule} \#1 TPC installation& \firsttpcinstallend      \\ \colhline
- \rowcolor{dunepeach}Start of \dword{detmodule} \#2 TPC installation& \startsecondtpcinstall      \\ \colhline
-End of \dword{cpa} production Detector \#2 & September 2025  \\ \colhline
+\rowcolor{dunepeach}Start of  \dshort{detmodule} \#1 TPC installation& \startfirsttpcinstall      \\ \colhline
+\rowcolor{dunepeach}Start of  \dshort{detmodule} \#1 TPC installation& \startfirsttpcinstall      \\ \colhline
+\rowcolor{dunepeach}Top of  \dshort{detmodule} \#2 accessible& \accesstopsecondcryo      \\ \colhline
+\rowcolor{dunepeach}End of  \dshort{detmodule} \#1 TPC installation& \firsttpcinstallend      \\ \colhline
+ \rowcolor{dunepeach}Start of  \dshort{detmodule} \#2 TPC installation& \startsecondtpcinstall      \\ \colhline
+End of  \dshort{cpa} production Detector \#2 & September 2025  \\ \colhline
 End of Top/Bottom FC production Detector \#2  &  October 2025   \\ \colhline
 End of EndWall FC production Detector \#2  & January 2026  \\  \colhline
-\rowcolor{dunepeach}End of \dword{detmodule} \#2 TPC installation& \secondtpcinstallend      \\ 
+\rowcolor{dunepeach}End of  \dshort{detmodule} \#2 TPC installation& \secondtpcinstallend      \\ 
 \end{dunetable}
 
 %\fixme{Some text must accompany the tables.}
@@ -1730,7 +1701,7 @@ Gantt chart providing a detailed view of the production and installation schedul
 \end{dunefigure}
 
 
-
+\begin{comment}
 A first high-level summary of the materials cost estimate for the \dword{hv} system of one \dword{spmod} results from %has been obtained 
 extrapolating from the as-realized \dword{pdsp} costs and effort. It includes no costs for spare parts % has been included, 
 and no contingency. %On the other hand, these estimates also do not 
@@ -1738,37 +1709,35 @@ The estimate also does not include any projected cost savings from %that will be
 the high production volume at each production site, however, which could be substantial.  %Given the small numbers of each unit required for the \dword{pdsp} (e.g., \num{12} \dword{topfc} and \dword{botfc} modules and \num{16} \dword{ewfc} modules) the assembly sites were still climbing the learning curve; this could give additional substantial savings. 
 %\fixme{I don't think you need this last sentence. Anne. Disagree - RKP}
 
-
-
-
-
-
-
+\end{comment}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Appendix - Alternatives}
+\section{Appendix: Alternatives}
 
 \subsection{Optical Reflectors on CPA}
 
-Since the \dwords{pd} in the current \dword{tpc} design are installed only on the \dword{apa} side of the drift volume and have low coverage, their responses to ionization inside the \dword{tpc} are highly dependent on drift distance and severely biased toward the \dword{apa}.  In order to improve the uniformity of response along the drift direction, the \dword{pd} consortium has proposed adding reflector foils coated with \dword{wls} to convert the UV photons arriving at the cathode into visible photons and bounce them back to the \dwords{pd} inside the \dword{apa}s.  Simulations have shown that addition of the reflectors  significantly improves the uniformity of response.
+Since the \dwords{pd} in the current \dword{tpc} design are installed only on the \dword{apa} side of the drift volume and have low coverage, their responses to ionization inside the \dword{tpc} are highly dependent on drift distance and severely biased toward the \dword{apa}.  In order to improve the uniformity of response along the drift direction, the \dword{pd} consortium has proposed adding reflector foils coated with \dword{wls} \fixme{coatings?} to convert the UV photons arriving at the cathode into visible photons and bounce them back to the \dwords{pd} inside the \dword{apa}s.  Simulations have shown that addition of the reflectors  significantly improves the uniformity of response.
 
 Implementing this concept, however, could dramatically alter the current \dword{cpa} characteristics and design.  The \dword{hvs} consortium has %Several concepts have been developed by the HVS 
-developed several concepts to accommodate the reflectors with minimal change to the current \dword{cpa} design.  The main issue %here 
+developed several concepts to accommodate the reflectors with minimal change to the %current 
+\dword{cpa} design.  The main issue %here 
 is the conductivity of the reflector foil versus the highly resistive nature of the \dword{cpa}.  To improve the light output it would be best to %One would like to 
 cover as much of the cathode surfaces as possible, however, % if the reflectors are conductive, aluminum-coated for example, large area coverage with these 
-large area coverage with conductive, e.g., aluminum-coated, reflectors could short circuit the resistive cathode and render it ineffective in slowing down the energy transfer during a \dword{hv} breakdown.  On the other hand, %if the reflector foils are insulators, they would intercept the ionization drifting toward the cathode and become charged.  
-reflector foils made of insulating material would intercept the ionization drifting toward the cathode and become charged. This would alter the drift field uniformity, and worst yet, possibly result in random breakdowns through the foil.
+large area coverage with conductive, e.g., aluminum-coated, reflectors could short-circuit the resistive cathode and render it ineffective in slowing down the energy transfer during a potential \dword{hv} breakdown.  On the other hand, %if the reflector foils are insulators, they would intercept the ionization drifting toward the cathode and become charged.  
+reflector foils made of insulating material would intercept the ionization charges drifting toward the cathode and become charged. This would alter the drift field uniformity, and worst yet, possibly result in random breakdowns through the foil.
 
-A design concept that is fairly simple to implement and that uses a known material is depicted in Figure~\ref{fig:reflectorOnCPA}.  A 3M Vikuiti\footnote{Vikuiti\texttrademark is a light enhancement film produced by the 3M Company,  \url{http://multimedia.3m.com/mws/media/419882O/vikuititm-rear-projection-displays-brochure.pdf}.} 
-reflector foil or equivalent is laminated on a thin \frfour backing sheet to maintain thermal expansion compatibility
-with the resistive \dword{cpa} panel which also has an \frfour core. The reflector foil assembly is perforated at regular intervals to allow %electrons to be collected 
-collection of electrons through the holes to the \dword{rp}  surface, minimizing the voltage build up from charging of the non-perforated surfaces.  Several such foil assemblies are then tiled on the existing \dwords{rp} with screws.
+A design concept that is fairly simple to implement %and that uses a known material 
+is depicted in Figure~\ref{fig:reflectorOnCPA}.  A 3M Vikuiti\footnote{Vikuiti\texttrademark is a light enhancement film produced by the 3M Company,  \url{http://multimedia.3m.com/mws/media/419882O/vikuititm-rear-projection-displays-brochure.pdf}.} 
+reflector foil or equivalent is laminated onto a thin \frfour backing sheet to maintain thermal expansion compatibility
+with the resistive \dword{cpa} panel, which also has an \frfour core. The reflector foil assembly is perforated at regular intervals to allow %electrons to be collected 
+collection of electrons through the holes to the \dword{rp}  surface, minimizing the voltage build-up from charging of the non-perforated surfaces.  Several such foil assemblies are then tiled onto the existing \dwords{rp} with screws.
 
-In order to advance the \dword{cpa} design while providing the option of adding the reflector foils at a later time, the \dword{hvs} consortium will design in a hole pattern 
+In order to advance the \dword{cpa} design while providing the option of adding the reflector foils at a later time, the \dword{hvs} consortium will design %in 
+a hole pattern 
 on the %\dword{cpa} resistive panels
-\dwords{rp} that could be used for mounting of reflector foils or panels, or left unused without negative consequences. In the meantime, \dword{hvs} and PD consortia are conducting joint R\&D to evaluate a few design concepts and material choices. 
+\dwords{rp} that could be used for mounting of reflector foils or panels, or left unused without negative consequences. In the meantime, \dword{hvs} and \dword{pd} consortia are conducting joint R\&D to evaluate a few design concepts and material choices. 
 
 
 \begin{dunefigure}[Concept to attach reflector to a CPA panel]{fig:reflectorOnCPA}{A concept to attach reflector foils to a \dword{cpa} panel. (Credit: BNL)}
@@ -1777,7 +1746,7 @@ on the %\dword{cpa} resistive panels
 
 \subsection{Calibration Laser Penetrations}
 
-The calibration consortium is developing requirements for calibrating the \dword{tpc} \efield.  One existing technique is to use UV laser beams to ionize the \dword{lar} and generating straight tracks along known trajectories.  Since the \dword{fc} surrounds the \dword{tpc} active volume, one needs to either shoot through the gaps between the \dword{fc} profiles (as in \microboone), or make openings in the \dword{fc}  for the laser heads to pass through (as in SBND).    Figure~\ref{fig:SBND_laser}  shows the design of a corner of the SBND \dword{tpc} with a \dword{fc}  opening, and a calibration laser head through the opening.  Implementing such openings is straightforward if the openings are at the \dword{fc}  module boundaries.  Doing so through the interior surface of a \dword{fc} panel is more complicated, but still simpler than the beam plug we designed for \dword{pdsp}.  There will be some minor drift field distortion around the openings.  Preliminary \dwords{fea} have shown the field distortion to be negligible. 
+The calibration consortium is developing requirements for calibrating the \dword{tpc} \efield.  One existing technique is to use UV laser beams to ionize the \dword{lar} and generate straight tracks along known trajectories.  Since the \dword{fc} surrounds the \dword{tpc} active volume, one needs to either shoot through the gaps between the \dword{fc} profiles (as in \dword{microboone}), or make openings in the \dword{fc}  for the laser heads to pass through (as in \dword{sbnd}).    Figure~\ref{fig:SBND_laser}  shows the design of a corner of the \dword{sbnd} \dword{tpc} with a \dword{fc}  opening, and a calibration laser head through the opening.  Implementing such openings is straightforward if the openings are at the \dword{fc}  module boundaries.  Doing so through the interior surface of a \dword{fc} panel is more complicated, but still simpler than the beam plug we designed for \dword{pdsp}.  There will be some minor drift field distortion around the openings.  Preliminary \dword{fea} studies have shown the field distortion to be negligible. 
 
 \begin{dunefigure}[SBND laser arrangement]{fig:SBND_laser}{SBND field cage opening to allow a calibration laser head to pass through. (Credit: BNL)}
 \includegraphics[width=0.7\textwidth]{SBND_Laser_Arrangement.png}
