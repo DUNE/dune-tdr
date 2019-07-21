@@ -1,15 +1,25 @@
-\chapter{Cryogenics Instrumentation and Slow Control}
+\chapter{Cryogenics Instrumentation and Slow Controls}
 \label{ch:sp-cisc}
 
-%\metainfo{Dual-phase section starts here [not a real fixme, just a landmark]}
+% \fixme{Add more information about what is identical and what is different between DP and SP versions.} -- done (Glenn)
 
-\fixme{which portions of this are identical to what will be in the DP version of CISC? We need to note these portions. anne.  Please see added footnote - Glenn. I think I'll take it out of footnote and move it to main text. Tim hates footnotes! Anne}
 %%%%%%%%
 \section{Introduction} 
 
+The \dfirst{cisc} consortium provides comprehensive monitoring for all detector  components and for \dword{lar} quality and behavior as well as a control system for many detector components.
+%
+% I replaced the following sentence with a new one that gives the reader a better idea where to find the differences between DP and SP chapters. -Glenn
+%The \dword{dpmod} uses the same control system and much of the same cryogenic instrumentation as the \dword{spmod}. A discussion of instrumentation specific to the \dword{dpmod} may be found in the corresponding chapter of Volume~4 of this \dword{tdr}.
+%
+The \dword{sp} and \dword{dp} modules both use the same control
+system and have nearly identical cryogenic instrumentation except
+for differences in location due to the different \dword{tpc}
+geometries and the addition of dedicated instrumentation for
+monitoring temperature and pressure in the gas phase for the
+\dword{dpmod}.  The corresponding chapter of Volume~4 of this
+\dword{tdr} is virtually the same as this chapter apart from
+those few differences.
 
-The \dfirst{cisc} consortium provides comprehensive monitoring for all detector  components and for \dword{lar} quality and behavior, and a control system for many of the detector components. %The structure of the \dword{cisc} consortium is quite complex.
-The \dfirst{dpmod} uses the same control system and much of the same cryogenic instrumentation as the \dfirst{spmod}. A detailed list of instrumentation differences may be found in the corresponding chapter of Volume~4 of this \dword{tdr}. 
 
 The consortium responsibilities are split into 
 two main branches: cryogenics instrumentation and slow controls, as illustrated in  Figure~\ref{fig:cisc-subsystem-chart}. % provides a subsystem chart for the \dword{cisc} system. 
@@ -49,9 +59,10 @@ parameters are extrapolated from these designs. The \dword{pdsp} data (and in so
 Cryogenics instrumentation includes purity monitors,  various types of temperature monitors, and cameras with their associated light emitting systems. Also included are %components like 
 gas analyzers and \dword{lar} level monitors that are directly related to the external cryogenics system, which have substantial interfaces with the \dword{lbnf}. \dword{lbnf} provides the needed expertise  for these systems and is responsible for the design, installation, and commissioning, while the \dword{cisc} consortium provides the resources and supplements labor as needed. 
 
-A test facility for the instrumentation devices is also part of the cryogenics instrumentation.
+A \dword{citf} for the instrumentation devices is also part of the cryogenics instrumentation.
  \dword{cisc} is responsible for design through commissioning in the \dword{spmod} %\dfirst{fd}.
-of \dword{lar} instrumentation devices (purity monitors, thermometers, cameras, and light-emitting system, and their associated feedthroughs) and the \dword{citf}.
+of \dword{lar} instrumentation devices: purity monitors, thermometers, capacitive level meters, cameras, and light-emitting system, and their associated feedthroughs.
+%and the \dword{citf}.
 
 Cryogenics instrumentation %also 
 requires significant engineering, physics, and
@@ -64,7 +75,7 @@ regions of high \efield, so that %and
 their presence does not induce large field distortions. 
 % AC. What do we mean by distortions here ?
 % Alternative: ``that their designs do not induce high \efields and risk of dielectric breakdown. ``
-\dshort{cfd} simulations help identify %are needed to understand 
+\dword{cfd} simulations help identify %are needed to understand 
 expected temperature, impurity, and velocity flow distributions and guide the placement and distribution of instrumentation devices inside the cryostat.
 
 %%%%%%%%%%%%
@@ -81,7 +92,8 @@ hardware, infrastructure, and software. The slow controls hardware and infrastru
 
 
 %For slow controls, 
-\dword{cisc} provides software and infrastructure for controlling and monitoring all detector elements that provide data on the health of the \dword{detmodule} or conditions important to the experiment, as well as  some related hardware. Slow controls includes the systems detailed below.
+\dword{cisc} provides software and infrastructure for controlling and monitoring all detector elements that provide data on the health of the \dword{detmodule} or conditions important to the experiment, as well as  some related hardware. 
+%Slow controls includes the systems detailed below.
 
 %\textbf{Slow controls base software and databases:}
 Slow controls base software and databases are the central tools needed to develop
@@ -103,8 +115,11 @@ status bit monitoring (but not the actual interlock mechanism), ground
 impedance monitoring, and possibly building and detector hall
 monitoring, as needed.
 
+The \dword{ddss} can provide inputs to \dword{cisc} on safety interlock status, and \dword{cisc} will monitor and make that information available to the experiment operators and experts as needed. However, \dword{ddss} and \dword{cisc} are separate monitors, and the slow controls portion of \dword{cisc} does not provide any inputs to \dword{ddss}. A related question is whether \dword{cisc} can provide software intervention before a hardware safety interlock. In principle such intervention can be implemented in \dword{cisc}, presumably by (or as specified by) the hardware experts. For example, at \dword{pdsp}, the automatic lowering of \dword{hv} to clear streamers was implemented in the software for the \dword{hv} control using \dword{cisc}-level software. 
+
+
 %\textbf{Slow controls for detector hardware systems:}\
-Slow controls for detector hardware systems %develop 
+Slow controls %for detector hardware systems %develop 
 covers software interfaces for detector hardware devices, including:
 \begin{itemize}
 \item monitoring and control of all power supplies,
@@ -128,18 +143,20 @@ has additional activities outside the scope of the consortium that require coord
 \subsection{Design Considerations}
 
 %Some common 
-Important design considerations for instrumentation devices include stability, reliability, and longevity, so that the devices can survive for a period of at least \dunelifetime. %For any device to have 
-Such longevity %a long lifetime 
-is uncommon for any device, so the overall design allows replacement of devices where possible. %A requirement common to every element inside the cryostat is that 
+Important design considerations for instrumentation devices include stability, reliability, and longevity, so that devices can survive for at least \dunelifetime.
+Such longevity is uncommon for any device, so the overall design allows replacement of devices where possible.
+Some devices are critical for filling and commissioning but less critical for later operations; for these devices we specify a minimum lifetime of 18 months and 20 years as a desirable goal.
 DUNE requires the \efield  on any instrumentation devices inside the cryostat to be less than \localefield to minimize the risk of dielectric breakdown in \dword{lar}. %To avoid confusing event reconstruction, we include another important design parameter that should be evaluated in \dword{pdsp}: the maximum noise level induced by instrumentation devices on the readout electronics that can be tolerated.
-A consideration important for event reconstruction is the maximum noise level induced by instrumentation devices that the readout electronics  can tolerate. \dword{pdsp} is evaluating this.  Tables~\ref{tab:fdgen-slow-cryo-requirements-1} and \ref{tab:fdgen-slow-cryo-requirements-2} show the full set of specifications %requirements for the \dword{cisc} subsystems.
-that relate to the \dword{cisc} subsystems.
+A consideration important for event reconstruction is the maximum noise level induced by instrumentation devices that the readout electronics  can tolerate. \dword{pdsp} is evaluating this. 
+Table~\ref{tab:specs:SP-CISC} shows the top-level specifications that determine the requirements for \dword{cisc} together with selected high-level specifications for \dword{cisc} subsystems. The physics-driven rationale for each requirement and the proposed validation are also included in the table.
+Tables~\ref{tab:fdgen-slow-cryo-requirements-1} and \ref{tab:fdgen-slow-cryo-requirements-2} show the full set of specifications 
+for the \dword{cisc} subsystems. In all those tables two values are quoted for most of the design parameters: i) {\it specification}, which is the minimal requirement to guarantee the detector performance, and ii) {\it goal},  an improved version enabling more detailed studies which could lead to an improved design of the cryogenics system for subsequent detectors. 
 
 Data from purity monitors and different types of thermometers will be used to validate the \dword{lar} fluid flow model. 
 %A number of requirements drive the design parameters on the precision and granularity in their distribution across the cryostat. 
 A number of requirements drive the design parameters for the precision and granularity of monitor distribution across the cryostat. 
 For example, the electron lifetime measurement precision must be \SI{1.4}{\%} to keep the bias on the charge readout in the \dword{tpc} below \SI{0.5}{\%} at \SI{3}{ms} lifetime. For thermometers, the %requirements 
-parameters are driven by the \dshort{cfd} simulations based on \dword{pdsp} design.
+parameters are driven by the \dword{cfd} simulations based on \dword{pdsp} design.
 The temperature measurement resolution must be less than \SI{2}{mK}, and the relative precision of those measurements must be less than \SI{5}{mK}. The resolution is defined as the temperature RMS for individual measurements and is driven by the electronics. The relative precision also includes the effect of reproducibility for successive immersions in \dword{lar}. 
 The relative precision is particularly important in order to characterize %because 
 gradients below \SI{20}{mK}. % should be characterized.  
@@ -147,24 +164,29 @@ As will be described below, the laboratory calibration data and the recent analy
 
 The level meters must have a precision of 0.1\% over \SI{14}{m} (i.e., \SI{14}{mm}) for measurement accuracy during filling. This precision is also sufficient to ensure that the \dword{lar} level stays above the \dwords{gp} of a \dfirst{sp} module. As shown in Table~\ref{tab:fdgen-slow-cryo-requirements-2}, several requirements drive the design of cold and warm cameras and the associated light emitting system. The components of the camera systems must not contaminate the \dword{lar} or produce bubbles % when the \dword{hv}
 so as  to avoid  increasing the risk of \dword{hv} discharge. Both cold and warm cameras must provide coverage of at least \SI{80}{\%} of the \dword{tpc} volume 
-\fixme{An illustration showing where all these instruments go would be helpful. Anne. Locations are not defined yet for some of the devices [Carmen and Glenn] -- can't fix by deadline.}
+% \fixme{An illustration showing where all these instruments go would be helpful. Anne. --- Agreed, but locations are not defined yet for all devices, can't be completed by deadline.}
 with a resolution of \SI{1}{cm} for cold cameras and \SI{2}{mm} for warm cameras on the \dword{tpc}.
 % CEL: my 'fix me' with details, removed. Wanted to hold 
 % if needed later in the document. 
 
-For the cryogenic test facility, a cryostat with a capacity of only \num{0.5} to approximately \SI{3}{m^3} %cubic meter is reasonable because 
+For the \dword{citf}, a cryostat with a capacity of only \num{0.5} to approximately \SI{3}{m^3} %cubic meter is reasonable because 
 will suffice and will keep turn-around times and filling costs %are 
 lower. % for smaller cryostats. 
 For gas analyzers, the operating range must allow establishment of useful electron lifetimes;
 % is an important requirement; 
 details  are in Table~\ref{tab:fdgen-slow-cryo-requirements-1}.
 
-For slow controls, the system must %be designed to 
+For slow controls, the system must
 be sufficiently robust to monitor 
-a minimum of 150,000  variables per \dword{detmodule}, and 
-support a broad range of monitoring and archiving rates. The system must also %be capable of an 
-interface with a large number of detector subsystems and %to 
+a minimum of 150,000 variables per \dword{detmodule}, and 
+support a broad range of monitoring and archiving rates;
+the estimated variable count, data rate, and archive storage needs
+are discussed in section \ref{sec:fdgen-slow-cryo-quant}.
+The system must also
+interface with a large number of detector subsystems and
 establish two-way communication with them for control and monitoring. 
+For the alarm rate, 150 alarms/day is used as the specification as it is the maximum to which humans can be expected to respond. The goal for the alarm rate is less than 50 alarms/day. The alarm logic system will need to include features for managing ``alarm storms'' using alarm group acknowledgment, summaries, delays, and other aids.
+
 
 % \fixme{Anne added input of generated SP-CISC specifications table here. Need to compare contents and make sure the generated one contains all the right information for the CISC-specific items. The top-level ones that apply are now there: top 5 plus the CISC-selected ones) {\bf Anselmo and Glenn are still working on checking contents (2019-01-11)} -- DONE}
 \input{generated/req-longtable-SP-CISC}
@@ -181,7 +203,7 @@ Noise from Instrumentation devices				             & $\ll$ \elecnoisefe         
 Max. \efield near instrumentation devices				     & <\localefield			                                                & <15 kV/cm		                                          \\ \colhline                     
 \textbf{Purity Monitors}	                                             &                                                                      &                                                         \\ \colhline                      
 Precision in electron lifetime				                 & <1.4\% at 3~ms,  <4\% at 9~ms,  relative differences <2.5\%			                                            & < 1\%		                                              \\ \colhline                     
-Range in electron lifetime				                     & 0 - 10 ms  			                    & (0 - 30 ms inline)       
+Range in electron lifetime				                     & 0.04 - 10 ms  			                    & (0.04 - 30 ms inline)       
 \\ \colhline                         
 Longevity				                                     & \dunelifetime			                                                    & > \dunelifetime		                                      \\ \colhline                     
 Stability				                                     & Match precision requirement at all places/times			    & %Match precision requirement at all places/times  
@@ -241,16 +263,16 @@ Longevity (all)		  & 20 years	   & > 20 years		                                 
 Coverage				                                     & 80\% of the exterior of HV surfaces			                        & 100\% 	                                                          \\ \colhline         
 Frames per second	   & yet to be defined	  & %yet to be defined
 \\ \colhline             
-Resolution 	 & 1 cm on the TPC	 & yet to be defined
+Resolution 	 & 1 cm on the \dword{tpc}	 & yet to be defined
 \\ \colhline           
 Duty cycle	  & yet to be defined	 & %yet to be defined
 \\ \colhline         
 longevity			 & > 18 months			                                                & > 20 years		                                                  \\ 
 \textbf{Inspection cameras}	     &                                                                      &                                                                     \\ \colhline        
-Coverage	 & 80\% of the TPC		  & yet to be defined		                                              \\ \colhline         
+Coverage	 & 80\% of the \dword{tpc}		  & yet to be defined		                                              \\ \colhline         
 Frames per second		   & yet to be defined	   & %yet to be defined	
 \\ \colhline             
-Resolution 	  & 2 mm on the TPC			                                            & yet to be defined		                                              \\ \colhline           
+Resolution 	  & 2 mm on the \dword{tpc}			                                            & yet to be defined		                                              \\ \colhline           
 heat transfer	  & no generation of bubbles			                                & 	%no generation of bubbles	
 \\ \colhline         
 longevity			  & > 18 months			                                                & > 20 years		                                                  \\ \colhline         
@@ -260,7 +282,7 @@ power				     & < 125 mW/LED			                                        & %\dword
 \\ \colhline           
 wavelength	   & red/green		 & IR/white	   \\ \colhline         
 longevity	  & > 18 months (for cold cameras) 			                            & > 20 years		                                              \\ \colhline         
-\textbf{Cryogenics Instrumentation Tests Facility}	                 &                                                                      &                                                                     \\ \colhline            
+\textbf{\dfirst{citf}}	                 &                                                                      &                                                                     \\ \colhline            
 Dimensions		  & 0.5 to 3  cubic meters 			                                    & %0.5-3 cubic meters
 \\ \colhline             
 Temperature stability	 & $\pm$1K	 & %+- 1K
@@ -279,17 +301,30 @@ Near Detector Status & Beam conditions and detector status	                     
 \subsection{Fluid Dynamics Simulation}
 \label{sec:fdgen-cryo-cfd}
 
-Proper placement of purity monitors, thermometers, and liquid level monitors within the \dword{detmodule} requires knowing how \dword{lar} flows within the cryostat, given its fluid dynamics, heat and mass transfer, and distribution of impurity concentrations. Fluid motion within the cryostat is driven primarily by small changes in density caused by thermal gradients within the fluid, although pump flow rates and inlet and outlet locations also contribute. Heat sources include exterior heat from the surroundings, interior heat from electronics, and heat flow through the pump inlet. In principle, purity monitors can be placed throughout the cryostat to determine if the argon is pure enough for experimentation. However, fluid flow, \dword{hv}, cost, and space constraints limit the distribution of these monitors in the cryostat.
+Proper placement of purity monitors, thermometers, and liquid level monitors within the \dword{detmodule} requires knowing how \lar flows within the cryostat, given its fluid dynamics, heat and mass transfer, and distribution of impurity concentrations. Fluid flow is also important in understanding how the positive and negative ion excess created by various sources (e.g., ionization from cosmic rays and $^{36}$Ar; ion feedback at the liquid-gas interface in a \dword{dp} detector) is distributed across the detector as it affects \efield uniformity. 
+Finally, \dword{cfd} simulations are crucial to predict the purity of the argon in regions where experimental data is unavailable. The overall goal of the \dword{cfd} simulations
+%\dword{dune} \dword{fd} 
+%for the \dword{spmod} 
+is to better understand and predict the fluid (in either liquid or vapor state) motions and the implications for detector performance. % of the detectors. 
+
+Fluid motion within the cryostat is driven primarily by small changes in density caused by thermal gradients within the fluid although pump flow rates and inlet and outlet locations also contribute. Heat sources include exterior heat from the surroundings, interior heat from electronics, and heat flow through the pump inlet. In principle, purity monitors can be placed throughout the cryostat to determine if the argon is pure enough for experimentation. However, some areas inside the cryostat are off limits for such monitors. 
+% \fixme{anne moved prev pgraph up --- looks good [Glenn, Carmen, Sowjanya]}
+
+
+The fluid flow behavior can be determined by simulating \dword{lar} flow within a \dword{detmodule} %the detector 
+using Siemens Star-CCM$+$\footnote{https://mdx.plm.automation.siemens.com/star-ccm-plus}, a commercially available \dword{cfd} code.  Such a model must properly define the fluid characteristics, solid bodies, and fluid-solid interfaces, as well as provide a way to measure contamination, while still maintaining reasonable computation times. In addition, these fluid dynamics simulations can be compared to available experimental data to assess simulation accuracy and credibility.
+
+% ~Proper placement of purity monitors, thermometers, and liquid level monitors within the \dword{detmodule} requires knowing how \dword{lar} flows within the cryostat, given its fluid dynamics, heat and mass transfer, and distribution of impurity concentrations. Fluid motion within the cryostat is driven primarily by small changes in density caused by thermal gradients within the fluid, although pump flow rates and inlet and outlet locations also contribute. Heat sources include exterior heat from the surroundings, interior heat from electronics, and heat flow through the pump inlet. In principle, purity monitors can be placed throughout the cryostat to determine if the argon is pure enough for experimentation. However, fluid flow, \dword{hv}, cost, and space constraints limit the distribution of these monitors in the cryostat.
 
 %However, some areas inside the cryostat are off limits for such monitors. 
 % \fixme{anne moved prev pgraph up --- looks good [Glenn, Carmen, Sowjanya]}
 
-To determine the purity of the argon in regions where experimental data is unavailable, \dword{cfd} simulations can be used to better understand and quantify impurity levels. The overall goal of the \dword{cfd} simulations
+% To determine the purity of the argon in regions where experimental data is unvailable, \dword{cfd} simulations can be used to better understand and quantify impurity levels. The overall goal of the \dword{cfd} simulations
 %\dword{dune} \dword{fd} 
 %for the \dword{spmod} 
-is to better understand and predict the fluid (in either a liquid and vapor state) motions and the implications for the detector performance. % of the detectors. 
-The fluid flow behavior can be determined by simulating \dword{lar} flow within a \dword{detmodule} %the detector 
-using Siemens Star-CCM$+$\footnote{https://mdx.plm.automation.siemens.com/star-ccm-plus}, a commercially available \dword{cfd} code.  Such a model must properly define the fluid characteristics, solid bodies and fluid-solid interfaces, and provide a means for measuring contamination, while still maintaining reasonable computation times. In addition, these fluid dynamics simulations are compared with available experimental data (see Section~\ref{sec:cfdvalid}) to assess simulation accuracy and credibility. 
+% is to better understand and predict the fluid (in either a liquid and vapor stte) motions and the implications for the detector performance. % of the detectors. 
+% The fluid flow behavior can be determined by simulating \dword{lar} flow within a dword{detmodule} %the detector 
+% ~using Siemens Star-CCM$+$\footnote{https://mdx.plm.automation.siemens.com/star-ccm-plus}, a commercially available \dword{cfd} code.  Such a model must properly define the fluid characteristics, solid bodies and fluid-solid interfaces, and provide a means for measuring contamination, while still maintaining reasonable computation times. In addition, these fluid dynamics simulations are compared with available experimental data (see Section~\ref{sec:cfdvalid}) to assess simulation accuracy and credibility. 
 
 %\fixme{seems like the above is sp/dp independent but the next stuff isn't. anne. The text has been modified [Carmen and Glenn] --- we think this is fixed.}
 Although simulation of the \dword{detmodule} presents challenges, %there are 
@@ -301,13 +336,20 @@ in air or dyes released in liquids.
 
 % top pgraph in section was taken from here. Anne
 
-Discrepancies between real data and simulations may affect detector performance. % because 
-Simulation results contribute to decisions about where to place sensors and monitors, and to %as well as 
-the definitions of various calibration quantities. Methods of mitigating such risks include well established convergence criteria, sensitivity studies, and comparison to results of previous \dword{cfd} simulation work. Moreover, the simulation will be improved with input from temperature measurements and validation tests from \dword{pdsp}. %{protodune} 
+% <Discrepancies between real data and simulations may affect detector perormance. % because 
+% Simulation results contribute to decisions about where to place sensors and moitors, and to %as well as 
+% the definitions of various calibration quantities. Methods of mitigating such riks include well established convergence criteria, sensitivity studies, and comparison to results of previous \dword{cfd} simulation work. Moreover, the simulation will be improved with input from temperature measurements and validation tests from \dword{pdsp}. %{protodune} 
 
 % \fixme{Must find better pictures. Just use this for now (not sure who wrote this) anne asks - why describe right side then left? [Carmen] already fixed (by Anne)}
+
+Discrepancies between real data and simulations may affect detector performance. % because 
+Simulation results contribute to decisions about where to place sensors and monitors and to %as well as 
+the definitions of various calibration quantities. Methods of mitigating such risks include well established convergence criteria, sensitivity studies, and comparison to results of previous \dword{cfd} simulation work. Moreover, the simulation will be improved with input from \lar temperature and purity measurements and validation tests from \dword{pdsp}\footnote{Because \dword{pddp} was not instrumented with high-precision thermometers in the liquid phase and because the cryogenics design is the same for \dword{sp} and \dword{dp} modules of the \dword{dune} \dword{fd}, \dword{pdsp} data will be used to validate the liquid \dword{cfd} model.}. 
+
+Taking into account that the \dword{cfd} model can predict both temperature and impurity levels, the procedure for validating and tuning the \dword{cfd} model will be the following: i) temperature predictions will be constrained with temperature measurements in numerous locations in the cryostat to improve the \dword{cfd} model, ii) the improved model is then used to predict the \lar impurity level at the location of purity monitors, iii) this prediction is compared with the actual measurement from purity monitors to further constraint the \dword{cfd} model.  
+
 \begin{dunefigure}[\dshort{cfd} example]{fig:cfd-example}
-  {Distribution of temperature on a plane intersecting an inlet (left) and halfway between an inlet and an outlet (right), as predicted by previous \dshort{cfd} simulations (from~\cite{bib:docdb5915}). (See Figure~\ref{fig:cfd-example-geometry} for geometry.)}
+  {Distribution of temperature on a plane intersecting an inlet (left) and halfway between an inlet and an outlet (right), as predicted by previous \dword{cfd} simulations (from~\cite{bib:docdb5915}). (See Figure~\ref{fig:cfd-example-geometry} for geometry.)}
   \includegraphics[height=0.4\textwidth]{cisc_cfd_inlet_z52.png}
   \includegraphics[height=0.4\textwidth]{cisc_cfd_outlet_z0.png}
 \end{dunefigure}
@@ -334,16 +376,15 @@ for instrumentation. We are pursuing a prioritized set of studies to help determ
 to ensure that the simulation represents the actual design.
 \item 
 model the \dword{pdsp} liquid and gas regions with the same precision as the \dword{fd}. Presently, we have only the liquid model, which is needed to interpret the thermometer data. The gas model is needed to see how to place thermometers in the ullage and verify the design of the gaseous argon purge system.
-% \item Perform a \dword{cfd} study to determine the feasibility of a wier for DP; this helps to determine if it can be used to clean the \dword{lar} surface before the extraction grid is submerged in the DP module.
 \item verify the \dword{cfd} model for the \dword{spmod} in a simulation performed by LBNF; this defines the requirements for instrumentation devices (e.g., thermometry).
 % \item Model the \dword{pddp} liquid and gas regions with the same precision as the \dword{fd}.
 \end{itemize}
 
 \begin{dunetable}
 [CFD parameters for ProtoDUNE]
-{p{0.25\textwidth}p{0.15\textwidth}p{0.5\textwidth}}
+{p{0.24\textwidth}p{0.17\textwidth}p{0.49\textwidth}}
 {tab:fdgen-cisc-CFDparam}
-{\dword{cfd} input parameters for \dword{protodune}}   
+{\dword{cfd} input parameters for \dword{protodune}-SP}   
 
 
 Parameter  &	Value &	Comments \\ \toprowrule
@@ -374,26 +415,27 @@ Computed using ullage pressure and \cite{larpropertiesbnl}%(Luke to add to bib) 
 \\ \toprowrule
 \lar inlet temperature
 &
-outlet + 0.2 K
+bulk LAr + 0.2 K
 &
-Estimated
+Estimated from pressure settings in cryo-system
 \\ \toprowrule
 \lar flow rate per pipe
 &
-0.4170025 kg/s
-&
-\\ \toprowrule		
-Heat flux 
-&
-\SI{5.76}{W/m^2}
-&
-This is the heat flux from all four walls as well as the ground
-\\ \toprowrule
-Vapor being drawn from the chimneys
-&
-5-7 gr/sec
-&
-Among all chimneys
+%0.4170025 kg/s
+0.417 kg/s
+& Estimated from cryostat filling rate 
+%\\ \toprowrule		
+%Heat flux 
+%&
+%\SI{5.76}{W/m^2}
+%&
+%This is the heat flux from all four walls as well as the ground
+%\\ \toprowrule
+%Vapor being drawn from the chimneys
+%&
+%5-7 gr/sec
+%&
+%Among all chimneys
 \\
 \end{dunetable}
 %%%%%%%%%%%%%%%%%%%%
@@ -425,41 +467,23 @@ The data, which has been logged through the \dword{pdsp} slow control system \ci
 In parallel, \dword{cisc} has produced a \dword{pdsp} \dword{cfd} model %has been produced 
 with input from \dword{pdsp} measurements (see Table  \ref{tab:fdgen-cisc-CFDparam}). Streamlines\footnote{In fluid mechanics, a streamline is a line that is everywhere tangent to the local velocity vector. For steady flows, a streamline also represents the path that a single particle of the fluid will take from inlet to exit.} from the current  simulation (Figure~\ref{fig:cisc-cfd-larflow-inlets}) show the flow paths from the four cryostat inlets to the outlet. The validation of this model consists of an iterative process in which several versions of the \dword{cfd} simulation, using different input parameters, eventually %will %be produced to 
 converge %on 
-to a reasonable agreement with data from instrumentation devices. Preliminary results for the comparison of vertical temperature profiles already exist. Figure~\ref{fig:cisc-cfd-valid} shows the fluid temperature measured by the dynamic T-gradient thermometer and compares it against the current \dword{pdsp} \dword{cfd} model, with parameters shown in Table~\ref{tab:fdgen-cisc-CFDparam}.
-%\fixme{We still need to confirm this table is indeed showing input parameters to the iteration procedure for comparison with temperature probes. Anselmo: I'll ask SDSU today. {\bf Anselmo working on this.}}. 
-The agreement is already quite good. %, which indicates that the current  \dword{pdsp} \dword{cfd} model is reasonable. 
+to a reasonable agreement with data from instrumentation devices. Those comparisons will be shown in Sec.~\ref{sec:fdgen-slow-cryo-temp-ana}
 
-%The comparison with the dynamic T-gradient monitor data is just the first step in the validation. As described below, data from purity monitors and other temperature probes will be also used. Furthermore, cryostat conditions will be changed deliberately such that several points of comparison exist, allowing for further refinement of the \dword{pdsp} \dword{cfd} model.  
+%Preliminary results for the comparison of vertical temperature profiles already exist. Figure~\ref{fig:cisc-cfd-valid} shows the fluid temperature measured by the dynamic T-gradient thermometer and compares it against the current \dword{pdsp} \dword{cfd} model, with parameters shown in Table~\ref{tab:fdgen-cisc-CFDparam}.
+%%\fixme{We still need to confirm this table is indeed showing input parameters to the iteration procedure for comparison with temperature probes. Anselmo: I'll ask SDSU today. {\bf Anselmo working on this.}}. 
+%The agreement is already quite good. %, which indicates that the current  \dword{pdsp} \dword{cfd} model is reasonable. 
 
-\begin{dunefigure}[Comparison of ProtoDUNE-SP temperature data and CFD simulations]{fig:cisc-cfd-valid}
-  {Comparison of \dword{pdsp} temperature data and \dword{cfd} simulations.}
-  \includegraphics[width=0.6\textwidth]{cisc_CFD_valid_v1.png}
-\end{dunefigure}
+%%The comparison with the dynamic T-gradient monitor data is just the first step in the validation. As described below, data from purity monitors and other temperature probes will be also used. Furthermore, cryostat conditions will be changed deliberately such that several points of comparison exist, allowing for further refinement of the \dword{pdsp} \dword{cfd} model.  
+
+%\begin{dunefigure}[Comparison of ProtoDUNE-SP temperature data and CFD simulations]{fig:cisc-cfd-valid}
+%  {Comparison of \dword{pdsp} temperature data and \dword{cfd} simulations.}
+%  \includegraphics[width=0.6\textwidth]{cisc_CFD_valid_v1.png}
+%\end{dunefigure}
 
 
-%Additional dedicated tests are also planned to validate the \dword{cfd} under various deliberate changes of the cryostat environment; measuring the instrumentation response may help establish the validity of the \dword{cfd} model. The \dword{cfd} predicts a reasonable response for more than one set of initial conditions, which is reassuring.   These tests were not attempted during the beam run because even controlled changes of the cryostat environment could have undesirable effects. Some possible additional tests include pump/recirculation manipulations such as pump on/off, pumping speed change, and bypassing filtration. Additionally, changes in the pressure can be induced by setting the cryostat pressure set point to a higher (or lower) value\footnote{The HV could be ramped down for this exercise because dropping the pressure too fast might provoke boiling of the \lar near the surface.} for a specified time while monitoring the instrumentation. Any change in pressure could change the temperatures everywhere in the cryostat. Studying the rate of this change, as detected in the various vertical heights of the cryostat, might provide interesting constraints on the \dword{cfd} model.
-The \dword{cfd} reassuringly predicts a
-reasonable response for more than one set of initial conditions. It is still important to %, but 
-measure the instrumentation response  
-to help establish
-the validity of the \dword{cfd} model. 
-We did not run tests with differing initial conditions during the beam run
-because even controlled changes of the cryostat environment could have
-undesirable effects.   
-However, dedicated tests to validate the
-\dword{cfd} under various deliberate changes of the cryostat
-environment are planned. 
-Possible additional tests include
-pump and recirculation manipulations such as pump on-off, change of pumping speed, and bypassing of filtration, and changing the cryostat pressure set point to
-a higher (or lower) value\footnote{The \dword{hv} could be ramped down for
-  this exercise because dropping the pressure too fast might provoke
-  boiling of the \dword{lar} near the surface.} to induce changes in the
-pressure for a specified time while
-monitoring the instrumentation. Any change in pressure could change
-the temperatures everywhere in the cryostat. Studying the rate of this
-change, as detected at various heights in the cryostat,
-might provide interesting constraints on the \dword{cfd} model.
-% \fixme{The plan is (was?) to PRODUCE A NEW MAP WITH THE HAWAII DATA INCLUDED AND THE NEW CFD SIMULATION, BY THE END OF DECEMBER. Text will be updated accordingly to discuss new results. Anselmo: I've added the plot with Hawaii Data and some text}
+%%Additional dedicated tests are also planned to validate the \dword{cfd} under various deliberate changes of the cryostat environment; measuring the instrumentation response may help establish the validity of the \dword{cfd} model. The \dword{cfd} predicts a reasonable response for more than one set of initial conditions, which is reassuring.   These tests were not attempted during the beam run because even controlled changes of the cryostat environment could have undesirable effects. Some possible additional tests include pump/recirculation manipulations such as pump on/off, pumping speed change, and bypassing filtration. Additionally, changes in the pressure can be induced by setting the cryostat pressure set point to a higher (or lower) value\footnote{The HV could be ramped down for this exercise because dropping the pressure too fast might provoke boiling of the \lar near the surface.} for a specified time while monitoring the instrumentation. Any change in pressure could change the temperatures everywhere in the cryostat. Studying the rate of this change, as detected in the various vertical heights of the cryostat, might provide interesting constraints on the \dword{cfd} model.
+%The \dword{cfd} reassuringly predicts a reasonable response for more than one set of initial conditions. It is still important to %, but measure the instrumentation response to help establish he validity of the \dword{cfd} model. We did not run tests with differing initial conditions during the beam run because even controlled changes of the cryostat environment could have undesirable effects.    However, dedicated tests to validate the \dword{cfd} under various deliberate changes of the cryostat environment are planned.  Possible additional tests include pump and recirculation manipulations such as pump on-off, change of pumping speed, and bypassing of filtration, and changing the cryostat pressure set point to a higher (or lower) value\footnote{The \dword{hv} could be ramped down for this exercise because dropping the pressure too fast might provoke boiling of the \dword{lar} near the surface.} to induce changes in the pressure for a specified time while monitoring the instrumentation. Any change in pressure could change the temperatures everywhere in the cryostat. Studying the rate of this change, as detected at various heights in the cryostat, might provide interesting constraints on the \dword{cfd} model.
+%% \fixme{The plan is (was?) to PRODUCE A NEW MAP WITH THE HAWAII DATA INCLUDED AND THE NEW CFD SIMULATION, BY THE END OF DECEMBER. Text will be updated accordingly to discuss new results. Anselmo: I've added the plot with Hawaii Data and some text}
 
 Once the \dword{pdsp} \dword{cfd} model %is able to 
 predicts the fluid temperature in the entire cryostat to a reasonable level under different conditions, we will use it %this model will be used 
@@ -497,6 +521,366 @@ purity monitors, thermometers, level monitors and cameras
 %all cryogenic instrumentation 
 for the \dword{spmod}, validating the baseline  %\dword{fd} 
 design.
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Thermometers}
+\label{sec:fdsp-cryo-therm}
+As discussed in section \ref{sec:fdgen-cryo-cfd}, a detailed \threed temperature map is important %in 
+for monitoring %whether the cryogenic system is functioning correctly and the \lar is uniform.
+the cryogenic system for correct functioning and the \dword{lar} for uniformity.
+Given the complexity and size of purity monitors, they can only be installed on the sides of the cryostat to provide a local measurement of
+\dword{lar} purity. %While a direct measurement of the LAr purity across the entire cryostat is not viable, a sufficiently detailed \threed temperature map can predict LAr purity using \dword{cfd} simulations. The vertical coordinate is especially important because it will be closely related to LAr recirculation and uniformity. 
+A direct measurement of the \dword{lar} purity across the entire cryostat is not feasible, but a sufficiently detailed \threed temperature map based on \dword{cfd} simulations can predict it. The vertical coordinate is especially important because it will relate closely to the 
+\dword{lar} recirculation and uniformity. 
+
+The baseline sensor distribution and the cryostat ports used to extract cables (with indication of number of cables per port) are shown in Figure~\ref{fig:cisc-tsensor-map}. The baseline distribution will evolve as more information becomes available (precise \dword{cfd} simulations, better understanding of \dword{dss} ports, installation interfaces with other groups), but the baseline suffices to establish the overall strategy.
+
+\begin{dunefigure}[Distribution of temperature sensors inside the cryostat]{fig:cisc-tsensor-map}
+  {Distribution of temperature sensors inside the cryostat}
+  \includegraphics[width=0.95\textwidth]{cisc_tsensor_map_crop.png}
+  \includegraphics[width=0.85\textwidth]{cisc_tsensor_map_legend.png}
+\end{dunefigure}
+%\fixme{legend is hard to read in figure (anne)}
+
+High-precision temperature sensors will be distributed near the \dword{tpc} walls in two ways:
+(1) forming high density (\(>2\) sensors/\si{m}) vertical arrays %(the so-
+(called T-gradient monitors) and (2) in coarser ($\sim$ 1 sensor/\SI{5}{m}) 2D arrays %(the so-
+(called individual sensors) at the top and bottom of the \dword{detmodule}, where it is most crucial to know the temperature.%\fixme{[Carmen] Check Anne's modification} %which are the most delicate regions. 
+
+% Somehow the text below got changed such that the distinction between installation and calibration got really muddled.  Rewritten paragraph added below.
+% Temperature variations inside the cryostat should be very small ($\SI{0.02}{K}$; see Figure~\ref{fig:cfd-example}), 
+% so sensors must be cross-calibrated to more than $\SI{0.005}{K}$. Most sensors will be calibrated in the laboratory before installation. 
+% (Installation is described in section \ref{sec:fdgen-slow-cryo-install-th}.) Where available space is restricted, the only viable way to install sensors is on the long sides of the detector
+% % (behind the APAs for SP, and behind the lateral FC end-walls for DP) 
+% and the top and bottom of the cryostat.  
+% Given the precision required and the unknown longevity of the sensors -- possibly requiring another  calibration after some time -- a complementary method
+% will be used for T-gradient monitors behind the front end-walls.
+% \fixme{why here? and is it end wall of cryostat or field cage? No hyphenated end-wall; pls fix. GLENN AND CARMEN TO CHECK}
+% % at least for the SP detector.
+% In areas with sufficient space for a movable system, %this 
+% another calibration method, described in section \ref{sec:fdgen-slow-cryo-dynamic-therm}, can be used to cross calibrate
+% the temperature sensors in situ.% This calibration method is . 
+
+%\fixme{Rewritten paragraph below based on text from Anselmo [Glenn]}
+
+Expected temperature variations inside the cryostat are very small ($\SI{0.02}{K}$; see Figure~\ref{fig:cfd-example}),
+so sensors must be cross-calibrated to better than $\SI{0.005}{K}$. Most sensors will be calibrated in the laboratory before installation
+(installation is described in section \ref{sec:fdgen-slow-cryo-install-th}).
+Calibration before installation is the only option for sensors installed on the long sides of the detector and the top and bottom of the cryostat, where space is limited.
+Given the precision required and the unknown longevity of the sensors -- possibly requiring another  calibration after some time -- an additional method
+will be used for T-gradient monitors installed on the short ends of the detector in the space between the field cage end walls and the cryostat walls. There is sufficient space in this area for a movable system, which can be used to cross calibrate
+the temperature sensors {\em in situ}, as described in \ref{sec:fdgen-slow-cryo-dynamic-therm}.
+
+The baseline design for all thermometer systems have three elements in
+common: sensors, cables, and readout system. We plan to use Lake Shore
+PT100-series\footnote{Lake Shore Cryotronics\texttrademark{} platinum RTD series,
+  \url{https://www.lakeshore.com/}.} %products/cryogenic-temperature-sensors/platinum-rtds/models/Pages/Overview.aspx}.} 
+platinum sensors with \SI{100}{\ohm} resistance %are used 
+because in
+the temperature range \SIrange{83}{92}{K} %these particular sensors
+they 
+show high reproducibility of $\sim\SI{5}{mK}$ and absolute temperature
+accuracy of \SI{100}{mK}.  Using a four-wire readout greatly reduces
+issues related to lead resistance, any parasitic resistances,
+connections through the flange, and general electromagnetic noise
+pick-up. Lakeshore PT102 sensors (see
+Figure~\ref{fig:sensor-support}, right) were used in the \dword{35t} and \dword{pdsp}, % detector, 
+giving excellent results. For the inner
+readout cables, a custom cable made by Axon\footnote{Axon\texttrademark{} Cable, \url{http://www.axon-cable.com}.}
+is the baseline. It
+consists of four teflon-jacketed copper wires (\dword{awg} 28), forming two
+twisted pairs, with a metallic external shield and an outer teflon
+jacket.
+%Further details are given in Fig.~\ref{fig:sensor_cable}-Right. 
+The readout system is described in section \ref{sec:fdgen-slow-cryo-therm-readout}.
+
+%As shown in Fig.~\ref{fig:sensor_cable}, the PT102 sensor has a length of \SI{21}{mm}, which can easily be accommodated in the \dword{dune} T-gradient monitors. 
+
+%\begin{dunefigure}[\dword{dune} baseline choices for sensor and cable]{fig:sensor_cable}
+%  {\dword{dune} baseline choices for sensor and cable. Left: Schematic diagram of the PT102 sensor from the Lakeshore company. Right: Schematic diagram and properties of the four wires cable from the
+%  Axon company}
+%  \includegraphics[width=0.4\textwidth]{cisc_pt102.png}
+%  \includegraphics[width=0.55\textwidth]{cisc_TAxonCable.png}
+%\end{dunefigure}
+
+Another set of lower-precision sensors epoxied into the bottom membrane of the cryostat will monitor  the cryostat filling in the initial stage.   
+Finally, the inner walls and roof of the cryostat will have the same types of sensors to monitor the temperature during cooldown and filling (``W'' sensors in Figure~\ref{fig:cisc-tsensor-map}).
+ 
+% \fixme{Remove references to DP -- done}
+ 
+%except for the membrane sensors that may come from Minco.
+
+% % % %
+\subsubsection{Dynamic T-gradient monitors}
+\label{sec:fdgen-slow-cryo-dynamic-therm}
+% What I was thinking about is to have 3 sensors per meter. 4 would be even better and have 1.35 m range of motion. The goal is to have 4 sensor overlap. In this case, we would be quite safe against sensor failure.
+% If we are to populate 14 m with 3 sensors per meter, that would be 42 sensors. In addition, we should increase frequency at the top or bottom.
+
+%The dynamic temperature monitor is a vertical array of high precision temperature sensors to measure the vertical temperature gradient within a few mK. The design of the system is driven by the following:
+%\begin{itemize}
+%\item
+%Uncertainties in the measured vertical temperature profile must be less than a few mK over the entire detector height to monitor LAr purity and provide useful feedback on the efficiency of cryogenic recirculation and purification.
+%\item
+%Simulations of cryogenic recirculation predict very slow changes in temperature at meter scale except at the bottom and top of the cryostat. Thus, sensors will be placed every \SI{50}{cm} along the detector height with more sensors in the first \SI{50}{cm}, closest to the bottom of the cryostat, and the last \SI{50}{cm}, closest to the top of the cryostat, where spacing between sensors is reduced to \SI{10}{cm}.
+% \end{itemize}
+
+% ANSELMO: Paragraph below removed, since it is substituted by the one by Jelena
+
+%The dynamic T-gradient monitor is a vertical array of high precision temperature sensors to measure the vertical temperature gradient within a few mK. 
+%To address concerns about potential differences in sensor readings before and after installation in the \dword{dune} \dword{fd}, the dynamic T-gradient monitor allows cross-calibration of sensors {\em in situ}. Namely, the system can move vertically while installed in the \dword{fd} such that a given sensor can be placed at the nominal position of its neighbor, and the temperature offset between them can be computed assuming the temperature at that location did not change during the movement. 
+
+% \fixme{New paragraph from Jelena below. (2019-01-11)}
+
+ To address concerns about potential differences in sensor readings prior to and after installation in a \dword{detmodule}, and potential drifts over the lifetime of the %detector 
+ module that may affect accuracy of the vertical temperature gradient measurement, % in a \dword{detmodule}, 
+ a dynamic temperature monitor allows cross-calibration of sensor readings %{\em in situ}. 
+ in situ.
+Namely, this T-gradient monitor is motorized, allowing vertical motion of the temperature sensor array %in vertical direction while installed 
+in the \dword{detmodule}, %. This ability enables 
+enabling precise cross-calibration between the sensors, %{\em in situ
+as illustrated in Figure~\ref{fig:sensor-cross-calibration}.  
+
+The procedure for cross-calibrations is the following: in step 1, the temperature reading  of all sensors is taken at the home (lowest) position of the carrier rod. In  step 2, the stepper motor moves the carrier rod up \SI{25}{cm}. Since the sensors along the entire  carrier rod are positioned \SI{25}{cm} apart, when the system is moved up \SI{25}{cm}, each sensor is positioned at the height that was occupied by another sensor in step 1. Then a second temperature reading is taken. In this manner, except for the lowest position two temperature measurements are taken at each location with %two 
+different sensors. Assuming that the temperature at each location is stable over the few minutes required to make the measurements, %the 
+any difference in the temperature readings between the two different sensors is due to their relative measurement offset. This %temperature readings 
+difference is then calculated for all locations.  In step 3, readout differences between pairs of sensors at each location are linked to one another, expressing temperature measurements at all heights with respect to a single sensor. In this way, temperature readings from all sensors are cross-calibrated %{\em in situ}
+in situ, canceling all possible offsets due to electromagnetic noise or any parasitic resistances that may have prevailed despite the four-point connection to the sensors that should cancel most of the offsets. These measurements are taken with a very stable current source, which ensures high precision of repeated temperature measurements over time. The motion of the dynamic T-monitor is stepper-motor operated, delivering measurements with high spatial resolution. 
+
+\begin{dunefigure}[Principle of cross-calibration with dynamic T-gradient monitor]{fig:sensor-cross-calibration}
+  {In step 1, sensor temperature measurements are taken with the T-gradient monitor in the home position. In step 2, the entire system is moved up \SI{25}{cm} and another set of temperature readings is taken by all sensors. Then, the offsets between pairs of sensors are calculated for each position. In step 3, offsets are linked together, providing cross-calibration of all sensors, to obtain the entire vertical temperature gradient measurement with respect to a single sensor (number 1 in this case). }
+  \includegraphics[width=1.0\textwidth]{cisc_cross_calibration_illustration.png}%
+\end{dunefigure}
+
+
+A total of \num{72} sensors will be installed with \SI{25}{cm} spacing, decreased to \SI{10}{cm} spacing for the top and bottom \SI{1}{m} of the carrier rod.  
+ The vertical displacement of the system is such that every sensor can be moved to the nominal position of at least five other sensors, minimizing the risks associated with sensor failure and allowing for several points of comparison. The total expected motion range of the carrier rod is \SI{1.35}{m}.
+
+%\fixme{This entire procedure is unclear. Shorten the sentences and make the procedure description more precise. A figure might help, along with references to that figure in the text. {\bf  ANSELMO:  I've removed the existing text and added some text above. The concept is clear, I don't think we need to give more details, which could confuse the reader.} {\em I think it is clear now. =Glenn}} 
+
+%The procedure for cross-calibration involves first, taking a temperature reading at the lowest sensor position. Then, the stepper motor moves the carrier rod up by \SI{50}{cm} putting all sensors in the location of their neighbor that is \SI{50}{cm} above them. Then the second reading is taken. In this manner, except for the lowest position we have temperature measurement at each location with two adjacent sensors, and by linking the temperature offsets between the two readings at each location, temperature readings from all sensors are cross-calibrated {\em in situ}, canceling all offsets due to electromagnetic noise or any parasitic resistances that may have prevailed despite the four point connection to the sensors that should cancel most of the offsets. These measurements are taken with very stable current source, which ensures high precision of repeated temperature measurements over time. The motion of the dynamic T-monitor is stepper motor operated, delivering measurements with high spatial resolution. 
+
+This procedure was tested in \dword{pdsp}, where the system was successfully moved up by a maximum of \SI{51}{cm}, allowing cross-calibration of all sensors (22 sensors with \SI{10.2}{cm} spacing at top and bottom and \SI{51}{cm} in the middle). 
+%Figure~\ref{fig:cisc-cfd-valid} shows the temperature profile after calibration; the smoothness of the profile demonstrates the reliability of the method. An even better figure of merit is %however 
+%the temperature profile after cross-calibration, when the recirculation pumps are off. Under these conditions the  temperature should be very homogeneous except near the surface. This is indeed what %is observed in Figure~\ref{fig:dynamic_t_pumps-off} shows.  
+
+Figure~\ref{fig:dynamic_t_pumps-off} shows the temperature profile after calibration when the recirculation pumps are off. Under these conditions the  temperature should be very homogeneous except near the surface. This is indeed what is observed in that figure, demonstrating the reliability of the method.  
+
+\begin{dunefigure}[Temperature profile for dynamic T-gradient with pumps-off]{fig:dynamic_t_pumps-off}
+  {Temperature profile as measured by the dynamic T-gradient monitor after cross-calibration, when the recirculation pumps are off. Temperature variation is of the order of \SI{3}{mK} except close to the top and the gas phase interface, as expected.}
+  \includegraphics[width=0.6\textwidth]{cisc_dynamic_t_pumps-off.png}%
+\end{dunefigure}
+
+
+%\subsubsection{Dynamic T-gradient monitor design}
+%\label{sec:fdgen-slow-cryo-dynamic-therm-design}
+A dynamic T-gradient monitor has three parts: a carrier rod on which sensors are mounted; an enclosure above the cryostat housing space that allows the carrier rod to move vertically  \SI{1.5}{m} over its lowest location; and the motion mechanism. The motion mechanism consists of a stepper motor connected through a ferrofluidic dynamic seal to a gear and pinion motion mechanism. The sensors have two pins soldered to a printed circuit board (PCB). 
+%\fixme{maybe add gloss term}
+Two wires are individually soldered to the common soldering pad for each pin.  A cutout in the PCB around the sensor allows free flow of argon for more accurate temperature readings.  Stepper motors typically have very fine steps that allow highly precise positioning of the sensors.  Figure~\ref{fig:fd-slow-cryo-dt-monitor-overview} shows the overall design of the dynamic T-gradient monitor. % with the sensor carrier rod, enclosure above the cryostat, and stepper motor mounted on the side of the enclosure. 
+The enclosure has two parts connected by a six-cross flange. One side of this flange will be used for signal wires, another will be used as a viewing window, and the two other ports will be spares. Figure~\ref{fig:fd-slow-cryo-sensor-mount}, left shows the PCB mounted on the carrier rod and the sensor mounted on the PCB along with the four point connection to the signal readout wires. %Finally, 
+Figure~\ref{fig:fd-slow-cryo-sensor-mount}, right shows the stepper motor mounted on the side of the rod enclosure. The motor remains outside the enclosure, at room temperature, %and 
+as do its power and control cables. % also remain outside.
+
+\begin{dunefigure}[Dynamic T-gradient monitor overview]{fig:fd-slow-cryo-dt-monitor-overview}
+  {%An overview 
+  A schematic of the dynamic T-gradient monitor.}
+% \includegraphics[width=0.11\textwidth,angle=90]{cisc_DTOverview.png}
+ \includegraphics[width=0.95\textwidth,angle=0]{cisc_DynamicProfiler.png}
+\end{dunefigure}
+\begin{dunefigure}[Sensor-cable assembly for dynamic T-gradient monitor]{fig:fd-slow-cryo-sensor-mount}
+  {Left: Sensor mounted on a PCB board and PCB board mounted on the rod. Right:
+    The driving mechanism of the dynamic T-gradient monitor, consisting of a stepper motor driving the pinion and gear linear motion mechanism. }
+  \includegraphics[width=0.40\textwidth]{cisc_DTSensorMount.png}
+  \hspace{3cm}%
+  \includegraphics[width=0.12\textwidth]{cisc_DTMotor.png}
+\end{dunefigure}
+
+
+% % % %
+\subsubsection{Static T-gradient monitors}
+\label{sec:fdgen-slow-cryo-static-therm}
+
+Several vertical arrays of high-precision temperature sensors cross-calibrated in the laboratory will be installed behind the \dword{apa}s.  
+% near the lateral walls.
+%(behind the APAs for SP and behind the lateral FC end-walls for DP). 
+%For the SP detector, since the electric potential is zero behind the APAs, no electric field shielding is required, simplifying enormously the mechanical design.
+%\footnote{This does not apply for the DP detector, for which the proper shielding must be provided.} 
+The baseline design assumes six arrays with \num{48} sensors each. Spacing between sensors
+is \SI{20}{cm} at the top and bottom and \SI{40}{cm} in the middle area. This configuration is similar to the one used in \dword{pdsp} but with nearly double the spacing. 
+As shown in Figure~\ref{fig:pd_static_t_results} a configuration with \num{48} sensors was appropriate in \dword{pdsp}, as it should be in the \dword{spmod} where the expected total gradient is no larger than in \dword{pdsp} (see Figure~\ref{fig:cfd-example}). 
+
+\begin{dunefigure}[Temperature sensor resolution and reproducibility]{fig:Trepro}{
+ Left:   Temperature offset between two sensors as a function of time for four independent immersions in LAr. The reproducibility of those sensors, defined as the RMS of the mean offset in the flat region, is $\sim\,\SI{1}{mK}$,
+    The resolution for individual measurements, defined as the RMS of one offset in the flat region, is better than \SI{0.5}{mK}. Right: Difference between the mean offset obtained with two independent calibration methods for the 51 calibrated sensors. The standard deviation of this distribution is interpreted as precision of the calibration.}
+  \includegraphics[height=0.44\textwidth]{cisc_tsensor_calib.png}%
+  \includegraphics[height=0.45\textwidth]{cisc_tsensor_calib2.png}%
+\end{dunefigure}
+
+Sensors will be cross-calibrated in the laboratory using a controlled environment and a high-precision readout system, described in subsection \ref{sec:fdgen-slow-cryo-therm-readout}.
+%Although the calibration procedure will certainly improve, the one currently used for \dword{pdsp} is descrived here.
+%Four sensors are placed as close as possible (such that identical temperature can be assumed for all of them) inside a small cylindrical aluminum capsule,
+%which protects the sensors from thermal shocks and helps in minimizing convection.
+%One of the sensors acts as reference while the other three are the ones being calibrated. Five independent calibrations
+%are performed for each set of three sensors, such that the reproducibility of each sensor can be computed. For each calibration 
+%the capsule is introduced in a PLA box of size \(9.5\times9.5\times\SI{19}{cm^3}\), with two concentrical independent volumes of LAr
+%and sourounded by a polystyrene box with \SI{15}{cm} thick walls. A small quantity of LAr is used to slowly
+%cooldown the capsule to $\sim\SI{90}{K}$, avoiding thermal shocks that could dammage the sensors.
+%Then the capsule is covered by LAr such that it penetrates
+%inside fully covering the sensors. Once the temperature stabilizes to the 1-\SI{2}{mK} level (after 5-15 minutes) measurements are taken. Then the capsule is taken out from LAr
+%and kept at room temperature until it reaches \SI{200}{K}. As mentioned above, this procedure is repeated five times, before going to the next set of three sensors.  
+The accuracy of the calibration for \dword{pdsp} was estimated to be $\SI{2.6}{mK}$, as shown in Figure~\ref{fig:Trepro}. Preliminary results for the analysis of \dword{pdsp} static T-gradient monitor data are shown in Figure~\ref{fig:pd_static_t_results}. The temperature profile has been computed using both the laboratory calibration and the so-called \textit{in-situ pump-off calibration}, which consists %in 
+of estimating the offsets between sensors assuming the temperature of \dword{lar} in the cryostat is homogeneous when the re-circulation pumps are off (the validity of this method is demonstrated in Section~\ref{sec:fdgen-slow-cryo-dynamic-therm}).  
+The RMS of the difference between both methods is $\SI{4.6}{mK}$, slightly larger than the value quoted above for the accuracy of the laboratory calibration, due to the presence of few outliers (under investigation) and to the imperfect assumption of homogeneous temperature when pumps are off (see Figure~\ref{fig:dynamic_t_pumps-off}).  
+
+\begin{dunefigure}[ProtoDUNE-SP static T-gradient results]{fig:pd_static_t_results}{
+ Left: Temperature profile as measured by the static T-gradient monitor for two different calibration methods. Right: Distribution of the difference between both methods.}
+  \includegraphics[height=0.34\textwidth]{cisc_static_t_profiles.png}%
+  \includegraphics[height=0.34\textwidth]{cisc_static_t_calib_diff.png}%
+\end{dunefigure}
+
+
+\begin{dunefigure}[Conceptual design of the static T-gradient monitor]
+{fig:cisc-static-tgradient}
+  {Conceptual design of the static T-gradient monitor.}
+  \includegraphics[width=0.8\textwidth]{cisc_static_tgradient_new.png}
+\end{dunefigure}
+
+Figure~\ref{fig:cisc-static-tgradient} shows the baseline mechanical design of
+the static T-gradient monitor. Two strings (stainless steel or carbon fibre) are anchored at the top and bottom corners of the cryostat using the available M10 bolts (see Figure~\ref{fig:sensor-support}, left). One string routes the cables while the other supports the temperature sensors.
+Given the height of the cryostat, an intermediate anchoring point to reduce swinging is under consideration. 
+%To account for shrinkage in the strings under cryogenic conditions and to guarantee that the same tension is always applied, a weight is hung at the bottom of the strings. 
+A prototype is being built at \dfirst{ific}, Spain, where the full system will be mounted using two dummy cryostat corners.   
+%\fixme{please remake ific glossary term and send it to me so I can put it in master copy. 10 Apr. Anne}
+
+
+Figure~\ref{fig:sensor-support} (right) shows the baseline design of the ($52\times \SI{15}{mm^2}$) PCB support for temperature sensors with an IDC-4 male connector. A narrower connector (with two rows of two pins each) is being studied. This alternative design would reduce the width of the PCB assembly and allow more sensors to be calibrated simultaneously. Each four-wire cable from the sensor to the flange will have an IDC-4 female connector on the sensor end; the flange end of the cable will be soldered or crimped to the appropriate connector, whose type and number of pins  depend on the final design of the \dword{dss} ports that will be used to extract the cables. SUBD-25 connectors were used in \dword{pdsp}.
+
+\begin{dunefigure}[Cryostat bolts and temperature sensor support]{fig:sensor-support}
+  {Left: bolts at the bottom corner of the cryostat. Right: Lakeshore PT102 sensor mounted on a PCB with an IDC-4 connector.}
+  \includegraphics[height=0.2\textwidth]{cisc_cryostat_bolts.png}%
+    \hspace{1cm}%
+  \includegraphics[height=0.2\textwidth]{cisc_tsensor.png}%
+\end{dunefigure}
+
+
+
+
+% \begin{dunetable}
+% [Static t-gradient parameters]
+% {p{0.2\textwidth}p{0.1\textwidth}p{0.6\textwidth}}
+% {tab:fdgen-cisc-static-tgradient}
+% {Parameters for the Static T-gradient monitor}   
+% Parameter            & {\bf value} & {\bf comment} \\ \toprowrule
+% \# sensors	         &     48      &       \\ \toprowrule
+% sensor spacing       &    20/40 cm & 20 at top and bottom and 40 in the mid area  \\ \toprowrule
+% cable diameter       &   3.5 mm    &       \\ \toprowrule
+% cable weight         &   28 g/m    &       \\ \toprowrule
+% cable-string weight  &   13 Kg     &  10 Kg for the cable, 1.3 Kg for the SS string and 1.7 kg for the cable supports      \\ \toprowrule
+% sensor-string weight &   3.3 Kg     & 1.3 Kg for the SS string, 1.7 kg for the cable supports and 300 g for the sensors     \\ \toprowrule
+% \end{dunetable}
+
+%Table \ref{tab:fdgen-cisc-static-tgradient} summarizes key properties of the static T-gradient monitor.
+
+% % % %
+
+% % % %
+\subsubsection{Individual Temperature Sensors}
+\label{sec:fdgen-slow-cryo-individual-therm}
+
+T-gradient monitors will be complemented by a coarser 2D array (every \SI{5}{m}) of precision sensors at the top and bottom of the \dword{detmodule}, as shown in Figure~\ref{fig:cisc-tsensor-map}. Following the \dword{pdsp} design, bottom sensors will use the cryogenic pipes as a support structure, while top sensors will be anchored to the \dwords{gp}. Although sensors at the top will have a similar distribution to those at the bottom, %some differences will occur because 
+suitable anchoring points at the top and bottom will differ. 
+
+As in \dword{pdsp}, another set of standard sensors will be evenly distributed and epoxied to the bottom membrane. They will detect the presence of \dword{lar} when cryostat filling starts. Finally, two vertical arrays of standard sensors will be epoxied to the lateral walls in two opposite vertical corners, with a spacing of \SI{102}{cm} (every three corrugations), to monitor the cryostat membrane temperature during the cooldown and filling processes. 
+
+%While 
+Whereas in \dword{pdsp} cables were routed individually (without touching neighboring cables or any metallic elements) to prevent grounding loops in case the outer Teflon jacket broke, such a failure has been proved to be very unlikely. Thus, in the \dwords{detmodule}, cables will be routed in bundles, simplifying the design enormously. As Figure~\ref{fig:cisc-tsensor-map} shows, up to 20 sensors will use the same \dword{dss} port, large enough for a cable bundle \SI{16}{mm} in diameter.
+
+Cable bundles of several sizes will be configured using custom made Teflon 
+pieces %,  %(see Fig.~\ref{fig:cable-support})
+%which 
+that will be anchored to different cryostat and detector elements to route cables from sensors to \dword{dss} ports. For sensors at the bottom (on pipes and floor), cables will be routed towards the cryostat bottom horizontal corner using stainless steel split clamps anchored to pipes (successfully prototyped in \dword{pdsp}), and from there, to the top of the cryostat using vertical strings (as with static T-gradient monitors). For sensors on the top \dwords{gp}, cables bundles will be routed to the corresponding \dword{dss} port using Teflon supports attached to both the FR4 threaded rods in the union between two \dword{gp} modules and to the \dword{dss} I-beams (both successfully prototyped in \dword{pdsp}). Sensors on the walls will use bolts in the vertical corners for cable routing. 
+
+For all individual sensors, PCB sensor support, cables, and connection to the flanges will be the same as for the T-gradient monitors. 
+  
+
+%\begin{dunefigure}[Cable supports for individual temperature sensors]{fig:cable-support}
+%  {Left: support for two cables on ground planes. Right: Supports for three %cables  mounted on cryogenics pipes using split clamps}
+% This PDF is made from the .dot of the same name.
+%  \includegraphics[width=0.3\textwidth]{cisc_TcableSupportGP.png}
+%  \includegraphics[width=0.315\textwidth]{cisc_TcableSupportPipes.png}
+%\end{dunefigure}
+
+% % % %
+\subsubsection{Analysis of temperature data in \dword{pdsp}}
+\label{sec:fdgen-slow-cryo-temp-ana}
+
+
+Temperature data from \dword{pdsp} has been recorded since \dword{lar} filling %started 
+in August 2018. The analysis of this data and the comparison with \dword{cfd} simulations is actively underway, but interesting preliminary results are available and will be described below. Fig.~\ref{fig:pd_inst_map} shows the distribution of temperature sensors in the \dword{pdsp} cryostat.  
+
+\begin{dunefigure}[ProtoDUNE-SP instrumentation map]{fig:pd_inst_map}{Distribution of temperature sensors in the \dword{pdsp} cryostat. Notice that four of the bottom sensors are located right above the LAr inlets. Purity monitors and level meters are also indicated. }
+  \includegraphics[width=0.7\textwidth]{cisc_pdsp_instrumentation.png}%
+\end{dunefigure}
+
+
+All precision temperature sensors (for the static and dynamic T-gradient monitors,  and the 2D arrays at top and bottom) were calibrated in the laboratory prior to installation. However, since the calibration method was still under development when those sensors 
+%had to be 
+were installed, this calibration was only satisfactory (2.6 mK precision) for the static T-gradient monitor, whose sensors were calibrated the last and  plugged in just few days prior to installation in the cryostat. In section~\ref{sec:fdgen-slow-cryo-static-therm}, an additional calibration method, the so called {\it pumps-off calibration}, has been described and the agreement with the laboratory calibration was proved (see Fig.~\ref{fig:pd_static_t_results}). Since this is the only reliable calibration for individual sensors, this method will be used for the data analysis presented in this section, for all sensors except for the dynamic T-gradient monitor, whose calibration based on the movable system is more precise (see Sec.~\ref{sec:fdgen-slow-cryo-dynamic-therm}). 
+
+\begin{dunefigure}[ProtoDUNE-SP T-gradient results]{fig:pd_tgradient_results}{Temperature profiles measured by the T-gradient monitors and comparison to the CFD model with different boundary conditions. Left: dynamic T-gradient monitor; Right: Static T-gradient monitor.}
+  \includegraphics[width=0.5\textwidth]{cisc_dynamic_cfd_data.png}%
+%  \hspace*{0.3cm}
+  \includegraphics[width=0.5\textwidth]{cisc_static_cfd_data.png}%
+\end{dunefigure}
+
+Fig.~\ref{fig:pd_tgradient_results} shows the vertical temperature profiles as measured by the dynamic and static T-gradient monitors at a given moment in time (10 minutes in May 2019). The stability of those profiles has been carefully studied: the relative variation between any two sensors on the same profiler is below 3 mK along the entire data taking, probing that the shape of the profiles is nearly constant in time. In Fig.~\ref{fig:pd_tgradient_results} one immediately observes that the shapes of the two profiles are similar, with a bump at 6.2 m, but the magnitude of %the 
+variation of the static profile almost doubles %the one of 
+compared to the dynamic profile. This effect is attributed to the fact that the dynamic T-gradient monitor is on the path of the \lar flow, which makes the temperature more uniform, while the static profiler is on the side.  
+
+In order to connect the two different %locations 
+regions covered by the T-gradient monitors, temperature measurements by the bottom sensor grid can be used. Fig.~\ref{fig:pd_t_bottom_results} shows the temperature difference between bottom sensors and the second sensor of the static T-gradient monitor (the one at 40~cm from the floor), which is used as reference. %It is also 
+Also shown in the figure is the third sensor of the dynamic T-gradient monitor, located at a similar height. Three different periods are shown in the figure: two periods with pumps-on and one period with pumps-off. It is observed that when the pumps are working the temperature decreases towards the \dword{lar} pump, being  higher in the sensors below the cathode. The horizontal gradient observed in this situation is of the order of 20~mK -- larger than the vertical gradient. When the pumps are off the horizontal gradient decreases, although a residual gradient of 5 mk is observed. This gradient is attributed to the inertia of the liquid once the pumps are switched off: it takes more than one day to recover the horizontal homogeneity.    
+
+\begin{dunefigure}[\dword{pdsp} bottom sensor results ]{fig:pd_t_bottom_results}{Temperature difference between bottom sensors at 40~cm from the floor and static T-gradient sensor at same height. The third dynamic T-gradient sensor, which is  at the same height, is also shown. Two pumps-on periods (left and middle panels) and one pump-off period (right panel) are shown.}
+  \includegraphics[width=0.95\textwidth]{cisc_t_bottom.png}%
+\end{dunefigure}
+
+\dword{cfd} simulations have been produced with different inputs. Two parameters have been identified as potential drivers of the convection regime: i) the incoming \dword{lar} flow rate and ii) the incoming \dword{lar} temperature. The result of varying those parameters was shown in Fig.~\ref{fig:pd_tgradient_results}. 
+The \dword{cfd} model reasonably predicts the main features of the data but the details still need to be understood: the bump at 6.2~m or the lower measured temperature at the bottom. It is worth noting that the simulation depends minimally on the \dword{lar} temperature while the flow rate has more impact, specially in the regions where discrepancies are larger. All simulations use the nominal \dword{lar} flow rate, 0.42~kg/s, except the one explicitly indicated 
+in the plots, which uses half of the rate. More simulations with other \dword{lar} flow rates are needed to conclude.  
+
+The \dword{cfd} reassuringly predicts a reasonable response for more than one set of initial conditions. It is still important to %, but measure the 
+instrumentation response to help establish the validity of the \dword{cfd} model. We did not run tests with differing initial conditions during the beam run because even controlled changes of the cryostat environment could have undesirable effects. However, dedicated tests to validate the \dword{cfd} under various deliberate changes of the cryostat were performed recently. Those  additional tests include pump and recirculation manipulations such as pump on-off, change of pumping speed, and bypassing of filtration, and changing the cryostat pressure set point to a higher (or lower) value\footnote{The \dword{hv} %could be 
+was ramped down for this exercise because dropping the pressure too fast might provoke boiling of the \dword{lar} near the surface.} to induce changes in the pressure for a specified time while monitoring the instrumentation. Any change in pressure could change the temperatures everywhere in the cryostat. Studying the rate of this change, as detected at various heights in the cryostat, might provide interesting constraints on the \dword{cfd} model.
+
+\subsubsubsection{Comparison of calibration methods}
+
+Three different calibration methods have been described above, each of them having a different purpose. The underlying assumption is that reliable temperature monitoring at the few mK level is desirable during the entire lifetime of the experiment, both to guarantee the correct functioning of the cryogenics system and to compute offline corrections based on temperature measurements and \dword{cfd} simulations. This is only possible if an insitu calibration method is available since relative calibration between sensors is expected to diverge with time with respect to the one performed in the laboratory. Two insitu methods have been used. The pumps-off calibration method is very powerful since it is the only way of cross-calibrating all sensors in the cryostat at any point in time. However it relies on the assumption that the temperature is uniform when the recirculation pumps are off. The validity of this assumption has to be bench-marked with real data and this is done in \dword{pdsp} using the calibration based on the movable system (see Fig~\ref{fig:dynamic_t_pumps-off}). The last is the most precise calibration method and the one that sustains all other methods, providing a reliable reference during the entire lifetime of the experiment. This method is even more crucial for the far detector. Indeed, recirculation pumps will be located on one side of the cryostat, very far (almost \SI{60}{m}) from some regions of the \dword{lar} volume, where the inertia will be more pronounced and the homogeneous temperature assumption becomes less valid.   
+
+% % % %
+\subsubsection{Readout system for thermometers}
+\label{sec:fdgen-slow-cryo-therm-readout}
+
+A %highly precise 
+high-precision and very stable system is required to achieve a readout level of $<\,\SI{5}{mK}$.
+The proposed readout system was used in \dword{pdsp} and relies on a variant of an existing mass PT100 temperature readout system developed at
+CERN for an LHC experiment; it has already been tested and validated in \dword{pdsp}.
+%; it has already been tested and validated by the collaboration experts. 
+The system has an electronic circuit that includes
+\begin{itemize}
+\item a precise and accurate current source\footnote{The actual current delivered is monitored with high precision resistors such that the effect of ambient temperature can be disentangled.} for the excitation of the temperature sensors measured using the four-wires method, 
+\item a multiplexing circuit connecting the temperature sensor signals and forwarding the selected signal to a single line, and 
+\item a readout system  with a high-accuracy voltage signal readout module\footnote{National Instrument CompactRIO\texttrademark{} device  with a signal readout NI9238\texttrademark{} module.} with 24 bit resolution over a \SI{1}{V} range.
+\end{itemize}
+This readout system also drives the multiplexing circuit and calculates temperature values. The CompactRIO device is connected to the detector Ethernet network, sending temperature values to the DCS software through a standard OPC UA driver.
+%\fixme{These acronyms are not defined- RIO, DCS, OPC, UA. GLENN AND CARMEN TO CHECK}
+
+The current mode of operation averages more than \num{2000} samples taken every second for each sensor. 
+Figure~\ref{fig:Trepro} shows the system has a resolution higher than 
+\SI{1}{mK}, the RMS of one of the offsets in the stable region.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%  PURITY MONITORS %%%%%%%%%%%%%%%%%%%
@@ -558,7 +942,7 @@ Similarly, gas analyzers (described in Section~\ref{sec:fdgen-slow-cryo-gas-anly
 protect against contaminated gas.  
 %Purity monitors inside the \dword{detmodule} provide critical defense against liquid argon contamination caused by pump and filter problems, as well as all sources of contamination in the \lar volume and contamination from recirculated \lar. 
 
-Furthermore, using several purity monitors to measure lifetime with high precision at carefully chosen points provides key input, e.g.,  vertical gradients in impurity concentrations, for \dshort{cfd} models of the \dword{detmodule}.
+Furthermore, using several purity monitors to measure lifetime with high precision at carefully chosen points provides key input, e.g.,  vertical gradients in impurity concentrations, for \dword{cfd} models of the \dword{detmodule}.
 
 Purity monitors were deployed in previous \dword{lartpc} experiments, e.g., ICARUS, \microboone, and the \dword{35t}. During the first run of the \dword{35t}, two of the four purity monitors stopped working during cooldown, and a third operated intermittently. We later found that this was due to poor electrical contacts between the resistor chain and the purity monitor. A new design was implemented and successfully tested in the second run. 
 
@@ -575,23 +959,20 @@ Figure~\ref{fig-pdsp-prmassembly} shows the assembly of the \dword{pdsp} purity 
 
 
 \dword{pdsp} implements three purity monitors. The purity monitors continuously monitored LAr purity during all commissioning, beam test and operation periods of \dword{pdsp}. Figure~\ref{fig-pdsp-prm} shows the \dword{pdsp} data taken using %them 
-its three purity monitors from commissioning of \dword{pdsp} starting in September 2018, through the entire beam running, to February 2019.
-
-%to the middle of test beam running, in November 2018. 
+its three purity monitors from commissioning of \dword{pdsp} starting in September 2018, through the entire beam running, to July 2019.
 
 \begin{dunefigure}[Measured electron lifetimes in the %four 
 three purity monitors at ProtoDUNE-SP]{fig-pdsp-prm}
-  {The measured electron lifetimes as of Feb 2019 in the %four 
-  three purity monitors as a function of time in \dword{pdsp}.}
-  \includegraphics[width=0.9\textwidth]{PrMon_pdsp-PrM.pdf}
+  {The electron lifetimes measured by three purity monitors in \dword{pdsp} as a function of time, September 2018 through July 2019. The purity is low prior to start of circulation in October. Reasons for later dips include recirculation studies and recirculation pump stoppages.}
+  \includegraphics[width=0.9\textwidth]{cisc_pdsp_Lifetime_till_July17_without_error}
 \end{dunefigure}
 
+The purity monitor system at \dword{pdsp} measured electron lifetime every hour during commissioning and daily during the beam test. During %the commissioning and operation of \dword{pdsp},
+this time, %purity monitors alone 
+it alerted the experiment to serious problems several times. The first time was for filter saturation during \dword{lar} filling, and the rest were recirculation pump stoppages, false alarms, and problems from the cryostat-level gauges.  The dips in Figure~\ref{fig-pdsp-prm} show these sudden changes in purity caught by purity monitors. The purity alerts made by purity monitors %are crucial to the \dword{pdsp} project's success, as they 
+prevented situations which otherwise would have continued unnoticed for some time, with serious consequences to the ability to take any data. %Neither the gas analyzers nor the \dword{tpc} caught these problems in time. 
 
-
-The purity monitor system at \dword{pdsp} measured electron lifetime every hour during commissioning and daily during the beam test. During the commissioning and operation of \dword{pdsp}, purity monitors alone alerted the experiment  to serious problems several times. The first time was for filter saturation during LAr filling, and the rest were recirculation pump stoppages, false alarms, and problems from the cryostat-level gauges.  The dips in Figure~\ref{fig-pdsp-prm} show these sudden changes in purity caught by purity monitors. The purity alerts made by purity monitors are crucial to the \dword{pdsp} project's success, as they prevented situations which otherwise would have continued unnoticed for some time, with severe consequences to the ability to take any data. Neither the gas analyzers nor the \dword{tpc} caught these problems in time. 
-
-
-At \dword{pdsp} (on the surface), where we have enough \dword{tpc} cosmic ray data to measure electron lifetime online, the large fluctuation in the online e-lifetime from \dword{tpc} data makes it hard to catch the purity change caused by \dword{lar} re-circulation issues in time. On the other hand, after lowering the purity monitor anode high voltage, electron drift time in purity monitors reached \SI{2.2}{ms}, the same as in the \dword{tpc}. Furthermore, the purity monitor can take large data sets in a short period of time at the same location, so the statistical error and effects from location dependent uncertainties are smaller in purity monitors compared to the  \dword{tpc}. Each purity monitor e-lifetime measurement is based on purity monitor anode-to-cathode signal ratios from 200 UV flashes within 40 seconds at the same location, and the statistic error on the purity monitor e-lifetime is less than 0.03 ms when the purity is 6 ms. With this high sensitivity, purity monitors  caught the purity drops immediately and make the alert to the experiment in time.
+At \dword{pdsp} (on the surface), where we have enough \dword{tpc} cosmic ray data to measure electron lifetime online, the large fluctuation in the online e-lifetime from \dword{tpc} data makes it hard to catch the purity change caused by \dword{lar} re-circulation issues in time. On the other hand, after lowering the purity monitor anode high voltage, electron drift time in purity monitors reached \SI{2.2}{ms}, the same as in the \dword{tpc}. Furthermore, the purity monitor can take large data sets in a short period of time at the same location, so the statistical error and effects from location dependent uncertainties are smaller in purity monitors compared to the  \dword{tpc}. Each purity monitor e-lifetime measurement is based on purity monitor anode-to-cathode signal ratios from 200 UV flashes within 40 seconds at the same location, and the statistical error on the purity monitor e-lifetime is less than 0.03 ms when the purity is 6 ms. With this high sensitivity, purity monitors  caught the purity drops immediately and make the alert to the experiment in time.
 
 
 
@@ -752,7 +1133,9 @@ The \dword{cisc} consortium will produce the individual purity monitors, test th
 A short version of the %assembly
 string
 %\fixme{string?}
-with all purity monitors will be tested in the \dword{lar} test facility. The full string will be assembled and shipped to \surf. 
+with all purity monitors will be tested at the \dword{citf}.
+%in the \dword{lar} test facility. 
+The full string will be assembled and shipped to \surf. 
  A vacuum test in a long vacuum tube will be performed on-site before inserting the full assembly into the \dword{spmod} cryostat. 
 
 %not clear if we want to ship the 12 meter assembly or assemble onsite yet.
@@ -763,319 +1146,10 @@ with all purity monitors will be tested in the \dword{lar} test facility. The fu
 %shipped to the \dword{fd} site for installation into the cryostat. // a shorter version need to be tested in the LAr testing facility
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Thermometers}
-\label{sec:fdsp-cryo-therm}
-As discussed in section \ref{sec:fdgen-cryo-cfd}, a detailed \threed temperature map is important %in 
-for monitoring %whether the cryogenic system is functioning correctly and the \lar is uniform.
-the cryogenic system for correct functioning and the \dword{lar} for uniformity.
-Given the complexity and size of purity monitors, they can only be installed on the sides of the cryostat to provide a local measurement of
-\dword{lar} purity. %While a direct measurement of the LAr purity across the entire cryostat is not viable, a sufficiently detailed \threed temperature map can predict LAr purity using \dword{cfd} simulations. The vertical coordinate is especially important because it will be closely related to LAr recirculation and uniformity. 
-A direct measurement of the \dword{lar} purity across the entire cryostat is not feasible, but a sufficiently detailed \threed temperature map based on \dword{cfd} simulations can predict it. The vertical coordinate is especially important because it will relate closely to the 
-\dword{lar} recirculation and uniformity. 
-
-The baseline sensor distribution and the cryostat ports used to extract cables (with indication of number of cables per port) are shown in Figure~\ref{fig:cisc-tsensor-map}. The baseline distribution will evolve as more information becomes available (precise \dword{cfd} simulations, better understanding of \dword{dss} ports, installation interfaces with other groups), but the baseline suffices to establish the overall strategy.
-
-\begin{dunefigure}[Distribution of temperature sensors inside the cryostat]{fig:cisc-tsensor-map}
-  {Distribution of temperature sensors inside the cryostat}
-  \includegraphics[width=0.95\textwidth]{cisc_tsensor_map_crop.png}
-  \includegraphics[width=0.85\textwidth]{cisc_tsensor_map_legend.png}
-\end{dunefigure}
-%\fixme{legend is hard to read in figure (anne)}
-
-High-precision temperature sensors will be distributed near the \dword{tpc} walls in two ways:
-(1) forming high density (\(>2\) sensors/\si{m}) vertical arrays %(the so-
-(called T-gradient monitors) and (2) in coarser ($\sim$ 1 sensor/\SI{5}{m}) 2D arrays %(the so-
-(called individual sensors) at the top and bottom of the \dword{detmodule}, where it is most crucial to know the temperature.%\fixme{[Carmen] Check Anne's modification} %which are the most delicate regions. 
-
-% Somehow the text below got changed such that the distinction between installation and calibration got really muddled.  Rewritten paragraph added below.
-% Temperature variations inside the cryostat should be very small ($\SI{0.02}{K}$; see Figure~\ref{fig:cfd-example}), 
-% so sensors must be cross-calibrated to more than $\SI{0.005}{K}$. Most sensors will be calibrated in the laboratory before installation. 
-% (Installation is described in section \ref{sec:fdgen-slow-cryo-install-th}.) Where available space is restricted, the only viable way to install sensors is on the long sides of the detector
-% % (behind the APAs for SP, and behind the lateral FC end-walls for DP) 
-% and the top and bottom of the cryostat.  
-% Given the precision required and the unknown longevity of the sensors -- possibly requiring another  calibration after some time -- a complementary method
-% will be used for T-gradient monitors behind the front end-walls.
-% \fixme{why here? and is it end wall of cryostat or field cage? No hyphenated end-wall; pls fix. GLENN AND CARMEN TO CHECK}
-% % at least for the SP detector.
-% In areas with sufficient space for a movable system, %this 
-% another calibration method, described in section \ref{sec:fdgen-slow-cryo-dynamic-therm}, can be used to cross calibrate
-% the temperature sensors in situ.% This calibration method is . 
-
-\fixme{Rewritten paragraph below based on text from Anselmo [Glenn]}
-
-Temperature variations inside the cryostat should be very small ($\SI{0.02}{K}$; see Figure~\ref{fig:cfd-example}),
-so sensors must be cross-calibrated to better than $\SI{0.005}{K}$. Most sensors will be calibrated in the laboratory before installation.
-(Installation is described in section \ref{sec:fdgen-slow-cryo-install-th}.)
-Calibration before installation is the only option for sensors installed on the long sides of the detector and the top and bottom of the cryostat, where space is limited.
-Given the precision required and the unknown longevity of the sensors -- possibly requiring another  calibration after some time -- an additional method
-will be used for T-gradient monitors installed on the short ends of the detector in the space between the field cage end walls and the cryostat walls. There is sufficient space in this area for a movable system, which can be used to cross calibrate
-the temperature sensors {\em in situ}, as described in \ref{sec:fdgen-slow-cryo-dynamic-therm}.
-
-The baseline design for all thermometer systems have three elements in
-common: sensors, cables, and readout system. We plan to use Lake Shore
-PT100-series\footnote{Lake Shore Cryotronics\texttrademark{} platinum RTD series,
-  \url{https://www.lakeshore.com/}.} %products/cryogenic-temperature-sensors/platinum-rtds/models/Pages/Overview.aspx}.} 
-platinum sensors with \SI{100}{\ohm} resistance %are used 
-because in
-the temperature range \SIrange{83}{92}{K} %these particular sensors
-they 
-show high reproducibility of $\sim\SI{5}{mK}$ and absolute temperature
-accuracy of \SI{100}{mK}.  Using a four-wire readout greatly reduces
-issues related to lead resistance, any parasitic resistances,
-connections through the flange, and general electromagnetic noise
-pick-up. Lakeshore PT102 sensors (see
-Figure~\ref{fig:sensor-support}-Right) were used in the \dword{35t} prototype
-and \dword{pdsp}, % detector, 
-giving excellent results. For the inner
-readout cables, a custom cable made by Axon\footnote{Axon\texttrademark{} Cable, \url{http://www.axon-cable.com}.}
-is the baseline. It
-consists of four teflon-jacketed copper wires (\dword{awg}28), forming two
-twisted pairs, with a metallic external shield and an outer teflon
-jacket.
-%Further details are given in Fig.~\ref{fig:sensor_cable}-Right. 
-The readout system is described in section \ref{sec:fdgen-slow-cryo-therm-readout}.
-
-%As shown in Fig.~\ref{fig:sensor_cable}, the PT102 sensor has a length of \SI{21}{mm}, which can easily be accommodated in the \dword{dune} T-gradient monitors. 
-
-%\begin{dunefigure}[\dword{dune} baseline choices for sensor and cable]{fig:sensor_cable}
-%  {\dword{dune} baseline choices for sensor and cable. Left: Schematic diagram of the PT102 sensor from the Lakeshore company. Right: Schematic diagram and properties of the four wires cable from the
-%  Axon company}
-%  \includegraphics[width=0.4\textwidth]{cisc_pt102.png}
-%  \includegraphics[width=0.55\textwidth]{cisc_TAxonCable.png}
-%\end{dunefigure}
-
-Another set of lower-precision sensors epoxied into the bottom membrane of the cryostat will monitor  the cryostat filling in the initial stage.   
-Finally, the inner walls and roof of the cryostat will have the same types of sensors to monitor the temperature during cooldown and filling (W sensors in Figure~\ref{fig:cisc-tsensor-map}).
- 
-% \fixme{Remove references to DP -- done}
- 
-%except for the membrane sensors that may come from Minco.
-
-% % % %
-\subsubsection{Static T-gradient monitors}
-\label{sec:fdgen-slow-cryo-static-therm}
-
-Several vertical arrays of high-precision temperature sensors cross-calibrated in the laboratory will be installed behind the \dword{apa}s.  
-% near the lateral walls.
-%(behind the APAs for SP and behind the lateral FC end-walls for DP). 
-%For the SP detector, since the electric potential is zero behind the APAs, no electric field shielding is required, simplifying enormously the mechanical design.
-%\footnote{This does not apply for the DP detector, for which the proper shielding must be provided.} 
-The baseline design assumes six arrays with \num{48} sensors each. Spacing between sensors
-is \SI{20}{cm} at the top and bottom and \SI{40}{cm} in the middle area. This configuration is similar to the one used in \dword{pdsp} but with nearly double the spacing. 
-As shown in Figure~\ref{fig:cisc-cfd-valid} a configuration with \num{48} sensors was appropriate in \dword{pdsp}, as it should be in the \dword{spmod} where the expected total gradient is no larger than in \dword{pdsp} (see Figure~\ref{fig:cfd-example}). 
-
-\begin{dunefigure}[Temperature sensor resolution and reproducibility]{fig:Trepro}{
- Left:   Temperature offset between two sensors as a function of time for four independent immersions in LAr. The reproducibility of those sensors, defined as the RMS of the mean offset in the flat region, is $\sim\,\SI{1}{mK}$,
-    The resolution for individual measurements, defined as the RMS of one offset in the flat region, is better than \SI{0.5}{mK}. Right: Difference between the mean offset obtained with two independent calibration methods for the 51 calibrated sensors. The standard deviation of this distribution is interpreted as precision of the calibration.}
-  \includegraphics[height=0.44\textwidth]{cisc_tsensor_calib.png}%
-  \includegraphics[height=0.45\textwidth]{cisc_tsensor_calib2.png}%
-\end{dunefigure}
-
-Sensors will be cross-calibrated in the laboratory using a controlled environment and a high-precision readout system, described in subsection \ref{sec:fdgen-slow-cryo-therm-readout}.
-%Although the calibration procedure will certainly improve, the one currently used for \dword{pdsp} is descrived here.
-%Four sensors are placed as close as possible (such that identical temperature can be assumed for all of them) inside a small cylindrical aluminum capsule,
-%which protects the sensors from thermal shocks and helps in minimizing convection.
-%One of the sensors acts as reference while the other three are the ones being calibrated. Five independent calibrations
-%are performed for each set of three sensors, such that the reproducibility of each sensor can be computed. For each calibration 
-%the capsule is introduced in a PLA box of size \(9.5\times9.5\times\SI{19}{cm^3}\), with two concentrical independent volumes of LAr
-%and sourounded by a polystyrene box with \SI{15}{cm} thick walls. A small quantity of LAr is used to slowly
-%cooldown the capsule to $\sim\SI{90}{K}$, avoiding thermal shocks that could dammage the sensors.
-%Then the capsule is covered by LAr such that it penetrates
-%inside fully covering the sensors. Once the temperature stabilizes to the 1-\SI{2}{mK} level (after 5-15 minutes) measurements are taken. Then the capsule is taken out from LAr
-%and kept at room temperature until it reaches \SI{200}{K}. As mentioned above, this procedure is repeated five times, before going to the next set of three sensors.  
-The accuracy of the calibration for \dword{pdsp} was estimated to be $\SI{2.6}{mK}$, as shown in Figure~\ref{fig:Trepro}. Preliminary results for the analysis of \dword{pdsp} static T-gradient monitor data are shown in Figure~\ref{fig:pd_static_t_results}. The temperature profile has been computed using both the laboratory calibration and the so-called \textit{in-situ pump-off calibration}, which consists %in 
-of estimating the offsets between sensors assuming the temperature of \dword{lar} in the cryostat is homogeneous when the re-circulation pumps are off (the validity of this method is demonstrated in Section~\ref{sec:fdgen-slow-cryo-dynamic-therm}).  
-The RMS of the difference between both methods is $\SI{4.6}{mK}$, slightly larger than the value quoted above for the accuracy of the laboratory calibration, due to the presence of few outliers (under investigation) and to the imperfect assumption of homogeneous temperature when pumps are off (see Figure~\ref{fig:dynamic_t_pumps-off}).  
-
-\begin{dunefigure}[ProtoDUNE-SP static T-gradient results]{fig:pd_static_t_results}{
- Left: Temperature profile as measured by the static T-gradient monitor for two different calibration methods. Right: Distribution of the difference between both methods.}
-  \includegraphics[height=0.34\textwidth]{cisc_static_t_profiles.png}%
-  \includegraphics[height=0.34\textwidth]{cisc_static_t_calib_diff.png}%
-\end{dunefigure}
-
-
-\begin{dunefigure}[Conceptual design of the static T-gradient monitor]
-{fig:cisc-static-tgradient}
-  {Conceptual design of the static T-gradient monitor.}
-  \includegraphics[width=0.8\textwidth]{cisc_static_tgradient.png}
-\end{dunefigure}
-
-Figure~\ref{fig:cisc-static-tgradient} shows the baseline mechanical design of
-the static T-gradient monitor. Two stainless steel strings are anchored at the top and bottom corners of the cryostat
-using the available M10 bolts (see Figure~\ref{fig:sensor-support}, left). One string routes the cables while the other,
-separated from the first by \SI{340}{mm},  supports the temperature sensors.
-Given the height of the cryostat, an intermediate anchoring point is needed to reduce swinging. This is still under discussion. To account for shrinkage in the strings under cryogenic conditions and to guarantee that the same tension is always applied, a weight is hung at the bottom of the strings. A guiding system made of stainless steel and anchored by four M10 bolts at the bottom keeps the weight confined in space. A prototype is being built at \dfirst{ific}, Spain, where the full system will be mounted using two dummy cryostat corners. We are also considering an alternative design with carbon fiber strings.  
-%\fixme{please remake ific glossary term and send it to me so I can put it in master copy. 10 Apr. Anne}
-
-
-Figure~\ref{fig:sensor-support}, right shows the baseline design of the ($52\times \SI{15}{mm^2}$) 
-PCB support for temperature sensors with an IDC-4 male connector. %It is . 
-
-A narrower connector (with two rows of two pins each) is being studied. This alternative design would reduce the width of the PCB assembly and allow more sensors to be calibrated simultaneously. Each four-wire cable from the sensor to the flange will have an IDC-4 female connector on the sensor end; the flange end of the cable will be soldered or crimped to the appropriate connector, whose type and number of pins  depend on the final design of the \dword{dss} ports that will be used to extract the cables. SUBD-25 connectors were used in \dword{pdsp}.
-
-\begin{dunefigure}[Cryostat bolts and temperature sensor support]{fig:sensor-support}
-  {Left: bolts at the bottom corner of the cryostat. Right: Lakeshore PT102 sensor mounted on a PCB with an IDC-4 connector.}
-  \includegraphics[height=0.2\textwidth]{cisc_cryostat_bolts.png}%
-    \hspace{1cm}%
-  \includegraphics[height=0.2\textwidth]{cisc_tsensor.png}%
-\end{dunefigure}
-
-
-
-
-% \begin{dunetable}
-% [Static t-gradient parameters]
-% {p{0.2\textwidth}p{0.1\textwidth}p{0.6\textwidth}}
-% {tab:fdgen-cisc-static-tgradient}
-% {Parameters for the Static T-gradient monitor}   
-% Parameter            & {\bf value} & {\bf comment} \\ \toprowrule
-% \# sensors	         &     48      &       \\ \toprowrule
-% sensor spacing       &    20/40 cm & 20 at top and bottom and 40 in the mid area  \\ \toprowrule
-% cable diameter       &   3.5 mm    &       \\ \toprowrule
-% cable weight         &   28 g/m    &       \\ \toprowrule
-% cable-string weight  &   13 Kg     &  10 Kg for the cable, 1.3 Kg for the SS string and 1.7 kg for the cable supports      \\ \toprowrule
-% sensor-string weight &   3.3 Kg     & 1.3 Kg for the SS string, 1.7 kg for the cable supports and 300 g for the sensors     \\ \toprowrule
-% \end{dunetable}
-
-%Table \ref{tab:fdgen-cisc-static-tgradient} summarizes key properties of the static T-gradient monitor.
-
-% % % %
-\subsubsection{Dynamic T-gradient monitors}
-\label{sec:fdgen-slow-cryo-dynamic-therm}
-% What I was thinking about is to have 3 sensors per meter. 4 would be even better and have 1.35 m range of motion. The goal is to have 4 sensor overlap. In this case, we would be quite safe against sensor failure.
-% If we are to populate 14 m with 3 sensors per meter, that would be 42 sensors. In addition, we should increase frequency at the top or bottom.
-
-%The dynamic temperature monitor is a vertical array of high precision temperature sensors to measure the vertical temperature gradient within a few mK. The design of the system is driven by the following:
-%\begin{itemize}
-%\item
-%Uncertainties in the measured vertical temperature profile must be less than a few mK over the entire detector height to monitor LAr purity and provide useful feedback on the efficiency of cryogenic recirculation and purification.
-%\item
-%Simulations of cryogenic recirculation predict very slow changes in temperature at meter scale except at the bottom and top of the cryostat. Thus, sensors will be placed every \SI{50}{cm} along the detector height with more sensors in the first \SI{50}{cm}, closest to the bottom of the cryostat, and the last \SI{50}{cm}, closest to the top of the cryostat, where spacing between sensors is reduced to \SI{10}{cm}.
-% \end{itemize}
-
-% ANSELMO: Paragraph below removed, since it is substituted by the one by Jelena
-
-%The dynamic T-gradient monitor is a vertical array of high precision temperature sensors to measure the vertical temperature gradient within a few mK. 
-%To address concerns about potential differences in sensor readings before and after installation in the \dword{dune} \dword{fd}, the dynamic T-gradient monitor allows cross-calibration of sensors {\em in situ}. Namely, the system can move vertically while installed in the \dword{fd} such that a given sensor can be placed at the nominal position of its neighbor, and the temperature offset between them can be computed assuming the temperature at that location did not change during the movement. 
-
-% \fixme{New paragraph from Jelena below. (2019-01-11)}
-
- To address concerns about potential differences in sensor readings prior to and after installation in a \dword{detmodule}, and potential drifts over the lifetime of the %detector 
- module that may affect accuracy of the vertical temperature gradient measurement, % in a \dword{detmodule}, 
- a dynamic temperature monitor allows cross-calibration of sensor readings %{\em in situ}. 
- in situ.
-Namely, this T-gradient monitor is motorized, allowing vertical motion of the temperature sensor array %in vertical direction while installed 
-in the \dword{detmodule}, %. This ability enables 
-enabling precise cross-calibration between the sensors, %{\em in situ
-as illustrated in Figure~\ref{fig:sensor-cross-calibration}.  
-
-The procedure for cross-calibrations is the following: in step 1, the temperature reading  of all sensors is taken at the home (lowest) position of the carrier rod. In  step 2, the stepper motor moves the carrier rod up \SI{25}{cm}. Since the sensors along the entire  carrier rod are positioned \SI{25}{cm} apart, when the system is moved up \SI{25}{cm}, each sensor is positioned at the height that was occupied by another sensor in step 1. Then a second temperature reading is taken. In this manner, except for the lowest position two temperature measurements are taken at each location with %two 
-different sensors. Assuming that the temperature at each location is stable over the few minutes required to make the measurements, %the 
-any difference in the temperature readings between the two different sensors is due to their relative measurement offset. This %temperature readings 
-difference is then calculated for all locations.  In step 3, readout differences between pairs of sensors at each location are linked to one another, expressing temperature measurements at all heights with respect to a single sensor. In this way, temperature readings from all sensors are cross-calibrated %{\em in situ}
-in situ, canceling all possible offsets due to electromagnetic noise or any parasitic resistances that may have prevailed despite the four-point connection to the sensors that should cancel most of the offsets. These measurements are taken with a very stable current source, which ensures high precision of repeated temperature measurements over time. The motion of the dynamic T-monitor is stepper-motor operated, delivering measurements with high spatial resolution. 
-
-\begin{dunefigure}[Principle of cross-calibration with dynamic T-gradient monitor]{fig:sensor-cross-calibration}
-  {In step 1, sensor temperature measurements are taken with the T-gradient monitor in the home position. In step 2, the entire system is moved up \SI{25}{cm} and another set of temperature readings is taken by all sensors. Then, the offsets between pairs of sensors are calculated for each position. In step 3, offsets are linked together, providing cross-calibration of all sensors, to obtain the entire vertical temperature gradient measurement with respect to a single sensor (number 1 in this case). }
-  \includegraphics[width=1.0\textwidth]{cisc_cross_calibration_illustration.png}%
-\end{dunefigure}
-
-
-A total of \num{72} sensors will be installed with \SI{25}{cm} spacing, decreased to \SI{10}{cm} spacing for the top and bottom \SI{1}{m} of the carrier rod.  
- The vertical displacement of the system is such that every sensor can be moved to the nominal position of at least five other sensors, minimizing the risks associated with sensor failure and allowing for several points of comparison. The total expected motion range of the carrier rod is \SI{1.35}{m}.
-
-%\fixme{This entire procedure is unclear. Shorten the sentences and make the procedure description more precise. A figure might help, along with references to that figure in the text. {\bf  ANSELMO:  I've removed the existing text and added some text above. The concept is clear, I don't think we need to give more details, which could confuse the reader.} {\em I think it is clear now. =Glenn}} 
-
-%The procedure for cross-calibration involves first, taking a temperature reading at the lowest sensor position. Then, the stepper motor moves the carrier rod up by \SI{50}{cm} putting all sensors in the location of their neighbor that is \SI{50}{cm} above them. Then the second reading is taken. In this manner, except for the lowest position we have temperature measurement at each location with two adjacent sensors, and by linking the temperature offsets between the two readings at each location, temperature readings from all sensors are cross-calibrated {\em in situ}, canceling all offsets due to electromagnetic noise or any parasitic resistances that may have prevailed despite the four point connection to the sensors that should cancel most of the offsets. These measurements are taken with very stable current source, which ensures high precision of repeated temperature measurements over time. The motion of the dynamic T-monitor is stepper motor operated, delivering measurements with high spatial resolution. 
-
-This procedure was tested in \dword{pdsp}, where the system was successfully moved up by a maximum of \SI{51}{cm}, allowing cross-calibration of all sensors (22 sensors with \SI{10.2}{cm} spacing at top and bottom and \SI{51}{cm} in the middle). 
-Figure~\ref{fig:cisc-cfd-valid} shows the temperature profile after calibration; the smoothness of the profile demonstrates the reliability of the method. An even better figure of merit is %however 
-the temperature profile after cross-calibration, when the recirculation pumps are off. Under these conditions the  temperature should be very homogeneous except near the surface. This is indeed what %is observed in 
-Figure~\ref{fig:dynamic_t_pumps-off} shows.  
-
-\begin{dunefigure}[Temperature profile for dynamic T-gradient with pumps-off]{fig:dynamic_t_pumps-off}
-  {Temperature profile as measured by the dynamic T-gradient monitor after cross-calibration, when the recirculation pumps are off. Temperature variation is of the order of \SI{3}{mK} except close to the top and the gas phase interface, as expected.}
-  \includegraphics[width=0.6\textwidth]{cisc_dynamic_t_pumps-off.png}%
-\end{dunefigure}
-
-
-%\subsubsection{Dynamic T-gradient monitor design}
-%\label{sec:fdgen-slow-cryo-dynamic-therm-design}
-A dynamic T-gradient monitor has three parts: a carrier rod on which sensors are mounted; an enclosure above the cryostat housing space that allows the carrier rod to move vertically  \SI{1.5}{m} over its lowest location; and the motion mechanism. The motion mechanism consists of a stepper motor connected through a ferrofluidic dynamic seal to a gear and pinion motion mechanism. The sensors have two pins soldered to a printed circuit board (PCB). 
-%\fixme{maybe add gloss term}
-Two wires are individually soldered to the common soldering pad for each pin.  A cutout in the PCB around the sensor allows free flow of argon for more accurate temperature readings.  Stepper motors typically have very fine steps that allow highly precise positioning of the sensors.  Figure~\ref{fig:fd-slow-cryo-dt-monitor-overview} shows the overall design of the dynamic T-gradient monitor. % with the sensor carrier rod, enclosure above the cryostat, and stepper motor mounted on the side of the enclosure. 
-The enclosure has two parts connected by a six-cross flange. One side of this flange will be used for signal wires, another will be used as a viewing window, and the two other ports will be spares. Figure~\ref{fig:fd-slow-cryo-sensor-mount}, left shows the PCB mounted on the carrier rod and the sensor mounted on the PCB along with the four point connection to the signal readout wires. %Finally, 
-Figure~\ref{fig:fd-slow-cryo-sensor-mount}, right shows the stepper motor mounted on the side of the rod enclosure. The motor remains outside the enclosure, at room temperature, %and 
-as do its power and control cables. % also remain outside.
-
-\begin{dunefigure}[Dynamic T-gradient monitor overview]{fig:fd-slow-cryo-dt-monitor-overview}
-  {%An overview 
-  A schematic of the dynamic T-gradient monitor.}
-% \includegraphics[width=0.11\textwidth,angle=90]{cisc_DTOverview.png}
- \includegraphics[width=0.95\textwidth,angle=0]{cisc_DynamicProfiler.png}
-\end{dunefigure}
-\begin{dunefigure}[Sensor-cable assembly for dynamic T-gradient monitor]{fig:fd-slow-cryo-sensor-mount}
-  {Left: Sensor mounted on a PCB board and PCB board mounted on the rod. Right:
-    The driving mechanism of the dynamic T-gradient monitor, consisting of a stepper motor driving the pinion and gear linear motion mechanism. }
-  \includegraphics[width=0.40\textwidth]{cisc_DTSensorMount.png}
-  \hspace{3cm}%
-  \includegraphics[width=0.12\textwidth]{cisc_DTMotor.png}
-\end{dunefigure}
-
-% % % %
-\subsubsection{Individual Temperature Sensors}
-\label{sec:fdgen-slow-cryo-individual-therm}
-
-T-gradient monitors will be complemented by a coarser 2D array (every \SI{5}{m}) of precision sensors at the top and bottom of the \dword{detmodule}, as shown in Figure~\ref{fig:cisc-tsensor-map}. Following the \dword{pdsp} design, bottom sensors will use the cryogenic pipes as a support structure, while top sensors will be anchored to the \dwords{gp}. Although sensors at the top will have a similar distribution to those at the bottom, %some differences will occur because 
-suitable anchoring points at the top and bottom will differ. 
-
-As in \dword{pdsp}, another set of standard sensors will be evenly distributed and epoxied to the bottom membrane. They will detect the presence of \dword{lar} when cryostat filling starts. Finally, two vertical arrays of standard sensors will be epoxied to the lateral walls in two opposite vertical corners, with a spacing of \SI{102}{cm} (every three corrugations), to monitor the cryostat membrane temperature during the cooldown and filling processes. 
-
-%While 
-Whereas in \dword{pdsp}, cables were routed individually (without touching neighboring cables or any metallic elements) to prevent grounding loops in case the outer Teflon jacket broke, such a failure is very unlikely. Thus, in the \dwords{detmodule}, cables will be routed in bundles, simplifying the design enormously. As Figure~\ref{fig:cisc-tsensor-map} shows, up to 20 sensors will use the same \dword{dss} port, large enough for a cable bundle \SI{16}{mm} in diameter.
-
-Cable bundles of several sizes will be configured using custom made Teflon 
-pieces %,  %(see Fig.~\ref{fig:cable-support})
-%which 
-that will be anchored to different cryostat and detector elements to route cables from sensors to \dword{dss} ports. For sensors at the bottom (on pipes and floor), cables will be routed towards the cryostat bottom horizontal corner using stainless steel split clamps anchored to pipes (successfully prototyped in \dword{pdsp}), and from there, to the top of the cryostat using vertical strings (as with static T-gradient monitors). For sensors on the top \dwords{gp}, cables bundles will be routed to the corresponding \dword{dss} port using Teflon supports attached to both the FR4 threaded rods in the union between two \dword{gp} modules and to the \dword{dss} I-beams (both successfully prototyped in \dword{pdsp}). Sensors on the walls will use bolts in the vertical corners for cable routing. 
-
-For all individual sensors, PCB sensor support, cables, and connection to the flanges will be the same as for the T-gradient monitors. 
-  
-
-%\begin{dunefigure}[Cable supports for individual temperature sensors]{fig:cable-support}
-%  {Left: support for two cables on ground planes. Right: Supports for three %cables  mounted on cryogenics pipes using split clamps}
-% This PDF is made from the .dot of the same name.
-%  \includegraphics[width=0.3\textwidth]{cisc_TcableSupportGP.png}
-%  \includegraphics[width=0.315\textwidth]{cisc_TcableSupportPipes.png}
-%\end{dunefigure}
-
-
-% % % %
-\subsubsection{Readout system for thermometers}
-\label{sec:fdgen-slow-cryo-therm-readout}
-
-A %highly precise 
-high-precision and very stable system is required to achieve a readout level of $<\,\SI{5}{mK}$.
-The proposed readout system was used in \dword{pdsp} and relies on a variant of an existing mass PT100 temperature readout system developed at
-CERN for an LHC experiment; it has already been tested and validated in \dword{pdsp}.
-%; it has already been tested and validated by the collaboration experts. 
-The system has an electronic circuit that includes
-\begin{itemize}
-\item a precise and accurate current source for the excitation of the temperature sensors measured using the four-wires method,
-\item a multiplexing circuit connecting the temperature sensor signals and forwarding the selected signal to a single line, and 
-\item a readout system  with a high-accuracy voltage signal readout module\footnote{National Instrument CompactRIO\texttrademark{} device  with a signal readout NI9238\texttrademark{} module} with 24 bit resolution over a \SI{1}{V} range.
-\end{itemize}
-This readout system also drives the multiplexing circuit and calculates temperature values. The CompactRIO device is connected to the detector Ethernet network, sending temperature values to the DCS software through a standard OPC UA driver.
-%\fixme{These acronyms are not defined- RIO, DCS, OPC, UA. GLENN AND CARMEN TO CHECK}
-
-The current mode of operation averages more than \num{2000} samples taken every second for each sensor. 
-Figure~\ref{fig:Trepro} shows the system has a resolution higher than 
-\SI{1}{mK}, the RMS of one of the offsets in the stable region.
 
 
 %%%%%%%%%%%%%%%%%%%% LIQUID LEVEL MONITORING %%%%%%%%%%%%%%%%%%%%
-\subsection{Liquid Level Monitoring}
+\subsection{Liquid Level Meters}
 % john L, anselmo
 % SP
 
@@ -1282,7 +1356,7 @@ The fixed cameras
 monitor the following items during filling:
 \begin{itemize}
 \item positions of corners of \dword{apa} or \dword{crp}, \dword{cpa} or cathode, \dwords{fc}, \dwords{gp} (\SI{1}{mm} resolution)
-\item relative straightness and alignment of \dword{apa} or \dword{crp}, \dword{cpa} or cathode, and \dword{fc} (\(<\sim\SI{1}{mm}\))
+\item relative straightness and alignment of \dword{apa} or \dword{crp}, \dword{cpa} or cathode, and \dword{fc} (\(\lesssim\SI{1}{mm}\))
 \item relative positions of profiles and endcaps (\SI{0.5}{mm} resolution); and 
 \item the \dword{lar} surface, specifically, the presence of bubbling or debris.
 \end{itemize}
@@ -1337,7 +1411,9 @@ An alternative design uses an acrylic enclosure.
 This design was used successfully in \dword{pdsp} (see Figure~\ref{fig:gen-fdgen-cameras-enclosure}, bottom left). Cameras 001, 002, 004, and 005, shown in Figure~\ref{fig:pdsp-camera-locations}, use acrylic enclosures. 
 All operate successfully, including those at the bottom of the cryostat.  It must be noted that the \dword{dune} \dword{fd} will be twice as deep as \dword{protodune}, and therefore cameras observing the lowest surfaces of the \dword{fc} must withstand twice the pressure.
 
-We will continue prototyping and testing in order to finalize and validate the cold camera design for \dword{dune}, focusing particularly on pressure resistance.
+%We will continue prototyping and testing in order to finalize and validate the cold camera design for \dword{dune}, focusing particularly on pressure resistance.
+Improved designs for the cold cameras will be tested in \dword{pddp} and \dword{citf} for improved imaging including focus adjustment, and in \dword{citf} for pressure resistance, during 2020. 
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
@@ -1406,7 +1482,8 @@ drive in the event of motor failure.
 
 An alternative design was demonstrated in \dword{pdsp}. In this design, the warm camera is contained inside a gas-tight acrylic tube inserted into the feedthrough, so a gate valve or a gas-tight rotatable stage is not needed, and the warm cameras can be removed for servicing or upgrade at any time. Figure~\ref{fig:gen-fdgen-cameras-movable} (right) shows an acrylic tube enclosure and camera immediately before deployment. These acrylic tube enclosures for removable cameras were deployed at the positions marked 201, 202, and 203 in Figure~\ref{fig:pdsp-camera-locations}; they operated successfully in \dword{pdsp}. Cameras with fisheye lenses were used in these tubes during initial operation.  One camera was removed without any evidence of contamination of the \dword{lar}. We plan to use other cameras during post-beam running.
 
-We will continue prototyping and testing in order to finalize and validate the inspection camera design for \dword{dune}, focusing particularly on longevity, camera replaceability, and protection of the \dword{lar}.
+%We will continue prototyping and testing in order to finalize and validate the inspection camera design for \dword{dune}, focusing particularly on longevity, camera replaceability, and protection of the \dword{lar}.
+Improved designs for the inspection cameras will be tested in the \dword{citf} and \dword{pdsp} during 2020 and 2021, focusing particularly on longevity, camera replaceability, and protection of the \dword{lar}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1427,11 +1504,12 @@ While data on how well \dwords{led} perform at cryogenic temperatures
 is sparse, some studies of NASA projects~\cite{Carron:2017zzz}
 indicate that \dword{led} are more efficient at low temperatures and
 that emitted wavelengths may change, particularly for blue
-\dwords{led}.  Amber \dwords{led} were observed in \dword{pdsp} to
-emit green light at \dword{lar} temperature. (See bottom right photo
-in \ref{fig:gen-fdgen-cameras-enclosure}.)  To avoid degradation of
+\dwords{led}.  In \dword{pdsp}, amber \dwords{led} were observed  to
+emit green light at \dword{lar} temperature (see bottom right photo
+in \ref{fig:gen-fdgen-cameras-enclosure}).  To avoid degradation of
 wavelength-shifting materials in the \dword{pds}, short wavelength
-\dwords{led} are not used in the \dword{fd}.
+\dwords{led} are not used in the \dword{fd}; \dwords{led} will be tested
+in \dword{ln} to ensure their wavelength is long enough.
 
 \begin{dunefigure}[Example schematic for LED chain]{fig:cisc-LED}
   {Example schematic for LED chain, allowing failure tolerance and two LED illumination spectra.}
@@ -1457,8 +1535,9 @@ This allows two different wavelengths of illumination using a single chain simpl
 \subsection{Cryogenic Instrumentation Test Facility}
 % same for SP and DP
 % alan h
-
-The \dfirst{citf} at \fnal has provided access to small ($<\,\SI{1}{ton}$) to intermediate ($\sim\,\SI{1}{ton}$) volumes of purified \dword{tpc}-grade \dword{lar}, required for %. Hardware that requires this high-purity liquid includes 
+The \dword{cisc} consortium plans to build a \dfirst{citf} at \fnal to facilitate testing of various cryogenic instrumentation devices and small-scale assemblies of \dword{cisc} systems. 
+%The \dfirst{citf} at 
+In the past and recent times, various test facilities at \fnal have provided access to small ($<\,\SI{1}{ton}$) to intermediate ($\sim\,\SI{1}{ton}$) volumes of purified \dword{tpc}-grade \dword{lar}, required for %. Hardware that requires this high-purity liquid includes 
 any device intended for drifting electrons for millisecond periods. %Not all devices need this high purity \lar , but may need a relatively large volume for the necessary prototyping environments. A relatively fast turn-around time of approximately a week is needed for short prototyping runs. 
 
 %\begin{dunefigure}[]{fig:cisc_PAB_photo}
@@ -1468,9 +1547,9 @@ any device intended for drifting electrons for millisecond periods. %Not all dev
 
 %\fixme{suggestion to remove this figure entirely or crop it to upper right and adjust text. It doesn't clarify anything. Tim and Anne  GLENN AND CARMEN TO CHECK}
 
-The PAB facility at \fnal houses the ICEBERG \SI {3000} {liter} cryostat which enables fast turnaround testing for the \dword{dune} \dword{ce}. 
+The \dword{pab} facility at \fnal houses the ICEBERG \SI {3000} {liter} cryostat which enables fast turnaround testing for the \dword{dune} \dword{ce}. 
 
-The PAB facility also includes TallBo (\SI {450} {liter}), Blanche (\SI {500} {liter}), and Luke (\SI {250} {liter}) cryostats. %All these cryostats are available for outside use.
+The \dword{pab} facility also includes TallBo (\SI {450} {liter}), Blanche (\SI {500} {liter}), and Luke (\SI {250} {liter}) cryostats. %All these cryostats are available for outside use.
 In the recent past, Blanche has been used for \dword{hv} studies, TallBo for \dword{pd} studies, and Luke for the material test stand work. These studies have contributed to the design and testing of  \dword{pdsp} components.
 
 \subsection{Validation in ProtoDUNE}
@@ -1506,7 +1585,7 @@ the \dword{spmod} will be done using the data from
 % same for SP and DP
 
 The slow controls system collects, archives, and displays data from
-a broad variety of sources and provides real-time status, alarms, and warnings for detector operators. Slow controls also provides control for %some detector components of the detector systems 
+a broad variety of sources and provides real-time status, alarms, and warnings for detector operators. The slow control system also provides control for %some detector components of the detector systems 
 items such as \dword{hv} systems, \dword{tpc} electronics, and \dword{pd} systems. Data is acquired via network interfaces.  Figure~\ref{fig:gen-slow-controls-diagram} shows connections between major parts of the slow controls system and other systems. %Hardware, infrastructure, and software are the three main components of the slow controls system. %, each of which are described in this section.
 
 \begin{dunefigure}[Slow controls connections and data]{fig:gen-slow-controls-diagram}
@@ -1620,24 +1699,23 @@ available in the \dshort{cuc}'s \dword{daq} server room for \dword{cisc} use. Th
 To provide complete monitoring and control of detector subsystems, the slow controls software includes
 %
 \begin{itemize}
- \item the control systems base that performs input and output operations
-  and defines processing logic, scan conditions, and alarm conditions;
- \item an alarm server that monitors all channels and sends alarm
+ \item the control systems base for input and output operations
+  and defining processing logic, scan conditions, and alarm conditions;
+ \item an alarm server to monitor all channels and send alarm
   messages to operators;
- \item a data archiver that performs automatic sampling and storage of
-  values for history tracking; and 
- \item an integrated operator interface that provides display panels for
+ \item a data archiver for automatic sampling and storing values for history tracking; and 
+ \item an integrated operator interface providing display panels for
   controls and monitoring.
 \end{itemize}
 
-An additional requirement for the software is the capability to 
+In addition, the software must be able to 
 interface indirectly with external systems (e.g., cryogenics control
 system) and databases (e.g., beam database) to export data into
 slow controls process variables (or channels) for archiving and status
 displays. This allows us to integrate displays and warnings into one
-system for the experiment operators, and %to provide 
+system for the experiment operators and %to provide 
 provides integrated
-archiving for sampled data in the archived database. As one possibility, an input output controller (IOC) running on a central \dword{daq}
+archiving for sampled data in the archived database. As one possibility, an input output controller running on a central \dword{daq}
 server could provide soft channels for these data.
 Figure~\ref{fig:gen-slow-controls-diagram} shows a typical workflow of a
 slow controls system.
@@ -1646,7 +1724,7 @@ The key features of the software require highly evolved software designed to man
 to hundreds of thousands of channels sampled at intervals of hours to seconds as needed. The software
 must be well documented, supported, and reliable. The base
 software must also allow easy access to any channel by name. The
-archiver software must allow data storage in an SQL database with
+archiver software must allow data storage in a database with
 adjustable rates and thresholds so data
 for any channel can be easily retrieved using channel name and time range. Among other key
 features, the alarm server software must remember the state, support an
@@ -1656,14 +1734,14 @@ convention for channels will be part of the software to help handle large
 numbers of channels and subsystems.
 
 %\fixme{CP: Paragraph below modified to explain the baseline software here}
-The \dword{pdsp} detector control system software \cite{pdspdcs_proc} (NP04-DCS) provides a prototype for %this required 
-the \dword{fd} slow
-controls software. In NP04-DCS, the unified control system base is WinCC OA \cite{winccoa}, a
+The \dword{pdsp} detector control system software \cite{pdspdcs_proc} provides a prototype for %this required 
+the \dword{fd} slow controls software.
+In \dword{pdsp}, the unified control system base is WinCC OA \cite{winccoa}, a
 commercial toolkit used extensively at CERN, with device interfaces
 supported using several standardized interface protocols. A more detailed description is in Section~\ref{sec:cisc-slow-control-pdsp} below.
+WinCC OA is our baseline for the \dword{fd} slow control software.
+EPICS \cite{epics7} is an alternative controls system which also meets the specifications; it is used in other neutrino experiments including \dword{microboone}\cite{microboone} and \dword{nova}\cite{Lukhanin:2012fp}. 
 
-%provides a prototype for this required \dword{fd} slow
-%controls software, as described in Section~\ref{sec:cisc-slow-control-pdsp} below.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Ed T
@@ -1676,9 +1754,13 @@ The final set of quantities to monitor will ultimately be determined
 by the subsystems being monitored, documented in
 appropriate  interface control documents (ICDs), and continually revised based on operational
 experience.  The total number of quantities to monitor has been roughly estimated by taking the total number monitored
-in \dword{pdsp}\cite{pdspdcs_proc}, 7595 as of Nov. 19, 2018, and scaling by the detector length and the number of planes, giving approximately 150,000 per \dword{detmodule}. % in the range of \numrange{140}{190} thousand. % let's keep just 1 digit of precision to be safe [glenn]
+in \dword{pdsp}\cite{pdspdcs_proc}, 7595 as of Nov. 19, 2018, and scaling by the detector length and the number of planes, giving approximately 150,000 per \dword{detmodule}.
 Quantities should update on average no more than once per minute.
-Transmitting a single update for each channel at that rate translates to a few thousand updates per second, or a few tens of thousands of bytes per second. While this is not a significant load on a network with an efficient slow controls protocol, it would correspond to approximately 1~TB per year if every timestamp and value were stored.
+Transmitting a single update for each channel at that rate translates to a few thousand updates per second, or a few tens of thousands of bytes per second. While this is not a significant load on a network with an efficient slow controls protocol, it would correspond to approximately 1~TB per year per \dword{detmodule} if every timestamp and value were stored.
+The actual data volume will be less because values are stored only if they vary from previous values by more than an amount that is adjustable channel-by-channel.
+Database storage also allows data to be sparsified later.
+No slow controls data is planned to be written to the \dword{daq} stream.
+With careful management of archiving thresholds for each quantity monitored and yearly reduction of stored sample time density, the retained data volume can be reduced to a few TB over the life of the experiment.
 
 The subsystems
 to be monitored include the %detector 
@@ -1709,7 +1791,7 @@ Cryogenic internal piping & \fdth gas purge flow and temperature \\ \colhline
 \dword{crp} / \dword{apa} & bias voltages and currents \\ \toprowrule
 \multicolumn{2}{l}{\bf Infrastructure and external systems } \\ \specialrule{1.5pt}{1pt}{1pt}
 Cryogenics (external) & status of pumps, flow rates, inlet and return temperature and pressure (via OPC or similar SCADA interface) \\ \colhline
-Beam status & protons on target, rate, target steering, beam pulse timing (via IFBeamDB) \\ \colhline
+Beam status & protons on target, rate, target steering, beam pulse timing (via \dword{ifbeam}) \\ \colhline
 Near detector & near detector run status (through common slow controls database) \\ \colhline
 Rack power and status & power distribution unit current and voltage, air temperature, fan status if applicable, interlock status \\ \colhline
 \multicolumn{2}{l}{\bf Detector calibration systems } \\ \specialrule{1.5pt}{1pt}{1pt}
@@ -1732,14 +1814,14 @@ and network interfaces with systems outside of the scope of the \dword{detmodule
 This includes the following:
 \begin{itemize}
 \item readings from the LBNF-managed external cryogenics systems, for status of pumps, flow rates, inlet, and return temperature and pressure, which are implemented via OPC or a similar SCADA interface;
-\item beam status, such as protons-on-target, rate, target steering, and beam pulse timing, which are retrieved via IFBeamDB; and 
+\item beam status, such as protons-on-target, rate, target steering, and beam pulse timing, which are retrieved via \dword{ifbeam}; and 
 \item near detector status, which can be retrieved from a common slow controls database.
 \end{itemize}
 %
 Integration occurs after both the slow controls and non-detector
 systems are in place.  The LBNF-\dword{cisc} interface is managed by the
 cryogenics systems working group in \dword{cisc} as described in Section~\ref{sec:cisc-slow-controls-org}, which includes members from both \dword{cisc} and \dword{lbnf}. 
-The IFBeamDB interface for slow controls is already well established in \microboone, \nova, and other \fnal experiments. An internal near-detector--\dword{fd} working group can be established 
+The \dword{ifbeam} interface for slow controls is already well established in \microboone, \nova, and other \fnal experiments. An internal near-detector--\dword{fd} working group can be established 
 to coordinate detector status exchange between the near and far sites.
 
 %%%%%%%%%%%%%
@@ -1747,35 +1829,47 @@ to coordinate detector status exchange between the near and far sites.
 \label{sec:cisc-slow-control-pdsp}
 
 \begin{dunefigure}[Diagram of the ProtoDUNE-SP control system topology]{fig:cisc-NP04-DCS-topology}
-{Diagram of the \dword{pdsp} control system (NP04 DCS) topology, from \cite{pdspdcs_proc}.}
+{Diagram of the \dword{pdsp} control system topology, from \cite{pdspdcs_proc}.}
 % Figure cannot be scaled down smaller than height=0.9\textheight,width=0.95\textwidth without making text unreadable. Even at this scale, the largest text on figure is 75% of the caption text font size. Authors of the NP04-DCS paper are making a new figure, just not ready for 1st TDR draft. [Glenn]
 \includegraphics[height=0.9\textheight,width=0.95\textwidth,keepaspectratio]{NP04-DCS_arch_vert}
 \end{dunefigure}
 
-The \dword{pdsp} detector control system (also known as NP04-DCS) met
-all requirements for operation in September 2018, as
-described in \cite{pdspdcs_proc}.  Those requirements are
+The \dword{pdsp} detector control system has met
+all requirements for operation of \dword{pdsp}\cite{pdspdcs_proc} and will be used for \dword{pddp}. The requirements for \dword{protodune} are
 nearly identical to those for the \dword{spmod} other than
-total channel count. Of particular note, the NP04-DCS unified a heterogenous set of devices and data sources
-through multiple protocols into a
+total channel count. Of particular note, the \dword{protodune} slow control system unified a heterogenous set of devices and data sources
+through several protocols into a
 single control system, as illustrated in
 Figure~\ref{fig:cisc-NP04-DCS-topology}. In addition to what
-the figure shows, data was also acquired from external cryogenic and beam
+the figure shows, data were also acquired from external cryogenic and beam
 systems.  The topology and data flow of the system matches the general
-shape shown in Figure~\ref{fig:gen-slow-controls-diagram}. In NP04-DCS,
-the unified control system base is a
-commercial toolkit (WinCC OA) supported by CERN.
-%used extensively at CERN, with device interfaces
-%supported using several standardized interface protocols.
+shape shown in Figure~\ref{fig:gen-slow-controls-diagram}.
+
+In this control system, the unified control system base is WinCC-OA~\cite{winccoa}, a commercial \dword{scada} system for visualizing and operating of processes, production flows, machines, and plants, used
+in many businesses. It was chosen at \dword{cern} as a basis for
+developing the control systems of the \dword{lhc} experiments, the
+accelerators and the laboratory infrastructure for its flexibility and
+scalability, as well as for the openness of the architecture, allowing
+it to interface with many different types of hardware devices and
+communication protocols. Additional software developed at \dword{cern}
+is also used, including Joint COntrols Projects~\cite{jcop} and UNified
+Industrial COntrol System (UNICOS)~\cite{unicos}. WinCC-OA and the
+additional software developed on top of it in the past 20 years, have
+grown into a fairly complex ecosystem. While multiple collaboration
+members have experience using the \dword{pdsp} control system,
+customising and using WinCC-OA in an effective way for developing the
+control system of \dword{dune} requires proper training and a
+non-negligible learning effort.
+
+% a commercial toolkit used extensively at \dword{cern}, with device interfaces supported using several standardized interface protocols.
 
 As noted in sections \ref{sec:fdgen-slow-cryo-sw} and \ref{sec:fdgen-slow-cryo-quant},
-the %\dword{dune} 
-\dword{spmod} slow control system will produce massive amounts of
+the slow control archiver will gradually accumulate terabytes of
 data, requiring a sizable database to store the value history and
 allow efficient data retrieval. Individually adjustable rates and
-thresholds for each channel are key in keeping this database
+thresholds for each channel are key to keeping this database
 manageable. The \dword{pdsp} operations provided not only a test of
-these features as implemented in the NP04 DCS, but also insight into
+these features as implemented in the \dword{protodune} slow control system, but also insight into
 reasonable values for these archiving parameters for each system.
 
 
@@ -1789,7 +1883,7 @@ consortium has five working groups:
 \begin{description}
  \item[Cryogenics Systems] gas analyzers and liquid level
   monitors; \dword{cfd} simulations
- \item[Argon Instrumentation] purity monitors, thermometers, pressure meters, capacitive level meters, cameras and light emitting system, and instrumentation test facility; feedthroughs; \efield simulations; instrumentation precision studies; \dword{protodune} data analysis coordination and validation 
+ \item[Argon Instrumentation] purity monitors, thermometers, pressure meters, capacitive level meters, cameras and light emitting system, and \dword{citf}; feedthroughs; \efield simulations; instrumentation precision studies; \dword{protodune} data analysis coordination and validation 
  \item [Slow Controls Base Software and Databases]  base I/O software, alarms and archiving databases, and monitoring tools;
    variable naming conventions and slow controls quantities
  \item [Slow Controls Detector System Interfaces] signal processing software and hardware interfaces (e.g., power supplies); firmware; rack hardware and infrastructure   
@@ -1798,7 +1892,7 @@ consortium has five working groups:
 
 \begin{dunefigure}[CISC consortium organization]{fig:gen-slow-cryo-org}
 {CISC Consortium organizational chart}
-\includegraphics[width=0.8\textwidth]{graphics/CISC_Org_9Apr2019_zoomedin.png}
+\includegraphics[width=0.8\textwidth]{graphics/cisc_org_20190716_zoomedin.png}
 \end{dunefigure}
 
 \begin{dunetable}
@@ -1849,14 +1943,16 @@ Virginia Tech (VT)                            &	USA	           % &  Camillo Mari
 \end{dunetable}
 
 Moreover, because the \dword{cisc} consortium broadly interacts with other groups, liaisons have been named as shown in Figure~\ref{fig:gen-slow-cryo-org}. 
-A short-term task force was recently formed to explore the need for cryogenic modeling for the consortium. A work plan for \dword{cfd} simulations for both \dword{protodune} and \dword{fd} was developed based on input from the task force. The \dword{tdr} editors are responsible for the overall editing and delivery of the \dword{tdr} document. Currently, members from new institutes are added to the consortium based on consensus from the consortium board members following an expression of interest petition from the new institute.
+A short-term task force was recently formed to explore the need for cryogenic modeling for the consortium. A work plan for \dword{cfd} simulations for both \dword{protodune} and \dword{fd} was developed based on input from the task force. 
+
+%The \dword{tdr} editors are responsible for the overall editing and delivery of the \dword{tdr} document. Currently, members from new institutes are added to the consortium based on consensus from the consortium board members following an expression of interest petition from the new institute.
 
 \subsection{Institutional Responsibilities}
 
 The \dword{cisc} consortium %slow controls and cryogenic instrumentation 
 will be a joint effort for \single and \dual. A single slow controls system will be implemented to serve both the \dword{spmod} and the \dword{dpmod}.
 
-Design and installation of cryogenic systems (e.g., gas analyzers, liquid level monitoring) will be coordinated with \dword{lbnf}, with the consortium providing resources and effort, and expertise provided by \dword{lbnf}. \dword{protodune} designs for \dword{lar} instrumentation (e.g., purity monitors, thermometers, cameras, test facility) will be the basis for \dword{detmodule} designs. Design validation, testing, calibration, and performance will be evaluated through \dword{protodune} data.
+Design and installation of cryogenic systems (e.g., gas analyzers, liquid level monitoring) will be coordinated with \dword{lbnf}, with the consortium providing resources and effort, and expertise provided by \dword{lbnf}. \dword{protodune} designs for \dword{lar} instrumentation (e.g., purity monitors, thermometers, cameras) will be the basis for \dword{detmodule} designs. Design validation, testing, calibration, and performance will be evaluated through \dword{protodune} data.
 
 Following the conceptual funding model envisioned for the consortium, various responsibilities have been distributed across institutions within the consortium. At this stage of the project, firm funding decisions are not made yet.
 %At this stage of the project, these should be considered as ``aspirational`` responsibilities until firm funding decisions are made.
@@ -1880,7 +1976,7 @@ Light-emitting System (for cameras) & Drexel \\ \colhline
 Gas Analyzers & FNAL, \dword{lbnf} \\ \colhline
 Differential Pressure Level Meters & \dword{lbnf} \\ \colhline
 Capacitive Level Meters & Notre Dame \\ \colhline
-Cryogenic Instrumentation Test Facility & FNAL, ANL \\ \colhline
+\dfirst{citf} & FNAL, ANL \\ \colhline
 \dword{cfd} Simulations & SDSU, ANL \\ \colhline
 Other Simulation \& Validation Studies & Number of Institutes \\ \colhline
 Slow Controls Hardware & UMD, UTK, Drexel\\ \colhline
@@ -1890,6 +1986,9 @@ Slow Controls Signal Processing & A number of institutes \\ \colhline
 Slow Controls External Interfaces & VT, UTK, UMD \\
 \end{dunetable}
 
+\begin{comment}
+  % Note all nested comment environments are commented out below with %
+  % because comment package does not allow nesting of comments!
 \subsection{Cost and Labor}
 
 Table \ref{tab:cisc-cost} shows the current cost estimates for the \dword{cisc} subsystems. It also shows the quantity associated with each subsystem and a brief description of what is included in the cost estimate. The cost estimates only include materials and supplies (M\&S) and packing and shipping, but not labor and travel costs. Labor costs depend on personnel category (e.g., faculty, student, technician, post-doc, engineer) and vary by region and institution, so costs are quantified using labor hours needed to fulfill a given task. Table~\ref{tab:cisc-labor} provides estimates of labor hours for each subsystem, for a total of \num{95010} labor hours for all \dword{cisc} tasks. 
@@ -1897,7 +1996,8 @@ Table \ref{tab:cisc-cost} shows the current cost estimates for the \dword{cisc} 
 \fixme{3/25 Anne: Cost and labor hour tables will be automated in early April. Info to come.}
 
 \fixme{Commenting out the cost column for submission to LBNC per Tim. Anne}
-\begin{comment}
+\fixme{Comment command commented out because they don't nest. Glenn}
+%begin{comment}
 \begin{dunetable}
 [CISC cost]
 {p{0.3\textwidth}p{0.08\textwidth}p{0.1\textwidth}p{0.45\textwidth}}
@@ -1915,12 +2015,13 @@ Cold cameras                   & 12 & \$38,300  & Includes material cost, comput
 Light system                   & 15 & \$4,900 & Cost of illuminator and light driver module    \\ \colhline
 Gas analyzers                  & 1 & \$222,360 & Cost of gas analyzers and piping \& routing panel  \\ \colhline
 Capacitive level meters        & 4 & \$19,018  & Cost of level meters and flanges   \\ \colhline
-Cryogenics test facility       & 1 & \$62,000  & Material cost includes \dword{lar} costs for years 1 to 5 and minor fixture costs  \\ \colhline
+\dfirst{citf}       & 1 & \$62,000  & Material cost includes \dword{lar} costs for years 1 to 5 and minor fixture costs  \\ \colhline
 Slow controls hardware         & - & \$78,970  & Cost of 6 servers, 0.5 rack, 126 rack monitoring boxes, and cables   \\ \colhline
 Slow controls software         & - & \$1,500 & Includes cost of a laptop    \\ \colhline
 \textbf{Total Cost}          &       & \textbf{\$1,291,750}& \\
 \end{dunetable}
-\end{comment}
+\fixme{Comment command commented out because they don't nest. Glenn}
+%end{comment}
 
 \begin{dunetable}
 [CISC cost]
@@ -1938,14 +2039,15 @@ Cold cameras                   & 12 & - & Includes material cost, computer, mino
 Light system                   & 15 & - & Cost of illuminator and light driver module    \\ \colhline
 Gas analyzers                  & 1 & - & Cost of gas analyzers and piping \& routing panel  \\ \colhline
 Capacitive level meters        & 4 & \-  & Cost of level meters and flanges   \\ \colhline
-Cryogenics test facility       & 1 &-  & Material cost includes \dword{lar} costs for years 1 to 5 and minor fixture costs  \\ \colhline
+\dfirst{citf}       & 1 &-  & Material cost includes \dword{lar} costs for years 1 to 5 and minor fixture costs  \\ \colhline
 Slow controls hardware         & - & -  & Cost of 6 servers, 0.5 rack, 126 rack monitoring boxes, and cables   \\ \colhline
 Slow controls software         & - & - & Includes cost of a laptop    \\ 
 %\textbf{Total Cost}          &       & \textbf{\$1,291,750}& \\
 \end{dunetable}
 
 \fixme{removing hours from table because that implies costs. Per Tim. Anne}
-\begin{comment}
+\fixme{Comment command commented out because they don't nest. Glenn}
+%begin{comment}
 \begin{dunetable}
 [CISC labor]
 {p{0.25\textwidth}p{0.15\textwidth}p{0.1\textwidth}p{0.08\textwidth}p{0.08\textwidth}p{0.1\textwidth}p{0.08\textwidth}}
@@ -1962,13 +2064,15 @@ Cold cameras & 884& 1768& 1768& 100& 50& \textbf{4570}\\ \colhline
 Light system & 884& - & 442 & - &20 & \textbf{1346}\\ \colhline
 Gas analyzers & - & - & - &  320 & 480& \textbf{800}\\ \colhline
 Level meters & - & - & - & 56 & - & \textbf{56}\\ \colhline
-Cryogenic test facility & 1768& 2400& 2400& 180& 525& \textbf{7273}\\ \colhline
+\dfirst{citf} & 1768& 2400& 2400& 180& 525& \textbf{7273}\\ \colhline
 Slow controls hardware & 884 & 589& 884& 295 & 147& \textbf{2799}\\ \colhline
 Slow controls software & 1768& 11492& - & 221 & 884& \textbf{14365}\\ \colhline
 Physics \& simulation & 1768& 1768& 5604&  530 & - & \textbf{9670}\\ \colhline
 \textbf{Total}  & \textbf{25636} & \textbf{32161}& \textbf{27010}& \textbf{3382}& \textbf{6821} & \textbf{95010}\\
 \end{dunetable}
-\end{comment}
+\fixme{Comment command commented out because they don't nest. Glenn}
+%end{comment}
+
 \begin{dunetable}
 [CISC labor]
 {p{0.25\textwidth}p{0.15\textwidth}p{0.1\textwidth}p{0.08\textwidth}p{0.08\textwidth}p{0.1\textwidth}p{0.08\textwidth}}
@@ -1986,13 +2090,15 @@ Cold cameras  & -& -& -& -& - & - \\ \colhline
 Light system  & -& -& -& -& - & - \\ \colhline
 Gas analyzers  & -& -& -& -& - & - \\ \colhline
 Level meters  & -& -& -& -& - & - \\ \colhline
-Cryogenic test facility  & -& -& -& -& - & - \\ \colhline
+\dfirst{citf} & -& -& -& -& - & - \\ \colhline
 Slow controls hardware  & -& -& -& -& - & - \\ \colhline
 Slow controls software  & -& -& -& -& - & - \\ \colhline
 Physics \& simulation  & -& -& -& -& - & - \\ 
 \end{dunetable}
+\end{comment}
 
 \subsection{Schedule}
+\label{sec:fdgen-cisc-schedule}
 
 %\fixme{Anne: Please use this new template (\ref{tab:sp-cisc-sched}) (as of late March)}
 
@@ -2004,42 +2110,43 @@ Physics \& simulation  & -& -& -& -& - & - \\
 {tab:sp-cisc-sched}
 {Key \dword{cisc} construction schedule milestones leading to commissioning of the first FD module.}   
 Milestone & Date (Month YYYY)   \\ \toprowrule
-Technology Decision Dates &   September 2019   \\ \colhline
-Final Design Review Dates &   November 2019   \\ \colhline
-Start of module 0 component production for \dword{protodune2} & March 2020  \\ \colhline
-End of module 0 component production for \dword{protodune2} & September 2020  \\ \colhline
+Technology Decision Dates &   April 2020   \\ \colhline
+Final Design Review Dates &   June 2020   \\ \colhline
+Start of module 0 component production for \dword{protodune2} & August 2020  \\ \colhline
+End of module 0 component production for \dword{protodune2} & January 2021  \\ \colhline
 \rowcolor{dunepeach} Start of \dword{pdsp}-II installation& \startpduneiispinstall      \\ \colhline
- \dword{prr} dates &  September 2021    \\ \colhline
-Start procurement of \dword{cisc} hardware & December 2021 \\ \colhline
 \rowcolor{dunepeach} Start of \dword{pddp}-II installation& \startpduneiidpinstall      \\ \colhline
-Start of production of \dword{cisc} hardware & April 2022 \\ \colhline
 \rowcolor{dunepeach}South Dakota Logistics Warehouse available& \sdlwavailable      \\ \colhline
+ \dword{prr} dates &  September 2022    \\ \colhline
 \rowcolor{dunepeach}Beneficial occupancy of cavern 1 and \dword{cuc}& \cucbenocc      \\ \colhline
+Start procurement of \dword{cisc} hardware & December 2022 \\ \colhline
 \rowcolor{dunepeach} \dword{cuc} counting room accessible& \accesscuccountrm      \\ \colhline
-End of \dword{cisc} hardware production  &   July 2023   \\ \colhline
+Start of production of \dword{cisc} hardware & April 2023 \\ \colhline
 \rowcolor{dunepeach}Top of \dword{detmodule} \#1 cryostat accessible& \accesstopfirstcryo      \\ \colhline
+End of \dword{cisc} hardware production  &   April 2024   \\ \colhline
 %End of  (component 1) production  &      \\ \colhline
 %... & ...                       \\ \colhline
-Start integration of \dword{cisc} hardware in the cavern & March 2024   \\ \colhline
-Installation of gas analyzers & April 2024\\ \colhline
-Installation of support structure for all instrumentation devices &  May 2024 \\ \colhline
-Installation of individual sensors, static T-gradient thermometers, and level meters & June 2024\\ \colhline
-\rowcolor{dunepeach}Start of \dword{detmodule} \#1 TPC installation& \startfirsttpcinstall      \\ \colhline
+Start integration of \dword{cisc} hardware in the cavern & July 2024   \\ \colhline
+%Installation of gas analyzers & July 2024\\ \colhline
+\rowcolor{dunepeach}Start of \dword{detmodule} \#1 \dword{tpc} installation& \startfirsttpcinstall      \\ \colhline
+Installation of gas analyzers and support structure for all instrumentation devices &  September 2024 \\ \colhline
+Installation of individual sensors, static T-gradient thermometers, and level meters & November 2024\\ \colhline
 \rowcolor{dunepeach}Top of \dword{detmodule} \#2 cryostat accessible& \accesstopsecondcryo      \\ \colhline
 All slow controls hardware, infrastructure, \& networking installed & February 2025\\ \colhline
 Slow controls software for I/O, alarms, archiving, displays installed on production systems & May 2025 \\ \colhline
-\rowcolor{dunepeach}End of \dword{detmodule} \#1 TPC installation& \firsttpcinstallend      \\ \colhline
-Install dynamic T-gradient monitors, cameras, purity monitors & July 2025 \\\colhline
+\rowcolor{dunepeach}End of \dword{detmodule} \#1 \dword{tpc} installation& \firsttpcinstallend      \\ \colhline
+Install dynamic T-gradient monitors, cameras, purity monitors, and pressure meters & June 2025 \\\colhline
 Install all feedthroughs for instrumentation devices & July 2025 \\ \colhline
- \rowcolor{dunepeach}Start of \dword{detmodule} \#2 TPC installation& \startsecondtpcinstall      \\ \colhline
+ \rowcolor{dunepeach}Start of \dword{detmodule} \#2 \dword{tpc} installation& \startsecondtpcinstall      \\ \colhline
 Install slow control expert interfaces for all systems in time for testing & September 2025 \\ \colhline
-\rowcolor{dunepeach}End of \dword{detmodule} \#2 TPC installation& \secondtpcinstallend      \\ 
+\rowcolor{dunepeach}End of \dword{detmodule} \#2 \dword{tpc} installation& \secondtpcinstallend      \\ 
 Full slow controls systems commissioned and integrated into remote operations & July 2026 \\ 
 \end{dunetable}
 
-Table \ref{tab:sp-cisc-sched} shows key construction milestones for the \dword{cisc} consortium leading to commissioning of the first \dword{fd} module. \dword{cisc} construction milestones align with the overall construction milestones of the first \dword{fd} module (highlighted in orange in the table). The technology design decisions for \dword{cisc} systems should be made by September 2019 followed by technical design reviews. The production of improved design prototypes (if any) to be deployed at \dword{protodune2} running should be finished by September 2020 followed by assembly, laboratory testing and deployment in \dword{protodune2}. 
+Table \ref{tab:sp-cisc-sched} shows key construction milestones for the \dword{cisc} consortium leading to commissioning of the first \dword{fd} module. \dword{cisc} construction milestones align with the overall construction milestones of the first \dword{fd} module (highlighted in orange in the table). The technology design decisions for \dword{cisc} systems should be made by April 2020 followed by final design reviews in June 2020. Design decisions will largely be based on how a given system performed (technically and physics-wise) in \dword{protodune}. This is currently actively ongoing with the \dword{pdsp} instrumentation data.  
+As noted in section~\ref{sec:pdsp-cryo-valid}, the current plan is to deploy improved designs of static and dynamic T-gradient thermometers, purity monitors, long (\dual-style) level meters and cameras to be validated in \dword{protodune2}. The production of systems aimed for \dword{protodune2} \single should be finished by January 2021 followed by assembly and deployment in March 2021. 
 
-Production of \dword{cisc} systems for the \dword{fd} should start in April 2022, followed by assembly of the systems underground in the detector cavern in early 2024. Installation of instrumentation devices will start in April 2024 following the beneficial occupancy of the cryostat. Installing gas analyzers, level meters, individual temperature sensors, static T-gradient thermometers, and support structure for all instrumentation devices will be finished before installing \dword{tpc}, but installing dynamic T-gradient thermometers, purity monitors, and cameras will occur afterward. \dword{cisc} will work closely with \dword{lbnf} to coordinate installation of the cryogenic systems and instrumentation devices. For slow controls, the goal is to have the full slow controls system commissioned and integrated into remote operations at least three months before the \dword{spmod} is ready for operations.  
+Designs may need review based on performance in \dword{protodune2} and any modifications will be incorporated into the final design before the start of production of \dword{cisc} systems for the \dword{fd} in April 2023. This will be followed by assembly of the systems underground in the detector cavern in July 2024. Installation of instrumentation devices will start in September 2024 following the beneficial occupancy of the interior of the cryostat. Installing gas analyzers, level meters, individual temperature sensors, static T-gradient thermometers, and support structure for all instrumentation devices will be finished before installing \dword{tpc}, but installing dynamic T-gradient thermometers, purity monitors, pressure meters and cameras will occur afterward. \dword{cisc} will work closely with \dword{lbnf} to coordinate installation of the cryogenic systems and instrumentation devices. For slow controls, the goal is to have the full slow controls system commissioned and integrated into remote operations at least three months before the \dword{spmod} is ready for operations.  
 
 \begin{comment}
 %SG: commenting out the old text
@@ -2056,9 +2163,9 @@ will begin in 2022. \fixme{no ITF - underground?} Installing instrumentation dev
 {tab:fdgen-slow-cryo-schedule}
 {Key CISC Milestones leading to ...}   
 WBS     & Milestone                                                                                    & Start & Finish  \\ \toprowrule
-2.1     & Cryogenic Instrumentation Local Test Facility ready                                          & 12/19 & 05/20   \\ \colhline
+2.1     & \dfirst{citf} ready                                          & 12/19 & 05/20   \\ \colhline
 2.2     & Production of first full system prototypes of all CISC hardware devices                      & 11/19 & 06/20   \\ \colhline
-2.3     & Test instrumentation device prototypes at the local test facility                            & 06/20 & 10/20   \\ \colhline
+2.3     & Test instrumentation device prototypes at \dword{citf}                            & 06/20 & 10/20   \\ \colhline
 2.4     & Detector 1 (\dword{sp})                                                                    & 11/20 & 07/25   \\ \colhline
 2.4.1   & Procurement of CISC hardware                                                                 & 11/20 & 03/21   \\ \colhline
 2.4.2   & Assembly \& Production of CISC hardware                                                      & 03/21 & 02/22   \\ \colhline
@@ -2075,7 +2182,7 @@ WBS     & Milestone                                                             
 2.4.11  & Installation of individual sensors, Static T-gradient thermometers and level meters          & 04/23 & 05/23   \\ \colhline
 2.4.12  & All Slow Controls hardware, infrastructure \& networking installed                           & 08/23 & 02/24   \\ \colhline
 2.4.13  & Slow Controls software for I/O, alarms, archiving, displays installed on production systems   & 02/24 & 05/24   \\ \colhline
-2.4.14  & Install Dynamic T-gradient monitors, Cameras, Purity monitors after TPC installation         & 06/24 & 07/24   \\ \colhline
+2.4.14  & Install Dynamic T-gradient monitors, Cameras, Purity monitors after \dword{tpc} installation         & 06/24 & 07/24   \\ \colhline
 2.4.15  & Install all feedthroughs for instrumentation devices                                         & 07/24 & 07/24   \\ \colhline
 2.4.16  & Install Slow Control Expert interfaces for all systems in time for testing                   & 05/24 & 09/24   \\ \colhline
 2.4.17  & Full Slow controls systems commissioned and integrated into remote operations                & 04/25 & 07/25   \\ 
@@ -2092,9 +2199,9 @@ WBS     & Milestone                                                             
 {tab:fdgen-slow-cryo-schedule}
 {Key \dword{cisc} construction schedule milestones leading to commissioning the first \dword{fd} module.}   
 Milestone  & Start & Finish  \\ \toprowrule
-Cryogenic instrumentation local test facility ready                                          & 12/19 & 05/20   \\ \colhline
+\dfirst{citf} ready                                          & 12/19 & 05/20   \\ \colhline
 Production of first full system prototypes of all CISC hardware devices                      & 11/19 & 06/20   \\ \colhline
-Test instrumentation device prototypes at the local test facility                            & 06/20 & 10/20   \\ \colhline
+Test instrumentation device prototypes at \dword{citf}                            & 06/20 & 10/20   \\ \colhline
 Procurement of CISC hardware                                                                 & 11/20 & 03/21   \\ \colhline
 Assembly \& production of CISC hardware                                                      & 03/21 & 02/22   \\ \colhline
 Local testing of CISC production hardware                                                    & 10/21 & 03/22   \\ \colhline
@@ -2109,11 +2216,11 @@ Procure gas analyzers and level meters                                          
 Installation of gas analyzers                                                                & 12/22 & 03/23   \\ \colhline 
 Installation of support structure for all instrumentation devices                            & 03/23 & 04/23   \\ \colhline
 Installation of individual sensors, static T-gradient thermometers, and level meters          & 04/23 & 05/23   \\ \colhline
-\textbf{Cryostat\#1 ready for TPC installation} & 05/23 & 05/23 \\ \colhline
+\textbf{Cryostat\#1 ready for \dword{tpc} installation} & 05/23 & 05/23 \\ \colhline
 All slow controls hardware, infrastructure, \& networking installed                           & 08/23 & 02/24   \\ \colhline
 Slow controls software for I/O, alarms, archiving, displays installed on production systems   & 02/24 & 05/24   \\ \colhline
 \textbf{Begin closing Cryostat\#1} & 05/24 & 05/24 \\ \colhline
-Install dynamic T-gradient monitors, cameras, purity monitors after installing TPC          & 06/24 & 07/24   \\ \colhline
+Install dynamic T-gradient monitors, cameras, purity monitors after installing \dword{tpc}          & 06/24 & 07/24   \\ \colhline
 Install all feedthroughs for instrumentation devices                                         & 07/24 & 07/24   \\ \colhline
 Install slow control expert interfaces for all systems in time for testing                   & 05/24 & 09/24   \\ \colhline
 \textbf{Cryostat\#1 ready for filling} & 10/24 & 10/24 \\ \colhline
@@ -2122,16 +2229,26 @@ Full slow controls systems commissioned and integrated into remote operations   
 \end{dunetable}                      
 \end{comment}
 
+
  
 
 \subsection{Risks}
 %\fixme{SG: Table reformatted and updated. New text added. This is now ready for review.}
-\fixme{Risk tables to be automated; Anne to send template via email. 3/25}
+%\fixme{Risk tables to be automated; Anne to send template via email. 3/25}
 
 Table~\ref{tab:risks:SP-FD-CISC}  %{tab:fdgen-slow-cryo-risk1}, \ref{tab:fdgen-slow-cryo-risk2}, and \ref{tab:fdgen-slow-cryo-risk3} 
-lists the possible risks identified by the \dword{cisc} consortium along with corresponding mitigation strategies. %The table lists 18 risks at low and medium level. 
-A more detailed list of risks with additional descriptions can be found in \cite{bib:docdb7192}. The tables shows 18 risks, all at medium or low level, mitigated with necessary steps and precautions. Risk 01, where the \dword{pdsp}-based designs are inadequate for \dword{fd}, is important because this requires early validation from \dword{protodune} data so R\&D of alternate designs can be timely. With \dword{pdsp} data now available, the consortium is focused on validating instrumentation designs.
+lists the possible risks identified by the \dword{cisc} consortium along with corresponding mitigation strategies. %The table lists 18 risks at low and medium level. f
+A more detailed list of risks with additional descriptions can be found in \cite{bib:docdb7192}. The table shows 18 risks, all at medium or low level, mitigated with necessary steps and precautions. More discussion on all medium-level risks are provided in the text below. 
+\begin{itemize}
+    \item Risk 01: The risk associated with \dword{pdsp}-based designs being inadequate for \dword{fd}, is important because this requires early validation from \dword{protodune} data so R\&D of alternate designs can be timely. With \dword{pdsp} data now available, the consortium is focused on validating instrumentation designs. 
+    \item Risk 06: Temperature sensors in the dynamic T-gradient monitor are calibrated using two methods: lab calibration to 0.002~K (as in the static T-gradient monitor case) and in-situ cross-calibration moving the system vertically. Disagreement between the two methods can occur. In order to mitigate this we need to investigate and improve both methods, specifically the laboratory calibration since this is the only one possible for sensors behind \dword{apa}s, and top/bottom of the detector.  
+    \item Risk 10: This risk involves not being able to build a working prototype for cold cameras during R\&D phase that meets all the requirements \& safety. For example, cold camera prototypes fail longevity tests or show low performance (e.g. bad resolution). This risk originates from past experience with cold cameras that became non-operational after a period of time in \dword{lar} or show low performance. In order to address this, we plan to pursue further R\&D to improve thermal insulation and heaters, develop alternative camera models, etc. If problems persist one can use the cameras in the ullage (cold or inspection) with the appropriate field of view and lighting such that elements inside \dword{lar} can be inspected during filling.
+    \item Risk 12: Cameras are delicate devices and some of them located near \dword{hv} devices can be destroyed by \dword{hv} discharges. This can be mitigated by ensuring that most important cold cameras have enough redundancy such that the loss of one camera does not compromise the overall performance. In the case of inspection cameras since they are replaceable, one can simply replace them.
+    \item Risk 17: The gas analyzers and level meters may fail as these are commercial devices purchased at some point in their product cycle and cannot be required to last 20 years. Typical warranties are $\sim$1 year from date of purchase. The active electronics parts of both gas analyzers and level meters are external to the cryostat so they can be replaced. To mitigate this, provisions will be made for future replacement in case of failure or loss of sensitivity. Also, the risk is not high since we have purity monitors in the filtration system that can cover the experiment during the time gas analyzers are being replaced or repaired. 
+\end{itemize}
 
+Related to risks 12, 16 and 18, aging is an important aspect for several monitors, especially for those that are inaccessible. The \dword{protodune} tests demonstrate that the devices survive the commissioning phase and we continue to learn from \dword{protodune} experience. In addition to \dword{protodune}, other tests are planned. For example, in the case of purity monitors, photocathodes are expected to survive the first five years and if we prevent running them with high frequency at low purity (lifetime~$<$~\SI{3}{\milli\second}), aging can be prevented for a longer time. To understand long-term aging, R\&D is planned at \dword{citf} and at member institute sites for many of the devices. Other systems that are replaceable such as inline purity monitors, gas analyzers, and inspection cameras can be replaced when failures occur and maintained for the lifetime of the experiment.
+ 
 \input{generated/risks-longtable-SP-FD-CISC.tex}
 \begin{comment} goes to 2542
 \begin{dunetable}
@@ -2176,7 +2293,7 @@ No. & Risk  & Risk Level & Mitigation Strategy  \\ \toprowrule
 \\ \colhline
 12 & \dword{hv} discharge can damage cameras as some of them will be located near \dword{hv} devices. With proper shielding included, this is very unlikely but there is some risk. & M & The most important cameras should have enough redundancy such that the loss of one camera does not compromise the overall performance.
 \\ \colhline
-13 & Cameras have insufficient light to see. The attenuation of light in \dword{lar} could prevent cameras from seeing objects in the deep regions of the cryostat. & M & Cameras will have to be tested during the R\&D phase under conditions of illumination expected in the actual detector. The cryogenics instrumentation test facility should have sufficient depth for testing this risk scenario. \\ \colhline
+13 & Cameras have insufficient light to see. The attenuation of light in \dword{lar} could prevent cameras from seeing objects in the deep regions of the cryostat. & M & Cameras will have to be tested during the R\&D phase under conditions of illumination expected in the actual detector. The \dword{citf} should have sufficient depth for testing this risk scenario. \\ \colhline
 14 & Cameras may induce noise in cold electronics. & M & Work with the grounding and shielding group to ensure proper grounding. \\ 
 \end{dunetable}  
 
@@ -2204,7 +2321,7 @@ The best way to mitigate the degradation is to have monitors inline with the cry
 % Add additional level meters based on temperature and/or capacitive measurements, as done for \dword{pdsp}
 % \\ \toprowrule
 %****SG: remove this, this is an overkill at this point as I can't imagine not accommodating testing of alternate devices in CITF.****
-%19 & The baseline design of the Cryogenics Instrumentation Test Facility (CITF) is not suitable for some of the alternative designs mentioned in risk 1 in Table~\ref{tab:fdgen-slow-cryo-risk1}. & L & The constraints of the CITF should be taken into account when designing new prototypes, so that such that those new designs can be easily accommodated in the CITF.   \\ \colhline
+%19 & The baseline design of the \dword{citf} is not suitable for some of the alternative designs mentioned in risk 1 in Table~\ref{tab:fdgen-slow-cryo-risk1}. & L & The constraints of the CITF should be taken into account when designing new prototypes, so that such that those new designs can be easily accommodated in the CITF.   \\ \colhline
 17 & Longevity: Gas analyzers and level meters may fail. These are commercial devices with typical warranties around one year from date of purchase. & L &
 To mitigate this, make provisions for future replacement in case of failure or loss of sensitivity. 
 \\ \colhline
@@ -2358,7 +2475,7 @@ Specially important will be the attenuation of light inside LAr, which could pre
 &
 M
 &
-Cameras will have to be tested during the R\&D phase under conditions of illumination similar to the ones of the actual detector. The cryogenics instrumentation test facility should have sufficient depth for testing the ability of seen deep objects.
+Cameras will have to be tested during the R\&D phase under conditions of illumination similar to the ones of the actual detector. The \dword{citf} should have sufficient depth for testing the ability of seen deep objects.
 \\ \toprowrule
 14
 &
@@ -2493,7 +2610,7 @@ PrMs and light emitting system for cameras both emit light that might damage PDs
 Under consideration hardware interlocks that avoid turning on lights accidentally when PDs are on.
 \\ \colhline
 
-TPC Electronics	               & 6745  & \\ \colhline
+\dword{tpc} Electronics	               & 6745  & \\ \colhline
 
 
 HV Systems	                   & 6787  &
@@ -2574,7 +2691,7 @@ PrMs, light emitting system for cameras
 & \citedocdb{6730}  
 \\ \colhline
 
-TPC Electronics	         &  
+\dword{tpc} Electronics	         &  
 Noise, Power supply monitoring
 & \citedocdb{6745}  \\ \colhline
 
@@ -2658,7 +2775,7 @@ Significant interfaces at multiple levels
 %  the official interfaces document seems overkill.  Also, there are not
 %  currently plans for a DAQ test stand at SURF.  The DAQ as a whole is
 %  installed before APAs arrive, then the actual DAQ used to commission
-%  the APAs as they go in.  If the there is a slow controls test facility
+%  the APAs as they go in.  If there is a slow controls test stand
 %  at SURF, the same software interfaces could be used as for the final
 %  form, nothing new needs created.}
 
@@ -2678,7 +2795,7 @@ Significant interfaces at multiple levels
 
 
 %\fixme{Describe interface with DAQ system, including Interface with
-%  DAQ/Electronics groups for a slow controls test facility at SURF,
+%  DAQ/Electronics groups for a slow controls test stand at SURF,
 %  possibly as part of the DAQ test stand.}  
 
 
@@ -2731,12 +2848,13 @@ Integration %would
 continues as the  \dword{hv} cables are connected through the feedthrough to the system  \dword{fe} electronics; then optical fibers are connected to the light source.  The cables connecting the \dword{fe} electronics and the light source to the electronics rack %would also be 
 are also run and connected at this time.  This allows the system to be turned on and the software to begin testing the various components and connections.  Once all connections are confirmed successful, integration with the slow controls system begins, first by establishing communication between the two systems and then transferring data between them to ensure successful exchange of important system parameters and measurements.  
 
-Commissioning the purity monitor system is considered % would be
- official once the cryostat is purged and a gaseous argon atmosphere is present.  At this time, the \dword{hv} for the purity monitors %could be ramped up without fear of discharge
+Commissioning the purity monitor system % is considered  official
+begins once the cryostat is purged and a gaseous argon atmosphere is present.  At this time, the \dword{hv} for the purity monitors %could be ramped up without fear of discharge
   is ramped up without risk of discharge through the air, and the light source turned on.  Although the drift electron lifetime in the gaseous argon would be very large and therefore not %really 
   measurable with the purity monitors themselves, the signal strength at both the cathode and anode will %would 
   give a good indication of how well the light source generates drift electrons from the photocathode. % and  that the electrons successfully drift to the anode by looking at the signal strength at the anode and comparing it to the cathode signal strength.
  Comparing the signal strengths at the anode and cathode will indicate whether the electrons successfully drift to the anode.
+  Although \dword{qa} and \dword{qc} should make it unlikely for a purity monitor to fail this final test, if that does happen then the electric and optical connections can be fixed before filling.
 
 \subsubsection{Thermometers}
 \label{sec:fdgen-slow-cryo-install-th}
@@ -2748,11 +2866,11 @@ are preassembled before they are delivered to \surf.
 Installation will follow these steps:
 % \fixme{Should the following list use the LATEX coding for lists? It would be nice, but we compacted the table to save space.}
 \begin{enumerate}
-\item anchor the guiding plates to the four bolts on the bottom corner of the cryostat,
-\item anchor the support holding the two stainless steel strings to the four bolts on the top corner of the cryostat,
+\item anchor the stainless steel top bottom plates to the four bolts on the bottom corner of the cryostat,
+\item anchor the stainless steel support holding the two strings to the four bolts on the top corner of the cryostat,
 \item unroll the array with the help of the scissor lift,
-\item install the two weights at the bottom of the two strings and slide the weights into the guiding plates, 
-\item check tension and verticality,
+\item anchor the strings to the bottom stainless steel support,   
+\item check and adjust tension and verticality,
 \item review all cable and sensor supports, 
 \item route cable from the top anchoring point to the two \dword{dss} ports, and 
 \item plan to plug sensors into IDC-4 connectors later, just before moving the corresponding \dword{apa} into its final position. 
@@ -2829,6 +2947,7 @@ are installed, so
 the readout performance and the noise level inside the cryostat %will be
 is tested with precision resistors. Once sensors are installed, the entire chain %will be 
 is checked again at room temperature.
+Spare cables, connectors and sensors are available for replacement at \dword{surf} if needed. 
 The final commissioning phase %will be done 
 takes place during and after cryostat filling.  
 
@@ -2860,7 +2979,10 @@ They will be attached to the M10 bolts in the cryostat corners after the detecto
 \subsubsection{Pressure Meters}
 \label{sec:fdgen-slow-cryo-install-press}
 %\fixme{SG: to be reviewed by experts; waiting for response}
-Installing pressure meters is the responsibility of \dword{cisc}. A total of six sensors will be mechanically installed in two dedicated flanges (three sensors each) at opposite sides of the cryostat after the detector is installed. Cables will be routed through the same dedicated port assigned for these devices. The pressure signals (absolute and relative) are read and converted to electrical signals corresponding to 4...20~mA range. A twisted pair shielded cable connects the sensors up to the slow controls PLC controller, adapting by software the conversion of electrical signals to pressure values.  
+Installing pressure meters is the responsibility of \dword{cisc}. A total of six sensors will be mechanically installed in two dedicated flanges (three sensors each) at opposite sides of the cryostat after the detector is installed. Cables will be routed through the same dedicated port assigned for these devices. The pressure signals (absolute and relative) are read and converted to
+%electrical signals corresponding to 4...20~mA range.
+standard 4--20 mA current loop signals.
+A twisted pair shielded cable connects the sensors to the slow controls \dword{plc} controller using software to convert electrical signals to pressure values.
 
 \subsubsection{Cameras and light emitting system}
 \label{sec:fdgen-slow-cryo-install-c}
@@ -2955,7 +3077,8 @@ the drift electrons at the cathode and the anode to ensure the
 photocathode can provide sufficient numbers of photoelectrons to
 measure the signal attenuation
 with the required precision, and that the field gradient resistors all work properly to maintain the drift field. %and hence transport the drift electrons to the anode.  
-A smaller version of the assembly with all purity monitors installed will be  tested in the \dword{lar} test facility to ensure the full system performs as expected in \dword{lar}.  
+A smaller version of the assembly with all purity monitors installed will be  tested at the \dword{citf} %in the \lar test facility
+to ensure the full system performs as expected in \dword{lar}.  
 
 Next, %after individual testing would be 
 the entire system %will be 
@@ -2987,7 +3110,7 @@ as explained in Section~\ref{sec:fdsp-cryo-therm}. The main concern is reproduci
 Finally, the cable-connector assemblies are tested; sensors must measure the expected values with no additional noise introduced by either cable or connector. 
 
 %If there is a \lar test facility with sufficient height or length to test a good portion of the system and it is available for use,
-An integrated system test is conducted at a \dword{lar} test facility on site, which has sufficient linear dimension (>\SI{2}{m}) to test a good portion of the system. This %, which 
+An integrated system test is conducted at a \dword{lar} test facility at the production site, which has sufficient linear dimension (>\SI{2}{m}) to test a good portion of the system. This %, which 
 ensures that  the system
 operates in \dword{lar} at the required level of performance.
 The laboratory sensor calibration %will be 
@@ -3077,7 +3200,9 @@ are similarly checked. Operations tests will verify correct current draw, image 
 are inspected for physical defects and checked for proper mechanical operation before shipping. A checklist %will be 
 is created for each unit, filed electronically in the \dword{dune} logbook, and a hard copy sent with each unit. 
 
-Before installation, each fixed cryogenic camera unit is inspected for physical damage or defects and checked in a cryogenics test facility  for correct operation of all features, for recovery from \SI{87}{K} non-operating mode, and for contamination of the \dword{lar}{}. Lighting systems are similarly checked. Operations tests verify correct current draw, image quality, and temperature readback and control. After installation and connection of wiring, fixed cameras and lighting are again  checked for operation. The movable inspection camera apparatus is inspected for physical defects and, after integration with a camera unit, tested in the facility for proper mechanical and electronic operation and cleanliness before being installed or stored. A checklist will be completed for each \dword{qc} check and filed electronically in the \dword{dune} logbook. 
+Before installation, each fixed cryogenic camera unit is inspected for physical damage or defects and checked at the \dword{citf}
+%in a cryogenics test facility  
+for correct operation of all features, for recovery from \SI{87}{K} non-operating mode, and for contamination of the \dword{lar}. Lighting systems are similarly checked. Operations tests verify correct current draw, image quality, and temperature readback and control. After installation and connection of wiring, fixed cameras and lighting are again  checked for operation. The movable inspection camera apparatus is inspected for physical defects and, after integration with a camera unit, tested in the facility for proper mechanical and electronic operation and cleanliness before being installed or stored. A checklist will be completed for each \dword{qc} check and filed electronically in the \dword{dune} logbook. 
 
 \subsubsection{Light-emitting System}
 \label{sec:fdgen-slow-cryo-qc-les}
