@@ -115,7 +115,7 @@ system %is capable of
 can record all necessary information for offline 
 analysis of data that is associated with on- and off-beam physics events, as directed
 by the \dword{dune} physics mission, and with minimal compromise to
-\dword{dune}'s physics sensitivity. The requirements must be met by following the 
+\dword{dune}'s physics sensitivity. The requirements must be met following the 
 specifications provided in the same table.
 Those specifications are
 associated with trigger functionality, readout,
@@ -123,8 +123,8 @@ and operations and are motivated further in the following subsections.
 
 \subsubsection{How DUNE's Physics Mission Drives the DAQ Design}
 
-The DUNE Far Detector has three main physics drivers: neutrino \dword{cpv} and related
-long baseline oscillation studies using the high intensity beam provided
+The DUNE \dword{fd} has three main physics drivers: neutrino \dword{cpv} and related
+long baseline oscillation measurements using the high intensity beam provided
 by \fnal, off-beam measurements of atmospheric neutrinos and searches
 for rare processes such baryon-number-violating decays,
 and detection of neutrinos from a \dfirst{snb} occurring within our galaxy. The
@@ -138,22 +138,27 @@ self-triggering capabilities. Since the
 continuous raw data rate of the far detector module, as received by
 the \dword{daq} system, reaches multiple
 terabits per second, significant data buffering and processing
-resources are needed as part of the design.
+resources are needed as part of the design, as specified in
+later sections of this chapter.
 
 The \dword{dune} \dword{fd} modules employ two active detector components from which the \dword{daq} system must acquire data: the \dfirst{tpc} and the \dfirst{pds}. The two components access the physics by sensing and collecting signals associated with very different sensing time scales.
 
 Ionization charge measurement by the \dword{tpc} for any given activity in the detector requires a nominal recording of data over a time window of order \SIrange{1}{10}{\milli\second}. 
 This time scale is determined by the ionization electron drift speed in \lar and the detector dimension along the drift direction, and is nominally set to \spreadout, corresponding to 2.4$\times$\SI{2.25}{\milli\second}.
 The latter (\SI{2.25}{\milli\second}) assumes DUNE's nominal drift electric field of 500~V/cm.
-This assures the capture of ionization information from at least a full drift before and after a trigger.
-Given the ability to  immediately record a subsequent readout, early commissioning data will be used to evaluate and optimize this nominal readout time.
+The 2.4 factor assures the capture of ionization information from at
+least a full drift before and after the trigger time associated with the
+activity. Early commissioning data will be used to evaluate and optimize this nominal readout time.
 
 On the other hand, the \dword{pds} measures argon scintillation light emission, which
 occurs and is detected over a timescale of multiple nanoseconds to
 microseconds for
 any given event and/or subsequent subevent process. Unlike the \dword{tpc},
 the \dword{pds} data is zero-suppressed in
-the \dword{pds} electronics (see Chapter~\ref{ch:fdsp-pd}); therefore the total raw data volume received by
+the \dword{pds} electronics (see Chapter~\ref{ch:fdsp-pd}). Although
+the \dword{pds} system readout sampling frequency is higher than that
+of the TPC, the combination of zero-suppression and expected activity
+levels are assumed to yield significantly lower data rates than the \dword{tpc}. Therefore, the total raw data volume received by
 the \dword{daq} system is expected to be dominated by
 the \dword{tpc} data, which is sent out from the front-end electronics as a continuous stream.
  
@@ -169,8 +174,10 @@ above 100 MeV), rates are dominated by cosmic rays, beam neutrino interactions,
 and atmospheric neutrino interactions. With the exception of supernova
 burst neutrinos, the activity associated with any of these physics
 signals is localized in space and particularly in time. Supernova burst
-neutrinos on the other hand are characteristically different, as they arrive as multiple
-signals of localized activity that extends over the entirety of the
+neutrinos on the other hand are characteristically different, as they
+can be detected as up to several thousands of neutrino interactions
+for a given galactic supernova burst. As such, supernova burst neutrinos
+are associated with localized activity that extends over the entirety of the
 detector and over multiple seconds. %The arrival time and energy
 %distribution of
 %neutrinos from a \dword{snb} is model-dependent; as such, the DAQ must
