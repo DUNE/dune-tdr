@@ -639,8 +639,6 @@ Performance measurements of \dword{coldadc} have also been done. The performance
 the sub-circuits have been measured separately as well as the performance of the entire \dword{adc}.  
 Here we present two measurements made at \lntwo temperature.
 
-\fixme{Figure 4.11 will be replaced with a new one to be provided by Cheng-Ju Lin.}
-
 \begin{dunefigure}
 [Static linearity of ColdADC]
 {fig:ADCStaticLinearity}
@@ -648,8 +646,8 @@ Here we present two measurements made at \lntwo temperature.
 \includegraphics[width=0.9\linewidth]{sp-tpcelec-ADCStaticLinearity.pdf}
 \end{dunefigure}
 
-Static linearity was measured using a filtered sine wave input to the single-ended input buffer 
-of one channel of \dword{coldadc}. The measured histogram of \dword{adc} codes was fitted to the 
+The static linearity of the pipeline \dword{adc} was measured using a filtered sine wave connected to
+the test inputs of \dword{coldadc}. The measured histogram of \dword{adc} codes was fitted to the 
 probability density function for a sine wave.  The deviations to the fit yields the \dword{dnl}
 as a function of \dword{adc} code; the integral of \dword{dnl} is the \dword{inl}. These two
 distributions are shown in Figure~\ref{fig:ADCStaticLinearity}, which was obtained using a sine 
@@ -1355,7 +1353,12 @@ and lower \dwords{apa}, respectively. The figures for the power
 dissipated in the cables are reduced by a factor of three for operation
 in \dword{lar}, which allows for a reduction of the voltage 
 provided by the \dword{wib}. The voltage drop and power dissipation
-values are summarised in Table~\ref{tab:SPCE:cablesvdrop}.
+values are summarized in Table~\ref{tab:SPCE:cablesvdrop}.
+We will also consider the possibility of using one pair of wires to
+deliver a separate voltage to \dword{larasic} (\SI{2.0}{V} that will be reduced to
+the required \SI{1.8}{V} on the \dword{femb}). This solution may
+provide a better overall noise performance for the readout electronics,
+but will have a slightly larger voltage drop on the cold cables.
 The size of the cable bundles planned
 for \dword{dune} represents a small reduction compared to that used
 for \dword{pdsp}, where bundles of nine \num{20}AWG twisted-pair wires
@@ -1506,9 +1509,7 @@ five \dwords{wib} as shown in Figure~\ref{fig:tpcelec-wib-timing}. The
 passive backplane attached directly to both. A clock-data separator on the 
 \dword{wib} separates the signal received from the timing system into clock and data. 
 Timing endpoint firmware for receiving and transmitting 
-the clock is integrated into the \dword{wib} \dword{fpga} (the Altera 
-Arria V\footnote{Altera Arria\texttrademark{} V, 
-\url{https://www.altera.com/products/fpga/arria-series/arria-v/overview.html}.} was used for \dword{pdsp}). 
+the clock is integrated into the \dword{wib} \dword{fpga}.
 The \dword{spmod} timing system, described in Section~\ref{sec:sp-daq:design-timing}, 
 is a further development of the \dword{pdsp} system and is expected to have nearly identical 
 functionality at the \dword{wib} endpoint.
@@ -1520,9 +1521,8 @@ functionality at the \dword{wib} endpoint.
 \includegraphics[width=0.75\linewidth]{sp-tpcelec-wib-timing-v2.pdf}
 \end{dunefigure}
 
-The \dword{ptc} %also 
-receives \SI{48}{V} \dword{lv} power for all \dword{tpc} electronics %cold electronics 
-connected through the \dword{tpc} signal flange: 
+The \dword{ptc} receives \SI{48}{V} \dword{lv} power for all \dword{tpc} 
+electronics connected through the \dword{tpc} signal flange: 
 one \dword{ptc}, five \dwords{wib}, and \num{20}~\dwords{femb}. 
 The \dword{lv} power is then stepped down to \SI{12}{V} via 
 a \dword{dc}-\dword{dc} converter on the \dword{ptc}. The output 
@@ -1535,16 +1535,17 @@ The output of the \dword{wib} converters is further filtered by a
 common-mode choke, and each voltage line provided to the \dwords{femb}
 is individually controlled, regulated, and monitored.
 
-\fixme{ Figures 4.30 and 4.31 are still the old ProtoDUNE ones. We are working on replacement ones.}
 \begin{dunefigure}
 [Low voltage power distribution to the WIB and FEMBs]
 {fig:tpcelec-wib-power}
 {\dword{lv} power distribution to the \dword{wib} and \dwords{femb} 
-for \dword{dune} \dword{spmod}. This will be modified for the 
-\dword{spmod} to provide the required voltage or voltages 
-depending on which \dwords{asic} are used on the \dwords{femb}. 
-In particular, the voltages to the \dword{femb} \numrange{0}{3} 
-will change as the \dword{pdsp} \dword{fpga} is replaced by \dword{coldata}. }
+for \dword{dune}. In the current design, up to \num{4} separate 
+voltages can be provided from the \dword{wib} to each \dword{femb}.
+Measurements with prototype \dwords{femb} will inform the final
+design of the power distribution, and the number of different
+voltages sent to the \dword{wib} will be chosen to minimize the
+voltage drops along the cold cables and to optimize the readout
+noise.}
 \includegraphics[width=0.65\linewidth]{sp-tpcelec-wib-power.pdf}
 \end{dunefigure}
 
@@ -1559,18 +1560,18 @@ cables and optical fibers connecting to external systems.
 \begin{dunefigure}
 [Warm interface board]
 {fig:tpcelec-dune-wib}
-{\dword{wib}. Note that front panel inputs include 
-a LEMO connector and alternate inputs for \dword{lv} power and timing.}
-\includegraphics[width=0.8\linewidth]{sp-tpcelec-dune-wib.jpg}
+{\dword{wib} block diagram including the fiber optic connections to
+the \dword{daq} backend, slow controls, and the timing system, and the
+data readout, clock, and control signals to the \dwords{femb}.}
+\includegraphics[width=0.8\linewidth]{sp-tpcelec-dune-wib.pdf}
 \end{dunefigure}
 
-As shown in Figure~\ref{fig:tpcelec-dune-wib}, the \dword{wib} can 
-receive \dword{lv} power in the front panel and distribute it directly 
-to the \dword{femb}, bypassing all \dword{dc}-\dword{dc} converters.
-It can also receive the encoded system timing signals over bidirectional 
-optical fibers on the front panel and process them using either
-the on-board \dword{fpga} or clock synthesizer chip to provide the 
-clock required by the \dword{tpc} electronics. The baseline \dword{asic} design 
+As shown in Figure~\ref{fig:tpcelec-dune-wib}, the \dword{wib} can
+receive the encoded timing signal over bidirectional optical
+fibers on the front panel and process them using either the on-board
+\dword{fpga}or clock synthesizer chip to provide the clock required
+by the \dword{tpc} electronics.
+The baseline \dword{asic} design 
 currently uses 8b/10b encoding; if the \dword{slac} \dword{cryo} 
 \dword{asic} is selected for the \dword{dune} \dword{spmod}, 
 12b/14b encoding will be used instead of 8b/10b.
