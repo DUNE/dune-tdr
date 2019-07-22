@@ -244,19 +244,21 @@ time \bigo{100}\si{s} around every \dword{snb} trigger.
 \subsubsection{Considerations for Design}
 \label{sec:fd-daq:considerations}
 
-The \dword{daq} system is designed as a single, scalable system that can service
-all \dword{fd} modules. It is also designed on the principle that the system should be
-able to record and store full detector data with zero dead time, applying appropriate data reduction through data selection and compression; and
-that it should be evolutionary, taking advantage of the staged
-construction for the DUNE \dword{fd}, and thus beginning very conservatively
-for the first DUNE \dword{fd} module, and agressively reducing the design
-conservatism as further experience is gained with detector
-operations. At the same time, it is designed to preserve the possibility of additional capacity
-as required. The bulk of processing and buffering of raw detector data is
-done underground, in the upstream \dword{daq} part of the system (see Figure~\ref{fig:fd-daq:layout}), in order to
-control the consumption of available network bandwidth to surface.
+The \dword{daq} system is designed as a single, scalable system that can
+service all \dword{fd} modules. It is also designed on the principle that the
+system should be able to record and store full detector data with zero dead
+time, applying appropriate data reduction through data selection and
+compression; and that it should be evolutionary, taking advantage of the
+staged construction for the DUNE \dword{fd}, and thus beginning very
+conservatively for the first DUNE \dword{fd} module, and agressively reducing
+the design conservatism as further experience is gained with detector
+operations. At the same time, it is designed to preserve the possibility of
+additional capacity as required. The bulk of processing and buffering of raw
+detector data is done underground, in the upstream \dword{daq} part of the
+system (see Figure~\ref{fig:fd-daq:layout}), with only event building and data
+storage kept on surface.
 
-Power, cooling, and space constraints in the \dword{cuc} are limited to \daqpower and \daqracks (out of \cucracks total) for DAQ for all four \dword{fd} modules.
+Power, cooling, and space are constrained both in the \dword{cuc} and on surface, limited to \daqpower and \daqracks (out of \cucracks total) in the \dword{cuc} and \surfdaqpower and \surfdaqracks on surface for DAQ for all four \dword{fd} modules.
 The underground computing required for the DAQ to service the SP detector module is expected to require less than a quarter of the total power and rack space provided for all four detector modules. 
 The servers for FELIX, trigger, various services, networking and the timing system and including spares is expected to consume less than \SI{63}{\kilo\watt} and fill less than 300U of rack space.
 
@@ -271,7 +273,7 @@ The servers for FELIX, trigger, various services, networking and the timing syst
 
 
 
-There are four key challenges for the DUNE \dword{fd} \dword{daq} system: 
+There are five key challenges for the DUNE \dword{fd} \dword{daq} system: 
 \begin{itemize}
 \item First, the high overall experiment's uptime goal, requires the \dword{daq} to be designed with stringent reliability, fault tolerance and redundancy criteria, aiming at contributing in a negligible way to the overall downtime.
 
@@ -283,18 +285,17 @@ There are four key challenges for the DUNE \dword{fd} \dword{daq} system:
 
   Partitioning will be supported also within a single detector module, in order to support e.g. special calibration or debugging runs of parts of the detector, which are incompatible with physics data taking settings, while the rest of the detector remains in physics data taking mode. Partitioning, i.e. allowing multiple instances of the DAQ to operate independently with different configurations on different parts of the detector, will also be important during the installation and commissioning phases, to parallelize experts work e.g. for photon detectors and TPC.
 
-\item Thirdly, the \dword{snb}  physics
-requirements necessitate large buffering in the upstream \dword{daq} and low fake
-supernova burst trigger rates. 
+\item Thirdly, the \dword{snb} physics requirements necessitate large buffering in the upstream \dword{daq}. 
 
-The implementation of a buffer element in the upstream DAQ allows for the formation and capture of delayed, data-driven trigger decisions with no loss of physics information.
-The specification for the depth of this buffer is determined in consultation with physics groups and is driven primarily by the need to record up to ten seconds of unbiased data preceding a \dword{snb} trigger.
-%% Why says this?  it has nothing to do with buffering, does it?(bv) %%
-%This aspect remains to be validated with simulation, to ensure that high coverage (greater than 90\%) for galactic \dwords{snb} is achieved by the \dword{snb} trigger.
-Collecting data containing information on other types of interactions and decays do not pose additional requirements on the upstream \dword{daq} buffer since the latency to form the required triggers is expected to be well below 10 seconds.
+  The implementation of a buffer element in the upstream DAQ allows for the formation and capture of delayed, data-driven trigger decisions:
+  The trigger accumulates low energy signals while forming the trigger decision, thus identifying activity compatible with \dword{snb}.
+  The specification for the depth of this buffer is determined in consultation with physics groups and is driven primarily by the need to retaing all the unbiased data for up to \SI{10}{s}  preceding a \dword{snb} trigger.
+  Collecting data containing information on other types of interactions and decays do not pose additional requirements on the upstream \dword{daq} buffer since the latency to form the required triggers is expected to be well below \SI{10}{s}.
 
-\item Finally, the \dword{daq} needs to reduce the data volume of data to be permanently stored offline to a maximum of 30 PB/year.
-The \dword{daq} system is designed so as to be able to select interesting time windows in which activity was detected, apply lossless compression to data records, as well as filter them to remove unnecessary data regions in an intelligent way, i.e.~without compromising physics performance.
+\item Fourthly, the \dword{daq} must support a very wide range of readout windows and trigger rates. This encompasses the acquisition of localised events in both time and space up to the very large and rare \dword{snb} detecotr-wide readouts throughout \SI{100}{s}.
+
+\item Finally, the \dword{daq} needs to reduce the volume of data to be permanently stored offline to a maximum of \SI{30}{PB/year}.
+  The \dword{daq} system is designed so as to be able to select interesting time windows in which activity was detected, apply lossless compression to data records, as well as filter them to remove unnecessary data regions.
 
 A programmable trigger priority scheme ensures that the readout for the main physics triggers is never or rarely inhibited so as to enable easy determination of the live-time of these triggers. 
 
@@ -321,10 +322,8 @@ PDS \dword{adc} Dynamic Range                      & Under study \\ \colhline
 PDS \dword{adc} Readout Length                     & Under study \\ \colhline
 Localized Event Record Window                      & \spreadout \\  \colhline
 Extended Event Record Window                       & 100 s\\  \colhline
-Full size of TPC Localized Event Record per Module & 6.22 GB \\  \colhline
-Full size of TPC Extended Event Record per Module  & 115 TB\\  \colhline
-Full size of PDS Localized Event Record per Module & TBD \\  \colhline
-Full size of PDS Extended Event Record per Module  & TBD \\  \colhline
+Full size of Localized Event Record per Module     & 6.5 GB \\  \colhline
+Full size of Extended Event Record per Module      & 120 TB\\  \colhline
 \end{dunetable}
 
 
@@ -594,7 +593,7 @@ The throughput and endurance required by this buffer is satisfied by RAM technol
 A second challenge in recording data during a \dword{snb} is to assure essentially 100\% efficiency for collecting the individual, low-energy interactions. 
 To achieve this, the full-stream of data is recorded for a time duration that is expected to cover the time envelope of the burst.
 Guided by \dword{snb} models, this duration is chosen to be \snbtime.
-This requires extracting as much as 115 TB from the \dword{tpc} upstream \dword{daq} across one single-phase detector module.
+This requires extracting as much as \SI{120}{TB} from the \dword{tpc} upstream \dword{daq} across one single-phase detector module.
 It is not cost effective to design the \dword{daq} to extract such extended data record along the same path as nominal readout.
 
 The technology and scale of this additional buffering must satisfy several requirements. 
