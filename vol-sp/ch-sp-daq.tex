@@ -31,7 +31,7 @@ interchangeably.  However, some aspects of the \dword{daq} design described in
 this chapter are tailored to meet the specific needs of the single-phase
 detector module technology.  Adaptations to detector technology are
 implemented in the upstream part of the DAQ leaving the remainder generic. The
-individual modules are serviced essentially independently and only loosely
+individual modules are serviced independently and are only loosely
 coupled through a cross-module triggering mechanism.
 
 The chapter begins with an overview of the \dword{daq} design
@@ -44,9 +44,9 @@ Section~\ref{sec:fd-daq:validation} describes design validation efforts to
 date, and future design development and validation plans. At the center of
 these efforts is the  \dword{protodune} \dword{daq} system (described in
 Section~\ref{sec:fd-daq:protodune}), which has served as a demonstrator of
-several key aspects of the  \dword{dune}  \dword{daq}  design, and continues
+several key aspects of the  \dword{dune} \dword{fd} \dword{daq}  design, and continues
 to serve as a platform for further design development and validation toward
-the DUNE \dword{daq} design.  Finally, the chapter finishes with two sections
+the DUNE \dword{fd} \dword{daq} design.  Finally, the chapter finishes with two sections
 (Sections~\ref{sec:sp-daq:production} and \ref{sec:sp-daq:organization})
 providing details on the management of the \dword{daq} project, including
 schedule to completion of the design,  production, and installation of the
@@ -63,7 +63,7 @@ physically located at the \dword{fd} site, and it is split between the
 underground DUNE caverns and the surface level at \dword{surf}. Specifically, the \dword{daq} occupies space and
 power both in the underground \dword{cuc} and the above ground \dword{mcr}.
 The upstream part of the system, which is responsible for
-raw detector data reception, buffering, and pre-processing reside in the \dword{cuc}.
+raw detector data reception, buffering, and pre-processing, resides in the \dword{cuc}.
 The \dword{daqbes},
 which is responsible for
 event-building, as well as run control and monitoring, resides on the
@@ -72,10 +72,10 @@ Data flows through the \dword{daq} from
 upstream to the back-end and then to offline. The majority
 of raw data processing and buffering is performed underground, in the
 upstream \dword{daq}, thus controlling consumption of available data bandwidth  to the surface. A
-hierarchical data selection subsystem consumes minimally-processed
-information from the upstream \dword{daq}, and through further data processing, 
+hierarchical \dfirst{daqdsn} subsystem consumes minimally-processed
+information from the upstream \dword{daq}, and, through further data processing, 
 constructs module-level trigger decisions leading to a trigger command.
-The command is executed by a \dword{daqdfo} residing in the \dword{daqbes}
+The command is executed by a \dfirst{daqdfo} residing in the \dfirst{daqbes}
 by retrieving the required data from memory buffers maintained by the upstream DAQ.
 The results are aggregated across the detector module into a cohesive record and saved to non-volatile storage.
 During or after the aggregation, an optional down-selection of the data is possible via
@@ -86,11 +86,19 @@ detector modules and their subcomponents are synchronized and timed against a gl
 common clock, provided by the timing and synchronization
 subsystem. Cross-module communication as well as communication
 to the outside world for data selection purposes is facilitated
-through the external trigger interface. The
+through an external trigger interface, which is part of the \dword{daqdsn}
+system. The
 specifics of design implementation and data flow are described in Section~\ref{sec:fd-daq:design}.
 
-\begin{dunefigure}[DAQ conceptual data flow for one module]{fig:fd-daq:layout}{\dword{daq} conceptual data flow focusing on a single \nominalmodsize module. Included are the upstream \dword{daq} (orange), \dfirst{daqdsn} (blue), \dfirst{daqbes} which includes the \dfirst{daqdfo}, \dfirst{eb} and storage buffer (yellow).
-    Further, there is the subsystem for timing and synchronization (gray) and the subsystem for control, configuration and management (brown).
+\begin{dunefigure}[DAQ conceptual design overview for one
+  module]{fig:fd-daq:layout}{\dword{daq} conceptual data flow focusing
+    on a single \nominalmodsize module. Included are the upstream
+    \dword{daq} in orange, \dword{daqdsn} in blue, \dword{daqbes}
+    which includes the \dword{daqdfo}, \dfirst{eb} and storage buffer
+    in yellow. 
+    Furthermore, there is the subsystem for timing and
+    synchronization, shown in gray, and the subsystem for control,
+    configuration and management, shown in brown.
   }
   \includegraphics[width=0.8\textwidth,trim=4cm 3cm 4cm 3cm]{daq-layout-2.pdf}
 \end{dunefigure}
