@@ -292,7 +292,7 @@ There are five key challenges for the DUNE \dword{fd} \dword{daq} system:
   The specification for the depth of this buffer is determined in consultation with physics groups and is driven primarily by the need to retaing all the unbiased data for up to \SI{10}{s}  preceding a \dword{snb} trigger.
   Collecting data containing information on other types of interactions and decays do not pose additional requirements on the upstream \dword{daq} buffer since the latency to form the required triggers is expected to be well below \SI{10}{s}.
 
-\item Fourthly, the \dword{daq} must support a very wide range of readout windows and trigger rates. This encompasses the acquisition of localised events in both time and space up to the very large and rare \dword{snb} detecotr-wide readouts throughout \SI{100}{s}.
+\item Fourthly, the \dword{daq} must support a very wide range of readout windows and trigger rates. This encompasses the acquisition of localised events in both time and space up to the very large and rare \dword{snb} detector-wide readouts throughout \SI{100}{s}.
 
 \item Finally, the \dword{daq} needs to reduce the volume of data to be permanently stored offline to a maximum of \SI{30}{PB/year}.
   The \dword{daq} system is designed so as to be able to select interesting time windows in which activity was detected, apply lossless compression to data records, as well as filter them to remove unnecessary data regions.
@@ -453,9 +453,7 @@ co-processing \dword{fpga}/CPU hardware, all of which is hosted in 80-85 servers
 similar number of additional servers is responsible for the execution
 of subsequent software-based low-level processing of ``trigger
 primitives''
-generated in the upstream \dword{daq} for the purposes of data selection. The collective
-low-level information (trigger primitives and ``trigger candidates''
-constructed from trigger primitives) is propagated to a central server responsible
+generated in the upstream \dword{daq} for the purposes of data selection. The trigger candidates constructed from trigger primitives are propagated to a central server responsible
 for further processing and module-level triggering. The module level
 trigger also
 interfaces to a second server which is responsible for receiving and
@@ -525,10 +523,8 @@ The upstream \dword{daq} system comprises many similar \dword{daqrou}, each
 connected to a subset of electronics from a detector module and
 interfacing with the \dword{daq} switched network. In the case of the
 \dword{tpc}, 75 functionally identical RU are each responsible for the readout of raw data from two
-\dwords{apa}. In the case of the \dword{pds}, 5-10 RU are each responsible for the
-readout of raw data from a collection of \dword{pds} subdetectors, where each
-collection corresponds to an optically isolated region in the
-detector. 
+\dwords{apa}. In the case of the \dword{pds}, up to 8 RU are each responsible for the
+readout of raw data from a collection of \dword{pds} subdetectors. 
 Each RU is comprised of a \dword{fec} which is a commodity server that hosts a
 collection of custom hardware, 
 firmware, and software that collectively implement a set of functional blocks.
@@ -536,7 +532,7 @@ firmware, and software that collectively implement a set of functional blocks.
 In the baseline design, used also for system costing, each RU is composed of:
 \begin{enumerate}
 \item one dual socket multicore 2U server, with two \SI{10}{Gbps} and two \SI{1}{Gbps} ethernet ports for redundant data transmission and control, with at least 256 GB of DDR4 RAM, and sufficient PCIe lanes to host 2 TB of SSD disks,
-\item two \dword{felix} cards~\cite{atlas-felix}, each with a PCIe 3.0 x16 interface and supporting up to 48 \SI{9.6}{Gbps} bidirectional serial optical links,
+\item two \dword{felix} cards~\cite{atlas-felix}, each with a PCIe 3.0 x16 interface and supporting 10 \SI{9.6}{Gbps} bidirectional serial optical links,
 \item only in case of the TPC readout, four co-processor cards mounted onto the two \dword{felix} cards, for additional processing power and data buffering.
 
 \end{enumerate}
@@ -559,14 +555,19 @@ lengths can be reduced. The \dword{felix} board and firmware was developed initi
 ATLAS experiment and is now proposed or already in use by several other experiments including
 \dword{protodune}.
   
-  \item The upstream \dword{daq} subsystem provides access to the \dword{daqdsn} and \dword{daqbes} through a commodity switched network as illustrated in Figure~\ref{fig:daq:readout}).
-The network communication protocol is as described in Section~\ref{sec:daq:design-ipc}.
-The network I/O is handled by the \dwords{daqrou} via software; dedicated hardware or firmware development is not required.
+  \item The upstream \dword{daq} subsystem provides access to the
+\dword{daqdsn} and \dword{daqbes} through a commodity switched network as
+illustrated in Figure~\ref{fig:daq:readout}). The network communication
+protocol is as described in Section~\ref{sec:daq:design-ipc}. The network I/O
+is handled by the \dwords{daqrou} via software; dedicated hardware or firmware
+development is not required.
 
-\item The data processing functional block is tasked with identifying and forming \dwords{trigprimitive}, after a stage of data reorganization and noise filtering for both the \dword{tpc} or \dword{pds}.
+\item The data processing functional block is tasked with identifying and forming \dwords{trigprimitive} (see
+Section~\ref{sec:sp-daq:design-trigger-primitives}), after a stage of data
+reorganization and noise filtering for both the \dword{tpc} or \dword{pds}. 
 
-\item \Dwords{trigprimitive} summarize time periods on a channel where the digitized waveform is no longer consistent with noise.
-These regions of interest are then used as input to the \dword{daqds} sub-system where they begin the process of forming a trigger decision.
+\Dwords{trigprimitive} summarize time periods on a channel where the digitized waveform is no longer consistent with noise.
+These regions of interest are then used as input to the \dword{daqdsn} sub-system where they begin the process of forming a trigger decision.
 
 In the baseline design this functional block is implemented in \dword{fpga}.
 R\&D studies are ongoing to evaluate whether alternative implementations (in GPUs or CPUs) would bring any advantages in terms of flexibility or cost.
@@ -593,24 +594,23 @@ The throughput and endurance required by this buffer is satisfied by RAM technol
 A second challenge in recording data during a \dword{snb} is to assure essentially 100\% efficiency for collecting the individual, low-energy interactions. 
 To achieve this, the full-stream of data is recorded for a time duration that is expected to cover the time envelope of the burst.
 Guided by \dword{snb} models, this duration is chosen to be \snbtime.
-This requires extracting as much as \SI{120}{TB} from the \dword{tpc} upstream \dword{daq} across one single-phase detector module.
+This requires extracting as much as \SI{120}{\tera\byte} from the \dword{tpc} upstream \dword{daq} across one single-phase detector module.
 It is not cost effective to design the \dword{daq} to extract such extended data record along the same path as nominal readout.
 
 The technology and scale of this additional buffering must satisfy several requirements. 
-Each storage element must accept the full data rate of the portion of the detector module it services.
-The media must have sufficient capacity and allow for sufficient
-extraction throughput so that it is unlikely 
-to ever be too full to accept another extended data record. 
+Each \dword{daqrou} must accept the full data rate of the portion of the detector module it services.
+The media must have sufficient capacity and allow for sufficient extraction throughput so that it is unlikely to ever be too full to accept another extended data record : \SI{4}{\tera\bit/\second} guarantee the ability to store two \dword{snb} events simultaneously.
 Furthermore, assuming that, on average, a \dword{snb} trigger condition will be
 satisfied once per month, the most optimal technology is
-solid-state \dword{nvme} devices, which at the scale required to provide suitable input bandwidth, can provide a capacity to write the data from several extended activity triggers.
-Providing only a modest overhead to normal operations, this data can
-be extracted from such storage from the \dword{daq} in well under a day.
+solid-state \dword{nvme} devices, which at the scale required to provide suitable input bandwidth, can provide a capacity to write the data from several extended activity triggers. The recorded data will be transferred to the backend system in well under a day.
 
-For both types of activity, the buffering requirements may be reduced by employing lossless compression to the data prior to it entering the buffer.
-A factor of at least two to four compression is expected, based on MicroBooNE and \dword{protodune} experience using a modified Huffman encoding of differential ADC values. 
-If expected noise levels are achieved, this compression would provide a factor of four to ten, depending on the detector module technology.
-Efforts are currently underway to understand the costs and technology requirements in exploiting this benefit.
+For both types of activity, the buffering requirements may be reduced by
+employing lossless compression to the data prior to it entering the buffer. A
+factor of at least two to four compression is expected, based on MicroBooNE
+and \dword{protodune} experience using a modified Huffman encoding of
+differential ADC values.  Efforts are currently underway to understand the
+costs and technology requirements in exploiting this benefit.
+
 \end{itemize}
 
 Figure~\ref{fig:daq:readout-blocks} shows the flow diagram of data and control messages within the upstream \dword{daq} as well as the main interaction of the upstream \dword{daq} with other subsystems.
@@ -845,13 +845,11 @@ Nominally, individual candidates, or groups of candidates nearby in
 detector space and time, with measures of energy greater than these two
 types of decays, will be passed to the module level trigger. 
 
-This stage of data selection is
-implemented in O(100) CPU servers, which receive the trigger primitive
-stream from the upstream \dword{daq} and distribute trigger candidates to the
-module level trigger stage, described next, via the 10 Gbps \dword{daq} network. Studies are
-underway to demonstrate CPU resource utilization and latency, as are
-efforts to demonstrate online trigger candidate generation at \dword{protodune}.
-Trigger candidate generation performance is summarized in
+This stage of data selection is implemented 80  CPU servers, which receive the trigger primitive
+stream from the upstream \dword{daq} and distribute trigger candidates to the module level trigger
+stage, described next, via the \SI{10}{Gbps} \dword{daq} network. Studies are underway to demonstrate CPU
+resource utilization and latency, as are efforts to demonstrate online trigger candidate generation
+at \dword{protodune}. Trigger candidate generation performance is summarized in
 Section~\ref{sec:sp-daq:design-validation}. 
 
 %Additional studies are expected but nominally individual candidates, or
