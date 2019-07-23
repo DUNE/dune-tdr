@@ -31,7 +31,7 @@ interchangeably.  However, some aspects of the \dword{daq} design described in
 this chapter are tailored to meet the specific needs of the single-phase
 detector module technology.  Adaptations to detector technology are
 implemented in the upstream part of the DAQ leaving the remainder generic. The
-individual modules are serviced essentially independently and only loosely
+individual modules are serviced independently and are only loosely
 coupled through a cross-module triggering mechanism.
 
 The chapter begins with an overview of the \dword{daq} design
@@ -44,9 +44,9 @@ Section~\ref{sec:fd-daq:validation} describes design validation efforts to
 date, and future design development and validation plans. At the center of
 these efforts is the  \dword{protodune} \dword{daq} system (described in
 Section~\ref{sec:fd-daq:protodune}), which has served as a demonstrator of
-several key aspects of the  \dword{dune}  \dword{daq}  design, and continues
+several key aspects of the  \dword{dune} \dword{fd} \dword{daq}  design, and continues
 to serve as a platform for further design development and validation toward
-the DUNE \dword{daq} design.  Finally, the chapter finishes with two sections
+the DUNE \dword{fd} \dword{daq} design.  Finally, the chapter finishes with two sections
 (Sections~\ref{sec:sp-daq:production} and \ref{sec:sp-daq:organization})
 providing details on the management of the \dword{daq} project, including
 schedule to completion of the design,  production, and installation of the
@@ -63,7 +63,7 @@ physically located at the \dword{fd} site, and it is split between the
 underground DUNE caverns and the surface level at \dword{surf}. Specifically, the \dword{daq} occupies space and
 power both in the underground \dword{cuc} and the above ground \dword{mcr}.
 The upstream part of the system, which is responsible for
-raw detector data reception, buffering, and pre-processing reside in the \dword{cuc}.
+raw detector data reception, buffering, and pre-processing, resides in the \dword{cuc}.
 The \dword{daqbes},
 which is responsible for
 event-building, as well as run control and monitoring, resides on the
@@ -72,10 +72,10 @@ Data flows through the \dword{daq} from
 upstream to the back-end and then to offline. The majority
 of raw data processing and buffering is performed underground, in the
 upstream \dword{daq}, thus controlling consumption of available data bandwidth  to the surface. A
-hierarchical data selection subsystem consumes minimally-processed
-information from the upstream \dword{daq}, and through further data processing, 
+hierarchical \dfirst{daqdsn} subsystem consumes minimally-processed
+information from the upstream \dword{daq}, and, through further data processing, 
 constructs module-level trigger decisions leading to a trigger command.
-The command is executed by a \dword{daqdfo} residing in the \dword{daqbes}
+The command is executed by a \dfirst{daqdfo} residing in the \dfirst{daqbes}
 by retrieving the required data from memory buffers maintained by the upstream DAQ.
 The results are aggregated across the detector module into a cohesive record and saved to non-volatile storage.
 During or after the aggregation, an optional down-selection of the data is possible via
@@ -86,11 +86,19 @@ detector modules and their subcomponents are synchronized and timed against a gl
 common clock, provided by the timing and synchronization
 subsystem. Cross-module communication as well as communication
 to the outside world for data selection purposes is facilitated
-through the external trigger interface. The
+through an external trigger interface, which is part of the \dword{daqdsn}
+system. The
 specifics of design implementation and data flow are described in Section~\ref{sec:fd-daq:design}.
 
-\begin{dunefigure}[DAQ conceptual data flow for one module]{fig:fd-daq:layout}{\dword{daq} conceptual data flow focusing on a single \nominalmodsize module. Included are the upstream \dword{daq} (orange), \dfirst{daqdsn} (blue), \dfirst{daqbes} which includes the \dfirst{daqdfo}, \dfirst{eb} and storage buffer (yellow).
-    Further, there is the subsystem for timing and synchronization (gray) and the subsystem for control, configuration and management (brown).
+\begin{dunefigure}[DAQ conceptual design overview for one
+  module]{fig:fd-daq:layout}{\dword{daq} conceptual data flow focusing
+    on a single \nominalmodsize module. Included are the upstream
+    \dword{daq} in orange, \dword{daqdsn} in blue, \dword{daqbes}
+    which includes the \dword{daqdfo}, \dfirst{eb} and storage buffer
+    in yellow. 
+    Furthermore, there is the subsystem for timing and
+    synchronization, shown in gray, and the subsystem for control,
+    configuration and management, shown in brown.
   }
   \includegraphics[width=0.8\textwidth,trim=4cm 3cm 4cm 3cm]{daq-layout-2.pdf}
 \end{dunefigure}
@@ -107,7 +115,7 @@ system %is capable of
 can record all necessary information for offline 
 analysis of data that is associated with on- and off-beam physics events, as directed
 by the \dword{dune} physics mission, and with minimal compromise to
-\dword{dune}'s physics sensitivity. The requirements must be met by following the 
+\dword{dune}'s physics sensitivity. The requirements must be met following the 
 specifications provided in the same table.
 Those specifications are
 associated with trigger functionality, readout,
@@ -115,8 +123,8 @@ and operations and are motivated further in the following subsections.
 
 \subsubsection{How DUNE's Physics Mission Drives the DAQ Design}
 
-The DUNE Far Detector has three main physics drivers: neutrino \dword{cpv} and related
-long baseline oscillation studies using the high intensity beam provided
+The DUNE \dword{fd} has three main physics drivers: neutrino \dword{cpv} and related
+long baseline oscillation measurements using the high intensity beam provided
 by \fnal, off-beam measurements of atmospheric neutrinos and searches
 for rare processes such baryon-number-violating decays,
 and detection of neutrinos from a \dfirst{snb} occurring within our galaxy. The
@@ -130,22 +138,27 @@ self-triggering capabilities. Since the
 continuous raw data rate of the far detector module, as received by
 the \dword{daq} system, reaches multiple
 terabits per second, significant data buffering and processing
-resources are needed as part of the design.
+resources are needed as part of the design, as specified in
+later sections of this chapter.
 
 The \dword{dune} \dword{fd} modules employ two active detector components from which the \dword{daq} system must acquire data: the \dfirst{tpc} and the \dfirst{pds}. The two components access the physics by sensing and collecting signals associated with very different sensing time scales.
 
 Ionization charge measurement by the \dword{tpc} for any given activity in the detector requires a nominal recording of data over a time window of order \SIrange{1}{10}{\milli\second}. 
 This time scale is determined by the ionization electron drift speed in \lar and the detector dimension along the drift direction, and is nominally set to \spreadout, corresponding to 2.4$\times$\SI{2.25}{\milli\second}.
 The latter (\SI{2.25}{\milli\second}) assumes DUNE's nominal drift electric field of 500~V/cm.
-This assures the capture of ionization information from at least a full drift before and after a trigger.
-Given the ability to  immediately record a subsequent readout, early commissioning data will be used to evaluate and optimize this nominal readout time.
+The 2.4 factor assures the capture of ionization information from at
+least a full drift before and after the trigger time associated with the
+activity. Early commissioning data will be used to evaluate and optimize this nominal readout time.
 
 On the other hand, the \dword{pds} measures argon scintillation light emission, which
 occurs and is detected over a timescale of multiple nanoseconds to
 microseconds for
 any given event and/or subsequent subevent process. Unlike the \dword{tpc},
 the \dword{pds} data is zero-suppressed in
-the \dword{pds} electronics (see Chapter~\ref{ch:fdsp-pd}); therefore the total raw data volume received by
+the \dword{pds} electronics (see Chapter~\ref{ch:fdsp-pd}). Although
+the \dword{pds} system readout sampling frequency is higher than that
+of the TPC, the combination of zero-suppression and expected activity
+levels are assumed to yield significantly lower data rates than the \dword{tpc}. Therefore, the total raw data volume received by
 the \dword{daq} system is expected to be dominated by
 the \dword{tpc} data, which is sent out from the front-end electronics as a continuous stream.
  
@@ -161,8 +174,10 @@ above 100 MeV), rates are dominated by cosmic rays, beam neutrino interactions,
 and atmospheric neutrino interactions. With the exception of supernova
 burst neutrinos, the activity associated with any of these physics
 signals is localized in space and particularly in time. Supernova burst
-neutrinos on the other hand are characteristically different, as they arrive as multiple
-signals of localized activity that extends over the entirety of the
+neutrinos on the other hand are characteristically different, as they
+can be detected as up to several thousands of neutrino interactions
+for a given galactic supernova burst. As such, supernova burst neutrinos
+are associated with localized activity that extends over the entirety of the
 detector and over multiple seconds. %The arrival time and energy
 %distribution of
 %neutrinos from a \dword{snb} is model-dependent; as such, the DAQ must
@@ -184,17 +199,29 @@ supernova burst trigger coverage, for extended low-energy triggers. Galactic cov
 the supernova burst trigger efficiency, weighted by the probability of a galactic \dword{snb} (which
 is \dword{snb} distance-dependent).
 
-By offline considerations, the \dword{daq} is required to reduce the data volume for offline permanent storage to  \offsitepbpy.
-A far detector composed of four single-phase modules employing a full-detector, \spreadout readout strategy will be limited by this to an average readout rate of \SI{0.3}{\hertz}. 
+By offline considerations, the \dword{daq} is required to reduce the
+full \dword{fd} data volume for offline permanent storage to  \offsitepbpy.
+A far detector composed of four single-phase modules employing a
+strategy by which the entire \dword{fd} is read out for \spreadout
+given the presence of a localized high energy trigger will be limited
+by this offline permanent storage constraint to an average readout rate of \SI{0.3}{\hertz}. 
 Strategies will be developed during commissioning and early running that will limit the readout to some subset of the detector module and these are expected to allow an increase in this rate limit by about an order of magnitude.
 The instantaneous readout rate can be much higher, for example to accommodate calibrations.
 For planning purposes, the DAQ will allot an average rate of \dword{snb} triggers of 1 per month.
 Given current understanding of \dword{snb} rates and the $>$90\% expected efficiency for \dword{snb} within \SI{100}{\kilo\parsec}, the vast majority of such triggers will be due to fluctuations of low energy radiological backgrounds and potentially of excess noise.
 Such triggers will prompt \snbtime of data from the entire module to be read out.
-At this average rate and if saved to offline storage, the \dword{snb} triggers will lead to production of 1.8 PB/year uncompressed from one single-phase module. There is nevertheless no requirement to permanently store fake \dword{snb} data. 
+At this average rate and if saved to offline storage, the \dword{snb}
+triggers will lead to production of 1.8 PB/year uncompressed from one
+single-phase module. There is nevertheless no requirement to store SNB
+data that is deemed, after further offline analysis, to be due to fake triggers.
 
-The capability of recording data losslessly is built into the design as a conservative measure; a particular concern is charge measurement accuracy in the case of zero suppression.
-MicroBooNE is currently investigating the impact of zero suppression on reconstruction efficiency and energy resolution for low-energy events.
+The capability of recording data losslessly is built into the design
+as a conservative measure; a particular concern is charge collection
+efficiency and resolution in the case of zero suppression, in particular for TPC
+induction wire readout channels.
+MicroBooNE is currently investigating the impact of zero suppression
+on reconstruction efficiency and energy resolution for low-energy
+events \cite{MICROBOONE-NOTE-1030-PUB}.
 Expected data rates from physics signals of interest, which fit the 30 PB yearly generated volume and trigger rate requirements, are summarized in Table~\ref{tab:sp-daq:rates} and detailed in~\citedocdb{9240} and potential bottlenecks were analyzed in~\citedocdb{11461}.
 
 \begin{dunefigure}[Expected physics-related activity
@@ -204,23 +231,26 @@ Expected data rates from physics signals of interest, which fit the 30 PB yearly
   \includegraphics[width=0.7\textwidth,clip,trim=6cm 6cm 10cm 2cm]{daq-event-type-rates-vs-energy.pdf}
 \end{dunefigure}
 
-\begin{dunetable} [Expected DAQ Yearly Produced Data Volumes] {p{0.3\textwidth}p{0.1\textwidth}p{0.5\textwidth}} {tab:sp-daq:rates}{Summary of expected data volumes produced yearly for initial single-module running.
-    The numbers assume no compression, and are given for a single \SI{10}{\kilo\tonne} module (2-4x lossless compression factor expected). 
+\begin{dunetable} [Expected DAQ Yearly Produced TPC Data Volumes] {p{0.3\textwidth}p{0.1\textwidth}p{0.5\textwidth}} {tab:sp-daq:rates}{Summary of expected data volumes produced yearly for initial single-module running.
+    The numbers assume TPC only rates with no compression, and are given for a single
+    \SI{10}{\kilo\tonne} module, assuming the parameters listed in Table~\ref{tab1.3}. (A 2-4x lossless
+    compression factor is expected.)
     Trigger primitives (see Section~\ref{sec:sp-daq:design-data-selection}), fake SNB data as well as additional data recorded for detector performance studies and debugging are not foreseen to be stored offline permanently.}
 Source                                              & Annual Data Volume & Assumptions \\\toprowrule
 Beam interactions                                   & 27 TB              & 10 MeV threshold in coincidence with beam
 time, including cosmic coincidence; \spreadout readout \\\colhline
 Cosmics and atmospheric neutrinos                   & 10 PB              & \spreadout readout \\\colhline
 Radiological backgrounds                            & $<2$ PB            & $<1$ per month fake rate for SNB
-trigger\\\colhline
+trigger; 100s readout\\\colhline
 Cold electronics calibration                        & 4 TB               & scaled from \dword{pdsp} experience \\\colhline
 Radioactive source calibration                      & 100 TB             & $<10$ Hz source rate; single
 APA readout; \spreadout readout \\\colhline
 Laser calibration                                   & 200 TB             & 10$^6$ total laser pulses; half the
 TPC channels illuminated per pulse; lossy
 compression (zero-suppression) on all channels\\\colhline
-Random triggers                                     & 60 TB              & 45 per day\\\colhline
-Trigger primitives and detector performance studies & $<15$ PB           & Dominated by $^{39}$Ar \\\colhline
+Random triggers                                     & 60 TB
+& 45 per day; \spreadout readout \\\colhline
+Trigger primitives and detector performance studies & $<15$ PB           & $^{39}$Ar dominated\\\colhline
 \end{dunetable}
 
 Self-triggering on \dword{snb} activity is a unique challenge for the
@@ -228,7 +258,7 @@ DUNE \dword{fd}, and an aspect of the design which has never been demonstrated
 in a \dword{lartpc}. The challenge with \dword{snb} triggering is two-fold. 
 First, the activity of the individual \dword{snb} neutrino interactions
 is expected to be of relatively low energy (\SIrange{10}{30}{\mega\electronvolt}),
-sometimes indistinguishable from pile-up of radiological background activity in the
+often indistinguishable from pile-up of radiological background activity in the
 detector.  Triggering on an ensemble of \bigo{100} events expected on
 average in the case of a galactic supernova burst is therefore
 advantageous; however, since this ensemble of events is expected to occur sparsely over the
@@ -255,13 +285,18 @@ conservatively for the first DUNE \dword{fd} module, and agressively reducing
 the design conservatism as further experience is gained with detector
 operations. At the same time, it is designed to preserve the possibility of
 additional capacity as required. The bulk of processing and buffering of raw
-detector data is done underground, in the upstream \dword{daq} part of the
+detector data is done underground, in the upstream \dword{daq} and low
+level data selection parts of the
 system (see Figure~\ref{fig:fd-daq:layout}), with only event building and data
 storage kept on surface.
 
 Power, cooling, and space are constrained both in the \dword{cuc} and on surface, limited to \daqpower and \daqracks (out of \cucracks total) in the \dword{cuc} and \surfdaqpower and \surfdaqracks on surface for DAQ for all four \dword{fd} modules.
 The underground computing required for the DAQ to service the SP detector module is expected to require less than a quarter of the total power and rack space provided for all four detector modules. 
-The servers for FELIX, trigger, various services, networking and the timing system and including spares is expected to consume less than \SI{63}{\kilo\watt} and fill less than 300U of rack space.
+The hardware for upstream \dword{DAQ}, low level data selection,
+various services, networking, and the timing system, including spares,
+all residing in the \dword{cuc}, 
+are expected to consume less than \SI{63}{\kilo\watt} and fill less
+than 300U of rack space, combined \cite{ale}.
 
 %%% numbers from Alessandro
 % - 85 felix servers , 350 W, 2 APAs/host, 2Us - including spares
