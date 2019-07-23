@@ -324,12 +324,18 @@ There are five key challenges for the DUNE \dword{fd} \dword{daq} system:
 
 \item Thirdly, the \dword{snb} physics requirements necessitate large buffering in the upstream \dword{daq}. 
 
-  The implementation of a buffer element in the upstream DAQ allows for the formation and capture of delayed, data-driven trigger decisions:
-  The trigger accumulates low energy signals while forming the trigger decision, thus identifying activity compatible with \dword{snb}.
-  The specification for the depth of this buffer is determined in consultation with physics groups and is driven primarily by the need to retaing all the unbiased data for up to \SI{10}{s}  preceding a \dword{snb} trigger.
-  Collecting data containing information on other types of interactions and decays do not pose additional requirements on the upstream \dword{daq} buffer since the latency to form the required triggers is expected to be well below \SI{10}{s}.
+  The implementation of a buffer element in the upstream DAQ allows
+  for the formation and capture of delayed, data-driven data selection
+  decisions:
+  The trigger accumulates low energy signals over an extended period
+  of time while forming the trigger decision, thus identifying activity compatible with \dword{snb}.
+  The specification for the depth of this buffer is determined in
+  consultation with physics groups and is driven primarily by the need
+  to retain all unbiased data while processing up to \SI{10}{s} of
+  data for the trigger decision, preceding a \dword{snb} trigger.
+  Collecting data containing information on other types of interactions and decays does not pose additional requirements on the upstream \dword{daq} buffer, since the latency to form the required triggers is expected to be well below \SI{10}{s}.
 
-\item Fourthly, the \dword{daq} must support a very wide range of readout windows and trigger rates. This encompasses the acquisition of localised events in both time and space up to the very large and rare \dword{snb} detector-wide readouts throughout \SI{100}{s}.
+\item Fourthly, the \dword{daq} must support a very wide range of readout windows and trigger rates. This encompasses the acquisition of localized events in both time and space up to the very large and rare \dword{snb} detector-wide readouts over \SI{100}{s}.
 
 \item Finally, the \dword{daq} needs to reduce the volume of data to be permanently stored offline to a maximum of \SI{30}{PB/year}.
   The \dword{daq} system is designed so as to be able to select interesting time windows in which activity was detected, apply lossless compression to data records, as well as filter them to remove unnecessary data regions.
@@ -473,7 +479,7 @@ descriptions of the subsystem designs and implementation specifics.
 \subsection{Overview}
 \label{sec:fd-daq:design-overview}
 
-The  \dword{daq} system is composed of six distinct subsystems:
+The  \dword{daq} system is composed of five distinct subsystems:
 %
 (1) upstream \dword{daq} (Section~\ref{sec:daq:design-upstream}),
 %
@@ -485,8 +491,7 @@ The  \dword{daq} system is composed of six distinct subsystems:
 %
 (5) \dfirst{daqtss} (Section~\ref{sec:sp-daq:design-timing}).
 %
-The physical extent
-the first five of the \dword{daq} subsystems
+The physical extent of the subsystems
 can be specified in reference to Figure~\ref{fig:fd-daq:layout}: the
 upstream \dword{daq} and \dword{daqtss}  live underground in the \dword{cuc}; \dword{daqdss} occupies
 both underground and above-ground spaces; \dword{daqbes} is above-ground
@@ -497,7 +502,7 @@ detail in the following subsections.
 
 Front-end readout is carried out by the upstream \dword{daq}, using custom data receiver and
 co-processing \dword{fpga}/CPU hardware, all of which is hosted in 80-85 servers in the \dword{cuc}. A
-similar number of additional servers is responsible for the execution
+corresponding number of additional servers is responsible for the execution
 of subsequent software-based low-level processing of ``trigger
 primitives''
 generated in the upstream \dword{daq} for the purposes of data selection. The trigger candidates constructed from trigger primitives are propagated to a central server responsible
@@ -512,15 +517,15 @@ facilitates event building in a few servers and buffering for built
 events on non-volatile storage. Upon receiving a \dword{trigcommand}, the \dword{daqbes}
  queries
 data from the upstream \dword{daq} buffers and builds that into an ``event
-record'', which is temporarily stored as (a number of) files. Event records can be optionally processed in a high-level
+record'', which is temporarily stored as (a number of) files. Event records are optionally processed in a high-level
 filter/data reduction stage, which is part of overall data selection,
  prior to event records being shipped to DUNE offline. Pervasively,
  the  \dfirst{daqccm} provides the data taking orchestration
  (Section~\ref{sec:fd-daq:design-run-control}), and the
  \dfirst{daqtss} provides synchronization and synchronous command distribution
  (Section~\ref{sec:sp-daq:design-timing}). Figure~\ref{fig:daq-conceptual-overview}
- provides a conceptual illustration of the overal \dword{daq} system
- functionality while Figure~\ref{fig:daq-deployment} illustrates the deployment of the system.
+ provides a conceptual illustration of the overall \dword{daq} system
+ functionality.% while Figure~\ref{fig:daq-deployment} illustrates the deployment of the system.
  %, while Figure~\ref{fig:daq-design}
 %specifies the design implementation. 
 
@@ -566,7 +571,7 @@ namely the \dword{daqdss} and the \dword{daqbes}.
   \includegraphics[width=0.8\textwidth]{daq-ud-func-blocks}
 \end{dunefigure}
 
-The upstream \dword{daq} system comprises many similar \dword{daqrou}, each
+The upstream \dword{daq} system comprises many similar \dwords{daqrou}, each
 connected to a subset of electronics from a detector module and
 interfacing with the \dword{daq} switched network. In the case of the
 \dword{tpc}, 75 functionally identical RU are each responsible for the readout of raw data from two
@@ -580,11 +585,11 @@ In the baseline design, used also for system costing, each RU is composed of:
 \begin{enumerate}
 \item one dual socket multicore 2U server, with two \SI{10}{Gbps} and two \SI{1}{Gbps} ethernet ports for redundant data transmission and control, with at least 256 GB of DDR4 RAM, and sufficient PCIe lanes to host 2 TB of SSD disks,
 \item two \dword{felix} cards~\cite{atlas-felix}, each with a PCIe 3.0 x16 interface and supporting 10 \SI{9.6}{Gbps} bidirectional serial optical links,
-\item only in case of the TPC readout, four co-processor cards mounted onto the two \dword{felix} cards, for additional processing power and data buffering.
+\item only in case of the TPC readout, four custom-designed co-processor cards mounted onto the two \dword{felix} cards, for additional processing power and data buffering.
 
 \end{enumerate}
 
-In the following we describe the main functional blocks of the upstream \dword{daq}.
+The main functional blocks of the upstream \dword{daq} are described below:
 
 \begin{itemize}
   
