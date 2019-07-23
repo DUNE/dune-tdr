@@ -85,7 +85,7 @@ All
 detector modules and their subcomponents are synchronized and timed against a global,
 common clock, provided by the timing and synchronization
 subsystem. Cross-module communication as well as communication
-to the outside world for data selection purposes is facilitated
+to the outside world for data selection (trigger) purposes is facilitated
 through an external trigger interface, which is part of the \dword{daqdsn}
 system. The
 specifics of design implementation and data flow are described in Section~\ref{sec:fd-daq:design}.
@@ -183,7 +183,8 @@ detector and over multiple seconds. %The arrival time and energy
 %neutrinos from a \dword{snb} is model-dependent; as such, the DAQ must
 %utilize model-independent approach in selecting \dword{snb} activity.
 
-The nature and rates of these signatures necessitates a data selection strategy that handles two
+The nature and rates of these signatures necessitates a data selection
+(trigger) strategy that handles two
 distinct cases: a localized high-energy activity trigger, prompting an event record readout for
 activity associated with a minimum of \SI{100}{MeV} of deposited energy; and an extended low-energy
 activity trigger, prompting an event record readout when multiple localized low-energy activity
@@ -344,7 +345,10 @@ Table~\ref{tab:sp-daq:parameters} summarizes the important parameters driving th
 [Key DAQ Parameters]
 {ll}
 {tab:sp-daq:parameters}
-{Summary of important parameters driving the DAQ design.}
+{Summary of important parameters driving the DAQ design. The \dword{pds}
+  system parameters are under study, but it is expected that the \dword{pds} raw
+  data volume that must be handled by the \dword{daq} is an order of
+  magnitude smaller than the \dword{tpc} raw data volume.}
 Parameter                                          & Value \\ \toprowrule
 TPC Channel Count per Module                       & 384,000\\ \colhline
 TPC Collection Channel Count per Subdetector (APA) & 960\\ \colhline
@@ -392,7 +396,8 @@ PDS Readout & Data rate and format, number and type of links, timing &  \citedoc
 Computing & Off-site data transfer rates, methods, data file content, disk buffer, software development and maintenance &  \citedocdb{7123} \\ \colhline
 CISC & Information exchange, hardware and software for rack and server monitoring & \citedocdb{6790}{v1} \\ \colhline
 Calibration & Constraint on total volume of the calibration data; trigger and timing distribution from the DAQ & \citedocdb{7069} \\ \colhline
-Timing and Synchronization & Clients, clock frequency, protocols, transports, accuracy, monitoring &  \citedocdb{11224} \\ \colhline
+Timing and Synchronization & Clients, clock frequency, protocols,
+transports, accuracy, precision, monitoring&  \citedocdb{11224} \\ \colhline
 Facilities & Detector integration, coordination, cables, racks, safety, conventional facilities, lack of impact on cryo and DSS &  \citedocdb{6988}{v1} \\ \colhline
 Installation & Prototyping, planning, transport, underground equipment and activity, safety & \citedocdb{7015} \\ \colhline
 \end{dunetable}
@@ -404,7 +409,8 @@ the raw \dword{tpc} data to the \dword{daq} \dword{fe} readout (\dword{felix}; s
 Section~\ref{sec:daq:design-upstream}). This ensures the \dword{daq} is electrically decoupled from the detector
 cryostat. Ten \SI{10}{Gbps} links are expected per \dword{apa}, and have
 been specified as 300m OM4 multi-mode fibers from \dword{sfp}+ at the \dword{wib} to
-\dword{minipod} on \dword{felix}. The data format has been specified
+\dword{minipod} on \dword{felix}. (The optical fibers themselves are
+the responsibility of the \dword{daq} Consortium.) The data format has been specified
 to use a custom communication protocol and no
 compression.
 
