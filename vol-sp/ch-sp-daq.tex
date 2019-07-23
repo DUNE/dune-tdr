@@ -85,7 +85,7 @@ All
 detector modules and their subcomponents are synchronized and timed against a global,
 common clock, provided by the timing and synchronization
 subsystem. Cross-module communication as well as communication
-to the outside world for data selection purposes is facilitated
+to the outside world for data selection (trigger) purposes is facilitated
 through an external trigger interface, which is part of the \dword{daqdsn}
 system. The
 specifics of design implementation and data flow are described in Section~\ref{sec:fd-daq:design}.
@@ -115,7 +115,7 @@ system %is capable of
 can record all necessary information for offline 
 analysis of data that is associated with on- and off-beam physics events, as directed
 by the \dword{dune} physics mission, and with minimal compromise to
-\dword{dune}'s physics sensitivity. The requirements must be met by following the 
+\dword{dune}'s physics sensitivity. The requirements must be met following the 
 specifications provided in the same table.
 Those specifications are
 associated with trigger functionality, readout,
@@ -123,8 +123,8 @@ and operations and are motivated further in the following subsections.
 
 \subsubsection{How DUNE's Physics Mission Drives the DAQ Design}
 
-The DUNE Far Detector has three main physics drivers: neutrino \dword{cpv} and related
-long baseline oscillation studies using the high intensity beam provided
+The DUNE \dword{fd} has three main physics drivers: neutrino \dword{cpv} and related
+long baseline oscillation measurements using the high intensity beam provided
 by \fnal, off-beam measurements of atmospheric neutrinos and searches
 for rare processes such baryon-number-violating decays,
 and detection of neutrinos from a \dfirst{snb} occurring within our galaxy. The
@@ -138,22 +138,27 @@ self-triggering capabilities. Since the
 continuous raw data rate of the far detector module, as received by
 the \dword{daq} system, reaches multiple
 terabits per second, significant data buffering and processing
-resources are needed as part of the design.
+resources are needed as part of the design, as specified in
+later sections of this chapter.
 
 The \dword{dune} \dword{fd} modules employ two active detector components from which the \dword{daq} system must acquire data: the \dfirst{tpc} and the \dfirst{pds}. The two components access the physics by sensing and collecting signals associated with very different sensing time scales.
 
 Ionization charge measurement by the \dword{tpc} for any given activity in the detector requires a nominal recording of data over a time window of order \SIrange{1}{10}{\milli\second}. 
 This time scale is determined by the ionization electron drift speed in \lar and the detector dimension along the drift direction, and is nominally set to \spreadout, corresponding to 2.4$\times$\SI{2.25}{\milli\second}.
 The latter (\SI{2.25}{\milli\second}) assumes DUNE's nominal drift electric field of 500~V/cm.
-This assures the capture of ionization information from at least a full drift before and after a trigger.
-Given the ability to  immediately record a subsequent readout, early commissioning data will be used to evaluate and optimize this nominal readout time.
+The 2.4 factor assures the capture of ionization information from at
+least a full drift before and after the trigger time associated with the
+activity. Early commissioning data will be used to evaluate and optimize this nominal readout time.
 
 On the other hand, the \dword{pds} measures argon scintillation light emission, which
 occurs and is detected over a timescale of multiple nanoseconds to
 microseconds for
 any given event and/or subsequent subevent process. Unlike the \dword{tpc},
 the \dword{pds} data is zero-suppressed in
-the \dword{pds} electronics (see Chapter~\ref{ch:fdsp-pd}); therefore the total raw data volume received by
+the \dword{pds} electronics (see Chapter~\ref{ch:fdsp-pd}). Although
+the \dword{pds} system readout sampling frequency is higher than that
+of the TPC, the combination of zero-suppression and expected activity
+levels are assumed to yield significantly lower data rates than the \dword{tpc}. Therefore, the total raw data volume received by
 the \dword{daq} system is expected to be dominated by
 the \dword{tpc} data, which is sent out from the front-end electronics as a continuous stream.
  
@@ -169,14 +174,17 @@ above 100 MeV), rates are dominated by cosmic rays, beam neutrino interactions,
 and atmospheric neutrino interactions. With the exception of supernova
 burst neutrinos, the activity associated with any of these physics
 signals is localized in space and particularly in time. Supernova burst
-neutrinos on the other hand are characteristically different, as they arrive as multiple
-signals of localized activity that extends over the entirety of the
+neutrinos on the other hand are characteristically different, as they
+can be detected as up to several thousands of neutrino interactions
+for a given galactic supernova burst. As such, supernova burst neutrinos
+are associated with localized activity that extends over the entirety of the
 detector and over multiple seconds. %The arrival time and energy
 %distribution of
 %neutrinos from a \dword{snb} is model-dependent; as such, the DAQ must
 %utilize model-independent approach in selecting \dword{snb} activity.
 
-The nature and rates of these signatures necessitates a data selection strategy that handles two
+The nature and rates of these signatures necessitates a data selection
+(trigger) strategy that handles two
 distinct cases: a localized high-energy activity trigger, prompting an event record readout for
 activity associated with a minimum of \SI{100}{MeV} of deposited energy; and an extended low-energy
 activity trigger, prompting an event record readout when multiple localized low-energy activity
@@ -192,17 +200,29 @@ supernova burst trigger coverage, for extended low-energy triggers. Galactic cov
 the supernova burst trigger efficiency, weighted by the probability of a galactic \dword{snb} (which
 is \dword{snb} distance-dependent).
 
-By offline considerations, the \dword{daq} is required to reduce the data volume for offline permanent storage to  \offsitepbpy.
-A far detector composed of four single-phase modules employing a full-detector, \spreadout readout strategy will be limited by this to an average readout rate of \SI{0.3}{\hertz}. 
+By offline considerations, the \dword{daq} is required to reduce the
+full \dword{fd} data volume for offline permanent storage to  \offsitepbpy.
+A far detector composed of four single-phase modules employing a
+strategy by which the entire \dword{fd} is read out for \spreadout
+given the presence of a localized high energy trigger will be limited
+by this offline permanent storage constraint to an average readout rate of \SI{0.3}{\hertz}. 
 Strategies will be developed during commissioning and early running that will limit the readout to some subset of the detector module and these are expected to allow an increase in this rate limit by about an order of magnitude.
 The instantaneous readout rate can be much higher, for example to accommodate calibrations.
 For planning purposes, the DAQ will allot an average rate of \dword{snb} triggers of 1 per month.
 Given current understanding of \dword{snb} rates and the $>$90\% expected efficiency for \dword{snb} within \SI{100}{\kilo\parsec}, the vast majority of such triggers will be due to fluctuations of low energy radiological backgrounds and potentially of excess noise.
 Such triggers will prompt \snbtime of data from the entire module to be read out.
-At this average rate and if saved to offline storage, the \dword{snb} triggers will lead to production of 1.8 PB/year uncompressed from one single-phase module. There is nevertheless no requirement to permanently store fake \dword{snb} data. 
+At this average rate and if saved to offline storage, the \dword{snb}
+triggers will lead to production of 1.8 PB/year uncompressed from one
+single-phase module. There is nevertheless no requirement to store SNB
+data that is deemed, after further offline analysis, to be due to fake triggers.
 
-The capability of recording data losslessly is built into the design as a conservative measure; a particular concern is charge measurement accuracy in the case of zero suppression.
-MicroBooNE is currently investigating the impact of zero suppression on reconstruction efficiency and energy resolution for low-energy events.
+The capability of recording data losslessly is built into the design
+as a conservative measure; a particular concern is charge collection
+efficiency and resolution in the case of zero suppression, in particular for TPC
+induction wire readout channels.
+MicroBooNE is currently investigating the impact of zero suppression
+on reconstruction efficiency and energy resolution for low-energy
+events \cite{MICROBOONE-NOTE-1030-PUB}.
 Expected data rates from physics signals of interest, which fit the 30 PB yearly generated volume and trigger rate requirements, are summarized in Table~\ref{tab:sp-daq:rates} and detailed in~\citedocdb{9240} and potential bottlenecks were analyzed in~\citedocdb{11461}.
 
 \begin{dunefigure}[Expected physics-related activity
@@ -212,23 +232,26 @@ Expected data rates from physics signals of interest, which fit the 30 PB yearly
   \includegraphics[width=0.7\textwidth,clip,trim=6cm 6cm 10cm 2cm]{daq-event-type-rates-vs-energy.pdf}
 \end{dunefigure}
 
-\begin{dunetable} [Expected DAQ Yearly Produced Data Volumes] {p{0.3\textwidth}p{0.1\textwidth}p{0.5\textwidth}} {tab:sp-daq:rates}{Summary of expected data volumes produced yearly for initial single-module running.
-    The numbers assume no compression, and are given for a single \SI{10}{\kilo\tonne} module (2-4x lossless compression factor expected). 
+\begin{dunetable} [Expected DAQ Yearly Produced TPC Data Volumes] {p{0.3\textwidth}p{0.1\textwidth}p{0.5\textwidth}} {tab:sp-daq:rates}{Summary of expected data volumes produced yearly for initial single-module running.
+    The numbers assume TPC only rates with no compression, and are given for a single
+    \SI{10}{\kilo\tonne} module, assuming the parameters listed in Table~\ref{tab1.3}. (A 2-4x lossless
+    compression factor is expected.)
     Trigger primitives (see Section~\ref{sec:sp-daq:design-data-selection}), fake SNB data as well as additional data recorded for detector performance studies and debugging are not foreseen to be stored offline permanently.}
 Source                                              & Annual Data Volume & Assumptions \\\toprowrule
 Beam interactions                                   & 27 TB              & 10 MeV threshold in coincidence with beam
 time, including cosmic coincidence; \spreadout readout \\\colhline
 Cosmics and atmospheric neutrinos                   & 10 PB              & \spreadout readout \\\colhline
 Radiological backgrounds                            & $<2$ PB            & $<1$ per month fake rate for SNB
-trigger\\\colhline
+trigger; 100s readout\\\colhline
 Cold electronics calibration                        & 4 TB               & scaled from \dword{pdsp} experience \\\colhline
 Radioactive source calibration                      & 100 TB             & $<10$ Hz source rate; single
 APA readout; \spreadout readout \\\colhline
 Laser calibration                                   & 200 TB             & 10$^6$ total laser pulses; half the
 TPC channels illuminated per pulse; lossy
 compression (zero-suppression) on all channels\\\colhline
-Random triggers                                     & 60 TB              & 45 per day\\\colhline
-Trigger primitives and detector performance studies & $<15$ PB           & Dominated by $^{39}$Ar \\\colhline
+Random triggers                                     & 60 TB
+& 45 per day; \spreadout readout \\\colhline
+Trigger primitives and detector performance studies & $<15$ PB           & $^{39}$Ar dominated\\\colhline
 \end{dunetable}
 
 Self-triggering on \dword{snb} activity is a unique challenge for the
@@ -236,7 +259,7 @@ DUNE \dword{fd}, and an aspect of the design which has never been demonstrated
 in a \dword{lartpc}. The challenge with \dword{snb} triggering is two-fold. 
 First, the activity of the individual \dword{snb} neutrino interactions
 is expected to be of relatively low energy (\SIrange{10}{30}{\mega\electronvolt}),
-sometimes indistinguishable from pile-up of radiological background activity in the
+often indistinguishable from pile-up of radiological background activity in the
 detector.  Triggering on an ensemble of \bigo{100} events expected on
 average in the case of a galactic supernova burst is therefore
 advantageous; however, since this ensemble of events is expected to occur sparsely over the
@@ -263,13 +286,18 @@ conservatively for the first DUNE \dword{fd} module, and agressively reducing
 the design conservatism as further experience is gained with detector
 operations. At the same time, it is designed to preserve the possibility of
 additional capacity as required. The bulk of processing and buffering of raw
-detector data is done underground, in the upstream \dword{daq} part of the
+detector data is done underground, in the upstream \dword{daq} and low
+level data selection parts of the
 system (see Figure~\ref{fig:fd-daq:layout}), with only event building and data
 storage kept on surface.
 
 Power, cooling, and space are constrained both in the \dword{cuc} and on surface, limited to \daqpower and \daqracks (out of \cucracks total) in the \dword{cuc} and \surfdaqpower and \surfdaqracks on surface for DAQ for all four \dword{fd} modules.
 The underground computing required for the DAQ to service the SP detector module is expected to require less than a quarter of the total power and rack space provided for all four detector modules. 
-The servers for FELIX, trigger, various services, networking and the timing system and including spares is expected to consume less than \SI{63}{\kilo\watt} and fill less than 300U of rack space.
+The hardware for upstream \dword{daq}, low level data selection,
+various services, networking, and the timing system, including spares,
+all residing in the \dword{cuc}, 
+are expected to consume less than \SI{63}{\kilo\watt} and fill less
+than 300U of rack space, combined \cite{ale}.
 
 %%% numbers from Alessandro
 % - 85 felix servers , 350 W, 2 APAs/host, 2Us - including spares
@@ -296,12 +324,18 @@ There are five key challenges for the DUNE \dword{fd} \dword{daq} system:
 
 \item Thirdly, the \dword{snb} physics requirements necessitate large buffering in the upstream \dword{daq}. 
 
-  The implementation of a buffer element in the upstream DAQ allows for the formation and capture of delayed, data-driven trigger decisions:
-  The trigger accumulates low energy signals while forming the trigger decision, thus identifying activity compatible with \dword{snb}.
-  The specification for the depth of this buffer is determined in consultation with physics groups and is driven primarily by the need to retaing all the unbiased data for up to \SI{10}{s}  preceding a \dword{snb} trigger.
-  Collecting data containing information on other types of interactions and decays do not pose additional requirements on the upstream \dword{daq} buffer since the latency to form the required triggers is expected to be well below \SI{10}{s}.
+  The implementation of a buffer element in the upstream DAQ allows
+  for the formation and capture of delayed, data-driven data selection
+  decisions:
+  The trigger accumulates low energy signals over an extended period
+  of time while forming the trigger decision, thus identifying activity compatible with \dword{snb}.
+  The specification for the depth of this buffer is determined in
+  consultation with physics groups and is driven primarily by the need
+  to retain all unbiased data while processing up to \SI{10}{s} of
+  data for the trigger decision, preceding a \dword{snb} trigger.
+  Collecting data containing information on other types of interactions and decays does not pose additional requirements on the upstream \dword{daq} buffer, since the latency to form the required triggers is expected to be well below \SI{10}{s}.
 
-\item Fourthly, the \dword{daq} must support a very wide range of readout windows and trigger rates. This encompasses the acquisition of localised events in both time and space up to the very large and rare \dword{snb} detector-wide readouts throughout \SI{100}{s}.
+\item Fourthly, the \dword{daq} must support a very wide range of readout windows and trigger rates. This encompasses the acquisition of localized events in both time and space up to the very large and rare \dword{snb} detector-wide readouts over \SI{100}{s}.
 
 \item Finally, the \dword{daq} needs to reduce the volume of data to be permanently stored offline to a maximum of \SI{30}{PB/year}.
   The \dword{daq} system is designed so as to be able to select interesting time windows in which activity was detected, apply lossless compression to data records, as well as filter them to remove unnecessary data regions.
@@ -317,7 +351,10 @@ Table~\ref{tab:sp-daq:parameters} summarizes the important parameters driving th
 [Key DAQ Parameters]
 {ll}
 {tab:sp-daq:parameters}
-{Summary of important parameters driving the DAQ design.}
+{Summary of important parameters driving the DAQ design. The \dword{pds}
+  system parameters are under study, but it is expected that the \dword{pds} raw
+  data volume that must be handled by the \dword{daq} is an order of
+  magnitude smaller than the \dword{tpc} raw data volume.}
 Parameter                                          & Value \\ \toprowrule
 TPC Channel Count per Module                       & 384,000\\ \colhline
 TPC Collection Channel Count per Subdetector (APA) & 960\\ \colhline
@@ -365,7 +402,8 @@ PDS Readout & Data rate and format, number and type of links, timing &  \citedoc
 Computing & Off-site data transfer rates, methods, data file content, disk buffer, software development and maintenance &  \citedocdb{7123} \\ \colhline
 CISC & Information exchange, hardware and software for rack and server monitoring & \citedocdb{6790}{v1} \\ \colhline
 Calibration & Constraint on total volume of the calibration data; trigger and timing distribution from the DAQ & \citedocdb{7069} \\ \colhline
-Timing and Synchronization & Clients, clock frequency, protocols, transports, accuracy, monitoring &  \citedocdb{11224} \\ \colhline
+Timing and Synchronization & Clients, clock frequency, protocols,
+transports, accuracy, synchronization precision, monitoring&  \citedocdb{11224} \\ \colhline
 Facilities & Detector integration, coordination, cables, racks, safety, conventional facilities, lack of impact on cryo and DSS &  \citedocdb{6988}{v1} \\ \colhline
 Installation & Prototyping, planning, transport, underground equipment and activity, safety & \citedocdb{7015} \\ \colhline
 \end{dunetable}
@@ -377,7 +415,8 @@ the raw \dword{tpc} data to the \dword{daq} \dword{fe} readout (\dword{felix}; s
 Section~\ref{sec:daq:design-upstream}). This ensures the \dword{daq} is electrically decoupled from the detector
 cryostat. Ten \SI{10}{Gbps} links are expected per \dword{apa}, and have
 been specified as 300m OM4 multi-mode fibers from \dword{sfp}+ at the \dword{wib} to
-\dword{minipod} on \dword{felix}. The data format has been specified
+\dword{minipod} on \dword{felix}. (The optical fibers themselves are
+the responsibility of the \dword{daq} Consortium.) The data format has been specified
 to use a custom communication protocol and no
 compression.
 
@@ -414,13 +453,18 @@ rack status units in \dword{daq} racks. The information from \dword{cisc}
 feeds back into the \dword{daq} for run control operations.
 
 \item[Calibration] The \dword{daq} and calibration interface is described in \citedocdb{7069}. Two calibration systems are envisioned for the \dword{fd}: a laser calibration system and a neutron generator. 
-  Two way communication between the calibration system and the DAQ is needed.  In the first, the calibration system must notify the trigger decision process when activity has been induced in the detector.  In the second, the DAQ must provide input to the calibration system so that it may avoid inducing activity in the detector during certain periods such as during a \dword{snb} readout time or during a beam spill.
-This second communication will be initiated by the data selection system and distributed through the
+  Two-way communication between the calibration system and the
+  \dword{daq} is needed.  Specifically, the calibration system must
+  notify the data selection system, thus informing trigger decision,
+  when activity has been induced in the detector. At the same time, the \dword{daq} must provide input to the calibration system so that it may avoid inducing activity in the detector during certain periods such as during a \dword{snb} readout time or during a beam spill.
+This second communication will be initiated by the data selection
+system and distributed via the external trigger interface and
+subsequently through the
 \dword{daq} timing system.
 
 
 \item[Timing and Synchronization] The timing system of the \dword{dune} \dword{fd} connects with almost all detector systems and with the calibration system and has a uniform interface to each of them. 
-  A single interface document, \citedocdb{11224}, describes all these timing interfaces. 
+  A single interface document \citedocdb{11224} describes all timing interfaces. 
 
 Accuracy of timestamps delivered to  detector endpoints will be $\pm$\SI{500}{\nano\second} with respect to UTC. Synchronization between any two endpoints in the detector will be better than \SI{10}{\nano\second}. Between detector modules, synchronization will be better than \SI{25}{\nano\second}.  
 \end{description}
@@ -435,7 +479,7 @@ descriptions of the subsystem designs and implementation specifics.
 \subsection{Overview}
 \label{sec:fd-daq:design-overview}
 
-The  \dword{daq} system is composed of six distinct subsystems:
+The  \dword{daq} system is composed of five distinct subsystems:
 %
 (1) upstream \dword{daq} (Section~\ref{sec:daq:design-upstream}),
 %
@@ -447,8 +491,7 @@ The  \dword{daq} system is composed of six distinct subsystems:
 %
 (5) \dfirst{daqtss} (Section~\ref{sec:sp-daq:design-timing}).
 %
-The physical extent
-the first five of the \dword{daq} subsystems
+The physical extent of the subsystems
 can be specified in reference to Figure~\ref{fig:fd-daq:layout}: the
 upstream \dword{daq} and \dword{daqtss}  live underground in the \dword{cuc}; \dword{daqdss} occupies
 both underground and above-ground spaces; \dword{daqbes} is above-ground
@@ -459,7 +502,7 @@ detail in the following subsections.
 
 Front-end readout is carried out by the upstream \dword{daq}, using custom data receiver and
 co-processing \dword{fpga}/CPU hardware, all of which is hosted in 80-85 servers in the \dword{cuc}. A
-similar number of additional servers is responsible for the execution
+corresponding number of additional servers is responsible for the execution
 of subsequent software-based low-level processing of ``trigger
 primitives''
 generated in the upstream \dword{daq} for the purposes of data selection. The trigger candidates constructed from trigger primitives are propagated to a central server responsible
@@ -474,15 +517,15 @@ facilitates event building in a few servers and buffering for built
 events on non-volatile storage. Upon receiving a \dword{trigcommand}, the \dword{daqbes}
  queries
 data from the upstream \dword{daq} buffers and builds that into an ``event
-record'', which is temporarily stored as (a number of) files. Event records can be optionally processed in a high-level
+record'', which is temporarily stored as (a number of) files. Event records are optionally processed in a high-level
 filter/data reduction stage, which is part of overall data selection,
  prior to event records being shipped to DUNE offline. Pervasively,
  the  \dfirst{daqccm} provides the data taking orchestration
  (Section~\ref{sec:fd-daq:design-run-control}), and the
  \dfirst{daqtss} provides synchronization and synchronous command distribution
  (Section~\ref{sec:sp-daq:design-timing}). Figure~\ref{fig:daq-conceptual-overview}
- provides a conceptual illustration of the overal \dword{daq} system
- functionality while Figure~\ref{fig:daq-deployment} illustrates the deployment of the system.
+ provides a conceptual illustration of the overall \dword{daq} system
+ functionality.% while Figure~\ref{fig:daq-deployment} illustrates the deployment of the system.
  %, while Figure~\ref{fig:daq-design}
 %specifies the design implementation. 
 
@@ -528,7 +571,7 @@ namely the \dword{daqdss} and the \dword{daqbes}.
   \includegraphics[width=0.8\textwidth]{daq-ud-func-blocks}
 \end{dunefigure}
 
-The upstream \dword{daq} system comprises many similar \dword{daqrou}, each
+The upstream \dword{daq} system comprises many similar \dwords{daqrou}, each
 connected to a subset of electronics from a detector module and
 interfacing with the \dword{daq} switched network. In the case of the
 \dword{tpc}, 75 functionally identical RU are each responsible for the readout of raw data from two
@@ -542,11 +585,11 @@ In the baseline design, used also for system costing, each RU is composed of:
 \begin{enumerate}
 \item one dual socket multicore 2U server, with two \SI{10}{Gbps} and two \SI{1}{Gbps} ethernet ports for redundant data transmission and control, with at least 256 GB of DDR4 RAM, and sufficient PCIe lanes to host 2 TB of SSD disks,
 \item two \dword{felix} cards~\cite{atlas-felix}, each with a PCIe 3.0 x16 interface and supporting 10 \SI{9.6}{Gbps} bidirectional serial optical links,
-\item only in case of the TPC readout, four co-processor cards mounted onto the two \dword{felix} cards, for additional processing power and data buffering.
+\item only in case of the TPC readout, four custom-designed co-processor cards mounted onto the two \dword{felix} cards, for additional processing power and data buffering.
 
 \end{enumerate}
 
-In the following we describe the main functional blocks of the upstream \dword{daq}.
+The main functional blocks of the upstream \dword{daq} are described below:
 
 \begin{itemize}
   
@@ -555,27 +598,25 @@ point-to-point serial optical links running a simple (e.g., 8/10 bit encoded) pr
 \dword{apa} there are ten such links connecting its \dwords{wib} to the DAQ. To reduce space and
 power consumption in the \dword{cuc}, high data aggregation is desired. In the baseline design, the
 20 fibers from two \dwords{apa} are aggregated into one \dword{fec} with each \dword{apa} connected
-to one \dword{felix} FPGA PCIe 3.0 board.  If technology advances sufficiently a PCIe 4.0 version of
+to one \dword{felix} FPGA PCIe 3.0 board.  If technology advances sufficiently, a PCIe 4.0 version of
 \dword{felix} may be produced to increase the data aggregation such that each board would accept 20
 links and a total of 40 links per \dword{fec} would be accomodated. Tests were performed to verify
 \dword{om3} and \dword{om4} fibers support \SI{10}{Gbps} links over a run of \SI{300}{\meter}.
-Higher speed fiber optic links may be employed in order to reduce the number of fibers if run
+Higher-speed fiberoptic links may be employed in order to reduce the number of fibers if run
 lengths can be reduced. The \dword{felix} board and firmware was developed initially by and for the
 ATLAS experiment and is now proposed or already in use by several other experiments including
 \dword{protodune}.
   
   \item The upstream \dword{daq} subsystem provides access to the
 \dword{daqdss} and \dword{daqbes} through a commodity switched network as
-illustrated in Figure~\ref{fig:daq:readout}). The network communication
+illustrated in Figure~\ref{fig:daq:readout}. The network communication
 protocol is as described in Section~\ref{sec:daq:design-ipc}. The network I/O
 is handled by the \dwords{daqrou} via software; dedicated hardware or firmware
 development is not required.
 
 \item The data processing functional block is tasked with identifying and forming \dwords{trigprimitive} (see
 Section~\ref{sec:sp-daq:design-trigger-primitives}), after a stage of data
-reorganization and noise filtering for both the \dword{tpc} or \dword{pds}. 
-
-\Dwords{trigprimitive} summarize time periods on a channel where the digitized waveform is no longer consistent with noise.
+reorganization and noise filtering for both the \dword{tpc} and \dword{pds}. \Dwords{trigprimitive} summarize time periods on a channel where the digitized waveform is no longer consistent with noise.
 These regions of interest are then used as input to the \dword{daqdss} where they begin the process of forming a trigger decision.
 
 In the baseline design this functional block is implemented in \dword{fpga}.
@@ -593,25 +634,33 @@ bottlenecks. Localized and extended trigger activity are associated
 with two rather different time scales and data throughput metrics, and
 those collectively dictate the temporary storage technology and scale. 
 
-The time required to form a trigger decision based on localized activity is expected to be on order one second.
-Extended triggers present a far more challenging set of buffering requirements.  
-Early activity from a \dword{snb} may occur at a rate near that of radiological activity.
-Theoretical estimates indicate \snbpretime may be needed for the \dword{snb} interaction rate is significantly enough above backgrounds to warrant a trigger.
+The time required to form a trigger decision based on localized
+activity is expected to be on the order of one second.
+Extended triggers present a far more challenging set of buffering
+requirements; 
+early activity from a \dword{snb} may occur at a rate near that of radiological activity.
+Theoretical estimates indicate \snbpretime of integration time may be needed for the
+\dword{snb} interaction rate to be deemed significantly enough above
+background rate to warrant a trigger.
 In order to locate interactions in this low-rate period, the full data rate must be buffered until a \dword{snb} trigger may be formed.
 The throughput and endurance required by this buffer is satisfied by RAM technology such as DDR4.
 
-A second challenge in recording data during a \dword{snb} is to assure essentially 100\% efficiency for collecting the individual, low-energy interactions. 
+A second challenge in recording data during a \dword{snb} is to assure
+essentially 100\% efficiency for collecting the individual, low-energy
+interactions during any given \dword{snb} burst. 
 To achieve this, the full-stream of data is recorded for a time duration that is expected to cover the time envelope of the burst.
 Guided by \dword{snb} models, this duration is chosen to be \snbtime.
 This requires extracting as much as \SI{120}{\tera\byte} from the \dword{tpc} upstream \dword{daq} across one single-phase detector module.
-It is not cost effective to design the \dword{daq} to extract such extended data record along the same path as nominal readout.
+It is not cost effective to design the \dword{daq} to extract such
+extended data record along the same path as nominal readout, thus
+additional buffering is needed.
 
 The technology and scale of this additional buffering must satisfy several requirements. 
 Each \dword{daqrou} must accept the full data rate of the portion of the detector module it services.
-The media must have sufficient capacity and allow for sufficient extraction throughput so that it is unlikely to ever be too full to accept another extended data record : \SI{4}{\tera\bit/\second} guarantee the ability to store two \dword{snb} events simultaneously.
+The media must have sufficient capacity and allow for sufficient extraction throughput so that it is unlikely to ever be too full to accept another extended data record: \SI{4}{\tera\bit/\second} guarantee the ability to store two \dword{snb} events simultaneously.
 Furthermore, assuming that, on average, a \dword{snb} trigger condition will be
 satisfied once per month, the most optimal technology is
-solid-state \dword{nvme} devices, which at the scale required to provide suitable input bandwidth, can provide a capacity to write the data from several extended activity triggers. The recorded data will be transferred to the backend system in well under a day.
+solid-state \dword{nvme} devices, which, at the scale required to provide suitable input bandwidth, can provide a capacity to write the data from several extended activity triggers. The recorded data will be transferred to the backend system in well under a day.
 
 For both types of activity, the buffering requirements may be reduced by
 employing lossless compression to the data prior to it entering the buffer. A
@@ -630,12 +679,13 @@ Figure~\ref{fig:daq:readout-blocks} shows the flow diagram of data and control m
 The \dfirst{daqdsn} subsystem is a hierarchical, online, primarily
 software-based system. It is responsible for immediate and continuous processing of a substantial fraction of the entire input data stream. 
 This includes data from \dword{tpc} and \dword{pds} subdetectors.
-From that input, as well as external inputs provided, for example, by
-the accelerator or detector calibration systems, the \dword{daqdss} must form a \dword{trigdecision},
+From that input, as well as external inputs provided by
+the accelerator and detector calibration systems, the \dword{daqdss} must form a \dword{trigdecision},
 which in turn produces a \dword{trigcommand}.
 This command summarizes the observed activity that led to the decision
-and provides addresses (in channel--time space) of the data in the
-upstream \dword{daq} buffers that capture information about the activity.
+and provides addresses (in channel-time space) of the data in the
+upstream \dword{daq} buffers that capture raw data
+corresponding to the activity.
 This command is sent to and then consumed and executed by the \dfirst{daqbes} as described in Section~\ref{sec:fd-daq:design-backend}. 
 It may also be propagated to the \dword{etl} and from there it may be
 distributed to other \dwords{detmodule} or other detector systems
@@ -654,10 +704,15 @@ system to reduce its input data by almost four orders of magnitude
 without jeopardizing the above efficiencies.
 
 To meet its requirements, the \dword{daqdss} subsystem design follows a hierarchical data selection strategy, where low-level decisions are fed forward into higher-level ones until a module-level trigger is activated. 
-The hierarchy is illustrated in Figure~\ref{fig:daq:data-selection-hierarchy} and details may be found in~\citedocdb{11215}.
+The hierarchy is illustrated in
+Figure~\ref{fig:daq:data-selection-hierarchy} and details may be found
+in~\citedocdb{11215}. 
 At the lowest level, trigger primitives are formed on a per-channel basis, and represent, for the baseline design, a ``hit on a wire/channel'' activity summary. 
 \Dwords{trigprimitive} are aggregated into \dwords{trigcandidate}, which represent information associated with higher-level constructs derived from trigger primitives, for example ``clusters of hits''. 
-\dword{trigcandidate} information is subsequently used to inform a module-level trigger decision, which generates a \dword{trigcommand}; this takes the form of either a localized high energy trigger or an extended SNB trigger, and each prompts readout of an event record. 
+\dword{trigcandidate} information is subsequently used to inform a
+module-level trigger decision, which generates a \dword{trigcommand};
+this takes the form of either a localized high energy trigger or an
+extended SNB trigger, and each prompts the corresponding readout of an event record. 
 Post-event-building, further data selection is carried out in the form of down-selection of event records, through a high level filter. 
 The data selection strategy is applicable to both \dword{pds} and \dword{tpc}, operating in parallel up to the module level trigger stage, where \dword{pds} and \dword{tpc} information can be combined to form a module level trigger decision. 
 Data selection design efforts have taken the approach of validating and demonstrating a \dword{tpc}-based data selection.
@@ -666,26 +721,28 @@ An additional \dword{pds}-based data selection component can be accommodated wit
 The subsystem structure is illustrated in
 Figure~\ref{fig:daq:data-selection}. The structure
 reflects the three stages of \dword{daqdsn}: (1) low level trigger, which consists of
-\dword{trigprimitive} generation and subsequent
+\dword{trigprimitive} generation (facilitated in upstream \dword{daq}; see
+Section~\ref{sec:daq:design-upstrea}) and subsequent
 \dword{trigcandidate} generation; (2) module level trigger; and (3)
-high level filter. Each stage is described in subsequent
+high level filter. Each stage is described in further detail in subsequent
 sections. An additional subsystem component is the external trigger interface,
 which serves as a common interface for the
-module level trigger of each of the FD \dwords{detmodule} and between
-the module level trigger and other systems (e.g.,~calibration,
+module level trigger of each of the \dword{fd} \dwords{detmodule} and between
+the module level trigger and other systems (calibration,
 accelerator and timing system) within a single
 \dword{detmodule}. After sufficient confirmation of quality the
 external trigger interface also sends \dword{snb} triggers
-to global coincidence trigger recipients such as  \dword{snews} \cite{snews}.
+to global coincidence trigger recipients such as \dword{snews} \cite{snews}.
 
 \begin{dunefigure}[Data selection strategy and hierarchy]{fig:daq:data-selection-hierarchy}{Data selection
     strategy and hierarchy.}
   \includegraphics[width=0.9\textwidth, trim=0cm 5cm 0cm 0cm]{DS_hierarchy.pdf}
 \end{dunefigure}
 
-\begin{dunefigure}[DUNE DAQ data selection subsystem]{fig:daq:data-selection}{Block diagram of \dword{dune} \dword{daq}
+\begin{dunefigure}[DUNE DAQ data selection
+  subsystem]{fig:daq:data-selection}{Block diagram of the \dword{dune} \dword{daq}
     \dword{daqdsn} subsystem, illustrating hierarchical structure of
-    subsystem design, and subsystem functionality.}
+    subsystem design, and subsystem functionality and data flow.}
   \includegraphics[width=0.95\textwidth, trim=0 2cm 0 0]{DS_summary_2.pdf}
 \end{dunefigure}
 
@@ -713,15 +770,16 @@ The first stage of DUNE FD operations will trigger on two general
 classes of physics, each handled differently at the trigger level:
 
 \begin{description}
-\item[High-energy interactions] These include cosmic muons, neutrino beam interactions, atmospheric neutrinos, and nucleon decays. 
-  Our efficiency for these interactions will be $>$ 99\% for any given particle type (electron,muon, photon, etc.) that has a localized (confined to a few contiguous APAs) visible energy deposition above 100 MeV.
+\item[High-energy interactions] High-energy interactions include cosmic muons, neutrino beam interactions, atmospheric neutrinos, and nucleon decays. 
+  The trigger efficiency for these interactions is required to be $>$ 99\% for any given particle type (electron,muon, photon, etc.) that has a localized (confined to a few contiguous APAs) visible energy deposition above 100 MeV.
   To achieve this requirement, algorithms for creating high-energy trigger candidates are targeting a trigger effiiency of 50\% at 10 MeV visible energy, thus ensuring >99\% efficiency or better at 100 MeV.
   This type of trigger is referred to as localized high energy trigger. 
   Pushing the high-energy threshold lower could enable detection of diffuse supernova neutrinos and solar neutrinos, if radiological and neutron backgrounds are low enough.
 
-\item[Low-energy interactions] The primary physics target here is a neutrino burst from a nearby supernova. 
+\item[Low-energy interactions] The primary physics target for
+  low-energy interactions is a neutrino burst from a nearby supernova. 
   Low-energy trigger candidates (with threshold at or below 10 MeV visible energy) are generated and are input to an ``extended low-energy trigger'' that looks for bursts inconsistent with fluctuations in low-energy background events. 
-  The time window for detecting such bursts is tuned to ensure efficiency out to the galactic edge, and the pre-burst buffers are sized to handled the associated latency for detection.
+  The time window for detecting such bursts is tuned to ensure efficiency out to the galactic edge, and the pre-burst buffers are sized to handle the associated latency for detection.
 
 \end{description}
 
@@ -756,11 +814,9 @@ of the entire module but over significantly different time
 ranges: localized triggers prompt readout of \spreadout event records; extended
 triggers prompt readout of \SI{100}{\second} event records. 
 
-
-
 Viable data selection algorithms for the low level and module level trigger already exist, including
 algorithms for a module level \dword{snb} trigger.  It has
-been demonstrated through Monte Carlo simulations that the resulting efficiencies meet the DUNE
+been demonstrated through Monte Carlo simulations that the resulting efficiencies meet the above
 requirements \cite{bib:docdb11215}. On the other hand, the pipelines of processing required
 for \dword{daqdsn} can be executed using different firmware and software
 implementations. Development is actively ongoing to demonstrate
@@ -769,7 +825,9 @@ the philosophy and strategies of the \dword{daq} design, there is built-in
 flexibility in defining whether each element of a pipeline executes on
 \dword{fpga}, CPU, GPU, or, in principle, some other future hardware
 architecture. A purely software implementation of data selection is being
-implemented for demonstration at \dword{protodune}; it will be then modified to match the baseline design in which trigger primitives are generated in \dword{fpga}.
+implemented for demonstration at \dword{protodune}; it will be then
+modified to match the baseline design in which trigger primitives are
+generated in upstream \dword{daq} \dword{fpga}.
 
 \subsubsection{Low Level Trigger: Trigger Primitive Generation}
 \label{sec:sp-daq:design-trigger-primitives}
