@@ -531,13 +531,8 @@ filter/data reduction stage, which is part of overall data selection,
 
 \begin{dunefigure}[DAQ system overview]{fig:daq-conceptual-overview}{Conceptual
    Overview of \dword{daq} System Functionality for a single \nominalmodsize module}
-  \includegraphics[width=0.9\textwidth,clip,trim=0 0 0 20mm]{daq-toplevel-conceptual-nebot.pdf}
+  \includegraphics[width=0.9\textwidth]{daq-overview.pdf}
 \end{dunefigure}
-
-% \begin{dunefigure}[DAQ deployment]{fig:daq-deployment}{\dword{daq} Deployment}
-% %   \includegraphics[width=0.8\textwidth]{daq-overview.pdf}
-% \fixme{Someone draw this.  Roland?}
-% \end{dunefigure}
 
 Key to the implementation of the \dword{daq} design is the requirement that
 the system is partitionable. Specifically, the system can operate in
@@ -563,7 +558,7 @@ fiber(s) and buffers and serves data to other \dword{daq} subsystems,
 namely the \dword{daqdss} and the \dword{daqbes}.
 
 \begin{dunefigure}[DUNE upstream DAQ subsystem and connections]{fig:daq:readout}{\dword{dune} upstream \dword{daq} subsystem and its connections.}
-  \includegraphics[width=0.8\textwidth]{daq-readout.pdf}
+  \includegraphics[width=0.8\textwidth]{daq-readout}
 \end{dunefigure}
 
 \begin{dunefigure}[Flow diagram of the DUNE upstream DAQ subsystem.]{fig:daq:readout-blocks}{\dword{dune} upstream
@@ -1030,7 +1025,7 @@ storage buffer (OB) in Figure~\ref{fig:fd-daq:layout}.
 
 \subsubsection{Data Flow Orchestration}
 
-The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes to maximize the system tolerance to faults and to handle the readout of long SNB events in parallel tonominal readout request. This asynchronous, parallel readout will be coordinated by a \dword{daqdfo}.  Its operation is illustrated in Figure~\ref{fig:daq:backend} and is discussed here:
+The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes to maximize the system tolerance to faults and to handle the readout of long SNB events in parallel to nominal readout requests. This asynchronous, parallel readout will be coordinated by a \dword{daqdfo}.  Its operation is illustrated in Figure~\ref{fig:daq:backend} and is discussed here:
 
 % To minimize the latency in the readout of the data from the upstream
 % \dword{daq} buffers, the \dword{daqbes} will support parallel readout of event
@@ -1046,11 +1041,11 @@ The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes 
 \item The DFO will provide relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. Given its central role and knowledge of the state of available event builder buffers, it will be able to provide important information about the health and performance of the system.
 \end{itemize}
 
-\subsubsection{Event builder}
+\subsubsection{Event Builder}
 \label{sec:fd-daq:design-event-builder}
 
 The \dword{daqbes} will provide the instances of the \dfirst{eb} most likely as
-\dword{artdaq}~\cite{artdaq} components of the same name. The 
+\dword{artdaq}~\cite{artdaq} components of the same name. 
 As described above, each EB instance will
 
 \begin{itemize}
@@ -1076,7 +1071,7 @@ uninterrupted \dword{daq} operation in the unlikely event that the network conne
 sufficient to buffer the nominal output of the entire \dword{fd} for about one week even in the case of SNB events. Based on prior experience of the consortium with unusual losses of  connectivity at
 other far detector experiment sites, this is a conservative storage capacity value.
 
-The output buffer system will provide the relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. The knowledge of the health and performace of the of the buffer system will enable to promtly identify and address developing faults before they can have an impact on data taking.
+The output buffer system will provide the relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. The knowledge of the health and performace of the of the buffer system will enable the monitoring system to promtly identify and address developing faults before they can have an impact on data taking.
 
 
 \subsubsection{Data Network}
@@ -1103,7 +1098,7 @@ corresponding subsystem interfaces. It is responsible for error handling and rec
 achieved by designing a robust and autonomous fault-tolerant control system. The main goal is to
 maximize system up-time, data-taking efficiency and data quality when the system faces programmatic
 (i.e. calibrations) and unforeseen (hardware failures or software faults) change of data-taking
-conditions. The \dfirst{daqccm} provides an access point, which is delegating user’s actions to the
+conditions. The \dfirst{daqccm} provides an access point, which is delegating user's actions to the
 corresponding interfaces. The detector components and infrastructure elements access the \dfirst{daqccm}
 subsystems through their provided interfaces. 
 
@@ -1115,7 +1110,7 @@ The following sections describe each \dfirst{daqccm} subsystem, covering interna
 
 \subsubsection{Access}
 \label{sec:daq:design:ccm:access}
-Actions are defined as any kind of human interaction with the \dfirst{daqccm}. The access subsystem is responsible for the action delegation to internal function calls and procedures. It’s implementation is driven by the control, configuration and monitoring interface specifications, and protects the direct access to detector and infrastructural resources. It also controls authentication and authorization, which locks different functionalities to certain actor groups and subsystems. As an example, only the detector experts can modify frontend configuration through the configuration interfaces, or only an expert user can exclude an APA’s readout from data taking. 
+Actions are defined as any kind of human interaction with the \dfirst{daqccm}. The access subsystem is responsible for the action delegation to internal function calls and procedures. It's implementation is driven by the control, configuration and monitoring interface specifications, and protects the direct access to detector and infrastructural resources. It also controls authentication and authorization, which locks different functionalities to certain actor groups and subsystems. As an example, only the detector experts can modify frontend configuration through the configuration interfaces, or only an expert user can exclude an APA's readout from data taking. 
 
 
 \subsubsection{Control}
@@ -1130,7 +1125,7 @@ The control subsystem consists of several components and utilities, and also has
 It contains the following core components:
 \begin{itemize}
 \item Supervision System - It is responsible for manual and automated control and supervision of DAQ components at any given time. In autonomous mode, the system makes attempts for fault-recovery, failover to backup instances of subsystems, and isolation of problematic regions of the control tree. This is carried out by a hierarchical rule-based planning or fuzzy logic system.
-\item DAQ Application - The CCM provides interfaces in order to communicate with processes of the DAQ, and the ability to control and communication with the CCM. The Inter Process Communication (IPC) supports a mechanism to interact with all actors participating to data taking. The Finite State Machine (FSM) enforces the possible states and transitions that are specific to the experiment’s components, and also describes them in a uniform way.
+\item DAQ Application - The CCM provides interfaces in order to communicate with processes of the DAQ, and the ability to control and communication with the CCM. The Inter Process Communication (IPC) supports a mechanism to interact with all actors participating to data taking. The Finite State Machine (FSM) enforces the possible states and transitions that are specific to the experiment's components, and also describes them in a uniform way.
 \item Run Control - This part of the control subsystem coherently steers the data taking operations. It interacts with all actors participating to data taking in a given partition. It consists of a hierarchical control tree, which can subdivide the DAQ components into separated regions that may be acted upon independently.
 \item Resource Management - Provides a global scope of available resources for the DAQ components. This includes the mapping between the detector front-end readout units, processes, servers where they are spawned and required resources for the processes.
 \item Process Management - It is responsible to manage process lifetime.
@@ -1644,13 +1639,12 @@ PTMP has been successfully exercised to transfer trigger primitives from the sof
 \label{sec:sp-daq:design-plans}
 
 As mentioned in the introduction of this section, at present the development model chosen for the DAQ system is the one of iterative prototyping.
-This model is widely used in projects in which requirements are still being refined and for systems relying on rapidly evolving technologies, such as today’s information and computing sector. 
+This model is widely used in projects in which requirements are still being refined and for systems relying on rapidly evolving technologies, such as today's information and computing sector. 
 This model will be used throughout 2019, making use of the \dword{protodune} setup to explore architectural options, software solutions, etc.
 At a later stage the DAQ development will move to a more streamlined incremental model, ensuring that careful design precedes the final implementation of individual components.
 Most of the development will be carried out emulating the data inputs.
 On the other hand, regularly the DAQ will be validated via test stand integration with detectors, such as \dword{protodune} or pre-installation sites.
 The overall development schedule with the main DAQ milestones is shown in Section~\ref{sec:fd-daq:schedule}.
-
 
 \section{Production, Assembly, Installation and Integration}
 \label{sec:sp-daq:production}
