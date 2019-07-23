@@ -397,7 +397,7 @@ Computing & Off-site data transfer rates, methods, data file content, disk buffe
 CISC & Information exchange, hardware and software for rack and server monitoring & \citedocdb{6790}{v1} \\ \colhline
 Calibration & Constraint on total volume of the calibration data; trigger and timing distribution from the DAQ & \citedocdb{7069} \\ \colhline
 Timing and Synchronization & Clients, clock frequency, protocols,
-transports, accuracy, precision, monitoring&  \citedocdb{11224} \\ \colhline
+transports, accuracy, synchronization precision, monitoring&  \citedocdb{11224} \\ \colhline
 Facilities & Detector integration, coordination, cables, racks, safety, conventional facilities, lack of impact on cryo and DSS &  \citedocdb{6988}{v1} \\ \colhline
 Installation & Prototyping, planning, transport, underground equipment and activity, safety & \citedocdb{7015} \\ \colhline
 \end{dunetable}
@@ -447,13 +447,18 @@ rack status units in \dword{daq} racks. The information from \dword{cisc}
 feeds back into the \dword{daq} for run control operations.
 
 \item[Calibration] The \dword{daq} and calibration interface is described in \citedocdb{7069}. Two calibration systems are envisioned for the \dword{fd}: a laser calibration system and a neutron generator. 
-  Two way communication between the calibration system and the DAQ is needed.  In the first, the calibration system must notify the trigger decision process when activity has been induced in the detector.  In the second, the DAQ must provide input to the calibration system so that it may avoid inducing activity in the detector during certain periods such as during a \dword{snb} readout time or during a beam spill.
-This second communication will be initiated by the data selection system and distributed through the
+  Two-way communication between the calibration system and the
+  \dword{daq} is needed.  Specifically, the calibration system must
+  notify the data selection system, thus informing trigger decision,
+  when activity has been induced in the detector. At the same time, the \dword{daq} must provide input to the calibration system so that it may avoid inducing activity in the detector during certain periods such as during a \dword{snb} readout time or during a beam spill.
+This second communication will be initiated by the data selection
+system and distributed via the external trigger interface and
+subsequently through the
 \dword{daq} timing system.
 
 
 \item[Timing and Synchronization] The timing system of the \dword{dune} \dword{fd} connects with almost all detector systems and with the calibration system and has a uniform interface to each of them. 
-  A single interface document, \citedocdb{11224}, describes all these timing interfaces. 
+  A single interface document \citedocdb{11224} describes all timing interfaces. 
 
 Accuracy of timestamps delivered to  detector endpoints will be $\pm$\SI{500}{\nano\second} with respect to UTC. Synchronization between any two endpoints in the detector will be better than \SI{10}{\nano\second}. Between detector modules, synchronization will be better than \SI{25}{\nano\second}.  
 \end{description}
