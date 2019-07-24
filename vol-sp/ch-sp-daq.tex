@@ -685,62 +685,7 @@ corresponding to the activity.
 This command is sent to and then consumed and executed by the \dfirst{daqbes} as described in Section~\ref{sec:fd-daq:design-backend}. 
 It may also be propagated to the \dword{etl} and from there it may be
 distributed to other \dwords{detmodule} or other detector systems
-(e.g. calibration) for consideration.
-
-The \dword{daqdss} must select with high efficiency ($>$99\%) data associated with calibration
-signals, as well as beam interactions,
-atmospheric neutrinos, rare baryon-number-violating events, and cosmic
-ray events that deposit visible energy in excess of 100 MeV. 
-It must also select data associated with potential galactic \dwords{snb}, with galactic coverage
-of $>$90\%. Galactic coverage is defined as efficiency-weighted probability of an intra-galactic \dword{snb}. 
-To meet the requirement that the \dword{dune} \dword{fd} maintain
-$<$\offsitepbpy to permanent storage, the \dword{daqdss}
-subsystem must make \dword{daqdsn} decisions in a way that allows the \dword{daq} 
-system to reduce its input data by almost four orders of magnitude
-without jeopardizing the above efficiencies.
-
-To meet its requirements, the \dword{daqdss} subsystem design follows a hierarchical data selection strategy, where low-level decisions are fed forward into higher-level ones until a module-level trigger is activated. 
-The hierarchy is illustrated in
-Figure~\ref{fig:daq:data-selection-hierarchy} and details may be found
-in~\citedocdb{11215}. 
-At the lowest level, trigger primitives are formed on a per-channel basis, and represent, for the baseline design, a ``hit on a wire/channel'' activity summary. 
-\Dwords{trigprimitive} are aggregated into \dwords{trigcandidate}, which represent information associated with higher-level constructs derived from trigger primitives, for example ``clusters of hits''. 
-\dword{trigcandidate} information is subsequently used to inform a
-module-level trigger decision, which generates a \dword{trigcommand};
-this takes the form of either a localized high energy trigger or an
-extended SNB trigger, and each prompts the corresponding readout of an event record. 
-Post-event-building, further data selection is carried out in the form of down-selection of event records, through a high level filter. 
-The data selection strategy is applicable to both \dword{pds} and \dword{tpc}, operating in parallel up to the module level trigger stage, where \dword{pds} and \dword{tpc} information can be combined to form a module level trigger decision. 
-Data selection design efforts have taken the approach of validating and demonstrating a \dword{tpc}-based data selection.
-An additional \dword{pds}-based data selection component can be accommodated within the same data selection design and will augment data selection capabilities, efficiency and robustness.
-
-The subsystem structure is illustrated in
-Figure~\ref{fig:daq:data-selection}. The structure
-reflects the three stages of \dword{daqdsn}: (1) low level trigger, which consists of
-\dword{trigprimitive} generation (facilitated in upstream \dword{daq}; see
-Section~\ref{sec:daq:design-upstrea}) and subsequent
-\dword{trigcandidate} generation; (2) module level trigger; and (3)
-high level filter. Each stage is described in further detail in subsequent
-sections. An additional subsystem component is the external trigger interface,
-which serves as a common interface for the
-module level trigger of each of the \dword{fd} \dwords{detmodule} and between
-the module level trigger and other systems (calibration,
-accelerator and timing system) within a single
-\dword{detmodule}. After sufficient confirmation of quality the
-external trigger interface also sends \dword{snb} triggers
-to global coincidence trigger recipients such as \dword{snews} \cite{snews}.
-
-\begin{dunefigure}[Data selection strategy and hierarchy]{fig:daq:data-selection-hierarchy}{Data selection
-    strategy and hierarchy.}
-  \includegraphics[width=0.9\textwidth, trim=0cm 5cm 0cm 0cm]{DS_hierarchy.pdf}
-\end{dunefigure}
-
-\begin{dunefigure}[DUNE DAQ data selection
-  subsystem]{fig:daq:data-selection}{Block diagram of the \dword{dune} \dword{daq}
-    \dword{daqdsn} subsystem, illustrating hierarchical structure of
-    subsystem design, and subsystem functionality and data flow.}
-  \includegraphics[width=0.95\textwidth, trim=0 2cm 0 0]{DS_summary_2.pdf}
-\end{dunefigure}
+(e.g. calibration) for further consideration.
 
 To facilitate partitioning, the \dword{daqdsn} subsystem will be
 able to be instantiated multiple times, and multiple instances will be
@@ -751,18 +696,74 @@ apply certain masks and mapping on subdetectors or their fragments in
 its decision making. This information is delivered to the
 \dword{daqdss} from the \dword{daqccm} system.
 
-Ultimately, each \dword{trigdecision} culminates in a command sent to \dword{daqbes}. 
-This command contains all the logical detector addresses and time ranges
-required such that an \dword{eb} may properly query the upstream \dword{daq}
-buffers and finally collect and output the corresponding detector data
-and the corresponding trigger data. To avoid duplication of data
-records associated with \dwords{trigcommand} that overlap in readout
-record ``space'', the \dword{daqdsn} system must also time-order and
-prioritize trigger decisions. The details for forming this
-command are described next and the operation of the \dword{daqbes} is
-described in Section~\ref{sec:fd-daq:design-backend}.
+Following DUNE \dword{fd} and \dword{daq} requirements, the
+\dword{daqdss} must select, with sufficiently high ($>$99\%) efficiency, data associated with calibration
+signals, as well as beam interactions,
+atmospheric neutrinos, rare baryon-number-violating events, and cosmic
+ray events that deposit visible energy in excess of 100 MeV. 
+It must also select data associated with potential galactic
+\dwords{snb} within 100 kpc with $>$90\% efficiency. 
+Furthermore, to meet the requirement that the \dword{dune} \dword{fd} maintain
+$<$\offsitepbpy to permanent storage, the \dword{daqdss}
+subsystem must make \dword{daqdsn} decisions in a way that allows the \dword{daq} 
+system to reduce its input data by almost four orders of magnitude,
+without jeopardizing the above efficiencies.
 
-The first stage of DUNE FD operations will trigger on two general
+To meet its requirements, the \dword{daqdss} subsystem design follows a hierarchical data selection strategy, where low-level decisions are fed forward into higher-level ones until a module-level trigger is activated. 
+The hierarchy is illustrated in
+Figure~\ref{fig:daq:data-selection-hierarchy}. 
+At the lowest level, trigger primitives are formed on a per-channel basis, and represent, for the baseline design, a ``hit on a wire/channel'' activity summary. 
+\Dwords{trigprimitive} are aggregated into \dwords{trigcandidate}, which represent information associated with higher-level constructs derived from trigger primitives, for example ``clusters of hits''. 
+\dword{trigcandidate} information is subsequently used to inform a
+module-level trigger decision, which generates a \dword{trigcommand};
+this takes the form of either a localized high energy trigger or an
+extended SNB trigger, and each prompts the corresponding readout of an
+event record. Details on the
+exact algorithm implementation for trigger primitive, trigger
+candidate, and trigger decision generation may be found
+in~\citedocdb{11215} and~\citedocdb{14522} and references therein. 
+Post-event-building, further data selection is carried out in the form
+of down-selection of event records, through a high level
+filter. Details on a possible post-event-building filtering alforithm
+implementation may be found in~\citedocdb{11311}.
+
+It should be noted that this data selection strategy is applicable to both \dword{pds} and \dword{tpc}, operating in parallel up to the module level trigger stage, where \dword{pds} and \dword{tpc} information can be combined to form a module level trigger decision. 
+Data selection design efforts have taken the approach of validating
+and demonstrating a \dword{tpc}-based data selection. Nevertheless,
+the data selection design by construction allows an additional
+\dword{pds}-based data selection component to be accommodated within
+the same design, which will augment data selection capabilities, efficiency and robustness.
+
+The subsystem structure is illustrated in
+Figure~\ref{fig:daq:data-selection}. The structure
+reflects the three stages of \dword{daqdsn}: (1) low level trigger, which consists of
+\dword{trigprimitive} generation (facilitated in upstream \dword{daq}; see
+Section~\ref{sec:daq:design-upstream}) and subsequent
+\dword{trigcandidate} generation; (2) module level trigger; and (3)
+high level filter. Each stage is described in further detail in subsequent
+sections. An additional subsystem component is the external trigger interface,
+which serves as a common interface for the
+module level trigger of each of the \dword{fd} \dwords{detmodule} and between
+the module level trigger and other systems (calibration,
+accelerator and timing system) within a single
+\dword{detmodule}. An additional responsibility of the
+external trigger interface is to send \dword{snb} triggers
+to global coincidence trigger recipients such as \dword{snews}
+\cite{snews}, after sufficient confirmation of trigger quality.
+
+\begin{dunefigure}[Data selection strategy and hierarchy]{fig:daq:data-selection-hierarchy}{Data selection
+    strategy and hierarchy.}
+  \includegraphics[width=0.9\textwidth, trim=5cm 5cm 5cm 0cm]{DS_hierarchy.pdf}
+\end{dunefigure}
+
+\begin{dunefigure}[DUNE DAQ data selection
+  subsystem]{fig:daq:data-selection}{Block diagram of the \dword{dune} \dword{daq}
+    \dword{daqdsn} subsystem, illustrating hierarchical structure of
+    subsystem design, and subsystem functionality and data flow.}
+  \includegraphics[width=0.95\textwidth, trim=0 2cm 0 0]{DS_summary_2.pdf}
+\end{dunefigure}
+
+The first stage of DUNE \dword{fd} operations will trigger on two general
 classes of physics, each handled differently at the trigger level:
 
 \begin{description}
@@ -805,15 +806,26 @@ classes of physics, each handled differently at the trigger level:
 %   seconds.
 % \end{itemize}
 
-\noindent Each trigger type furthermore prompts readout
+\noindent Each trigger type prompts readout
 of the entire module but over significantly different time
 ranges: localized triggers prompt readout of \spreadout event records; extended
 triggers prompt readout of \SI{100}{\second} event records. 
 
+Ultimately, each \dword{trigdecision} culminates in a command sent to \dword{daqbes}. 
+This command contains all the logical detector addresses and time ranges
+required such that an \dword{eb} may properly query the upstream \dword{daq}
+buffers and finally collect and output the corresponding detector data
+and the corresponding trigger data. To avoid duplication of data
+records associated with \dwords{trigcommand} that overlap in readout
+record ``space'', the \dword{daqdsn} system must also time-order and
+prioritize trigger decisions. The details for forming this
+command are described next, while the operation of the \dword{daqbes} is
+described in Section~\ref{sec:fd-daq:design-backend}.
+
 Viable data selection algorithms for the low level and module level trigger already exist, including
 algorithms for a module level \dword{snb} trigger.  It has
 been demonstrated through Monte Carlo simulations that the resulting efficiencies meet the above
-requirements \cite{bib:docdb11215}. On the other hand, the pipelines of processing required
+requirements \cite{bib:docdb11215,bib:docdb14522}. On the other hand, the pipelines of processing required
 for \dword{daqdsn} can be executed using different firmware and software
 implementations. Development is actively ongoing to demonstrate
 and compare performance of different implementations. In satisfying
@@ -825,12 +837,13 @@ implemented for demonstration at \dword{protodune}; it will be then
 modified to match the baseline design in which trigger primitives are
 generated in upstream \dword{daq} \dword{fpga}.
 
+
 \subsubsection{Low Level Trigger: Trigger Primitive Generation}
 \label{sec:sp-daq:design-trigger-primitives}
 
 A \dword{trigprimitive} is defined nominally on a per-channel basis. In the case of
-the \dword{spmod}, it is identified as a collection-channel signal rising above some
-noise-driven threshold for some minimum period of time (here called a
+the \dword{spmod} \dword{tpc}, it is identified as a
+collection-channel signal rising above some noise-driven threshold for some minimum period of time (here called a
 ``hit'').
 A \dword{trigprimitive} takes the form of an information packet that 
 summarizes the above-threshold waveform information in terms of its
