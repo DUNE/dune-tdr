@@ -982,8 +982,8 @@ may either alter \dword{trigdecision} criteria or merely include the
 information in contemporaneous \dwords{trigdecision}. The beam time information can also be distributed to components of the calibration system so that they may avoid producing activity in the detector that may interfere with activity from beam neutrinos.
 
 The external trigger interface is implemented in \bigo{1} CPU server (with 100\%
-redundancy), with 10 Gbps networking and interfacing hardware components (White
-Rabbit) for timing and external trigger signal I/O.
+redundancy), with 10 Gbps networking and interfacing hardware
+components (White Rabbit) for timing and external trigger signal I/O.
 
 \subsubsection{High Level Filter}
 \label{sec:fd-daq:design-data-reduction}
@@ -1252,6 +1252,10 @@ module with an accuracy of \bigo{\SI{10}{\nano\second}}.
 For a common trigger for a \dword{snb} between modules, the timing must have an accuracy of order \SI{1}{\milli\second}.
 However, a tighter constraint is the need to calibrate the common clock to universal time derived from \dword{gps} so the \dword{daqdsn} algorithm can be adjusted inside an accelerator spill, which again requires an absolute accuracy of order \SI{1}{\micro\second}. The design of the timing system allows for an order-of-magnitude better synchronization precision than these requirements, allowing a substantial margin of safety and the possibility for future upgrades to front-end electronics.
 
+%The 62.5 MHz was pushed by the DAQ group.  The White Rabbit system (used 
+%by DP) is based on a 125 MHz clock... thus 62.5 MHz rather than 64 MHz.  
+%This difference is inconsequential for the CE.
+
 The \dword{dune} \dword{fd} uses a improved version of the \dword{protodune} timing
 system, where a design principle is to transmit synchronization messages over
 a serial data stream with the clock embedded in the data. The format
@@ -1286,13 +1290,14 @@ Differential delays between these two paths are resolved by a second pair of fib
 \section{Design Validation and Development Plans}
 \label{sec:fd-daq:validation}
 
-The following strategy will be followed in order to validate and
+The following strategy is being followed in order to validate and
 develop the \dword{dune} \dword{fd} \dword{daq}:
 \begin{itemize}
-\item Use \dword{protodune} and other teststands as a basis for prototyping, development and validation
+\item Use \dword{protodune} and other test stands as a basis for prototyping, development and validation
 of the \dword{daq} design.
 \item Use Monte Carlo simulations and emulations in order to augment actual hardware
 demonstrations and validate triggering schemes in the FD environment.
+\item Benefit from experience in LArTPC data processing by other experiments.
 \end{itemize}
 
 % This strategy reflects the current \dword{daq} project schedule,
@@ -1306,14 +1311,25 @@ demonstrations and validate triggering schemes in the FD environment.
 % review (PRR). By then, final designs of all components
 % will be complete.
 
-The design and implementation of the \dword{daq} is being carried out using an iterative prototyping model, which is well suited for a system that largely relies on commercial off the shelf hardware components, on communication and information technologies that are rapidly evolving, and that mainly requires software and firmware development effort.
-The advantage of the prototyping model is also that it facilitates the identification of and collaboration among experts from a large number of institutions, thanks to the focussed effort of achieving the short term objectives established through each prototyping iteration.
+The design and implementation of the \dword{daq} is being carried out using an iterative prototyping model, which is well suited for a system that largely relies on commercial off-the-shelf hardware components, on communication and information technologies that are rapidly evolving, and that mainly requires software and firmware development effort.
+The advantage of the prototyping model is also that it facilitates the identification of and collaboration among experts from a large number of institutions, through focussed efforts to achieve the short-term objectives established through each prototyping iteration.
 
-Once the identification of convenient technologies will have been completed and the overall system requirements will have been refined, the project will switch to an iterative incremental model, ensuring that, step-by-step, functional and performance requirements will be met by each of the sub-components individually and by the \dword{daq} system globally.
-The overall schedule, summarised in Section~\ref{sec:fd-daq:schedule},
+Once the identification of applicable technologies are completed and the overall system requirements are refined, the project will switch to an iterative incremental model, ensuring that, step-by-step, functional and performance requirements will be met by each of the sub-components individually, and by the \dword{daq} system globally.
+The overall schedule, summarized in Section~\ref{sec:fd-daq:schedule},
 reflects the different development and production time scales that are
 envisioned for the various \dword{daq} components.
 
+While \dword{dune} data processing challenges are unique in both form
+and scale, other ongoing or planned near-term \dword{lartpc}
+experiments, including MicroBooNE, SBND, and ICARUS, are exercising
+a number of relevant data processing and data reduction techniques, and already providing valuable
+inputs to the \dword{dune} \dword{fd} design. For example,
+MicroBooNE has demonstrated successful implementations of lossless Huffman
+compression and of continuous readout via use of lossy compression
+(dynamic and fixed-baseline zero-supression)
+\cite{bib:uBsnreadout2019}; this has provided guidance and 
+confidence on anticipated achievable data reduction factors and data compression
+impact on physics performance.
 
 The following subsections summarize past, ongoing, and planned
 development and validation studies and identify how anticipated outcomes
@@ -1326,8 +1342,10 @@ will be used to finalize the \dword{daq} design.
 The \dword{fd} \dword{daq} consortium constructed and operated the \dword{daq} system~\cite{Sipos:2018auh} for \dword{protodune}, which included two parallel \dword{daq} readout architectures, one based on \dword{felix}, developed by ATLAS \cite{atlas-felix}, and the other on \dword{rce}, developed at SLAC. \dword{daq} design and construction for \dword{protodune} began in Q3 of 2016, and the system became operational at the start of the beam data run in Q4 of 2018. The detector is continuing to run at the time of writing, recording cosmic ray activity, and providing further input for \dword{daq} development toward \dword{dune}. 
 
 Figure~\ref{fig:daq-protodune} depicts the \dword{protodune} \dword{daq} system. 
-The \dword{daq} is split between the \dword{felix} and \dword{rce} implementations. The two architectures share the same back-end and timing and trigger systems. 
-Neither of these tested architectures exclusively represents the baseline design for the DUNE \dword{fd}. Instead, each rouhgly maps onto one of two data processing approaches: one in which the data is processed exclusively in custom-designed \dword{fpga} firmware and carrier board, and the other in which the data is processed primarily with custom software run in commodity servers. The baseline design presented here merges elements of the two approaches. Specifically, it uses \dword{felix} as the hardware platform for data receiving and handling, and an co-processor FELIX daughter card (analogous to the \dword{rce} platform used at \dword{protodune}) to provide additional, dedicated data processing resources.
+The \dword{daq} is split between the \dword{felix} and \dfirst{rce}
+\cite{bib:docdb1881} implementations. The two architectures share the
+same back-end and timing and trigger systems.  
+Neither of these tested architectures explicitly represents the baseline design for the DUNE \dword{fd}. Instead, each rouhgly maps onto one of two data processing approaches: one in which the data is processed exclusively in custom-designed \dword{fpga} firmware and carrier board, and the other in which the data is processed primarily with custom software run in commodity servers. The baseline design presented here merges elements of the two approaches. Specifically, it uses \dword{felix} as the hardware platform for data receiving and handling, and a co-processor FELIX daughter card (analogous to the \dword{rce} platform used at \dword{protodune}) to provide additional, dedicated data processing resources.
 
 
 \begin{dunefigure}[ProtoDUNE DAQ system]{fig:daq-protodune}{The \dword{protodune} \dword{daq} system.}
@@ -1335,9 +1353,11 @@ Neither of these tested architectures exclusively represents the baseline design
 \end{dunefigure}
 
 Besides overall readout architecture, the \dword{protodune} and \dword{dune} \dword{daq} systems exhibit two key differences. 
-First, the \dword{protodune} \dword{daq} is externally triggered (and at a trigger rate over an order of magnitude higher than that anticipated for \dword{dune}). Because of this, the \dword{protodune} \dword{daq} does not facilitate online data processing from the \dword{tpc} or \dword{pd} systems for self-triggering. 
+First, the \dword{protodune} \dword{daq} is externally triggered (and at a trigger rate over an order of magnitude higher than that anticipated for \dword{dune}). Because of this, the \dword{protodune} \dword{daq} does not facilitate online data processing from the \dword{tpc} or \dword{pds} for self-triggering. 
 Second, the \dword{protodune} system sits at the surface with a much higher data occupancy due to cosmic ray activity.
-Overcoming the first key difference in order to demonstrate \dword{daqdsn} capability for the \dword{fd} \dword{daq} design is a main component of future \dword{daq} development plans.
+Overcoming the first key difference in order to demonstrate
+\dword{daqdsn} capability for the \dword{fd} \dword{daq} design is a
+main component of current and future \dword{daq} development plans.
 
 % Continuous self-tirggering of the detector is also new with respect to
 % other ongoing or planned near-term \dword{lartpc} experiments, including
@@ -1360,12 +1380,12 @@ However, the successful operation of the \dword{protodune} \dword{daq} has provi
 
 Specifically, \dword{protodune} has demonstrated: 
 \begin{itemize}
-\item Upstream \dword{daq}: front-end readout hardware and data flow functionality servicing two out of the six \dwords{apa} was successfully employed in \dword{protodune}.
+\item Upstream \dword{daq}: Front-end readout hardware and data flow functionality servicing two out of the six \dwords{apa}.
   The data from each APA was continuously streamed to a single FELIX board hosted in a dedicated computer which then transferred it to two other computers for buffering and readout.
   The baseline upstream \dword{daq} for \dword{dune} FD will retain one APA per FELIX board but place two FELIX boards and the buffering and readout functionality all together in a single \dword{fec}. 
   In addition to data flow functionality, \dword{protodune} \dword{fe} readout also demonstrates the interface to the front-end TPC electronics, and scalability to DUNE. It also supports host server requirements and specifications. Finally, it serves as platform for further development involving co-processor implementation and data selection aspects.
 \item \dword{daqbes}, \dword{daqccm} and software infrastructure:
- successful \dword{daqbes} implementation, including event builder
+ Successful \dword{daqbes} implementation, including event builder
   farm and disk buffering, as well as an initial implementation of \dword{daqccm} functions. This has allowed the
   development and exercising of system partitioning, and provides a
   basis for scalability to DUNE. \dword{protodune} also serves as
@@ -1389,9 +1409,10 @@ greater detail in~\cite{Hennessy:CDRReview}.
 \subsection{Ongoing Development}
 \label{sec:sp-daq:design-validation}
 
-Subsystem development is ongoing at \dword{protodune} at the time of
+\dword{daq} subsystem development is ongoing at \dword{protodune} at the time of
 writing. A detailed schedule for 2019 is available
-in \cite{bib:docdb14095}. Major development plan milestones are:
+in \cite{bib:docdb14095}. Major development plan milestones, a number
+of which have already been achieved at the time of this writing, are:
 \begin{itemize}
 \item optimization and tuning of the \dword{fe} readout
 \item optimization and tuning of the \dword{artdaq} based dataflow software
@@ -1537,8 +1558,8 @@ that four cores are sufficient to keep up with 960 channels.
 The test does not include reformatting of the data required to put it in
 a form that allows AVX2 hardware SIMD acceleration.
 In tests with live \dword{protodune} data, it is found that ten cores at
-and average 65\% usage were enough to handle both reformatting and
-trigger primitive selection. 
+an average 65\% usage were enough to handle both reformatting and
+trigger primitive generation. 
 Effort on understanding and removing contribution
 from cosmics/cosmogenics and (known) noisy channels is ongoing.
 These results are summarized in Figure~\ref{fig:daq-tp-rates}
@@ -1587,10 +1608,12 @@ efficiency for any individual \dword{snb} neutrino interaction is on the order
 of 20-30\%. Simulations have further demonstrated that a
 multiplicity-based \dword{snb} \dword{trigdecision} that integrates low-energy
 trigger candidates over an up to 10 seconds
-integration window yields high ($>90$\%) galactic coverage while
+integration window yields high ($>90$\%) galactic coverage\footnote{Galactic coverage is defined as
+supernova burst trigger efficiency, weighted by the probability of a galactic \dword{snb} (which
+is \dword{snb} distance-dependent).} while
 keeping fake \dword{snb} trigger rates to one per month, in accordance with system
 requirements. An energy-weighted multiplicity count scheme could be
-applied to further increase efficiency and minimize background.
+applied to further increase efficiency and minimize background \cite{bib:docdb14522}.
 The dominant contributor to fake \dword{snb} triggers is
 radiological backgrounds from neutrons, followed by radon. It is
 crucial to continue working closely with the radiological task force
@@ -1616,7 +1639,7 @@ rejected with an efficiency of $>$99\%, while frames containing or
 partially containing 
 a supernova neutrino, an atmospheric/cosmic interaction, or a baryon
 number-violating interaction can be preferentially selected with efficiency
-$>$88\%, $>$92\%, or $>$99\%, respectively  \cite{bib:docdb11311}. Such a 
+$>$88\%, $>$92\%, or $>$99\%, respectively. Such a 
 filter could potentially be applied to reduce the event record size by
 more than two orders of magnitude. Details may be found in~\citedocdb{11311}.
 The speed at which machine learning inference may be applied is under study.
@@ -1671,7 +1694,7 @@ The overall development schedule with the main \dword{daq} milestones is shown i
 \section{Production, Assembly, Installation and Integration}
 \label{sec:sp-daq:production}
 
-The \dword{daq} system relies largely on commercial off the shelf components, with the exception of the timing system and the first stage of the upstream \dword{daq}.
+The \dword{daq} system relies largely on commercial off-the-shelf components, with the exception of the timing system and the first stage of the upstream \dword{daq}.
 Therefore, the production and assembly aspects are simpler than for other systems, while of course the installation and integration stages are very important and have to be planned carefully, due to the large number of interfaces of the \dword{daq} system with other parts of the experiment.
 
 \subsection{Production and Assembly}
