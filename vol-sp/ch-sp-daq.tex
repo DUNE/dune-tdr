@@ -53,7 +53,7 @@ the final design.  Finally, the chapter finishes with two sections
 (Sections~\ref{sec:sp-daq:production} and \ref{sec:sp-daq:organization})
 providing details on the management of the \dword{daq} project, including
 schedule to completion of the design,  production, and installation of the
-system, as well as cost, resources, and safety considerations.
+system, as well as safety considerations.
 
 \section{Design Overview}
 \label{sec:fd-daq:overview}
@@ -64,7 +64,7 @@ servicing a single \dword{fd}
 provided in Figure~\ref{fig:fd-daq:layout}. The system is
 physically located at the \dword{fd} site, and it is split between the
 underground DUNE caverns and the surface level at \dword{surf}. Specifically, the \dword{daq} occupies space and
-power both in the underground \dword{cuc} and the above ground \dword{mcr}.
+power both in the underground \dword{cuc} and the above-ground \dword{mcr}.
 The upstream part of the system, which is responsible for
 raw detector data reception, buffering, and pre-processing, resides in the \dword{cuc}.
 The \dword{daqbes},
@@ -73,8 +73,7 @@ event-building, as well as run control and monitoring, resides on the
 surface.
 Data flows through the \dword{daq} from 
 upstream to the back-end parts of the DAQ and then to offline. The majority
-of raw data processing and buffering is performed underground, in the
-upstream \dword{daq}, thus controlling consumption of available data bandwidth  to the surface. A
+of raw data processing and buffering is performed underground, thus controlling consumption of available data bandwidth  to the surface. A
 hierarchical \dfirst{daqdss} consumes minimally-processed
 information from the upstream \dword{daq}, and, through further data processing, 
 carries out a module-level \dfirst{trigdecision} leading to a \dfirst{trigcommand}.
@@ -129,7 +128,7 @@ The DUNE \dword{fd} has three main physics drivers: neutrino \dword{cpv} and rel
 long baseline oscillation measurements using the high intensity beam provided
 by \fnal, off-beam measurements of atmospheric neutrinos and searches
 for rare processes such baryon-number-violating decays,
-and detection of neutrinos from a \dfirst{snb} occurring within our galaxy. The
+and detection of neutrinos from a nearby \dfirst{snb}. The
 \dword{dune} \dword{fd} \dword{daq} system must facilitate data
 readout for delivering on these main physics drivers, while keeping
 within physical (space, power) and resource constraints for
@@ -162,7 +161,7 @@ the \dword{pds} system readout sampling frequency is higher than that
 of the TPC, the combination of zero-suppression and expected activity
 levels are assumed to yield significantly lower data rates than the \dword{tpc}. Therefore, the total raw data volume received by
 the \dword{daq} system is expected to be dominated by
-the \dword{tpc} data, which is sent out from the front-end electronics as a continuous stream.
+the \dword{tpc} data, which is sent out from the \dword{tpc} electronics as a continuous stream.
  
 Figure \ref{fig:daq-rates} provides the expected activity rates in a
 single far detector module as a function of true energy associated
@@ -176,41 +175,42 @@ above \SI{100}{\MeV}), rates are dominated by cosmic rays, beam neutrino interac
 and atmospheric neutrino interactions. With the exception of supernova
 burst neutrinos, the activity associated with any of these physics
 signals is localized in space and particularly in time. Supernova burst
-neutrinos on the other hand are characteristically different, as they
-can be detected as up to several thousands of neutrino interactions
-for a given galactic supernova burst. As such, supernova burst neutrinos
-are associated with localized activity that extends over the entirety of the
-detector and over multiple seconds. 
+activity, on the other hand, is characteristically distinct, as it can
+manifest as up to several thousands of low-energy neutrino interactions
+arriving over multiple seconds. As such, supernova burst neutrinos
+are associated with activity that extends over the entirety of the
+detector and over a relatively long time interval.
 
 The nature and rates of these signatures necessitates a \dfirst{daqdsn} strategy that handles two
 distinct cases: a localized high-energy activity trigger, prompting an event record readout for
 activity associated with a minimum of \SI{100}{\MeV} of deposited energy; and an extended low-energy
 activity trigger, prompting an event record readout when multiple localized low-energy activity
-candidates with low deposited energy each (\SI{10}{\MeV} threshold) are found over a short (less than
+candidates with low deposited energy each (approximately \SI{10}{\MeV}) are found over a short (less than
 \SI{10}{\second}) time period and over the entirety of a \nominalmodsize  module. Because of the high
 granularity of the detector readout elements, a hierarchical \dword{daqdss} is employed to
 provide data processing and triggering, and facilitate optional data reduction and filtering. 
 
 The \dword{daq}  system is required to yield $>$99\% efficiency for particles depositing $>$\SI{100}{\MeV}
 of energy in the detector, for localized high-energy triggers; it is also required to yield
-sufficient efficiency for low-energy deposition in the detector as
-needed to yield $>$90\% efficiency for a \dword{snb} occurring at a
+sufficient efficiency for low energy deposition in the detector as
+needed to yield $>$90\% efficiency for a \dword{snb} occurring up to a
 distance of \SI{100}{\kilo\parsec}, per \dword{dune} requirements.
 
 By offline considerations, the \dword{daq} is required to reduce the
 full \dword{fd} data volume for offline permanent storage to  \offsitepbpy.
 A far detector composed of four single-phase modules employing a
-strategy by which the entire \dword{fd} is read out for \spreadout
-given the presence of a localized high energy trigger will be limited
+strategy by which the entire \dword{fd} is read out for \spreadout, 
+given the presence of a localized high energy trigger, will be limited
 by this offline permanent storage constraint to an average readout rate of \SI{0.3}{\hertz}. 
-Strategies will be developed during commissioning and early running that will limit the readout to some subset of the detector module and these are expected to allow an increase in this rate limit by about an order of magnitude.
+Strategies will be developed and validated during commissioning and early running that will limit the readout to some subset of the detector module and these are expected to allow an increase in this rate limit by about an order of magnitude.
 The instantaneous readout rate can be much higher, for example to accommodate calibrations.
 For planning purposes, the \dword{daq} will allot an average rate of \dword{snb} triggers of 1 per month.
 Given current understanding of \dword{snb} rates and the $>$90\% expected efficiency for \dword{snb} within \SI{100}{\kilo\parsec}, the vast majority of such triggers will be due to fluctuations of low energy radiological backgrounds and potentially of excess noise.
 Such triggers will prompt \snbtime of data from the entire module to be read out.
 At this average rate and if saved to offline storage, the \dword{snb}
 triggers will lead to production of \SI{1.8}{\peta\byte/\year} uncompressed from one
-single-phase module. There is nevertheless no requirement to store SNB
+single-phase module. There is nevertheless no requirement to
+permanently store \dword{snb}
 data that is deemed, after further offline analysis, to be due to fake triggers.
 
 The capability of recording data losslessly is built into the design
@@ -220,7 +220,8 @@ induction wire readout channels.
 MicroBooNE is currently investigating the impact of zero suppression
 on reconstruction efficiency and energy resolution for low-energy
 events \cite{bib:uBsnreadout2019}.
-Expected data rates from physics signals of interest, which fit the requirement that limits \offsitepbpy sent to permanent storage, are summarized in Table~\ref{tab:sp-daq:rates} and detailed in~\citedocdb{9240} and potential bottlenecks were analyzed in~\citedocdb{11461}.
+Expected data rates from physics signals of interest, which fit the
+requirement of \offsitepbpy sent to permanent storage, are summarized in Table~\ref{tab:sp-daq:rates} and detailed in~\citedocdb{9240} and potential bottlenecks were analyzed in~\citedocdb{11461}.
 
 \begin{dunefigure}[Expected physics-related activity
     rates in one FD module]{fig:daq-rates}{Expected physics-related activity
@@ -289,7 +290,7 @@ level data selection parts of the
 system (see Figure~\ref{fig:fd-daq:layout}), with only event building and data
 storage kept on surface.
 
-Power, cooling, and space are constrained both in the \dword{cuc} and on surface, limited to \daqpower and \daqracks (out of \cucracks total) in the \dword{cuc} and \surfdaqpower and \surfdaqracks on surface for \dword{daq} for all four \dword{fd} modules.
+Power, cooling, and space are constrained both in the \dword{cuc} and on surface, limited to \daqpower and \daqracks (out of \cucracks total) in the \dword{cuc}, and \surfdaqpower and \surfdaqracks on surface for \dword{daq} for all four \dword{fd} modules.
 The underground computing required for the \dword{daq} to service the SP detector module is expected to require less than a quarter of the total power and rack space provided for all four detector modules. 
 The hardware for upstream \dword{daq}, low level data selection,
 various services, networking, and the timing system, including spares,
@@ -306,9 +307,9 @@ There are five key challenges for the DUNE \dword{fd} \dword{daq} system:
 
 \item Secondly, the system must be able to evolve to accommodate newly commissioned sub-components as they are installed into a detector module which is under construction. 
   The \dword{daq} must also continue to service existing modules which have reached their operational status while simultaneously accommodating subsequent detector modules as they are installed and commissioned. 
-  To support this ongoing variability the \dword{daq} will support operating as multiple independent instances or partitions.
+  To support this ongoing variability, the \dword{daq} will support operating as multiple independent instances or partitions.
 
-  Partitioning will be supported also within a single detector module, in order to support e.g. special calibration or debugging runs of parts of the detector, which are incompatible with physics data taking settings, while the rest of the detector remains in physics data taking mode. Partitioning, i.e. allowing multiple instances of the \dword{daq} to operate independently with different configurations on different parts of the detector, will also be important during the installation and commissioning phases, to parallelize experts work e.g. for photon detectors and TPC.
+  Partitioning will be supported also within a single detector module, in order to support e.g. special calibration or debugging runs of parts of the detector, which are incompatible with physics data taking settings, while the rest of the detector remains in physics data taking mode. Partitioning, i.e. allowing multiple instances of the \dword{daq} to operate independently with different configurations on different parts of the detector, will also be important during the installation and commissioning phases, to parallelize experts' work, e.g.~for photon detectors and TPC.
 
 \item Thirdly, the \dword{snb} physics requirements necessitate large buffering in the upstream \dword{daq}. 
 
@@ -755,14 +756,17 @@ classes of physics, each handled differently at the trigger level:
 
 \begin{description}
 \item[High-energy interactions] High-energy interactions include cosmic muons, neutrino beam interactions, atmospheric neutrinos, and nucleon decays. 
-  The trigger efficiency for these interactions is explicitly required to be $>$99\% for any given particle type (electron,muon, photon, etc.) that has a localized (confined to a few contiguous APAs) visible energy deposition above \SI{100}{\MeV}.
+  The trigger efficiency for these interactions is explicitly required
+  to be $>$99\% for any given particle type (electron, muon, photon, etc.) that has a localized (confined to a few contiguous APAs) visible energy deposition above \SI{100}{\MeV}.
   To achieve this requirement, algorithms for creating high-energy trigger candidates are targeting a trigger efficiency of 50\% at \SI{10}{\MeV} visible energy, thus ensuring $>$99\% efficiency or better at \SI{100}{\MeV}.
   This type of trigger is referred to as localized high energy trigger. 
   Pushing the high-energy threshold lower could enable detection of diffuse supernova neutrinos and solar neutrinos, if radiological and neutron backgrounds are low enough.
 
 \item[Low-energy interactions] The primary physics target for
   low-energy interactions is a neutrino burst from a nearby supernova. 
-  Low-energy trigger candidates (with threshold at or below \SI{10}{\MeV} visible energy) are generated and are input to an ``extended low-energy trigger'' that looks for bursts inconsistent with fluctuations in low-energy background events. 
+  Low-energy trigger candidates (with threshold at or below
+  \SI{10}{\MeV} visible energy) are generated and are input to an
+  ``extended low-energy trigger'' data selection algorithm that looks for bursts inconsistent with fluctuations in low-energy background events. 
   The time window for detecting such bursts is tuned to ensure
   nearly 100\% efficiency out to the galactic edge, and the pre-burst
   buffers are sized to handle the associated latency for detection.
@@ -790,7 +794,7 @@ Viable data selection algorithms for the low level and module level trigger alre
 algorithms for a module level \dword{snb} trigger.  It has
 been demonstrated through Monte Carlo simulations that the resulting
 \dword{snb} trigger efficiency reaches $>$99\% for any \dwords{snb}
-occuring within our galaxy, and efforts to extend this reach to the
+occurring within our galaxy, and efforts to extend this reach to the
 Large Magellanic Cloud through refined algorithms are currently under
 way \cite{bib:docdb11215,bib:docdb14522}. At the same time, the
 pipelines of processing required 
@@ -1023,7 +1027,7 @@ The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes 
 
 The \dword{daqbes} will provide the instances of the \dfirst{eb} most likely as
 \dword{artdaq}~\cite{artdaq} components of the same name. 
-As described above, each EB instance will
+As described above, each EB instance will:
 
 \begin{itemize}
   \item Receive a readout segment for execution. Execution entails interpreting the \dword{trigcommand} segment and querying the appropriate upstream \dword{daq} units to request data from the period of time. 
@@ -1035,7 +1039,9 @@ As part of this, the EB subsystem will provide book-keeping functionality for th
 
 \subsubsection{Output Buffer}
 
-The output buffer system is composed by the physical hardware resource to host the incoming data and by the software services handling the final processing stages through the High-Level Filter and the transfer off-site to permanent storage.
+The output buffer system is composed by the physical hardware resource
+to host the incoming data and by the software services handling the
+final processing stages through the High Level Filter and the transfer off-site to permanent storage.
 
 It has two primary purposes.  First, it decouples the production of data from filtering and the
 transfer of filtered data offline. It provides the elasticity needed by the \dword{daq} to deal with
@@ -1102,8 +1108,8 @@ It contains the following core components:
 \item Supervision System - It is responsible for manual and automated control and supervision of \dword{daq} components at any given time. In autonomous mode, the system makes attempts for fault-recovery, failover to backup instances of subsystems, and isolation of problematic regions of the control tree. This is carried out by a hierarchical rule-based planning or fuzzy logic system.
 \item \dword{daq} Application - The CCM provides interfaces in order to communicate with processes of the \dword{daq}, and the ability to control and communication with the CCM. The Inter Process Communication (IPC) supports a mechanism to interact with all actors participating to data taking. The Finite State Machine (FSM) enforces the possible states and transitions that are specific to the experiment's components, and also describes them in a uniform way.
 \item Run Control - This part of the control subsystem coherently steers the data taking operations. It interacts with all actors participating to data taking in a given partition. It consists of a hierarchical control tree, which can subdivide the \dword{daq} components into separated regions that may be acted upon independently.
-\item Resource Management - Provides a global scope of available resources for the \dword{daq} components. This includes the mapping between the detector front-end readout units, processes, servers where they are spawned and required resources for the processes.
-\item Process Management - It is responsible to manage process lifetime.
+\item Resource Management - It provides a global scope of available resources for the \dword{daq} components. This includes the mapping between the detector front-end readout units, processes, servers where they are spawned and required resources for the processes.
+\item Process Management - It is responsible for managing process lifetime.
 \end{itemize}
 
 \subsubsection{Configuration}
@@ -1138,7 +1144,7 @@ It consists of the following main components, also shown in Figure~\ref{fig:daq-
 \begin{itemize}
   \item Metric Manager - It is responsible for the registration of metric data streams and corresponding aggregator functions. This central element is the collection of features and services that provides support for configurable operational monitoring of \dword{daqccm} services. \dword{daqccm} components and services that are registered via the Metric Manager, are reporting monitoring data to the State and the Storage Engines in a publish-subscribe fashion. 
   \item State Engine - This engine is responsible for providing the global state of the system at the current time. It subscribes to a set of registered metrics in the Metric Manager, and records the actual global state of the set for decision making systems (supervision, notification, and visualization).
-  \item Storage Engine - Metrics may have different persistency requirements, for which the engine is responsible to archive the data with the settings of interval, smoothing, etc. It also provides an implementation for the most common communication protocols for the database back ends (SQL, REST, etc.).
+  \item Storage Engine - Metrics may have different persistency requirements, for which the engine is responsible for archiving the data with the settings of interval, smoothing, etc. It also provides an implementation for the most common communication protocols for the database back ends (SQL, REST, etc.).
   \item Notification System - It is a rule-based system of scheduled and aimed notifications that occur in the case of state combinations. It defines soft and hard states of events and grace periods of alarms.
   \item User Interfaces - Provides graphical and command line user interfaces for monitoring configuration management and visualization of metric data.
 \end{itemize}
@@ -1258,7 +1264,7 @@ While \dword{dune} data processing challenges are unique in both form
 and scale, other ongoing or planned near-term \dword{lartpc}
 experiments, including MicroBooNE, SBND, and ICARUS, are exercising
 a number of relevant data processing and data reduction techniques, and already providing valuable
-inputs to the \dword{dune} \dword{fd} design. For example,
+inputs to the \dword{dune} \dword{fd} \dword{daq} design. For example,
 MicroBooNE has demonstrated successful implementations of lossless Huffman
 compression and of continuous readout via use of lossy compression
 (dynamic and fixed-baseline zero-suppression)
@@ -1539,10 +1545,11 @@ events). This performance is obtained by considering the sum ADC
 distribution of \dwords{trigcandidate} over \SI{10}{\second} and comparing to a background-only
 vs.~background plus \dword{snb} hypothesis. The efficiency gain compared to a
 simpler, \dword{trigcandidate} counting-based approach is quite significant; using
-only counting information, the efficiency is 6.5\%. The \dword{daq}
-consortium is working on further refining these algorithms to improve
-\dword{snb} trigger efficiency, in accordance with \dword{dune} physics
-requirements. Regardless, the design provides flexibility
+only counting information, the efficiency for a \dword{snb} at
+the Large Magellanic Cloud is 6.5\%. The \dword{daq}
+consortium is working on further refining these algorithms to further improve
+\dword{snb} trigger efficiency for more distant \dwords{snb}. For
+additional efficiency increase, the design provides flexibility
 for a slightly higher fake \dword{snb} trigger rate to be handled by
 the \dword{daqbes}, combined with more aggressive data reduction
 applied at the high level trigger stage so as to respect the data rate to
