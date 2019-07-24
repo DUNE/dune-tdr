@@ -808,7 +808,8 @@ of the entire module but over significantly different time
 ranges: localized triggers prompt readout of \spreadout event records; extended
 triggers prompt readout of \SI{100}{\second} event records. 
 
-Ultimately, each \dword{trigdecision} culminates in a command sent to \dword{daqbes}. 
+Ultimately, each \dword{trigdecision} culminates in a command sent to
+the \dword{daqbes} subsystem. 
 This command contains all the logical detector addresses and time ranges
 required such that an \dword{eb} may properly query the upstream \dword{daq}
 buffers and finally collect and output the corresponding detector data
@@ -829,7 +830,8 @@ and compare performance of different implementations. In satisfying
 the philosophy and strategies of the \dword{daq} design, there is built-in
 flexibility in defining whether each element of a pipeline executes on
 \dword{fpga}, CPU, GPU, or, in principle, some other future hardware
-architecture. A purely software implementation of data selection is being
+architecture. A purely software implementation of data selection
+(including \dword{trigprimitive} generation) is being
 implemented for demonstration at \dword{protodune}; it will be then
 modified to match the baseline design in which trigger primitives are
 generated in upstream \dword{daq} \dword{fpga}.
@@ -878,7 +880,7 @@ As such, 20-22 bytes provides a generous data
 representation of \dword{trigprimitive} information. 
 The \dword{trigprimitive} rate will be dominated by the rate of decay of naturally occurring
 $^{39}$Ar, which is about \SI{10}{\mega\hertz} per module.
-This leads to a detector module aggregate rate of
+This leads to a detector module \dword{trigprimitive} aggregate rate of
 \SI{200}{\mega\byte/\second}.
 The subsequent stage of the \dword{daqdsn} must continuously absorb and process this
 rate providing trigger candidates as described next.
@@ -918,8 +920,8 @@ Nominally, individual candidates, or groups of candidates nearby in
 detector space and time, with measures of energy greater than these two
 types of decays, will be passed to the module level trigger. 
 
-This stage of data selection is implemented 80  CPU servers, which receive the trigger primitive
-stream from the upstream \dword{daq} and distribute trigger candidates to the module level trigger
+This stage of data selection is implemented 75 (\dword{tpc}) plus 8
+(\dword{pds}) CPU servers, which receive the trigger primitive stream from the upstream \dword{daq} and distribute trigger candidates to the module level trigger
 stage, described next, via the \SI{10}{Gbps} \dword{daq} network. Studies are underway to demonstrate CPU
 resource utilization and latency, as are efforts to demonstrate online trigger candidate generation
 at \dword{protodune}. Trigger candidate generation performance is summarized in
@@ -934,13 +936,13 @@ Section~\ref{sec:sp-daq:design-validation}.
 \subsubsection{Module Level Trigger}
 \label{sec:daq:mlt}
 
-Data selection is further facilitated as trigger candidates are consumed
+Data selection is further facilitated as \dwords{trigcandidate} are consumed
 by the module level trigger in order to form the ultimate trigger
 decision which prompts the readout of data records from buffers kept by the upstream \dword{daq}. 
 The physical (channel and time) location, extent as well as the energy measure of the
 candidates are used at this stage to categorize the activity in terms
 of a localized high energy trigger or an extended low energy trigger. 
-Specifically, N isolated, low energy candidates found in coincidence
+Specifically, $N$ isolated, low energy candidates found in coincidence
 over the integration period of up to 10 seconds across the full \dword{detmodule}
 indicate the latter; individual high energy candidates, found
 otherwise, indicate the former.
@@ -965,7 +967,9 @@ Section~\ref{sec:sp-daq:design-validation}.
 
 \subsubsection{External Trigger Interface}
 
-The \dfirst{daqeti} provides a loose coupling between the \dwords{mlt}, sources of external information such as beam spill times and information to or from components of the calibration system. 
+The \dfirst{daqeti} provides a loose coupling between the
+\dwords{mlt}, sources of external information such as beam spill times
+and information to or from components of \dword{dune} \dword{fd} calibration systems. 
 
 As an interface between \dwords{mlt}, it is responsible receive and distribute information about module-level \dword{snb} \dwords{trigcommand}.
 This allows any detector module which alone may not have satisfied a \dword{snb} trigger requirement to nonetheless perform a \dword{snb} readout.
