@@ -975,12 +975,16 @@ As an interface between \dwords{mlt}, it is responsible receive and distribute i
 This allows any detector module which alone may not have satisfied a \dword{snb} trigger requirement to nonetheless perform a \dword{snb} readout.
 The \dword{daqeti} is also responsible for forming a coincidence between module-level \dword{snb} \dwords{trigcommand} and publishing the results, e.g.~for consumption by the \dfirst{snews}.
 
-Information about beam spill times can be received from the accelerator by the \dword{daqeti}. 
-These times can drive a model of the beam timeline to predict when beam spills will occur. 
-These predictions can then be distributed to components of the calibration system so that they may avoid producing activity in the detector that may interfere with activity from beam neutrinos.
-The beam time information can also be sent to the \dwords{mlt} so that they may either alter \dword{trigdecision} criteria or merely include the information in contemporaneous \dwords{trigdecision}.
+The \dword{daqeti} also receives information about beam spill times from the accelerator.
+These times can drive a model of the beam timeline to predict when
+beam spills and consequently beam-related interactions are expected to occur. 
+These predictions can then be sent to the \dwords{mlt} so that they
+may either alter \dword{trigdecision} criteria or merely include the
+information in contemporaneous \dwords{trigdecision}. The beam time information can also be distributed to components of the calibration system so that they may avoid producing activity in the detector that may interfere with activity from beam neutrinos.
 
-
+The module level trigger is implemented in \bigo{1} CPU server (with 100\%
+redundancy), with 10 Gbps networking and interfacing hardware components (White
+Rabbit) for timing and external trigger signal I/O.
 
 \subsubsection{High Level Filter}
 \label{sec:fd-daq:design-data-reduction}
@@ -990,7 +994,7 @@ high level filter, which resides in the \dword{daqbes}.
 The high level filter acts on triggered, read out, and aggregated data. 
 It therefore serves primarily to down-select and thus
 limit the total triggered data rate to offline storage, thereby keeping 
-efficiency high in collecting information on activities of interest
+efficiency high in collecting information on activities of interest,
 while maintaining low selection and content bias, and reducing the output data
 rate. It may do so via 
 further filtering, lossy data reduction, and/or further event
