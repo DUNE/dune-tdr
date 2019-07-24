@@ -197,7 +197,7 @@ of energy in the detector, for localized high-energy triggers; it is also requir
 sufficient efficiency for low-energy deposition in the detector as needed to yield $>$90\% galactic
 supernova burst trigger coverage, for extended low-energy triggers. Galactic coverage is defined as
 supernova burst trigger efficiency, weighted by the probability of a galactic \dword{snb} (which
-is \dword{snb} distance-dependent).
+is \dword{snb} distance-dependent). \fixme{confirm DUNE requirement}
 
 By offline considerations, the \dword{daq} is required to reduce the
 full \dword{fd} data volume for offline permanent storage to  \offsitepbpy.
@@ -697,7 +697,7 @@ Following DUNE \dword{fd} and \dword{daq} requirements, the
 signals, as well as beam interactions,
 atmospheric neutrinos, rare baryon-number-violating events, and cosmic
 ray events that deposit visible energy in excess of 100 MeV. 
-It must also select data associated with potential galactic
+It must also select data associated with potential
 \dwords{snb} within 100 kpc with $>$90\% efficiency. 
 Furthermore, to meet the requirement that the \dword{dune} \dword{fd} maintain
 $<$\offsitepbpy to permanent storage, the \dword{daqdss}
@@ -1603,21 +1603,42 @@ beam $\nu_e$ and $\nu_\mu$ events in excess of 99\% for visible energies
 above 100 MeV, as shown in Figure~\ref{fig:daq-tc-eff-allinc}.
 
 Low-energy \dwords{trigcandidate} furthermore can serve as input to the
-SNB trigger. Simulation demonstrates that the trigger candidate
+SNB trigger. Simulations demonstrate that the trigger candidate
 efficiency for any individual \dword{snb} neutrino interaction is on the order
-of 20-30\%. Simulations have further demonstrated that a
-multiplicity-based \dword{snb} \dword{trigdecision} that integrates low-energy
-trigger candidates over an up to 10 seconds
-integration window yields high ($>90$\%) galactic coverage\footnote{Galactic coverage is defined as
-supernova burst trigger efficiency, weighted by the probability of a galactic \dword{snb} (which
-is \dword{snb} distance-dependent).} while
-keeping fake \dword{snb} trigger rates to one per month, in accordance with system
-requirements. An energy-weighted multiplicity count scheme could be
-applied to further increase efficiency and minimize background \cite{bib:docdb14522}.
+of 20-30\%. However, a multiplicity-based \dword{snb}
+\dword{trigdecision} that integrates low-energy trigger candidates over an up to 10 seconds
+integration window yields high trigger efficiency out to the
+galactic edge while keeping fake \dword{snb} trigger rates to one per
+month, in accordance with \dword{dune} physics
+requirements. An energy-weighted multiplicity count scheme can be
+applied to further increase efficiency and minimize background
+\cite{bib:docdb14522}. This is illustrated in
+Figure~\ref{fig:daq-snb-eff-Eweight}, demonstrating $>$90\% efficiency
+out to the edge of the galaxy, and 70\% efficiency for a \dword{snb} at
+the Large Magellanic Cloud (or for any \dword{snb} creating 10
+events). This performance is obtained by considering the sum ADC
+distribution of \dwords{trigcandidate} over 10 seconds and comparing to a background-only
+vs.~background plus \dword{snb} hypothesis. The efficiency gain compared to a
+simpler, \dword{trigcandidate} counting-based approach is quite significant; using
+only counting information, the efficiency is 6.5\%. 
+
 The dominant contributor to fake \dword{snb} triggers is
 radiological backgrounds from neutrons, followed by radon. It is
 crucial to continue working closely with the radiological task force
 to validate radiological the background assumptions.
+
+\begin{dunefigure}[Supernova burst trigger
+  efficiency]{fig:daq-snb-eff-Eweight}{Top:\dword{snb} trigger 
+    efficiency as a function of the number of supernova neutrino
+    interactions in the 10 kton module, for a likelihood trigger
+    approach that utilizes sum ADC shape information of
+    \dwords{trigcandidate} input into the trigger decision. Bottom:
+    For a \dword{snb} at the Large Magellanic Cloud, where 10 neutrino
+  interactions are expected, the efficiency gain over a counting-only
+  trigger is significantly improved. }
+  \includegraphics[height=6cm]{daq-efficiency-snb.pdf}%
+  \includegraphics[height=6cm]{daq-snb-eff-lmc.pdf}%
+\end{dunefigure}
 
 In the case of the high level filter, the consortium is exploring the
 use of machine learning techniques, specifically image classification
