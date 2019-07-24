@@ -183,14 +183,13 @@ detector and over multiple seconds. %The arrival time and energy
 %neutrinos from a \dword{snb} is model-dependent; as such, the DAQ must
 %utilize model-independent approach in selecting \dword{snb} activity.
 
-The nature and rates of these signatures necessitates a data selection
-(trigger) strategy that handles two
+The nature and rates of these signatures necessitates a \dfirst{daqdsn} strategy that handles two
 distinct cases: a localized high-energy activity trigger, prompting an event record readout for
 activity associated with a minimum of \SI{100}{MeV} of deposited energy; and an extended low-energy
 activity trigger, prompting an event record readout when multiple localized low-energy activity
 candidates with low deposited energy each (\SI{10}{MeV} threshold) are found over a short (less than
 10 seconds) time period and over the entirety of a \nominalmodsize  module. Because of the high
-granularity of the detector readout elements, a hierarchical data selection subsystem is employed to
+granularity of the detector readout elements, a hierarchical \dword{daqdss} is employed to
 provide data processing and triggering, and facilitate optional data reduction and filtering. 
 
 The \dword{daq}  system is required to yield $>$99\% efficiency for particles depositing $>$100 MeV
@@ -502,7 +501,7 @@ co-processing \dword{fpga}/CPU hardware, all of which is hosted in 80-85 servers
 corresponding number of additional servers is responsible for the execution
 of subsequent software-based low-level processing of ``trigger
 primitives''
-generated in the upstream \dword{daq} for the purposes of data selection. The trigger candidates constructed from trigger primitives are propagated to a central server responsible
+generated in the upstream \dword{daq} for the purposes of \dword{daqdsn}. The trigger candidates constructed from trigger primitives are propagated to a central server responsible
 for further processing and module-level triggering. The module level
 trigger also
 interfaces to a second server which is responsible for receiving and
@@ -652,7 +651,7 @@ Each \dword{daqrou} must accept the full data rate of the portion of the detecto
 The media must have sufficient capacity and allow for sufficient extraction throughput so that it is unlikely to ever be too full to accept another extended data record: \SI{4}{\tera\bit/\second} guarantee the ability to store two \dword{snb} events simultaneously.
 Furthermore, assuming that, on average, a \dword{snb} trigger condition will be
 satisfied once per month, the most optimal technology is
-solid-state \dword{nvme} devices, which, at the scale required to provide suitable input bandwidth, can provide a capacity to write the data from several extended activity triggers. The recorded data will be transferred to the backend system in well under a day.
+solid-state \dword{nvme} devices, which, at the scale required to provide suitable input bandwidth, can provide a capacity to write the data from several extended activity triggers. The recorded data will be transferred to the \dword{daqbes} system in well under a day.
 
 For both types of activity, the buffering requirements may be reduced by
 employing lossless compression to the data prior to it entering the buffer. A
@@ -702,11 +701,11 @@ It must also select data associated with potential galactic
 \dwords{snb} within 100 kpc with $>$90\% efficiency. 
 Furthermore, to meet the requirement that the \dword{dune} \dword{fd} maintain
 $<$\offsitepbpy to permanent storage, the \dword{daqdss}
-subsystem must make \dword{daqdsn} decisions in a way that allows the \dword{daq} 
+must make \dword{daqdsn} decisions in a way that allows the \dword{daq} 
 system to reduce its input data by almost four orders of magnitude,
 without jeopardizing the above efficiencies.
 
-To meet its requirements, the \dword{daqdss} subsystem design follows a hierarchical data selection strategy, where low-level decisions are fed forward into higher-level ones until a module-level trigger is activated. 
+To meet its requirements, the \dword{daqdss} design follows a hierarchical data selection strategy, where low-level decisions are fed forward into higher-level ones until a module-level trigger is activated. 
 The hierarchy is illustrated in
 Figure~\ref{fig:daq:data-selection-hierarchy}. 
 At the lowest level, trigger primitives are formed on a per-channel basis, and represent, for the baseline design, a ``hit on a wire/channel'' activity summary. 
@@ -814,7 +813,7 @@ required such that an \dword{eb} may properly query the upstream \dword{daq}
 buffers and finally collect and output the corresponding detector data
 and the corresponding trigger data. To avoid duplication of data
 records associated with \dwords{trigcommand} that overlap in readout
-record ``space'', the \dword{daqdsn} system must also time-order and
+record ``space'', the \dword{daqdsn} subsystem must also time-order and
 prioritize \dwords{trigdecision}. The details for forming this
 command are described next, while the operation of the \dword{daqbes} is
 described in Section~\ref{sec:fd-daq:design-backend}.
@@ -957,7 +956,7 @@ The module level trigger is implemented in \bigo{1} CPU server (with 100\%
 redundancy), which
 receives the trigger candidate stream from the low level trigger stage
 of the data selection and distributes \dwords{trigcommand} to the
-backend \dword{daq} via the 10 Gbps \dword{daq} network. Studies are
+\dword{daqbes} via the 10 Gbps \dword{daq} network. Studies are
 underway to demonstrate CPU resource utilization and latency, as are
 efforts to demonstrate online \dword{trigcommand} generation at \dword{protodune}.
 \Dword{trigcommand} generation performance is summarized in
@@ -1047,7 +1046,7 @@ The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes 
 
 \begin{itemize}
 \item \dword{daqdfo} accepts a stream of \dwords{trigcommand} and dispatches each to an available \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution.
-\item In atypical situations in which there are insufficient event builder resources available to handle the rate of triggers produced by the data selection sub-system, the DFO will alert the DS sub-system that the rate of triggers needs to be reduced.  When such reductions are requested, the DS sub-system will update the calculation of the module-level \dword{daq} live time appropriately.
+\item In atypical situations in which there are insufficient event builder resources available to handle the rate of triggers produced by the data selection sub-system, the DFO will alert the DS sub-system that the rate of triggers needs to be reduced.  When such reductions are requested, the \dword{daqdss} will update the calculation of the module-level \dword{daq} livetime appropriately.
 \item The DFO will provide relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. Given its central role and knowledge of the state of available event builder buffers, it will be able to provide important information about the health and performance of the system.
 \end{itemize}
 
@@ -1085,8 +1084,8 @@ The output buffer system will provide the relevant data flow status and statisti
 
 
 \subsubsection{Data Network}
-Upstream \dword{daq}, \dword{daqdsn} and \dword{daqbes} \dword{daq} are interconnected by a \SI{10/100}{ Gbps} ethernet network for data exchange.
-In particular the upstream \dword{daq} and \dword{daqdsn} servers are connected through redundant \SI{10}{ Gbps} links to top-of-rack switches with \SI{10}{Gbps} uplinks.
+Upstream \dword{daq}, \dword{daqdss} and \dword{daqbes} \dword{daq} are interconnected by a \SI{10/100}{ Gbps} ethernet network for data exchange.
+In particular the upstream \dword{daq} and \dword{daqdss} servers are connected through redundant \SI{10}{ Gbps} links to top-of-rack switches with \SI{10}{Gbps} uplinks.
 The \dword{eb} and Output buffer hardware will support \SI{100}{Gbps} directly.
 The \dword{daq} data network is connected to the \fnal network via a WAN interface.
 
@@ -1889,7 +1888,7 @@ The following risks and mitigation strategies have been identified:
 
 \begin{description}
 \item[Detector noise specs not met] Excessive noise will make it
-  impossible for the data selection system to meet physics goals while
+  impossible for the \dword{daqdss} to meet physics goals while
   generating reasonable data volumes. Prior (to construction) mitigation includes
   studying noise conditions at ProtoDUNE, and leaving provisions in the
   system for additional front-end filtering (in the form of the
@@ -1917,7 +1916,7 @@ The following risks and mitigation strategies have been identified:
 
 \item[Power/space requirements exceed CUC capacity] The CUC has fixed
   space and power allocation for \dword{daq} 
-which cannot be exceeded.  Prior mitigation includes allowing
+that cannot be exceeded.  Prior mitigation includes allowing
 sufficient bandwidth up the shafts to move the upstream \dword{daq} components for
 subsequent DUNE far detector modules (modules 3 and 4) to the
 surface, or moving some of the \dword{daq} components to the detector caverns,
@@ -1936,7 +1935,7 @@ expanded surface facility.
   Calibration schemes may require substantial data 
 volumes, far in excess of triggered data volume, beyond currently
 envisioned; e.g., due to offline analysis inefficiencies. Prior
-mitigation includes allowing for back-end (event builder) system expansion to cope
+mitigation includes allowing for back-end (\dword{eb}) system expansion to cope
 with the increased data rate, and allowing for a high-level filter data
 selections stage to carry out online analysis and data
 reduction. Mitigation includes increasing the back-end \dword{daq} and high
@@ -1986,10 +1985,10 @@ level filter system capacity.
 %  surface. Mitigation includes expanding the high level filter
 %  resources.
 
-\item[PDTS fails to scale for DUNE requirements] The ProtoDUNE timing system concept may
+\item[ProtoDUNE timing system fails to scale for DUNE requirements] The ProtoDUNE timing system concept may
   not scale to DUNE in scale or performance.  Prior mitigation
-  includes testing the PDTS at realistic scale before the final
-  design. Mitigation includes replacing the PDTS with upgraded
+  includes testing the system at realistic scale before the final
+  design. Mitigation includes replacing the system with upgraded
   hardware.
 
 % \item[Full remote operation of DAQ proves non-viable] The DAQ consoritum
