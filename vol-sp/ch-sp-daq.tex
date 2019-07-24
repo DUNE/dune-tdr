@@ -81,7 +81,7 @@ Data flows through the \dword{daq} from
 upstream to the back-end parts of the DAQ and then to offline. The majority
 of raw data processing and buffering is performed underground, in the
 upstream \dword{daq}, thus controlling consumption of available data bandwidth  to the surface. A
-hierarchical \dfirst{daqdsn} subsystem consumes minimally-processed
+hierarchical \dfirst{daqdss} consumes minimally-processed
 information from the upstream \dword{daq}, and, through further data processing, 
 carries out a module-level \dfirst{trigdecision} leading to a \dfirst{trigcommand}.
 The command is subsequently executed by a \dfirst{daqdfo} residing in the \dfirst{daqbes}
@@ -95,14 +95,13 @@ detector modules and their subcomponents are synchronized and timed against a gl
 common clock, provided by the timing and synchronization
 subsystem. Cross-module communication as well as communication
 to the outside world for data selection (trigger) purposes is facilitated
-through an \dfirst{daqeti}, which is part of the \dword{daqdsn}
-system. The
+through an \dfirst{daqeti}, which is part of the \dword{daqdss}. The
 specifics of design implementation and data flow are described in Section~\ref{sec:fd-daq:design}.
 
 \begin{dunefigure}[DAQ conceptual design overview for one
   module]{fig:fd-daq:layout}{\dword{daq} conceptual design overview focusing
     on a single \nominalmodsize module. Included are the upstream
-    \dword{daq} subsystem in orange, the \dword{daqdsn} subsystem in
+    \dword{daq} subsystem in orange, the \dword{daqdss} in
     blue, and the \dword{daqbes} subsystem in yellow,
     which includes the \dword{daqdfo}, \dfirst{eb} and storage buffer. 
     Also shown is the subsystem for timing and
@@ -417,7 +416,7 @@ Installation & Prototyping, planning, transport, underground equipment and activ
 \begin{description}
 \item[\dword{tpc} \dword{ce}] The \dword{daq} and \dword{tpc} \dword{ce} interface is described in
 \citedocdb{6742}. The physical interface is at the \dword{cuc}, where optical links from the \dwords{wib} transfer
-the raw \dword{tpc} data to the \dword{daq} \dword{fe} readout (\dword{felix}; see
+the raw \dword{tpc} data to the \dword{daq} front-end readout (\dword{felix}; see
 Section~\ref{sec:daq:design-upstream}). This ensures the \dword{daq} is electrically decoupled from the detector
 cryostat. Ten \SI{10}{Gbps} links are expected per \dword{apa}, and have
 been specified as 300m OM4 multi-mode fibers from \dword{sfp}+ at the \dword{wib} to
@@ -507,7 +506,7 @@ system, supported on a private network throughout the \dword{daq} system. Each o
 detail in the following subsections. 
 
 Front-end readout is carried out by the upstream \dword{daq}, using custom data receiver and
-co-processing \dword{fpga}/CPU hardware, all of which is hosted in 80-85 servers in the \dword{cuc}. A
+co-processing \dword{fpga} and commodity computing hardware, all of which is hosted in 80-85 servers in the \dword{cuc}. A
 corresponding number of additional servers is responsible for the execution
 of subsequent software-based low-level processing of ``trigger
 primitives''
@@ -575,14 +574,14 @@ namely the \dword{daqdss} and the \dword{daqbes}.
 The upstream \dword{daq} system comprises many similar \dwords{daqrou}, each
 connected to a subset of electronics from a detector module and
 interfacing with the \dword{daq} switched network. In the case of the
-\dword{tpc}, 75 functionally identical RU are each responsible for the readout of raw data from two
-\dwords{apa}. In the case of the \dword{pds}, up to 8 RU are each responsible for the
+\dword{tpc}, 75 functionally identical \dword{daqrou} are each responsible for the readout of raw data from two
+\dwords{apa}. In the case of the \dword{pds}, up to 8 \dword{daqrou} are each responsible for the
 readout of raw data from a collection of \dword{pds} subdetectors. 
-Each RU is comprised of a \dword{fec} which is a commodity server that hosts a
+Each \dword{daqrou} is comprised of a \dword{fec} which is a commodity server that hosts a
 collection of custom hardware, 
 firmware, and software that collectively implement a set of functional blocks.
 
-In the baseline design, used also for system costing, each RU is composed of:
+In the baseline design, used also for system costing, each \dword{daqrou} is composed of:
 \begin{enumerate}
 \item one dual socket multicore 2U server, with two \SI{10}{Gbps} and two \SI{1}{Gbps} ethernet ports for redundant data transmission and control, with at least 256 GB of DDR4 RAM, and sufficient PCIe lanes to host 2 TB of SSD disks,
 \item two \dword{felix} cards~\cite{atlas-felix}, each with a PCIe 3.0 x16 interface and supporting 10 \SI{9.6}{Gbps} bidirectional serial optical links,
@@ -599,7 +598,7 @@ point-to-point serial optical links running a simple (e.g., 8/10 bit encoded) pr
 \dword{apa} there are ten such links connecting its \dwords{wib} to the \dword{daq}. To reduce space and
 power consumption in the \dword{cuc}, high data aggregation is desired. In the baseline design, the
 20 fibers from two \dwords{apa} are aggregated into one \dword{fec} with each \dword{apa} connected
-to one \dword{felix} FPGA PCIe 3.0 board.  If technology advances sufficiently, a PCIe 4.0 version of
+to one \dword{felix} FPGA PCIe 3.0 board.  If commodity computing technology advances sufficiently, a PCIe 4.0 version of
 \dword{felix} may be produced to increase the data aggregation such that each board would accept 20
 links and a total of 40 links per \dword{fec} would be accommodated. Tests were performed to verify
 \dword{om3} and \dword{om4} fibers support \SI{10}{Gbps} links over a run of \SI{300}{\meter}.
@@ -611,7 +610,7 @@ ATLAS experiment and is now proposed or already in use by several other experime
   \item The upstream \dword{daq} subsystem provides access to the
 \dword{daqdss} and \dword{daqbes} through a commodity switched network as
 illustrated in Figure~\ref{fig:daq:readout}. The network communication
-protocol is as described in Section~\ref{sec:daq:design-ipc}. The network I/O
+protocol is as described in Section~\ref{sec:daq:design-ipc}. The data flow
 is handled by the \dwords{daqrou} via software; dedicated hardware or firmware
 development is not required.
 
@@ -635,14 +634,14 @@ bottlenecks. Localized and extended trigger activity are associated
 with two rather different time scales and data throughput metrics, and
 those collectively dictate the temporary storage technology and scale. 
 
-The time required to form a \dword{trigdecision} based on localized
-activity is expected to be on the order of one second.
+A \dword{trigdecision} based on localized
+activity is expected to require buffering the full data stream for no more than about one second.
 Extended triggers present a far more challenging set of buffering
 requirements; 
 early activity from a \dword{snb} may occur at a rate near that of radiological activity.
 Theoretical estimates indicate \snbpretime of integration time may be needed for the
 \dword{snb} interaction rate to be deemed significantly enough above
-background rate to warrant a trigger.
+background rate to form a trigger decision.
 In order to locate interactions in this low-rate period, the full data rate must be buffered until a \dword{snb} trigger may be formed.
 The throughput and endurance required by this buffer is satisfied by RAM technology such as DDR4.
 
@@ -678,7 +677,7 @@ Figure~\ref{fig:daq:readout-blocks} shows the flow diagram of data and control m
 \subsection{Data Selection}
 \label{sec:sp-daq:design-data-selection}
 
-The \dfirst{daqdsn} subsystem is a hierarchical, online, primarily
+The \dfirst{daqdss}  is a hierarchical, online, primarily
 software-based system. It is responsible for immediate and continuous processing of a substantial fraction of the entire input data stream. 
 This includes data from \dword{tpc} and \dword{pds} subdetectors.
 From that input, as well as external inputs provided by
@@ -693,10 +692,10 @@ It may also be propagated to an \dfirst{etl} stage and from there it may be
 distributed to other \dwords{detmodule} or other detector systems
 (e.g. calibration) for further consideration.
 
-To facilitate partitioning, the \dword{daqdsn} subsystem will be
+To facilitate partitioning, the \dword{daqdss}  will be
 able to be instantiated multiple times, and multiple instances will be
 able to operate in parallel. Within any
-given partition, the \dword{daqdsn} subsystem will also be
+given partition, the \dword{daqdss} will also be
 informed and aware of current detector configuration and conditions and
 apply certain masks and mapping on subdetectors or their fragments in
 its decision making. This information is delivered to the
@@ -765,7 +764,7 @@ to global coincidence trigger recipients such as \dword{snews}
 
 \begin{dunefigure}[DUNE DAQ data selection
   subsystem]{fig:daq:data-selection}{Block diagram of the \dword{dune} \dword{daq}
-    \dword{daqdsn} subsystem, illustrating hierarchical structure of
+    \dword{daqdss}, illustrating hierarchical structure of
     subsystem design, and subsystem functionality and data flow.}
   \includegraphics[width=0.95\textwidth, trim=0 2cm 0 0]{DS_summary_2.pdf}
 \end{dunefigure}
@@ -827,7 +826,7 @@ required such that an \dword{eb} may properly query the upstream \dword{daq}
 buffers and finally collect and output the corresponding detector data
 and the corresponding trigger data. To avoid duplication of data
 records associated with \dwords{trigcommand} that overlap in readout
-record ``space'', the \dword{daqdsn} subsystem must also time-order and
+record ``space'', the \dword{daqdss} must also time-order and
 prioritize \dwords{trigdecision}. The details for forming this
 command are described next, while the operation of the \dword{daqbes} is
 described in Section~\ref{sec:fd-daq:design-backend}.
@@ -1001,7 +1000,7 @@ components (to White Rabbit and \dword{dune} timing system) for timing and exter
 \subsubsection{High Level Filter}
 \label{sec:fd-daq:design-data-reduction}
 
-The last processing stage in the \dword{daqdsn} subsystem is the
+The last processing stage in the \dword{daqdss} is the
 high level filter, which resides in the \dword{daqbes}, and physically
 on the surface at \dword{surf}.
 The high level filter acts on triggered, read out, and aggregated data. 
@@ -1254,6 +1253,7 @@ This system will be designed to allow it to evolve as the detector and its data 
 \subsection{Timing and Synchronization}
 \label{sec:sp-daq:design-timing}
 
+The \dfirst{daqtss} provides synchronous time services to the DAQ and the detector electronics.
 All components of the \dword{fd} use clocks derived from a single
 \dfirst{gps} disciplined source, and all module components are
 synchronized to a common \SI{62.5}{MHz} clock.
@@ -1396,7 +1396,7 @@ Specifically, \dword{protodune} has demonstrated:
 \item Upstream \dword{daq}: Front-end readout hardware and data flow functionality servicing two out of the six \dwords{apa}.
   The data from each APA was continuously streamed to a single FELIX board hosted in a dedicated computer which then transferred it to two other computers for buffering and readout.
   The baseline upstream \dword{daq} for \dword{dune} FD will retain one APA per FELIX board but place two FELIX boards and the buffering and readout functionality all together in a single \dword{fec}. 
-  In addition to data flow functionality, \dword{protodune} \dword{fe} readout also demonstrates the interface to the front-end TPC electronics, and scalability to DUNE. It also supports host server requirements and specifications. Finally, it serves as platform for further development involving co-processor implementation and data selection aspects.
+  In addition to data flow functionality, \dword{protodune} front-end readout also demonstrates the interface to the front-end TPC electronics, and scalability to DUNE. It also supports host server requirements and specifications. Finally, it serves as platform for further development involving co-processor implementation and data selection aspects.
 \item \dword{daqbes}, \dword{daqccm} and software infrastructure:
  Successful \dword{daqbes} implementation, including event builder
   farm and disk buffering, as well as an initial implementation of \dword{daqccm} functions. This has allowed the
@@ -1427,7 +1427,7 @@ writing. A detailed schedule for 2019 is available
 in \cite{bib:docdb14095}. Major development plan milestones, a number
 of which have already been achieved at the time of this writing, are:
 \begin{itemize}
-\item optimization and tuning of the \dword{fe} readout
+\item optimization and tuning of the front-end readout
 \item optimization and tuning of the \dword{artdaq} based dataflow software
 \item enhancement of monitoring and troubleshooting capabilities
 \item introduction of CPU-based hit finding (necessary for \dword{pds} readout)
@@ -1440,7 +1440,7 @@ topologies (e.g. long horizontal tracks, or Michel electrons from muon decay)
 builder to facilitate self-triggering of detector
 \item implementation of extended \dword{fpga}-based front-end functionality
 (e.g., compression)
-\item prototyping of fake \dword{snb} data flow in \dword{fe} and back end.
+\item prototyping of fake \dword{snb} data flow in front end and the back end.
 \end{itemize}
 
 Below, we focus on ongoing developments related to upstream \dword{daq},
@@ -1462,7 +1462,7 @@ The \dword{felix} I/O card interfaces with its host PC through 16-lane PCIe 3.0 
 It transfers the incoming WIB data directly into the host PC memory using continuous DMA transfer. The \dword{felix} host PC runs a software process that publishes the data to any client subscribing to it.
 Subscriptions may identify from which input optical links the received data stream will be sourced.
 The clients consuming these streams are ``BoardReader'' processes implemented in the \dword{artdaq} data acquisition toolkit.
-In order to sustain the data rate, modest modifications of the firmware and software were carried out specifically for \dword{protodune}: each \dword{felix} host receives and publishes data at $\sim$75 Gbps. The BoardReader hosts are equipped with embedded Intel QuickAssist (QAT)~\footnote{Intel\textregistered QuickAssist Technology, \url{https://www.intel.com/content/www/us/en/architecture-and-technology/intel-quick-assist-technology-overview.html}.} technology for hardware accelerated data compression. The \dword{protodune} application of the \dword{felix} \dword{fe} readout is shown in Figure~\ref{fig:sp-daq:felix-pd-impl}.
+In order to sustain the data rate, modest modifications of the firmware and software were carried out specifically for \dword{protodune}: each \dword{felix} host receives and publishes data at $\sim$75 Gbps. The BoardReader hosts are equipped with embedded Intel QuickAssist (QAT)~\footnote{Intel\textregistered QuickAssist Technology, \url{https://www.intel.com/content/www/us/en/architecture-and-technology/intel-quick-assist-technology-overview.html}.} technology for hardware accelerated data compression. The \dword{protodune} application of the \dword{felix} front-end readout is shown in Figure~\ref{fig:sp-daq:felix-pd-impl}.
 
 
 In DUNE only a very small fraction of the data received via the \dword{felix}
