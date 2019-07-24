@@ -153,14 +153,14 @@ The \dword{dune} \dword{fd} modules employ two active detector components from w
 
 Ionization charge measurement by the \dword{tpc} for any given activity in the detector requires a nominal recording of data over a time window of order \SIrange{1}{10}{\milli\second}. 
 This time scale is determined by the ionization electron drift speed in \lar and the detector dimension along the drift direction, and is nominally set to \spreadout, corresponding to 2.4$\times$\SI{2.25}{\milli\second}.
-The latter (\SI{2.25}{\milli\second}) assumes DUNE's nominal drift electric field of 500~V/cm.
+The latter (\SI{2.25}{\milli\second}) assumes a drift electric field of \mindriftfieldgoal.
 The 2.4 factor assures the capture of ionization information from at
 least a full drift before and after the trigger time associated with the
 activity. Early commissioning data will be used to evaluate and optimize this nominal readout time.
 
 On the other hand, the \dword{pds} measures argon scintillation light emission, which
-occurs and is detected over a timescale of multiple nanoseconds to
-microseconds for
+occurs and is detected over a timescale of multiple \si{\nano\second} to
+\si{\micro\second} for
 any given event and/or subsequent subevent process. Unlike the \dword{tpc},
 the \dword{pds} data is zero-suppressed in
 the \dword{pds} electronics (see Chapter~\ref{ch:fdsp-pd}). Although
@@ -173,12 +173,12 @@ the \dword{tpc} data, which is sent out from the front-end electronics as a cont
 Figure \ref{fig:daq-rates} provides the expected activity rates in a
 single far detector module as a function of true energy associated
 with given types of signal.
-At low energy ($<$10 MeV), activity is dominated by radiological backgrounds
+At low energy ($<$\SI{10}{\MeV}), activity is dominated by radiological backgrounds
 intrinsic to the detector, and
 low-energy solar neutrino interactions. Supernova burst neutrinos,
 expected to arrive at a galactic \dword{snb} rate of once per century, 
-would span the 10-30 MeV range. At higher energies (generally
-above 100 MeV), rates are dominated by cosmic rays, beam neutrino interactions,
+would span the \SIrange{10}{30}{\MeV} range. At higher energies (generally
+above \SI{100}{\MeV}), rates are dominated by cosmic rays, beam neutrino interactions,
 and atmospheric neutrino interactions. With the exception of supernova
 burst neutrinos, the activity associated with any of these physics
 signals is localized in space and particularly in time. Supernova burst
@@ -193,18 +193,18 @@ detector and over multiple seconds. %The arrival time and energy
 
 The nature and rates of these signatures necessitates a \dfirst{daqdsn} strategy that handles two
 distinct cases: a localized high-energy activity trigger, prompting an event record readout for
-activity associated with a minimum of \SI{100}{MeV} of deposited energy; and an extended low-energy
+activity associated with a minimum of \SI{100}{\MeV} of deposited energy; and an extended low-energy
 activity trigger, prompting an event record readout when multiple localized low-energy activity
-candidates with low deposited energy each (\SI{10}{MeV} threshold) are found over a short (less than
-10 seconds) time period and over the entirety of a \nominalmodsize  module. Because of the high
+candidates with low deposited energy each (\SI{10}{\MeV} threshold) are found over a short (less than
+\SI{10}{\second}) time period and over the entirety of a \nominalmodsize  module. Because of the high
 granularity of the detector readout elements, a hierarchical \dword{daqdss} is employed to
 provide data processing and triggering, and facilitate optional data reduction and filtering. 
 
-The \dword{daq}  system is required to yield $>$99\% efficiency for particles depositing $>$100 MeV
+The \dword{daq}  system is required to yield $>$99\% efficiency for particles depositing $>$\SI{100}{\MeV}
 of energy in the detector, for localized high-energy triggers; it is also required to yield
 sufficient efficiency for low-energy deposition in the detector as
 needed to yield $>$90\% efficiency for a \dword{snb} occurring at a
-distance of 100 kpc, per \dword{dune} requirements.
+distance of \SI{100}{\kilo\parsec}, per \dword{dune} requirements.
 
 By offline considerations, the \dword{daq} is required to reduce the
 full \dword{fd} data volume for offline permanent storage to  \offsitepbpy.
@@ -218,7 +218,7 @@ For planning purposes, the \dword{daq} will allot an average rate of \dword{snb}
 Given current understanding of \dword{snb} rates and the $>$90\% expected efficiency for \dword{snb} within \SI{100}{\kilo\parsec}, the vast majority of such triggers will be due to fluctuations of low energy radiological backgrounds and potentially of excess noise.
 Such triggers will prompt \snbtime of data from the entire module to be read out.
 At this average rate and if saved to offline storage, the \dword{snb}
-triggers will lead to production of 1.8 PB/year uncompressed from one
+triggers will lead to production of \SI{1.8}{\peta\byte/\year} uncompressed from one
 single-phase module. There is nevertheless no requirement to store SNB
 data that is deemed, after further offline analysis, to be due to fake triggers.
 
@@ -229,7 +229,7 @@ induction wire readout channels.
 MicroBooNE is currently investigating the impact of zero suppression
 on reconstruction efficiency and energy resolution for low-energy
 events \cite{bib:uBsnreadout2019}.
-Expected data rates from physics signals of interest, which fit the 30 PB yearly generated volume and trigger rate requirements, are summarized in Table~\ref{tab:sp-daq:rates} and detailed in~\citedocdb{9240} and potential bottlenecks were analyzed in~\citedocdb{11461}.
+Expected data rates from physics signals of interest, which fit the requirement that limits \offsitepbpy sent to permanent storage, are summarized in Table~\ref{tab:sp-daq:rates} and detailed in~\citedocdb{9240} and potential bottlenecks were analyzed in~\citedocdb{11461}.
 
 \begin{dunefigure}[Expected physics-related activity
     rates in one FD module]{fig:daq-rates}{Expected physics-related activity
@@ -244,20 +244,19 @@ Expected data rates from physics signals of interest, which fit the 30 PB yearly
     compression factor is expected.)
     Trigger primitives (see Section~\ref{sec:sp-daq:design-data-selection}), fake SNB data as well as additional data recorded for detector performance studies and debugging are not foreseen to be stored offline permanently.}
 Source                                              & Annual Data Volume & Assumptions \\\toprowrule
-Beam interactions                                   & 27 TB              & 10 MeV threshold in coincidence with beam
+Beam interactions                                   & \SI{27}{\TB}       & \SI{10}{\MeV} threshold in coincidence with beam
 time, including cosmic coincidence; \spreadout readout \\\colhline
-Cosmics and atmospheric neutrinos                   & 10 PB              & \spreadout readout \\\colhline
-Radiological backgrounds                            & $<2$ PB            & $<1$ per month fake rate for SNB
-trigger; 100s readout\\\colhline
-Cold electronics calibration                        & 4 TB               & scaled from \dword{pdsp} experience \\\colhline
-Radioactive source calibration                      & 100 TB             & $<10$ Hz source rate; single
+Cosmics and atmospheric neutrinos                   & \SI{10}{\PB}       & \spreadout readout \\\colhline
+Radiological backgrounds                            & $<\SI{2}{\PB}$     & $<1$ per month fake rate for SNB
+trigger; \SI{100}{\second} readout\\\colhline
+Cold electronics calibration                        & \SI{4}{\TB}       & scaled from \dword{pdsp} experience \\\colhline
+Radioactive source calibration                      & \SI{100}{\TB}     & $<10$ Hz source rate; single
 APA readout; \spreadout readout \\\colhline
-Laser calibration                                   & 200 TB             & 10$^6$ total laser pulses; half the
+Laser calibration                                   & \SI{200}{\TB}     & 10$^6$ total laser pulses; half the
 TPC channels illuminated per pulse; lossy
 compression (zero-suppression) on all channels\\\colhline
-Random triggers                                     & 60 TB
-& 45 per day; \spreadout readout \\\colhline
-Trigger primitives and detector performance studies & $<15$ PB           & $^{39}$Ar dominated\\\colhline
+Random triggers                                     & \SI{60}{\TB} & 45 per day; \spreadout readout \\\colhline
+  Trigger primitives and detector performance studies & $<\SI{15}{\PB}$  & $^{39}$Ar dominated\\\colhline
 \end{dunetable}
 
 Self-triggering on \dword{snb} activity is a unique challenge for the
@@ -275,7 +274,7 @@ capture the corresponding signals.
 Furthermore, to ensure high efficiency in collecting \dword{snb} interactions
 that, individually, are below low-energy activity threshold, data from
 all channels in the detector will be recorded over an extended and contiguous period of
-time which is specified to 100\si{s}, around every \dword{snb}
+time which is specified to \SI{100}{\second}, around every \dword{snb}
 trigger. This time has been defined in consultation with \dword{dune}
 physics groups.
 
@@ -342,7 +341,7 @@ There are five key challenges for the DUNE \dword{fd} \dword{daq} system:
 
 \item Fourthly, the \dword{daq} must support a very wide range of readout windows and trigger rates. This encompasses the acquisition of localized events in both time and space up to the very large and rare \dword{snb} detector-wide readouts over \SI{100}{s}.
 
-\item Finally, the \dword{daq} needs to reduce the volume of data to be permanently stored offline to a maximum of \SI{30}{PB/year}.
+\item Finally, the \dword{daq} needs to reduce the volume of data to be permanently stored offline to a maximum of \offsitepbpy.
   The \dword{daq} system is designed so as to be able to select interesting time windows in which activity was detected, apply lossless compression to data records, as well as filter them to remove unnecessary data regions.
 
 A programmable trigger priority scheme ensures that the readout for the main physics triggers is never or rarely inhibited so as to enable easy determination of the live-time of these triggers. 
@@ -361,20 +360,20 @@ Table~\ref{tab:sp-daq:parameters} summarizes the important parameters driving th
   data volume that must be handled by the \dword{daq} is an order of
   magnitude smaller than the \dword{tpc} raw data volume.}
 Parameter                                          & Value \\ \toprowrule
-TPC Channel Count per Module                       & 384,000\\ \colhline
-TPC Collection Channel Count per Subdetector (APA) & 960\\ \colhline
-TPC Induction Channel Count per Subdetector (APA)  & 1,600\\ \colhline
-PDS Channel Count per Module                       & 6000\\ \colhline
-PDS Channel Count per Subdetector (PDS per APA)            & 40 \\ \colhline
-TPC \dword{adc} Sampling Rate                      & 2 MHz\\ \colhline
-TPC \dword{adc} Dynamic Range                      & 12 bits\\ \colhline
+TPC Channel Count per Module                       & \num{384000}\\ \colhline
+TPC Collection Channel Count per Subdetector (APA) & \num{960}\\ \colhline
+TPC Induction Channel Count per Subdetector (APA)  & \num{1600}\\ \colhline
+PDS Channel Count per Module                       & \num{6000}\\ \colhline
+PDS Channel Count per Subdetector (PDS per APA)    & \num{40} \\ \colhline
+TPC \dword{adc} Sampling Rate                      & \SI{2}{\mega\hertz}\\ \colhline
+TPC \dword{adc} Dynamic Range                      & \SI{12}{bits}\\ \colhline
 PDS \dword{adc} Sampling Rate                      & Under study \\ \colhline
 PDS \dword{adc} Dynamic Range                      & Under study \\ \colhline
 PDS \dword{adc} Readout Length                     & Under study \\ \colhline
 Localized Event Record Window                      & \spreadout \\  \colhline
-Extended Event Record Window                       & 100 s\\  \colhline
-Full size of Localized Event Record per Module     & 6.5 GB \\  \colhline
-Full size of Extended Event Record per Module      & 120 TB\\  \colhline
+Extended Event Record Window                       & \SI{100}{\second}\\  \colhline
+Full size of Localized Event Record per Module     & \SI{6.5}{\GB} \\  \colhline
+Full size of Extended Event Record per Module      & \SI{120}{\TB}\\  \colhline
 \end{dunetable}
 
 
@@ -418,8 +417,8 @@ Installation & Prototyping, planning, transport, underground equipment and activ
 \citedocdb{6742}. The physical interface is at the \dword{cuc}, where optical links from the \dwords{wib} transfer
 the raw \dword{tpc} data to the \dword{daq} front-end readout (\dword{felix}; see
 Section~\ref{sec:daq:design-upstream}). This ensures the \dword{daq} is electrically decoupled from the detector
-cryostat. Ten \SI{10}{Gbps} links are expected per \dword{apa}, and have
-been specified as 300m OM4 multi-mode fibers from \dword{sfp}+ at the \dword{wib} to
+cryostat. Ten \SI{10}{\Gbps} links are expected per \dword{apa}, and have
+been specified as \SI{300}{\meter} OM4 multi-mode fibers from \dword{sfp}+ at the \dword{wib} to
 \dword{minipod} on \dword{felix}. (The optical fibers themselves are
 the responsibility of the \dword{daq} Consortium.) The data format has been specified
 to use a custom communication protocol and no
@@ -427,7 +426,7 @@ compression.
 
 \item[\dword{pds} Readout] The \dword{daq} and \dword{pds} readout interface is described in
 \citedocdb{6727}. It is anticipated to
-be of the form of no more than 150  \SI{10}{Gbps} OM4 fibers from one \dword{fd} module. 
+be of the form of no more than 150  \SI{10}{\Gbps} OM4 fibers from one \dword{fd} module. 
 This
 is similar to the interface to the \dword{tpc} \dword{ce}, except the overall
 data volume is lower by an order of magnitude. The data format has been specified to use
@@ -436,14 +435,14 @@ compression (zero suppression) and a custom communication protocol.
 \item[Computing] The \dword{daq} and computing interface is described in \citedocdb{7123}.
  The computing consortium
  is responsible for the online areas of WAN connection between \surf and
-\fnal providing on order \SI{100}{Gbps} bandwidth, while the \dword{daq} consortium is responsible for disk buffering
+\fnal providing on order \SI{100}{\Gbps} bandwidth, while the \dword{daq} consortium is responsible for disk buffering
 to handle any temporary WAN disconnects and the infrastructure needed
 for real-time data quality monitoring.  The computing consortium 
 is also
 responsible for the offline development and operation of the tools for data
 transfers to \fnal. The primary
 constraint in defining the \dword{daq} and offline computing interface is the
-requirement to produce less than \SI{30}{PB/year} 
+requirement to produce less than \offsitepbpy 
 into final storage at
 \fnal. \dword{daq} and
 computing consortia are jointly responsible for data
@@ -583,8 +582,8 @@ firmware, and software that collectively implement a set of functional blocks.
 
 In the baseline design, used also for system costing, each \dword{daqrou} is composed of:
 \begin{enumerate}
-\item one dual socket multicore 2U server, with two \SI{10}{Gbps} and two \SI{1}{Gbps} ethernet ports for redundant data transmission and control, with at least 256 GB of DDR4 RAM, and sufficient PCIe lanes to host 2 TB of SSD disks,
-\item two \dword{felix} cards~\cite{atlas-felix}, each with a PCIe 3.0 x16 interface and supporting 10 \SI{9.6}{Gbps} bidirectional serial optical links,
+\item one dual socket multicore 2U server, with two \SI{10}{\Gbps} and two \SI{1}{\Gbps} ethernet ports for redundant data transmission and control, with at least \SI{256}{\GB} of DDR4 RAM, and sufficient PCIe lanes to host \SI{2}{\TB} of SSD disks,
+\item two \dword{felix} cards~\cite{atlas-felix}, each with a PCIe 3.0 x16 interface and supporting 10 \SI{9.6}{\Gbps} bidirectional serial optical links,
 \item only in case of the TPC readout, four custom-designed co-processor cards mounted onto the two \dword{felix} cards, for additional processing power and data buffering.
 
 \end{enumerate}
@@ -593,7 +592,7 @@ The main functional blocks of the upstream \dword{daq} are described below:
 
 \begin{itemize}
   
-  \item The physical interface between the detector electronics and the \dword{daq} are 9.6 Gbps
+  \item The physical interface between the detector electronics and the \dword{daq} are \SI{9.6}{\Gbps}
 point-to-point serial optical links running a simple (e.g., 8/10 bit encoded) protocol.  For each
 \dword{apa} there are ten such links connecting its \dwords{wib} to the \dword{daq}. To reduce space and
 power consumption in the \dword{cuc}, high data aggregation is desired. In the baseline design, the
@@ -601,7 +600,7 @@ power consumption in the \dword{cuc}, high data aggregation is desired. In the b
 to one \dword{felix} FPGA PCIe 3.0 board.  If commodity computing technology advances sufficiently, a PCIe 4.0 version of
 \dword{felix} may be produced to increase the data aggregation such that each board would accept 20
 links and a total of 40 links per \dword{fec} would be accommodated. Tests were performed to verify
-\dword{om3} and \dword{om4} fibers support \SI{10}{Gbps} links over a run of \SI{300}{\meter}.
+\dword{om3} and \dword{om4} fibers support \SI{10}{\Gbps} links over a run of \SI{300}{\meter}.
 Higher-speed fiberoptic links may be employed in order to reduce the number of fibers if run
 lengths can be reduced. The \dword{felix} board and firmware was developed initially by and for the
 ATLAS experiment and is now proposed or already in use by several other experiments including
@@ -705,9 +704,9 @@ Following DUNE \dword{fd} and \dword{daq} requirements, the
 \dword{daqdss} must select, with sufficiently high ($>$99\%) efficiency, data associated with calibration
 signals, as well as beam interactions,
 atmospheric neutrinos, rare baryon-number-violating events, and cosmic
-ray events that deposit visible energy in excess of 100 MeV. 
+ray events that deposit visible energy in excess of \SI{100}{\MeV}. 
 It must also select data associated with potential
-\dwords{snb} within 100 kpc with $>$90\% efficiency. 
+\dwords{snb} within \SI{100}{\kilo\parsec} with $>$90\% efficiency. 
 Furthermore, to meet the requirement that the \dword{dune} \dword{fd} maintain
 $<$\offsitepbpy to permanent storage, the \dword{daqdss}
 must make \dword{daqdsn} decisions in a way that allows the \dword{daq} 
@@ -774,14 +773,14 @@ classes of physics, each handled differently at the trigger level:
 
 \begin{description}
 \item[High-energy interactions] High-energy interactions include cosmic muons, neutrino beam interactions, atmospheric neutrinos, and nucleon decays. 
-  The trigger efficiency for these interactions is explicitly required to be $>$99\% for any given particle type (electron,muon, photon, etc.) that has a localized (confined to a few contiguous APAs) visible energy deposition above 100 MeV.
-  To achieve this requirement, algorithms for creating high-energy trigger candidates are targeting a trigger efficiency of 50\% at 10 MeV visible energy, thus ensuring $>$99\% efficiency or better at 100 MeV.
+  The trigger efficiency for these interactions is explicitly required to be $>$99\% for any given particle type (electron,muon, photon, etc.) that has a localized (confined to a few contiguous APAs) visible energy deposition above \SI{100}{\MeV}.
+  To achieve this requirement, algorithms for creating high-energy trigger candidates are targeting a trigger efficiency of 50\% at \SI{10}{\MeV} visible energy, thus ensuring $>$99\% efficiency or better at \SI{100}{\MeV}.
   This type of trigger is referred to as localized high energy trigger. 
   Pushing the high-energy threshold lower could enable detection of diffuse supernova neutrinos and solar neutrinos, if radiological and neutron backgrounds are low enough.
 
 \item[Low-energy interactions] The primary physics target for
   low-energy interactions is a neutrino burst from a nearby supernova. 
-  Low-energy trigger candidates (with threshold at or below 10 MeV visible energy) are generated and are input to an ``extended low-energy trigger'' that looks for bursts inconsistent with fluctuations in low-energy background events. 
+  Low-energy trigger candidates (with threshold at or below \SI{10}{\MeV} visible energy) are generated and are input to an ``extended low-energy trigger'' that looks for bursts inconsistent with fluctuations in low-energy background events. 
   The time window for detecting such bursts is tuned to ensure
   nearly 100\% efficiency out to the galactic edge, and the pre-burst
   buffers are sized to handle the associated latency for detection.
@@ -887,12 +886,12 @@ Section~\ref{sec:sp-daq:design-validation}.
 The format and schema of \dwords{trigprimitive} are subject to further
 optimization, as they are further tightly coupled with the generation of
 trigger candidates, discussed in the following subsection. Nominally,
-each trigger primitive comprises the channel address (32 bit), hit
-start time (64 bit), the time over
-threshold (16 bit), the integral ADC value (32 bit), an error flag (16
-bit), and possibly also
-the waveform peak (12 bit) associated with the hit. 
-As such, 20-22 bytes provides a generous data
+each trigger primitive comprises the channel address (\SI{32}{\bit}), hit
+start time (\SI{64}{\bit}), the time over
+threshold (\SI{16}{\bit}), the integral ADC value (\SI{32}{\bit}),
+an error flag (\SI{16}{\bit}), and possibly also
+the waveform peak (\SI{12}{\bit}) associated with the hit. 
+As such, \SIrange{20}{22}{\byte} provides a generous data
 representation of \dword{trigprimitive} information. 
 The \dword{trigprimitive} rate will be dominated by the rate of decay of naturally occurring
 $^{39}$Ar, which is about \SI{10}{\mega\hertz} per module. Radioactive
@@ -941,7 +940,7 @@ types of decays, will be passed to the module level trigger.
 
 This stage of data selection is implemented 75 (\dword{tpc}) plus 8
 (\dword{pds}) CPU servers, which receive the trigger primitive stream from the upstream \dword{daq} and distribute trigger candidates to the module level trigger
-stage, described next, via the \SI{10}{Gbps} \dword{daq} network. Studies are underway to demonstrate CPU
+stage, described next, via the \SI{10}{\Gbps} \dword{daq} network. Studies are underway to demonstrate CPU
 resource utilization and latency, as are efforts to demonstrate online trigger candidate generation
 at \dword{protodune}. Trigger candidate generation performance is summarized in
 Section~\ref{sec:sp-daq:design-validation}. 
@@ -961,8 +960,8 @@ decision which prompts the readout of data records from buffers kept by the upst
 The physical (channel and time) location, extent as well as the energy measure of the
 candidates are used at this stage to categorize the activity in terms
 of a localized high energy trigger or an extended low energy trigger. 
-Specifically, $N$ isolated, low energy candidates found in coincidence
-over the integration period of up to 10 seconds across the full \dword{detmodule}
+Specifically, a suitable number of isolated, low energy candidates found in coincidence
+over the integration period of up to \SI{10}{\second} across the full \dword{detmodule}
 indicate the latter; individual high energy candidates, found
 otherwise, indicate the former.
 
@@ -978,7 +977,7 @@ The module level trigger is implemented in \bigo{1} CPU server (with 100\%
 redundancy), which
 receives the trigger candidate stream from the low level trigger stage
 of the data selection and distributes \dwords{trigcommand} to the
-\dword{daqbes} via the 10 Gbps \dword{daq} network. Studies are
+\dword{daqbes} via the \SI{10}{\Gbps} \dword{daq} network. Studies are
 underway to demonstrate CPU resource utilization and latency, as are
 efforts to demonstrate online \dword{trigcommand} generation at \dword{protodune}.
 \Dword{trigcommand} generation performance is summarized in
@@ -1001,7 +1000,7 @@ may either alter \dword{trigdecision} criteria or merely include the
 information in contemporaneous \dwords{trigdecision}. The beam time information can also be distributed to components of the calibration system so that they may avoid producing activity in the detector that may interfere with activity from beam neutrinos.
 
 The external trigger interface is implemented in \bigo{1} CPU server (with 100\%
-redundancy), with 10 Gbps networking and interfacing hardware
+redundancy), with \SI{10}{\Gbps} networking and interfacing hardware
 components (to White Rabbit and \dword{dune} timing system) for timing and external trigger signal I/O.
 
 \subsubsection{High Level Filter}
@@ -1113,9 +1112,9 @@ The output buffer system will provide the relevant data flow status and statisti
 
 
 \subsubsection{Data Network}
-Upstream \dword{daq}, \dword{daqdss} and \dword{daqbes} \dword{daq} are interconnected by a \SI{10/100}{ Gbps} ethernet network for data exchange.
-In particular the upstream \dword{daq} and \dword{daqdss} servers are connected through redundant \SI{10}{ Gbps} links to top-of-rack switches with \SI{10}{Gbps} uplinks.
-The \dword{eb} and Output buffer hardware will support \SI{100}{Gbps} directly.
+Upstream \dword{daq}, \dword{daqdss} and \dword{daqbes} \dword{daq} are interconnected by a \SI{10/100}{\Gbps} ethernet network for data exchange.
+In particular the upstream \dword{daq} and \dword{daqdss} servers are connected through redundant \SI{10}{\Gbps} links to top-of-rack switches with \SI{10}{\Gbps} uplinks.
+The \dword{eb} and Output buffer hardware will support \SI{100}{\Gbps} directly.
 The \dword{daq} data network is connected to the \fnal network via a WAN interface.
 
 \subsubsection{Data Model}
@@ -1243,7 +1242,7 @@ Understanding how to optimally select an \dword{ipc}  for such parts of the \dwo
 \subsubsection{Hardware}
 \label{sec:daq:design:ccm:hardware}
 
-The \dword{daqccm} software suite will run on approximately 15 servers interconnected by a \SI{1}{Gbps} ethernet network to upstream \dword{daq}, \dword{daqdss}, \dword{daqbes} as well as detector and calibration daq interface elements. While this network has a lower throughput compared to the data network, it has many more endpoints O(2000).
+The \dword{daqccm} software suite will run on approximately 15 servers interconnected by a \SI{1}{\Gbps} ethernet network to upstream \dword{daq}, \dword{daqdss}, \dword{daqbes} as well as detector and calibration daq interface elements. While this network has a lower throughput compared to the data network, it has many more endpoints O(2000).
 
 \subsection{Data Quality Monitoring}
 \label{sec:fd-daq:design-data-quality}
@@ -1288,7 +1287,7 @@ Central to the timing system are four types of signals:
 \item a \dfirst{pps} from the GPS,
 \item a \dword{ptproto} signal providing an absolute time for each \dword{pps}, and
 \item an \dfirst{irig} time code signal
-  used to set the timing system 64-bit time stamp.
+  used to set the timing system \SI{64}{\bit} time stamp.
 \end{itemize}
 
 The timing system synchronization codes are distributed to the \dword{daq} readout components in the \dfirst{cuc} and the readout components on the cryostat via single mode fibers and passive splitters/combiners.
@@ -1459,17 +1458,16 @@ data selection, and \dword{daqccm} prototyping, which is relevant to all \dword{
 %The detector readout for DUNE will be based Front-End Link EXchange (FELIX)[?] system, originally developed for the ATLAS experiment DAQ upgrades.
 The use of \dword{felix} as the front-end readout technology for DUNE was
 successfully prototyped at \dword{protodune}, initially for the readout of one
-\dword{apa}. In \dword{protodune}, \dword{felix} allows streaming of data arriving o- multiple 10
-Gbps optical point-to-point links into commercial host memory and,
+\dword{apa}. In \dword{protodune}, \dword{felix} allows streaming of data arriving o- multiple \SI{10}{\Gbps} optical point-to-point links into commercial host memory and,
 from there, storing, dispatching or processing of the data via
 software. 
 
-In \dword{protodune}, a single \dword{apa} \dword{felix}-based readout consists of two servers with a point-to-point 100 Gbps network connection to the \dword{felix} host computer.
+In \dword{protodune}, a single \dword{apa} \dword{felix}-based readout consists of two servers with a point-to-point \SI{100}{\Gbps} network connection to the \dword{felix} host computer.
 The \dword{felix} I/O card interfaces with its host PC through 16-lane PCIe 3.0 (theoretical bandwidth of \SI{16}{GB/s}).
 It transfers the incoming WIB data directly into the host PC memory using continuous DMA transfer. The \dword{felix} host PC runs a software process that publishes the data to any client subscribing to it.
 Subscriptions may identify from which input optical links the received data stream will be sourced.
 The clients consuming these streams are ``BoardReader'' processes implemented in the \dword{artdaq} data acquisition toolkit.
-In order to sustain the data rate, modest modifications of the firmware and software were carried out specifically for \dword{protodune}: each \dword{felix} host receives and publishes data at $\sim$75 Gbps. The BoardReader hosts are equipped with embedded Intel QuickAssist (QAT)~\footnote{Intel\textregistered QuickAssist Technology, \url{https://www.intel.com/content/www/us/en/architecture-and-technology/intel-quick-assist-technology-overview.html}.} technology for hardware accelerated data compression. The \dword{protodune} application of the \dword{felix} front-end readout is shown in Figure~\ref{fig:sp-daq:felix-pd-impl}.
+In order to sustain the data rate, modest modifications of the firmware and software were carried out specifically for \dword{protodune}: each \dword{felix} host receives and publishes data at $\sim$\SI{75}{\Gbps}. The BoardReader hosts are equipped with embedded Intel QuickAssist (QAT)~\footnote{Intel\textregistered QuickAssist Technology, \url{https://www.intel.com/content/www/us/en/architecture-and-technology/intel-quick-assist-technology-overview.html}.} technology for hardware accelerated data compression. The \dword{protodune} application of the \dword{felix} front-end readout is shown in Figure~\ref{fig:sp-daq:felix-pd-impl}.
 
 
 In DUNE only a very small fraction of the data received via the \dword{felix}
@@ -1606,7 +1604,7 @@ Additional details may be found in~\citedocdb{14062}.
 
 \Dword{trigcandidate} generation, building on trigger primitives information
 and considering integral \dword{adc} and trigger primitive proximity by channel
-and time (in 50 microseconds) space, has also been studied with Monte
+and time (in \SI{50}{\micro\second}) space, has also been studied with Monte
 Carlo simulations~\cite{bib:docdb11215}.
 Trigger candidates with sufficient total integral \dword{adc}  can be accepted to
 generate corresponding \dwords{trigcommand} for localized high energy
@@ -1615,18 +1613,18 @@ violating signatures, and cosmics.
 Simulation studies demonstrate that this scheme meets efficiency
 requirements for localized high energy triggers.
 Specifically, simulations demonstrate that $>99$\% efficiency is
-achievable for $>100$ MeV visible energy deposited by single particles
+achievable for $>\SI{100}{\MeV}$ visible energy deposited by single particles
 (shown in Figure~\ref{fig:daq-tc-eff-vis} for $e^-$), and that the
 corresponding effective threshold for localized triggers for the system
-is at $\sim$10 MeV. This translates to all-inclusive efficiencies for
+is at $\sim$\SI{10}{\MeV}. This translates to all-inclusive efficiencies for
 beam $\nu_e$ and $\nu_\mu$ events in excess of 99\% for visible energies
-above 100 MeV, as shown in Figure~\ref{fig:daq-tc-eff-allinc}.
+above \SI{100}{\MeV}, as shown in Figure~\ref{fig:daq-tc-eff-allinc}.
 
 Low-energy \dwords{trigcandidate} furthermore can serve as input to the
 SNB trigger. Simulations demonstrate that the trigger candidate
 efficiency for any individual \dword{snb} neutrino interaction is on the order
 of 20-30\%. However, a multiplicity-based \dword{snb}
-\dword{trigdecision} that integrates low-energy trigger candidates over an up to 10 seconds
+\dword{trigdecision} that integrates low-energy trigger candidates over an up to \SI{10}{\second}
 integration window yields high trigger efficiency out to the
 galactic edge while keeping fake \dword{snb} trigger rates to one per
 month. An energy-weighted multiplicity count scheme can be
@@ -1636,7 +1634,7 @@ Figure~\ref{fig:daq-snb-eff-Eweight}, demonstrating nearly 100\% efficiency
 out to the edge of the galaxy, and 70\% efficiency for a \dword{snb} at
 the Large Magellanic Cloud (or for any \dword{snb} creating 10
 events). This performance is obtained by considering the sum ADC
-distribution of \dwords{trigcandidate} over 10 seconds and comparing to a background-only
+distribution of \dwords{trigcandidate} over \SI{10}{\second} and comparing to a background-only
 vs.~background plus \dword{snb} hypothesis. The efficiency gain compared to a
 simpler, \dword{trigcandidate} counting-based approach is quite significant; using
 only counting information, the efficiency is 6.5\%. The \dword{daq}
