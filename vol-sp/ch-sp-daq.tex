@@ -74,8 +74,8 @@ of raw data processing and buffering is performed underground, in the
 upstream \dword{daq}, thus controlling consumption of available data bandwidth  to the surface. A
 hierarchical \dfirst{daqdsn} subsystem consumes minimally-processed
 information from the upstream \dword{daq}, and, through further data processing, 
-constructs module-level trigger decisions leading to a trigger command.
-The command is executed by a \dfirst{daqdfo} residing in the \dfirst{daqbes}
+carries out a module-level \dfirst{trigdecision} leading to a \dfirst{trigcommand}.
+The command is subsequently executed by a \dfirst{daqdfo} residing in the \dfirst{daqbes}
 by retrieving the required data from memory buffers maintained by the upstream DAQ.
 The results are aggregated across the detector module into a cohesive record and saved to non-volatile storage.
 During or after the aggregation, an optional down-selection of the data is possible via
@@ -86,7 +86,7 @@ detector modules and their subcomponents are synchronized and timed against a gl
 common clock, provided by the timing and synchronization
 subsystem. Cross-module communication as well as communication
 to the outside world for data selection (trigger) purposes is facilitated
-through an external trigger interface, which is part of the \dword{daqdsn}
+through an \dfirst{daqeti}, which is part of the \dword{daqdsn}
 system. The
 specifics of design implementation and data flow are described in Section~\ref{sec:fd-daq:design}.
 
@@ -328,11 +328,11 @@ There are five key challenges for the DUNE \dword{fd} \dword{daq} system:
   for the formation and capture of delayed, data-driven data selection
   decisions:
   The trigger accumulates low energy signals over an extended period
-  of time while forming the trigger decision, thus identifying activity compatible with \dword{snb}.
+  of time while carrying out the \dword{trigdecision}, thus identifying activity compatible with \dword{snb}.
   The specification for the depth of this buffer is determined in
   consultation with physics groups and is driven primarily by the need
   to retain all unbiased data while processing up to \SI{10}{s} of
-  data for the trigger decision, preceding a \dword{snb} trigger.
+  data for the \dword{trigdecision}, preceding a \dword{snb} trigger.
   Collecting data containing information on other types of interactions and decays does not pose additional requirements on the upstream \dword{daq} buffer, since the latency to form the required triggers is expected to be well below \SI{10}{s}.
 
 \item Fourthly, the \dword{daq} must support a very wide range of readout windows and trigger rates. This encompasses the acquisition of localized events in both time and space up to the very large and rare \dword{snb} detector-wide readouts over \SI{100}{s}.
@@ -455,10 +455,10 @@ feeds back into the \dword{daq} for run control operations.
 \item[Calibration] The \dword{daq} and calibration interface is described in \citedocdb{7069}. Two calibration systems are envisioned for the \dword{fd}: a laser calibration system and a neutron generator. 
   Two-way communication between the calibration system and the
   \dword{daq} is needed.  Specifically, the calibration system must
-  notify the data selection system, thus informing trigger decision,
+  notify the data selection system, thus informing \dword{trigdecision},
   when activity has been induced in the detector. At the same time, the \dword{daq} must provide input to the calibration system so that it may avoid inducing activity in the detector during certain periods such as during a \dword{snb} readout time or during a beam spill.
 This second communication will be initiated by the data selection
-system and distributed via the external trigger interface and
+system and distributed via the \dword{daqeti} and
 subsequently through the
 \dword{daq} timing system.
 
@@ -612,7 +612,7 @@ development is not required.
 \item The data processing functional block is tasked with identifying and forming \dwords{trigprimitive} (see
 Section~\ref{sec:sp-daq:design-trigger-primitives}), after a stage of data
 reorganization and noise filtering for both the \dword{tpc} and \dword{pds}. \Dwords{trigprimitive} summarize time periods on a channel where the digitized waveform is no longer consistent with noise.
-These regions of interest are then used as input to the \dword{daqdss} where they begin the process of forming a trigger decision.
+These regions of interest are then used as input to the \dword{daqdss} where they begin the process of forming a \dword{trigdecision}.
 
 In the baseline design this functional block is implemented in \dword{fpga}.
 R\&D studies are ongoing to evaluate whether alternative implementations (in GPUs or CPUs) would bring any advantages in terms of flexibility or cost.
@@ -629,7 +629,7 @@ bottlenecks. Localized and extended trigger activity are associated
 with two rather different time scales and data throughput metrics, and
 those collectively dictate the temporary storage technology and scale. 
 
-The time required to form a trigger decision based on localized
+The time required to form a \dword{trigdecision} based on localized
 activity is expected to be on the order of one second.
 Extended triggers present a far more challenging set of buffering
 requirements; 
@@ -683,7 +683,7 @@ and provides addresses (in channel-time space) of the data in the
 upstream \dword{daq} buffers that capture raw data
 corresponding to the activity.
 This command is sent to and then consumed and executed by the \dfirst{daqbes} as described in Section~\ref{sec:fd-daq:design-backend}. 
-It may also be propagated to the \dword{etl} and from there it may be
+It may also be propagated to an \dfirst{etl} stage and from there it may be
 distributed to other \dwords{detmodule} or other detector systems
 (e.g. calibration) for further consideration.
 
@@ -694,7 +694,7 @@ given partition, the \dword{daqdsn} subsystem will also be
 informed and aware of current detector configuration and conditions and
 apply certain masks and mapping on subdetectors or their fragments in
 its decision making. This information is delivered to the
-\dword{daqdss} from the \dword{daqccm} system.
+\dword{daqdss} by the \dword{daqccm} system (Section~\ref{sec:fd-daq:design-run-control}).
 
 Following DUNE \dword{fd} and \dword{daq} requirements, the
 \dword{daqdss} must select, with sufficiently high ($>$99\%) efficiency, data associated with calibration
@@ -714,20 +714,20 @@ The hierarchy is illustrated in
 Figure~\ref{fig:daq:data-selection-hierarchy}. 
 At the lowest level, trigger primitives are formed on a per-channel basis, and represent, for the baseline design, a ``hit on a wire/channel'' activity summary. 
 \Dwords{trigprimitive} are aggregated into \dwords{trigcandidate}, which represent information associated with higher-level constructs derived from trigger primitives, for example ``clusters of hits''. 
-\dword{trigcandidate} information is subsequently used to inform a
-module-level trigger decision, which generates a \dword{trigcommand};
+\Dword{trigcandidate} information is subsequently used to inform a
+module-level \dword{trigdecision}, which generates a \dword{trigcommand};
 this takes the form of either a localized high energy trigger or an
 extended SNB trigger, and each prompts the corresponding readout of an
 event record. Details on the
 exact algorithm implementation for trigger primitive, trigger
-candidate, and trigger decision generation may be found
+candidate, and \dword{trigcommand} generation may be found
 in~\citedocdb{11215} and~\citedocdb{14522} and references therein. 
 Post-event-building, further data selection is carried out in the form
 of down-selection of event records, through a high level
 filter. Details on a possible post-event-building filtering alforithm
 implementation may be found in~\citedocdb{11311}.
 
-It should be noted that this data selection strategy is applicable to both \dword{pds} and \dword{tpc}, operating in parallel up to the module level trigger stage, where \dword{pds} and \dword{tpc} information can be combined to form a module level trigger decision. 
+It should be noted that this data selection strategy is applicable to both \dword{pds} and \dword{tpc}, operating in parallel up to the module level trigger stage, where \dword{pds} and \dword{tpc} information can be combined to form a module level \dword{trigdecision}. 
 Data selection design efforts have taken the approach of validating
 and demonstrating a \dword{tpc}-based data selection. Nevertheless,
 the data selection design by construction allows an additional
@@ -741,13 +741,13 @@ reflects the three stages of \dword{daqdsn}: (1) low level trigger, which consis
 Section~\ref{sec:daq:design-upstream}) and subsequent
 \dword{trigcandidate} generation; (2) module level trigger; and (3)
 high level filter. Each stage is described in further detail in subsequent
-sections. An additional subsystem component is the external trigger interface,
+sections. An additional subsystem component is the \dword{daqeti},
 which serves as a common interface for the
 module level trigger of each of the \dword{fd} \dwords{detmodule} and between
 the module level trigger and other systems (calibration,
 accelerator and timing system) within a single
 \dword{detmodule}. An additional responsibility of the
-external trigger interface is to send \dword{snb} triggers
+\dword{daqeti} is to send \dword{snb} triggers
 to global coincidence trigger recipients such as \dword{snews}
 \cite{snews}, after sufficient confirmation of trigger quality.
 
@@ -818,7 +818,7 @@ buffers and finally collect and output the corresponding detector data
 and the corresponding trigger data. To avoid duplication of data
 records associated with \dwords{trigcommand} that overlap in readout
 record ``space'', the \dword{daqdsn} system must also time-order and
-prioritize trigger decisions. The details for forming this
+prioritize \dwords{trigdecision}. The details for forming this
 command are described next, while the operation of the \dword{daqbes} is
 described in Section~\ref{sec:fd-daq:design-backend}.
 
@@ -970,14 +970,14 @@ Section~\ref{sec:sp-daq:design-validation}.
 
 The \dfirst{daqeti} provides a loose coupling between the \dwords{mlt}, sources of external information such as beam spill times and information to or from components of the calibration system. 
 
-As an interface between \dwords{mlt}, it is responsible receive and distribute information about module-level \dword{snb} trigger decisions.
+As an interface between \dwords{mlt}, it is responsible receive and distribute information about module-level \dword{snb} \dwords{trigcommand}.
 This allows any detector module which alone may not have satisfied a \dword{snb} trigger requirement to nonetheless perform a \dword{snb} readout.
-The \dword{daqeti} is also responsible for forming a coincidence between module-level \dword{snb} trigger decisions and publishing the results, eg for consumption by the \dfirst{snews}.
+The \dword{daqeti} is also responsible for forming a coincidence between module-level \dword{snb} \dwords{trigcommand} and publishing the results, e.g.~for consumption by the \dfirst{snews}.
 
 Information about beam spill times can be received from the accelerator by the \dword{daqeti}. 
 These times can drive a model of the beam timeline to predict when beam spills will occur. 
 These predictions can then be distributed to components of the calibration system so that they may avoid producing activity in the detector that may interfere with activity from beam neutrinos.
-The beam time information can also be sent to the \dwords{mlt} so that they may either alter trigger decision criteria or merely include the information in contemporaneous trigger decisions.
+The beam time information can also be sent to the \dwords{mlt} so that they may either alter \dword{trigdecision} criteria or merely include the information in contemporaneous \dwords{trigdecision}.
 
 
 
@@ -1394,7 +1394,7 @@ in \cite{bib:docdb14095}. Major development plan milestones are:
 primitive stage (introduction of trigger candidate generation, and
 \dword{trigcommand} generation), and tests on well identified interaction
 topologies (e.g. long horizontal tracks, or Michel electrons from muon decay)
-\item integration of online trigger command and modified data flow to event
+\item integration of online \dword{trigcommand} and modified data flow to event
 builder to facilitate self-triggering of detector
 \item implementation of extended \dword{fpga}-based front-end functionality
 (e.g., compression)
@@ -1577,7 +1577,7 @@ Low-energy \dwords{trigcandidate} furthermore can serve as input to the
 SNB trigger. Simulation demonstrates that the trigger candidate
 efficiency for any individual \dword{snb} neutrino interaction is on the order
 of 20-30\%. Simulations have further demonstrated that a
-multiplicity-based \dword{snb} trigger decision that integrates low-energy
+multiplicity-based \dword{snb} \dword{trigdecision} that integrates low-energy
 trigger candidates over an up to 10 seconds
 integration window yields high ($>90$\%) galactic coverage while
 keeping fake \dword{snb} trigger rates to one per month, in accordance with system
@@ -1622,7 +1622,7 @@ Throughput and latency of the mechanism is being evaluated and optimized.
 Message schema and application level protocols have been designed and are being improved.
 Future work will include prototyping \dword{daqccm} functionality including \dword{daqdispre}.
 
-PTMP has been successfully exercised to transfer trigger primitives from the software based hit finder. The short-term goal will be to successfully aggregate information from across an APA and feed the result to a trigger candidate finder which identifies horizontal muons. From this output a trigger decision can be made.
+PTMP has been successfully exercised to transfer trigger primitives from the software based hit finder. The short-term goal will be to successfully aggregate information from across an APA and feed the result to a trigger candidate finder which identifies horizontal muons. From this output a \dword{trigdecision} can be made.
 
 % \subsection{Additional Teststands}
 % \label{sec:sp-daq:validation-demonstrators}
