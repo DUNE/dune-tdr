@@ -194,10 +194,9 @@ provide data processing and triggering, and facilitate optional data reduction a
 
 The \dword{daq}  system is required to yield $>$99\% efficiency for particles depositing $>$100 MeV
 of energy in the detector, for localized high-energy triggers; it is also required to yield
-sufficient efficiency for low-energy deposition in the detector as needed to yield $>$90\% galactic
-supernova burst trigger coverage, for extended low-energy triggers. Galactic coverage is defined as
-supernova burst trigger efficiency, weighted by the probability of a galactic \dword{snb} (which
-is \dword{snb} distance-dependent). \fixme{confirm DUNE requirement}
+sufficient efficiency for low-energy deposition in the detector as
+needed to yield $>$90\% efficiency for a \dword{snb} occurring at a
+distance of 100 kpc, per \dword{dune} requirements.
 
 By offline considerations, the \dword{daq} is required to reduce the
 full \dword{fd} data volume for offline permanent storage to  \offsitepbpy.
@@ -268,7 +267,9 @@ capture the corresponding signals.
 Furthermore, to ensure high efficiency in collecting \dword{snb} interactions
 that, individually, are below low-energy activity threshold, data from
 all channels in the detector will be recorded over an extended and contiguous period of
-time \bigo{100}\si{s} around every \dword{snb} trigger.
+time which is specified to 100\si{s}, around every \dword{snb}
+trigger. This time has been defined in consultation with \dword{dune}
+physics groups.
 
 \input{generated/req-longtable-SP-DAQ} 
 
@@ -281,7 +282,7 @@ system should be able to record and store full detector data with zero dead
 time, applying appropriate data reduction through data selection and
 compression; and that it should be evolutionary, taking advantage of the
 staged construction for the DUNE \dword{fd}, and thus beginning very
-conservatively for the first DUNE \dword{fd} module, and agressively reducing
+conservatively for the first DUNE \dword{fd} module, and aggressively reducing
 the design conservatism as further experience is gained with detector
 operations. At the same time, it is designed to preserve the possibility of
 additional capacity as required. The bulk of processing and buffering of raw
@@ -310,7 +311,7 @@ There are five key challenges for the DUNE \dword{fd} \dword{daq} system:
 \begin{itemize}
 \item First, the high overall experiment's uptime goal, requires the \dword{daq} to be designed with stringent reliability, fault tolerance and redundancy criteria, aiming at contributing in a negligible way to the overall downtime.
 
-  The \dword{daq} system is fully configurable, controllable, and operable from remote locations, with authentication and authorisation implemented to allow exclusive control. The \dword{daq} provides monitoring of the quality of the detector data and of its own operational status, as well as automated error detection and recovery capabilities.
+  The \dword{daq} system is fully configurable, controllable, and operable from remote locations, with authentication and authorization implemented to allow exclusive control. The \dword{daq} provides monitoring of the quality of the detector data and of its own operational status, as well as automated error detection and recovery capabilities.
 
 \item Secondly, the system must be able to evolve to accommodate newly commissioned sub-components as they are installed into a detector module which is under construction. 
   The \dword{daq} must also continue to service existing modules which have reached their operational status while simultaneously accommodating subsequent detector modules as they are installed and commissioned. 
@@ -591,7 +592,7 @@ power consumption in the \dword{cuc}, high data aggregation is desired. In the b
 20 fibers from two \dwords{apa} are aggregated into one \dword{fec} with each \dword{apa} connected
 to one \dword{felix} FPGA PCIe 3.0 board.  If technology advances sufficiently, a PCIe 4.0 version of
 \dword{felix} may be produced to increase the data aggregation such that each board would accept 20
-links and a total of 40 links per \dword{fec} would be accomodated. Tests were performed to verify
+links and a total of 40 links per \dword{fec} would be accommodated. Tests were performed to verify
 \dword{om3} and \dword{om4} fibers support \SI{10}{Gbps} links over a run of \SI{300}{\meter}.
 Higher-speed fiberoptic links may be employed in order to reduce the number of fibers if run
 lengths can be reduced. The \dword{felix} board and firmware was developed initially by and for the
@@ -720,7 +721,7 @@ candidate, and \dword{trigcommand} generation may be found
 in~\citedocdb{11215} and~\citedocdb{14522} and references therein. 
 Post-event-building, further data selection is carried out in the form
 of down-selection of event records, through a high level
-filter. Details on a possible post-event-building filtering alforithm
+filter. Details on a possible post-event-building filtering algorithm
 implementation may be found in~\citedocdb{11311}.
 
 This data selection strategy is applicable to both the \dword{pds} and
@@ -765,15 +766,17 @@ classes of physics, each handled differently at the trigger level:
 
 \begin{description}
 \item[High-energy interactions] High-energy interactions include cosmic muons, neutrino beam interactions, atmospheric neutrinos, and nucleon decays. 
-  The trigger efficiency for these interactions is explicitly required to be $>$ 99\% for any given particle type (electron,muon, photon, etc.) that has a localized (confined to a few contiguous APAs) visible energy deposition above 100 MeV.
-  To achieve this requirement, algorithms for creating high-energy trigger candidates are targeting a trigger effiiency of 50\% at 10 MeV visible energy, thus ensuring >99\% efficiency or better at 100 MeV.
+  The trigger efficiency for these interactions is explicitly required to be $>$99\% for any given particle type (electron,muon, photon, etc.) that has a localized (confined to a few contiguous APAs) visible energy deposition above 100 MeV.
+  To achieve this requirement, algorithms for creating high-energy trigger candidates are targeting a trigger efficiency of 50\% at 10 MeV visible energy, thus ensuring $>$99\% efficiency or better at 100 MeV.
   This type of trigger is referred to as localized high energy trigger. 
   Pushing the high-energy threshold lower could enable detection of diffuse supernova neutrinos and solar neutrinos, if radiological and neutron backgrounds are low enough.
 
 \item[Low-energy interactions] The primary physics target for
   low-energy interactions is a neutrino burst from a nearby supernova. 
   Low-energy trigger candidates (with threshold at or below 10 MeV visible energy) are generated and are input to an ``extended low-energy trigger'' that looks for bursts inconsistent with fluctuations in low-energy background events. 
-  The time window for detecting such bursts is tuned to ensure efficiency out to the galactic edge, and the pre-burst buffers are sized to handle the associated latency for detection.
+  The time window for detecting such bursts is tuned to ensure
+  nearly 100\% efficiency out to the galactic edge, and the pre-burst
+  buffers are sized to handle the associated latency for detection.
 
 \end{description}
 
@@ -983,7 +986,7 @@ information in contemporaneous \dwords{trigdecision}. The beam time information 
 
 The external trigger interface is implemented in \bigo{1} CPU server (with 100\%
 redundancy), with 10 Gbps networking and interfacing hardware
-components (White Rabbit) for timing and external trigger signal I/O.
+components (to White Rabbit and \dword{dune} timing system) for timing and external trigger signal I/O.
 
 \subsubsection{High Level Filter}
 \label{sec:fd-daq:design-data-reduction}
@@ -1075,11 +1078,11 @@ As described above, each EB instance will
 
 %%The final output files shall use data schema and file formats as described in Section~\ref{sec:fd-daq:design-data-model}.
 
-As part of this, the EB sub-system will provide book-keeping functionality for the raw data.  This will include the documentating of simple mappings, such as which trigger is stored in which raw data file, as well as more sophisticated quality checks. For example, it will know which time windows and geographic regions of the detector are requested for each trigger, and in the unlikely event that some fraction of the requested detector data can not be stored in the event record, it will document that mismatch.
+As part of this, the EB sub-system will provide book-keeping functionality for the raw data.  This will include the documenting of simple mappings, such as which trigger is stored in which raw data file, as well as more sophisticated quality checks. For example, it will know which time windows and geographic regions of the detector are requested for each trigger, and in the unlikely event that some fraction of the requested detector data can not be stored in the event record, it will document that mismatch.
 
 \subsubsection{Output Buffer}
 
-The output buffer system is composed by the physical harware resource to host the incoming data and by the software services handling the final processing stages through the High-Level Filter and the transfer off-site to permanent storage.
+The output buffer system is composed by the physical hardware resource to host the incoming data and by the software services handling the final processing stages through the High-Level Filter and the transfer off-site to permanent storage.
 
 It has two primary purposes.  First, it decouples the production of data from filtering and the
 transfer of filtered data offline. It provides the elasticity needed by the \dword{daq} to deal with
@@ -1090,7 +1093,7 @@ uninterrupted \dword{daq} operation in the unlikely event that the network conne
 sufficient to buffer the nominal output of the entire \dword{fd} for about one week even in the case of SNB events. Based on prior experience of the consortium with unusual losses of  connectivity at
 other far detector experiment sites, this is a conservative storage capacity value.
 
-The output buffer system will provide the relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. The knowledge of the health and performace of the of the buffer system will enable the monitoring system to promtly identify and address developing faults before they can have an impact on data taking.
+The output buffer system will provide the relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. The knowledge of the health and performance of the of the buffer system will enable the monitoring system to promptly identify and address developing faults before they can have an impact on data taking.
 
 
 \subsubsection{Data Network}
@@ -1111,7 +1114,7 @@ The requirements that these place on the \dword{daq} are primarily in the areas 
 
 The \dfirst{daqccm}, illustrated in Figure~\ref{fig:daq-ccm-subsys}, consist of the software
 subsystems to control, configure, and monitor the \dword{daq} system, as well as the detector components
-participating to datataking. It provides a central access point for the highly distributed \dword{daq}
+participating to data taking. It provides a central access point for the highly distributed \dword{daq}
 components, allowing them to be treated and managed as a single, coherent system, though their
 corresponding subsystem interfaces. It is responsible for error handling and recovery, which is
 achieved by designing a robust and autonomous fault-tolerant control system. The main goal is to
@@ -1326,7 +1329,7 @@ a number of relevant data processing and data reduction techniques, and already 
 inputs to the \dword{dune} \dword{fd} design. For example,
 MicroBooNE has demonstrated successful implementations of lossless Huffman
 compression and of continuous readout via use of lossy compression
-(dynamic and fixed-baseline zero-supression)
+(dynamic and fixed-baseline zero-suppression)
 \cite{bib:uBsnreadout2019}; this has provided guidance and 
 confidence on anticipated achievable data reduction factors and data compression
 impact on physics performance.
@@ -1345,7 +1348,7 @@ Figure~\ref{fig:daq-protodune} depicts the \dword{protodune} \dword{daq} system.
 The \dword{daq} is split between the \dword{felix} and \dfirst{rce}
 \cite{bib:docdb1881} implementations. The two architectures share the
 same back-end and timing and trigger systems.  
-Neither of these tested architectures explicitly represents the baseline design for the DUNE \dword{fd}. Instead, each rouhgly maps onto one of two data processing approaches: one in which the data is processed exclusively in custom-designed \dword{fpga} firmware and carrier board, and the other in which the data is processed primarily with custom software run in commodity servers. The baseline design presented here merges elements of the two approaches. Specifically, it uses \dword{felix} as the hardware platform for data receiving and handling, and a co-processor FELIX daughter card (analogous to the \dword{rce} platform used at \dword{protodune}) to provide additional, dedicated data processing resources.
+Neither of these tested architectures explicitly represents the baseline design for the DUNE \dword{fd}. Instead, each roughly maps onto one of two data processing approaches: one in which the data is processed exclusively in custom-designed \dword{fpga} firmware and carrier board, and the other in which the data is processed primarily with custom software run in commodity servers. The baseline design presented here merges elements of the two approaches. Specifically, it uses \dword{felix} as the hardware platform for data receiving and handling, and a co-processor FELIX daughter card (analogous to the \dword{rce} platform used at \dword{protodune}) to provide additional, dedicated data processing resources.
 
 
 \begin{dunefigure}[ProtoDUNE DAQ system]{fig:daq-protodune}{The \dword{protodune} \dword{daq} system.}
@@ -1359,7 +1362,7 @@ Overcoming the first key difference in order to demonstrate
 \dword{daqdsn} capability for the \dword{fd} \dword{daq} design is a
 main component of current and future \dword{daq} development plans.
 
-% Continuous self-tirggering of the detector is also new with respect to
+% Continuous self-triggering of the detector is also new with respect to
 % other ongoing or planned near-term \dword{lartpc} experiments, including
 % MicroBooNE, SBND, and ICARUS. Both MicroBooNE and ICARUS have demonstrated
 % self-triggering in coincidence with external gates, which effectively
@@ -1368,7 +1371,7 @@ main component of current and future \dword{daq} development plans.
 % exposure and therefore physics sensitivity. %On the other hand, ICARUS
 % %has ...
 % MicroBooNE has demonstrated successful continuous readout of a \dword{lartpc},
-% via use of dynamic and fixed-baseline zero-supression implemented in
+% via use of dynamic and fixed-baseline zero-suppression implemented in
 % firmware for both \dword{tpc} and \dword{pds} readout. SBND, which utilizes the same readout
 % system as MicroBooNE, will investigate trigger primitive generation
 % and self-triggering based on \dword{tpc} information in the timescale of 2021-2023.
@@ -1609,18 +1612,20 @@ of 20-30\%. However, a multiplicity-based \dword{snb}
 \dword{trigdecision} that integrates low-energy trigger candidates over an up to 10 seconds
 integration window yields high trigger efficiency out to the
 galactic edge while keeping fake \dword{snb} trigger rates to one per
-month, in accordance with \dword{dune} physics
-requirements. An energy-weighted multiplicity count scheme can be
+month. An energy-weighted multiplicity count scheme can be
 applied to further increase efficiency and minimize background
 \cite{bib:docdb14522}. This is illustrated in
-Figure~\ref{fig:daq-snb-eff-Eweight}, demonstrating $>$90\% efficiency
+Figure~\ref{fig:daq-snb-eff-Eweight}, demonstrating nearly 100\% efficiency
 out to the edge of the galaxy, and 70\% efficiency for a \dword{snb} at
 the Large Magellanic Cloud (or for any \dword{snb} creating 10
 events). This performance is obtained by considering the sum ADC
 distribution of \dwords{trigcandidate} over 10 seconds and comparing to a background-only
 vs.~background plus \dword{snb} hypothesis. The efficiency gain compared to a
 simpler, \dword{trigcandidate} counting-based approach is quite significant; using
-only counting information, the efficiency is 6.5\%. 
+only counting information, the efficiency is 6.5\%. The \dword{daq}
+consortium is working on further refining these algorithms to improve
+\dword{snb} trigger efficiency, in accordance with \dword{dune} physics
+requirements.
 
 The dominant contributor to fake \dword{snb} triggers is
 radiological backgrounds from neutrons, followed by radon. It is
@@ -1636,8 +1641,8 @@ to validate radiological the background assumptions.
     For a \dword{snb} at the Large Magellanic Cloud, where 10 neutrino
   interactions are expected, the efficiency gain over a counting-only
   trigger is significantly improved. }
-  \includegraphics[height=6cm]{daq-efficiency-snb.pdf}%
-  \includegraphics[height=6cm]{daq-snb-eff-lmc.pdf}%
+  \includegraphics[width=0.7\textwidth]{daq-efficiency-snb.pdf}%
+  \includegraphics[width=0.7\textwidth, angle=90]{daq-snb-eff-lmc.pdf}%
 \end{dunefigure}
 
 In the case of the high level filter, the consortium is exploring the
@@ -1652,7 +1657,7 @@ atmospheric neutrino interactions, baryon number violating
 interactions (proton decay or neutron-antineutron oscillation), cosmic
 ray interactions, supernova neutrino interactions, or no interactions at all -- all
 with radiological and noise background included in the
-simulations. Preliminary studies show that a \dword{cnn} can be sucessfully trained classify any
+simulations. Preliminary studies show that a \dword{cnn} can be successfully trained classify any
 given input frame as one of three categories: empty, containing a \dword{snb} neutrino
 interaction, or containing a high-energy (atmospheric neutrino, baryon
 number violating, or cosmic ray) interaction. Specifically, empty frames can be
@@ -2059,7 +2064,7 @@ level filter system capacity.
 \item[WAN network] The network connectivity to the experiment from
   remote locations may be proven unstable, making remote control and monitoring
   inefficient. Prior mitigation includes ensuring that minimal human intervention
-  is needed on the system for steady data taking and that automted
+  is needed on the system for steady data taking and that automated
   error recovery is well developed. Mitigation includes effort to further
   improve automated data taking, and increased cost for improving network
   connectivity. In the worst case, one would foresee presence of personnel at SURF.
@@ -2072,6 +2077,6 @@ level filter system capacity.
   degraded experiment uptime. 
 
 \item[Custom electronics manufacturing issues] Large-scale production of high-speed custom
-  electronics proves challenging, resulting in \dword{daq} installation delays. Prior mitigation includes diversifying manufacturers used for prototype production; assess manufacturer capability to meet specifications.  Mitigation includes running early pre-production with selected manufacurers, applying stringent QA criteria to ensure compliance with specifications.
+  electronics proves challenging, resulting in \dword{daq} installation delays. Prior mitigation includes diversifying manufacturers used for prototype production; assess manufacturer capability to meet specifications.  Mitigation includes running early pre-production with selected manufacturers, applying stringent QA criteria to ensure compliance with specifications.
 
 \end{description}
