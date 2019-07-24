@@ -1,3 +1,12 @@
+% Spelling:
+%
+% "subsystem" not "sub-system"
+%
+% "back-end" as adjective, "back end" as noun, etc for "front end".  "Back-end" or "Back end" as start of a sentence.
+
+% reset glossaries so the first \dword is really a \dfirst.
+\glsresetall
+
 \chapter{Data Acquisition}
 \label{ch:sp-daq}
 
@@ -12,9 +21,9 @@ subdetectors; receives, synchronizes, compresses, and buffers data
 streaming from the subdetectors; extracts information from the data at a
 local level to subsequently make local, module, and cross-module data
 selection decisions; builds event records %``events''
- from selected space-time volumes 
-and relays them to permanent storage; and carries out local data
-reduction and filtering of the data as needed.
+from selected space-time data volumes 
+and relays them to permanent storage; and carries out subsequent data
+reduction and filtering as needed.
 
 This chapter provides a description for the design of the \dword{dune}
 \dword{fd} \dword{daq} system developed by the \dword{dune} \dword{fd}
@@ -46,7 +55,7 @@ these efforts is the  \dword{protodune} \dword{daq} system (described in
 Section~\ref{sec:fd-daq:protodune}), which has served as a demonstrator of
 several key aspects of the  \dword{dune} \dword{fd} \dword{daq}  design, and continues
 to serve as a platform for further design development and validation toward
-the DUNE \dword{fd} \dword{daq} design.  Finally, the chapter finishes with two sections
+the final design.  Finally, the chapter finishes with two sections
 (Sections~\ref{sec:sp-daq:production} and \ref{sec:sp-daq:organization})
 providing details on the management of the \dword{daq} project, including
 schedule to completion of the design,  production, and installation of the
@@ -69,7 +78,7 @@ which is responsible for
 event-building, as well as run control and monitoring, resides on the
 surface.
 Data flows through the \dword{daq} from 
-upstream to the back-end and then to offline. The majority
+upstream to the back-end parts of the DAQ and then to offline. The majority
 of raw data processing and buffering is performed underground, in the
 upstream \dword{daq}, thus controlling consumption of available data bandwidth  to the surface. A
 hierarchical \dfirst{daqdsn} subsystem consumes minimally-processed
@@ -1030,7 +1039,7 @@ carried out to determine the scale of
 processing required by the \dword{fd}.
 
 
-\subsection{Back-End DAQ}
+\subsection{Back-end DAQ}
 \label{sec:fd-daq:design-backend}
 
 The  \dfirst{daqbes} is responsible for moving data of interest identified by the data-selection system from the readout \dword{daq} buffers, serving them to the High-Level Filter and storing the filtered data into the output buffer, from where they will be transferred to permanent storage off-site.
@@ -1060,7 +1069,7 @@ The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes 
 
 \begin{itemize}
 \item \dword{daqdfo} accepts a stream of \dwords{trigcommand} and dispatches each to an available \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution.
-\item In atypical situations in which there are insufficient event builder resources available to handle the rate of triggers produced by the data selection sub-system, the DFO will alert the DS sub-system that the rate of triggers needs to be reduced.  When such reductions are requested, the \dword{daqdss} will update the calculation of the module-level \dword{daq} livetime appropriately.
+\item In atypical situations in which there are insufficient event builder resources available to handle the rate of triggers produced by the data selection subsystem, the DFO will alert the DS subsystem that the rate of triggers needs to be reduced.  When such reductions are requested, the \dword{daqdss} will update the calculation of the module-level \dword{daq} livetime appropriately.
 \item The DFO will provide relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. Given its central role and knowledge of the state of available event builder buffers, it will be able to provide important information about the health and performance of the system.
 \end{itemize}
 
@@ -1079,7 +1088,7 @@ As described above, each EB instance will
 
 %%The final output files shall use data schema and file formats as described in Section~\ref{sec:fd-daq:design-data-model}.
 
-As part of this, the EB sub-system will provide book-keeping functionality for the raw data.  This will include the documenting of simple mappings, such as which trigger is stored in which raw data file, as well as more sophisticated quality checks. For example, it will know which time windows and geographic regions of the detector are requested for each trigger, and in the unlikely event that some fraction of the requested detector data can not be stored in the event record, it will document that mismatch.
+As part of this, the EB subsystem will provide book-keeping functionality for the raw data.  This will include the documenting of simple mappings, such as which trigger is stored in which raw data file, as well as more sophisticated quality checks. For example, it will know which time windows and geographic regions of the detector are requested for each trigger, and in the unlikely event that some fraction of the requested detector data can not be stored in the event record, it will document that mismatch.
 
 \subsubsection{Output Buffer}
 
@@ -1133,7 +1142,7 @@ The following sections describe each \dfirst{daqccm} subsystem, covering interna
 
 \subsubsection{Access}
 \label{sec:daq:design:ccm:access}
-Actions are defined as any kind of human interaction with the \dfirst{daqccm}. The access subsystem is responsible for the action delegation to internal function calls and procedures. It's implementation is driven by the control, configuration and monitoring interface specifications, and protects the direct access to detector and infrastructural resources. It also controls authentication and authorization, which locks different functionalities to certain actor groups and subsystems. As an example, only the detector experts can modify frontend configuration through the configuration interfaces, or only an expert user can exclude an APA's readout from data taking. 
+Actions are defined as any kind of human interaction with the \dfirst{daqccm}. The access subsystem is responsible for the action delegation to internal function calls and procedures. It's implementation is driven by the control, configuration and monitoring interface specifications, and protects the direct access to detector and infrastructural resources. It also controls authentication and authorization, which locks different functionalities to certain actor groups and subsystems. As an example, only the detector experts can modify front-end configuration through the configuration interfaces, or only an expert user can exclude an APA's readout from data taking. 
 
 
 \subsubsection{Control}
@@ -1186,7 +1195,7 @@ It consists of the following main components, also shown in Figure~\ref{fig:daq-
 \begin{itemize}
   \item Metric Manager - It is responsible for the registration of metric data streams and corresponding aggregator functions. This central element is the collection of features and services that provides support for configurable operational monitoring of \dword{daqccm} services. \dword{daqccm} components and services that are registered via the Metric Manager, are reporting monitoring data to the State and the Storage Engines in a publish-subscribe fashion. 
   \item State Engine - This engine is responsible for providing the global state of the system at the current time. It subscribes to a set of registered metrics in the Metric Manager, and records the actual global state of the set for decision making systems (supervision, notification, and visualization).
-  \item Storage Engine - Metrics may have different persistency requirements, for which the engine is responsible to archive the data with the settings of interval, smoothing, etc. It also provides an implementation for the most common communication protocols for the database backends (SQL, REST, etc.).
+  \item Storage Engine - Metrics may have different persistency requirements, for which the engine is responsible to archive the data with the settings of interval, smoothing, etc. It also provides an implementation for the most common communication protocols for the database back ends (SQL, REST, etc.).
   \item Notification System - It is a rule-based system of scheduled and aimed notifications that occur in the case of state combinations. It defines soft and hard states of events and grace periods of alarms.
   \item User Interfaces - Provides graphical and command line user interfaces for monitoring configuration management and visualization of metric data.
 \end{itemize}
@@ -1348,7 +1357,7 @@ The \dword{fd} \dword{daq} consortium constructed and operated the \dword{daq} s
 Figure~\ref{fig:daq-protodune} depicts the \dword{protodune} \dword{daq} system. 
 The \dword{daq} is split between the \dword{felix} and \dfirst{rce}
 \cite{bib:docdb1881} implementations. The two architectures share the
-same back-end and timing and trigger systems.  
+same back end and timing and trigger systems.  
 Neither of these tested architectures explicitly represents the baseline design for the DUNE \dword{fd}. Instead, each roughly maps onto one of two data processing approaches: one in which the data is processed exclusively in custom-designed \dword{fpga} firmware and carrier board, and the other in which the data is processed primarily with custom software run in commodity servers. The baseline design presented here merges elements of the two approaches. Specifically, it uses \dword{felix} as the hardware platform for data receiving and handling, and a co-processor FELIX daughter card (analogous to the \dword{rce} platform used at \dword{protodune}) to provide additional, dedicated data processing resources.
 
 
@@ -1431,7 +1440,7 @@ topologies (e.g. long horizontal tracks, or Michel electrons from muon decay)
 builder to facilitate self-triggering of detector
 \item implementation of extended \dword{fpga}-based front-end functionality
 (e.g., compression)
-\item prototyping of fake \dword{snb} data flow in \dword{fe} and back-end.
+\item prototyping of fake \dword{snb} data flow in \dword{fe} and back end.
 \end{itemize}
 
 Below, we focus on ongoing developments related to upstream \dword{daq},
