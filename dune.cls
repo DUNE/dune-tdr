@@ -405,3 +405,4 @@
 %Reformatting itemized lists per Jim Stewart
 \usepackage{enumitem}% http://ctan.org/pkg/enumitem
 \setlist[itemize]{topsep=1mm, parsep=1mm}
+\usepackage{appendix}
