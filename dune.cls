@@ -12,12 +12,12 @@
 
 \newif\iffinal
 %% Switch between draft or final:
-\finalfalse
-%\finaltrue
+%\finalfalse
+\finaltrue
 
 % Required values and their setters
-\newcommand\thedoctitle{DRAFT Technical Design Report}
-\newcommand\thedocsubtitle{Deep Underground Neutrino Experiment (DUNE) and Long-Baseline Neutrino Facility (LBNF)}
+%\newcommand\thedoctitle{DRAFT Technical Design Report}
+\newcommand\thedoctitle{Technical Design Report}\newcommand\thedocsubtitle{Deep Underground Neutrino Experiment (DUNE) and Long-Baseline Neutrino Facility (LBNF)}
 \def\titleextra{ }
 
 %%% numbers below count section digits (not the chapter digit)
@@ -331,7 +331,7 @@
 
 \ProcessOptions\relax
 
-\newcommand{\forlbnc}[1]{\todo[inline,backgroundcolor=dunegold]{#1}}
+%\newcommand{\forlbnc}[1]{\todo[inline,backgroundcolor=dunegold]{#1}}  %remove from here and put under draft 
 
 \iffinal
 %\presetkeys{todonotes}{disable}{}
@@ -339,7 +339,8 @@
 \newcommand{\fixme}[1]{}
 \newcommand{\fixmehl}[1]{}
 \newcommand{\metainfo}[1]{}
-\linenumbers  %<---- uncomment if you want ONLY linenumbers with otherwise print-ready copy
+\newcommand{\forlbnc}[1]{}
+%\linenumbers  %<---- uncomment if you want ONLY linenumbers with otherwise print-ready copy
 \else
 % "draft"
 %Set default style for todonotes
@@ -352,7 +353,7 @@
 \newcommand{\fixme}[1]{\todo[inline]{#1}}
 % a meta info block
 \newcommand{\metainfo}[1]{\todo[inline,backgroundcolor=yellow]{#1}}
-
+\newcommand{\forlbnc}[1]{\todo[inline,backgroundcolor=dunegold]{#1}}
 \linenumbers
 \fi
 
