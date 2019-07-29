@@ -334,7 +334,7 @@
 %\newcommand{\forlbnc}[1]{\todo[inline,backgroundcolor=dunegold]{#1}}  %remove from here and put under draft 
 
 \iffinal
-%\presetkeys{todonotes}{disable}{}
+\presetkeys{todonotes}{disable}{}
 \newcommand{\hlfix}[2]{#1}
 \newcommand{\fixme}[1]{}
 \newcommand{\fixmehl}[1]{}
