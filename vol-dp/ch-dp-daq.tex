@@ -1,57 +1,57 @@
 \chapter{Data Acquisition}
-\label{ch:dp-daq}
+\label{ch:daq}
 
 \section{Introduction}
 \label{sec:daq:introduction}
 
-The \dword{fd} \dword{daq} system is responsible for receiving, processing, and
-recording data from the \dword{dune} \dword{fd}.
-In doing so, it provides timing and synchronization for all \dwords{detmodule}
-and subdetectors; receives, synchronizes, compresses, and buffers streaming data
-from the subdetectors; extracts information from the data at a local level to
-subsequently make local, module, and cross-module data selection decisions;
-builds event records %``events''
-from selected space-time volumes and relays them to permanent storage; and
-carries out local data reduction and filtering of the data as needed.
+The \dword{fd} \dword{daq} system receives,
+processes, and records data from the \dword{dune} \dword{fd}.
+It provides
+timing and synchronization for all \dwords{detmodule} and
+subdetectors; receives, synchronizes, compresses, and buffers data
+streaming from the subdetectors; extracts information from the data at a
+local level to subsequently make local, module, and cross-module data
+selection decisions; builds event records
+from selected space-time data volumes 
+and relays them to permanent storage; and carries out subsequent data
+reduction and filtering as needed.
 
-This chapter provides a description for the design of the \dword{dune}
+This chapter provides a description of the design of the \dword{dune}
 \dword{fd} \dword{daq} system developed by the \dword{dune} \dword{fd}
 \dword{daq} consortium. 
-This consortium brings together resources and expertise from CERN,
-Colombia, France, Japan, the Netherlands, the UK, and the USA. 
-Its members bring considerable experience from ICARUS, MicroBooNE,
-SBND, and
-DUNE prototype LArTPCs, as well as from ATLAS at the LHC and other major
-HEP experiments across the world.
+This consortium brings together resources and expertise from \dword{cern},
+Colombia, Czech Republic, France, Italy, Japan, the Netherlands, the UK, and the USA. 
+Its members bring considerable experience from \dword{icarus}, \dword{microboone},
+\dword{sbnd}, and the
+\dword{dune} prototype \dwords{lartpc}, as well as from \dword{atlas} at the \dword{lhc} and other major
+\dword{hep} experiments across the world.
 
 The system is designed to service all \dword{fd} \dword{detmodule} designs
-interchangeably. 
-However, some aspects of the \dword{daq} design are tailored to meet
-module-specific requirements, and those are documented in sections of this
-chapter which are unique to the \dword{detmodule} covered in this TDR volume;
-these sections are %identified
-identifiable by their use of module-specific terms.
-In general, the DAQ services each \dword{fd} \dword{detmodule} independently,
-but cross-module communication is implemented at the trigger level.
+interchangeably.  However, some aspects of the \dword{daq} design described in
+this chapter are tailored to meet the specific needs of the 
+\dword{dp}
+detector module technology.  Adaptations to detector technology are
+implemented in the upstream part of the \dword{daq}, leaving the remainder generic. The
+individual detector modules are serviced by the DAQ independently and the two modules are only loosely
+coupled through a cross-module triggering mechanism.
 
 The chapter begins with an overview of the \dword{daq} design
-(Section~\ref{sec:daq:overview}), including requirements that the design must
-meet, and specification of interfaces between the \dword{daq} and other
-\dword{dune} \dword{fd} systems. 
-Subsequently, Section~\ref{sec:daq:design}, which comprises the bulk of this
-chapter, describes the design of the \dword{fd} \dword{daq} in greater detail.
-Section~\ref{sec:daq:validation} describes design validation efforts to date,
-and future design development and validation plans.
-At the center of these efforts are the \dword{protodune} \dword{daq} systems
-(described in Section~\ref{sec:daq:protodune}), which have served as a
-demonstrator of several key aspects of the \dword{dune} \dword{daq} design, and
-continue to serve as a platform for further design development and validation
-toward the DUNE DAQ design. 
-Finally, the chapter finishes with two sections
-(Sections~\ref{sec:daq:production} and \ref{sec:daq:organization})
-providing details on the management of the \dword{daq} project, including
-schedule to completion of the design, production, and installation of the
-system, as well as cost, resources, and safety considerations.
+(Section~\ref{sec:daq:overview}), including requirements that the design
+must meet and specifications for interfaces between the \dword{daq}  and other
+\dword{dune} \dword{fd} systems.  Subsequently,
+Section~\ref{sec:daq:design}, which comprises the bulk of this chapter,
+describes the design of the \dword{fd} \dword{daq} in greater detail.
+Section~\ref{sec:daq:validation} describes design validation efforts to
+date, as well as future design development and validation plans. At the center of
+these efforts is the  \dword{protodune} \dword{daq} system (described in
+Section~\ref{sec:daq:protodune}), which has demonstrated
+several key aspects of the  \dword{dune} \dword{fd} \dword{daq}  design and continues
+to serve as a platform for further developing and validating 
+the final design.  The chapter finishes with two sections
+(sections~\ref{sec:daq:production} and \ref{sec:daq:organization}), which
+detail the management of the \dword{daq} project, including the
+schedule for completing the design,  production, and installation of the
+system, as well as safety considerations.
 
 \section{Design Overview}
 \label{sec:daq:overview}
@@ -1729,10 +1729,10 @@ and commissioning.
 
 Outcomes specific to \dword{protodune} subsystems are discussed in
 greater detail
-in~\cite{talkfromCDR}. Figure~\ref{fig:sp-daq:protodunedaqpic} shows the
+in~\cite{talkfromCDR}. Figure~\ref{fig:daq:protodunedaqpic} shows the
 ProtoDUNE DAQ hardware as used during beam data taking.
 
-\begin{dunefigure}{fig:daq-rates}{ProtoDUNE DAQ hardware as used during beam data taking. \label{fig:sp-daq:protodunedaqpic}}
+\begin{dunefigure}{fig:daq-rates}{ProtoDUNE DAQ hardware as used during beam data taking. \label{fig:daq:protodunedaqpic}}
   \includegraphics[height=0.5\textheight]{DAQ_hardware_NP04.pdf}
 \end{dunefigure}
 
@@ -1770,13 +1770,13 @@ optical point-to-point links into commercial host memory and, from there,
 storing, dispatching or processing of the data via software. 
 
 
-\begin{dunefigure}{fig:sp-daq:felix-pd-impl}{The topology of the FELIX based
+\begin{dunefigure}{fig:daq:felix-pd-impl}{The topology of the FELIX based
     upstream DAQ of ProtoDUNE (from~\cite{pdsp-felix}). The FELIX host servers are publishing the data from the WIBs over 100Gb network interfaces. The BoardReader hosts are carrying out trigger matching, data compression and forwarding of fragments to the event builder.}
   \includegraphics[width=0.7\textwidth]{daq-pdsp-felix-system.pdf}
 \end{dunefigure}
 
 The test utilized three host computers as illustrated in
-Figure~\ref{fig:sp-daq:felix-pd-impl}.
+Figure~\ref{fig:daq:felix-pd-impl}.
 One hosting the FELIX board is connected to two hosting software
 applications over a 100 Gbps network.
 The FELIX I/O card interfaces with its host through 16-lane PCIe Gen3.
