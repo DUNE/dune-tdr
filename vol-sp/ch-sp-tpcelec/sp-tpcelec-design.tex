@@ -299,13 +299,10 @@ developed for this standard cell library using the Cadence Liberate
 tool\footnote{
 \href{https://www.cadence.com/content/cadence-www/global/en_US/home/tools/custom-ic-analog-rf-design/library-characterization/liberate-characterization.html}{Cadence Liberate\texttrademark{}.}
 } 
-and the Logix \dword{spice} models. With the
-exception of the \dword{coldata} \dword{pll}, serializer, and
-output driver, the digital sections of \dword{coldata} and
-\dword{coldadc} were synthesized from Verilog code using this
-standard cell library and the Cadence Innovus tool~\footnote{
-\href{https://www.cadence.com/content/cadence-www/global/en_US/home/tools/digital-design-and-signoff/hierarchical-design-and-floorplanning/innovus-implementation-system.html}{Cadence Innovus\texttrademark{}}.
-}. 
+and the Logix \dword{spice} models. Most of the digital logic
+used in \dword{coldadc} and \dword{coldata} was synthesized 
+from Verilog code using this standard cell library and the Cadence Innovus tool\footnote{
+\href{https://www.cadence.com/content/cadence-www/global/en_US/home/tools/digital-design-and-signoff/hierarchical-design-and-floorplanning/innovus-implementation-system.html}{Cadence Innovus\texttrademark{}}.}.
 Innovus was also used for the layout of the synthesized logic.
 The design of the \dword{cryo} \dword{asic} and of \dword{larasic}
 are implemented in the \dword{tsmc} \SI{130}{nm} and \SI{180}{nm} 
@@ -456,7 +453,8 @@ The \SI{2}{MHz} clock is aligned on the rising edge of one of
 the \SI{64}{MHz} transitions, as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-coldata}.
 For the remainder of this section we assume that the main clock is operating
 at \SI{64}{MHz}, but in the \dword{dune} \dword{spmod} this external clock will operate at \SI{62.5}{MHz}
-as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-coldata}. 
+as discussed in Section~\ref{sec:daq:design-timing}, and the waveforms from
+the \dword{apa}s will be digitized every \SI{512}{ns}.
 \dword{coldadc} is implemented in the \dword{tsmc}
 \SI{65}{nm} \dword{cmos} technology and has been designed by a team of engineers
 from \dword{lbnl}, \dword{bnl}, and \dword{fnal}.  The \dword{asic} uses a conservative,
@@ -707,9 +705,9 @@ reducing the number of cold cables that need to be routed through the
 
 The commands for the control of all the \dwords{asic} on a \dword{femb} are sent 
 from a \dword{wib}  
-using an \dword{i2c}-like~\cite{bib:I2C} protocol. While standard 
-\dword{i2c} uses single-ended \dword{cmos} signals and a bidirectional data 
-line, because of the long cables required between the \dword{wiec} and the 
+using an \dword{i2c}-like~\cite{bib:I2C} protocol. The protocol used
+in \dword{coldata} differs from the standard \dword{i2c} one.
+Because of the long cables required between the \dword{wiec} and the 
 \dwords{femb}, \dword{coldata} uses \dword{lv} differential pairs for both 
 the \dword{i2c} clock and data. Separate point-to-point links are used for
 data sent from warm-to-cold and for data sent from cold-to-warm.
@@ -723,8 +721,7 @@ Each  \dword{coldata} also relays \dword{i2c} commands and data sent from the
 the \dword{wib} from one of the  four \dword{coldadc} chips. 
 The links on the \dword{femb} between \dword{coldata} 
 chips and \dword{coldadc} chips use single-ended (\SI{2.25}{V}) \dword{cmos} 
-signals, but the \dword{i2c} links are still non-standard since separate lines are
-used for data transmission in the two directions.
+signals.
 
 The controls intended for the \dword{larasic} chips are interpreted 
 inside \dword{coldata} and transmitted to the appropriate \dword{asic} using 
@@ -839,14 +836,28 @@ A conservative estimation of the power consumption of \dword{coldata},
 that is dominated by the power required for the \dword{lvds} transmitters
 and receivers, amounts to \SI{195}{mW} for each \num{64}-channel \dword{asic}.
 
-The design of the first complete prototype of \dword{coldata} has been
-submitted for fabrication at the end of April 2019, and the first chips
-are expected back from the foundry at the end of July. Based on past 
-experience with the verification of the CDP1 prototype we expect to 
-validate the design and proceed to the construction of complete \dword{dune}
-prototype \dwords{femb} in the early fall of 2019. These prototypes will
-be used to demonstrate the overall system performance as discussed
-in Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
+% The design of the first complete prototype of \dword{coldata} has been
+% submitted for fabrication at the end of April 2019, and the first chips
+% are expected back from the foundry at the end of July. Based on past 
+% experience with the verification of the CDP1 prototype we expect to 
+% validate the design and proceed to the construction of complete \dword{dune}
+% prototype \dwords{femb} in the early fall of 2019. These prototypes will
+% be used to demonstrate the overall system performance as discussed
+% in Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
+
+Prototype \dword{coldata} chips were received in July 2019 and the first 
+round of room and \lntwo\  temperature bench tests has been completed.  
+All of the \dword{i2c} control paths have been verified. \dword{coldata} 
+registers can be written and read using either the \dword{lvds} interface 
+or the \dword{cmos} interface. \dword{coldadc} registers can be written and 
+read using the \dword{i2c} Relay. Fast commands are interpreted as designed; 
+the 2 MHz clock phase can be controlled, and the various ``ACT'' commands 
+are executed as intended.  The \dword{pll} locks and the link speed is 
+correct. Bench tests of \dword{coldata} will be completed before the end
+of 2019. Data integrity will be verified more completely using test equipment 
+capable of checking for link errors in test periods of hours or days.  
+The \dword{larasic} control path will also be more completely verified and
+later system tests with packaged \dwords{asic} will be performed.
 
 \begin{dunefigure}
 [ColdDATA output eye diagram]
