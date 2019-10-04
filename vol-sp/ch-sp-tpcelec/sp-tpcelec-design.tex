@@ -164,7 +164,7 @@ wires. The coupling capacitors block \dword{dc} levels while passing \dword{ac}
 signals to the \dwords{femb}. On the \dwords{femb} 
 clamping diodes limit the input voltage received at the amplifier
 circuits to between $\SI{1.8}{V}+U_D$ and $\SI{0}{V}-U_D$, where $U_D$
-is the threshold voltage of the diode, approximately \SI{0.7}{V}.
+is the threshold voltage of the diode, approximately \SI{0.7}{V} at \dword{lar} temperature.
 The amplifier circuit has a \SI{22}{nF} coupling capacitor at
 input to avoid leakage current from the protection clamping diodes.
 Tests of the protection mechanism have been performed by discharging
@@ -1475,7 +1475,7 @@ contains one \dword{ptc}, %power and timing card (\dword{ptc}),
  five %warm interface boards (
  \dwords{wib} %) 
  and a passive \dword{ptb}
-that fans out signals and \dword{lv} power from the \dword{ptc} to the 
+that fans out clock signals and \dword{lv} power from the \dword{ptc} to the 
 \dwords{wib}. The \dword{wiec} must provide Faraday-shielded housing, 
 robust ground connections from the \dwords{wib} to the detector ground 
 (Section~\ref{sec:fdsp-tpcelec-design-grounding}). Only optical
@@ -1507,9 +1507,8 @@ provided from the back end of the \fdth.
 
 The \dword{ptc} provides a bidirectional fiber interface to the
 timing system. The clock and data streams are separately fanned out to the 
-five \dwords{wib} as shown in Figure~\ref{fig:tpcelec-wib-timing}. The 
-\dword{ptc} fans the clocks out to the \dwords{wib} over the \dword{ptb}, which is a 
-passive backplane attached directly to both. A clock-data separator on the 
+five \dwords{wib} as shown in Figure~\ref{fig:tpcelec-wib-timing}. 
+A clock-data separator on the 
 \dword{wib} separates the signal received from the timing system into clock and data. 
 Timing endpoint firmware for receiving and transmitting 
 the clock is integrated into the \dword{wib} \dword{fpga}.
@@ -1595,12 +1594,12 @@ that require a different power and clock distribution scheme. Plans are
 being put in place to redesign the \dword{wib}, and eventually make 
 minor changes also to the \dword{ptc} and the \dword{wiec}, to use 
 less expensive \dwords{fpga} and to be able to program independently
-the voltage rails used to provide power the \dwords{femb}. This will include
-the possibility of setting independent voltage and current limits on each power
-rail. The current \dword{pdsp} version of the \dword{wib} already foresees
-the possibility of monitoring and turning on and off independently the
-various voltage rails. Another feature that we are planning to insert in
-the \dword{wib} is the possibility of measuring the delay of the propagation
+the voltage rails used to provide power the \dwords{femb}. While in
+the current \dword{wib} it is possible to monitor and turn on and off
+independently these voltage rails, the redesign will include the
+capability of setting independent voltage and current limits on each
+one of them. In addition it is planned to add the possibility of measuring
+the delay of the propagation
 of the clock signal between the \dword{wib} and the \dwords{femb}. With
 this feature it will be possible to align in situ the sampling time of different
 \dwords{femb} to a precision of a few ns, without relying on the 
@@ -1803,7 +1802,7 @@ used in \dword{pdsp} are prototypes of the \dword{dune} ones discussed in the
 previous Sections. The major difference is the \dword{femb}, where an
 early version of \dword{larasic} (P2) is used for the \dword{fe}, followed
 by the first prototype (P1) of a different \dword{adc}, using the ``domino'' architecture 
-and implemented in the \SI{130}{nm} technology, and by
+and implemented in the \SI{180}{nm} technology, and by
 a \dword{fpga} that provided the data serialization functionality.
 
 Each of the six \dword{pdsp} \dword{apa}+\dword{ce}
@@ -1824,7 +1823,7 @@ function of the cold cycle time. At a stable temperature of
 \begin{dunefigure}
 [ProtoDUNE-SP APA \#2 ENC levels measured in GN$_2$ in the CERN cold box]
 {fig:apa2-cycle}
-{Left $y$ axis: Noise (in electrons) for U, V, and X (red, blue, and green 
+{Left $y$ axis: \dword{enc} (in electrons) for U, V, and X (red, blue, and green 
 curves) sense wire planes as a function of time (hours) for the APA \#2 cold 
 cycle in GN$_2$ in the CERN cold box; right $y$ axis: temperature 
 (orange curve) measured at the level of the \dword{fe} electronics.}
@@ -1864,8 +1863,8 @@ information on the long term stability of the active electronics
 components immersed in \dword{lar}.
 
 With the detector operating under nominal
-conditions, the \dword{enc}
-measured by the online monitoring program was approximately $\SI{550}{e^-}$ 
+conditions, the 
+measured \dword{enc} by the online monitoring program was approximately $\SI{550}{e^-}$ 
 on the collection wires and approximately $\SI{650}{e^-}$ on the induction
 wires, averaged over all operational channels. The noise increased
 relative to the tests performed inside the cold box due to the 
