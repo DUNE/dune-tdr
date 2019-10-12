@@ -132,7 +132,11 @@ DUNE requires the \efield  on any instrumentation devices inside the cryostat to
 A consideration important for event reconstruction is the maximum noise level induced by instrumentation devices that the readout electronics  can tolerate. \dword{pdsp} is evaluating this. 
 Table~\ref{tab:specs:SP-CISC} shows the top-level specifications that determine the requirements for \dword{cisc} together with selected high-level specifications for \dword{cisc} subsystems. The physics-driven rationale for each requirement and the proposed validation are also included in the table.
 Tables~\ref{tab:fdgen-slow-cryo-requirements-1} and \ref{tab:fdgen-slow-cryo-requirements-2} show the full set of specifications 
-for the \dword{cisc} subsystems. In all those tables two values are quoted for most of the design parameters: i) {\it specification}, which is the minimal requirement to guarantee the detector performance, and ii) {\it goal},  an improved version enabling more detailed studies which could lead to an improved design of the cryogenics system for subsequent detectors. 
+for the \dword{cisc} subsystems. In all these tables two values are quoted for most of the design parameters: 
+ i) specification, which is the intended value or limits for the parameter set by physics and engineering needs, and ii) goal, an improved value offering a benefit which the collaboration aims to achieve where it is cost-effective to do so.
+% i) {\it specification}, which is the minimum requirement to guarantee baseline performance, and ii) {\it goal},  
+% an ideal requirement enabling more detailed studies and for achieving improved precision.
+%an improved version enabling more detailed studies which could lead to an improved design of the cryogenics system for subsequent detectors. 
 
 Data from purity monitors and different types of thermometers will be used to validate the \dword{lar} fluid flow model. 
 A number of requirements drive the design parameters for the precision and granularity of monitor distribution across the cryostat. 
@@ -165,7 +169,7 @@ interface with a large number of detector subsystems and
 establish two-way communication with them for control and monitoring. 
 For the alarm rate, 150 alarms/day is used as the specification as it is the maximum to which humans can be expected to respond. The goal for the alarm rate is less than 50 alarms/day. The alarm logic system will need to include features for managing ``alarm storms'' using alarm group acknowledgment, summaries, delays, and other aids.
 
-\fixme{get ITF out of spec table!}
+%\fixme{get ITF out of spec table!}
 \input{generated/req-longtable-SP-CISC}
 
 
@@ -189,7 +193,10 @@ Reliability				                                     & Daily Measurements			     
 as needed	  \\ \colhline                         
 \textbf{Thermometers}	                                             &                                                                      &                                                         \\ \colhline                      
 Vertical density of sensors for T-gradient monitors			 & > 2 sensor/m			                                                & > 4 sensors/m		                                      \\ \colhline                 
-2D horizontal density for top/bottom individual sensors		 &  1 sensor/5(10) m 			                                        &  1 sensor/3(5) m 		                                  \\ \colhline                     
+2D horizontal density for top/bottom individual sensors		 &  1 sensor/5(10) m 			                                        &  1 sensor/3(5) m 		                          
+        \\ \colhline 
+Swinging/deflection of T-Gradient monitors                   &  < 5 cm 			                                                    &  < 2 cm 		          
+        \\ \colhline                     
 Resolution of temperature measurements				         & < 2 mK			                                                    & <0.5 mK		                                          \\ \colhline                         
 Precision: temperature reproducibility 				         & < 5 mK			                                                    & 2 mK		                                              \\ \colhline                     
 Reliability				                                     & 80\% (in 18 months)			                                        & 50\% (during 20 years)		                              \\ \colhline                     
@@ -304,7 +311,9 @@ Discrepancies between real data and simulations may affect detector performance.
 Simulation results contribute to decisions about where to place sensors and monitors and to %as well as 
 the definitions of various calibration quantities. Methods of mitigating such risks include well established convergence criteria, sensitivity studies, and comparison to results of previous \dword{cfd} simulation work. Moreover, the simulation will be improved with input from \lar temperature and purity measurements and validation tests from \dword{pdsp}\footnote{Because \dword{pddp} was not instrumented with high-precision thermometers in the liquid phase and because the cryogenics design is the same for \dword{sp} and \dword{dp} modules of the \dword{dune} \dword{fd}, \dword{pdsp} data will be used to validate the liquid \dword{cfd} model.}. 
 
-Taking into account that the \dword{cfd} model can predict both temperature and impurity levels, the procedure for validating and tuning the \dword{cfd} model will be the following: i) temperature predictions will be constrained with temperature measurements in numerous locations in the cryostat to improve the \dword{cfd} model, ii) the improved model is then used to predict the \lar impurity level at the location of purity monitors, iii) this prediction is compared with the actual measurement from purity monitors to further constraint the \dword{cfd} model.  
+%Taking into account that the \dword{cfd} model can predict both temperature and impurity levels, the procedure for validating and tuning the \dword{cfd} model will be the following: 1) temperature predictions will be constrained with temperature measurements in numerous locations in the cryostat to improve the \dword{cfd} model, 2) the improved model is then used to predict the \lar impurity level at the location of purity monitors, 3) this prediction is compared with the actual measurement from purity monitors to further constrain the \dword{cfd} model.  
+
+Taking into account that the \dword{cfd} model can predict both temperature and impurity levels, the procedure for validating and tuning the \dword{cfd} model will be the following: 1) use temperature measurements in numerous locations in the cryostat to constrain temperature predictions and  improve the \dword{cfd} model, 2) use the improved model  to predict the \lar impurity level at the purity monitor locations, and 3) compare the predictions to the actual  purity monitor measurements to further constrain the \dword{cfd} model.  
 
 Figure~\ref{fig:cfd-example} shows an example of the temperature
 distribution on a plane intersecting a \dword{lar} inlet and at a
@@ -790,12 +799,14 @@ three purity monitors at ProtoDUNE-SP]{fig-pdsp-prm}
   \includegraphics[width=0.9\textwidth]{cisc_pdsp_Lifetime_till_July17_without_error}
 \end{dunefigure}
 
-The purity monitor system at \dword{pdsp} measured electron lifetime every hour during commissioning and daily during the beam test. During %the commissioning and operation of \dword{pdsp},
-this time, %purity monitors alone 
-it alerted the experiment to serious problems several times. The first time was for filter saturation during \dword{lar} filling, and the rest were recirculation pump stoppages, false alarms, and problems from the cryostat-level gauges.  The dips in Figure~\ref{fig-pdsp-prm} show these sudden changes in purity caught by purity monitors. The purity alerts made by purity monitors %are crucial to the \dword{pdsp} project's success, as they 
-prevented situations which otherwise would have continued unnoticed for some time, with serious consequences to the ability to take any data. 
+Although \dword{pdsp} receives ample cosmic ray data to perform electron lifetime measurements, the purity monitor system was found to be essential for providing quick, reliable real-time monitoring of purity in the detector and to catch purity-related changes in time due to liquid argon recirculation issues. 
+Each purity monitor electron lifetime measurement is based on purity monitor anode-to-cathode signal ratios from 200 UV flashes within 40 seconds at the same location. The statistical error on this lifetime measurement is less than \SI{0.03}{ms} when the purity is \SI{6}{ms}. 
 
-At \dword{pdsp} (on the surface), where we have enough \dword{tpc} cosmic ray data to measure electron lifetime online, the large fluctuation in the online e-lifetime from \dword{tpc} data makes it hard to catch the purity change caused by \dword{lar} re-circulation issues in time. On the other hand, after lowering the purity monitor anode high voltage, electron drift time in purity monitors reached \SI{2.2}{ms}, the same as in the \dword{tpc}. Furthermore, the purity monitor can take large data sets in a short period of time at the same location, so the statistical error and effects from location dependent uncertainties are smaller in purity monitors compared to the  \dword{tpc}. Each purity monitor e-lifetime measurement is based on purity monitor anode-to-cathode signal ratios from 200 UV flashes within 40 seconds at the same location, and the statistical error on the purity monitor e-lifetime is less than 0.03 ms when the purity is 6 ms. With this high sensitivity, purity monitors  caught the purity drops immediately and make the alert to the experiment in time.
+The purity monitor system at \dword{pdsp} measured electron lifetime every hour during commissioning and daily during the beam test. During 
+this time, it alerted the experiment to serious problems several times. The first time was for filter saturation during \dword{lar} filling, and the others were for recirculation pump stoppages, false alarms, and problems from the cryostat-level gauges.  The dips in Figure~\ref{fig-pdsp-prm} show these sudden changes in purity caught by purity monitors. 
+Given the high sensitivity, the \dword{pdsp} purity monitors  were immediately able to alert the experiment to the purity drops, 
+preventing situations which otherwise would have continued unnoticed for some time, with potentially serious consequences for the ability to take any data. 
+
 
 
 During the commissioning and beam test of \dword{pdsp}, the purity monitors operated with different high voltages to change electron drift time, ranging from \SI{150}{\micro\second} to \SI{3}{\milli\second}. This allowed the \dword{pdsp} purity monitors to measure electron lifetime from \SI{35}{\micro\second} to about \SI{10}{\milli\second} with high precision, a dynamic range greater than \num{300}. 
@@ -1411,7 +1422,7 @@ In \dword{pdsp}, the unified control system base is WinCC OA \cite{winccoa}, a
 commercial toolkit used extensively at CERN, with device interfaces
 supported using several standardized interface protocols. A more detailed description is in Section~\ref{sec:cisc-slow-control-pdsp} below.
 WinCC OA is our baseline for the \dword{fd} slow control software.
-EPICS \cite{epics7} is an alternative controls system which also meets the specifications; it is used in other neutrino experiments including \dword{microboone}\cite{microboone} and \dword{nova}\cite{Lukhanin:2012fp}. 
+EPICS~\cite{epics7} is an alternative controls system which also meets the specifications; it is used in other neutrino experiments including \dword{microboone}~\cite{microboone} and \dword{nova}~\cite{Lukhanin:2012fp}. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1497,7 +1508,7 @@ to coordinate detector status exchange between the near and far sites.
 \label{sec:cisc-slow-control-pdsp}
 
 The \dword{pdsp} detector control system has met
-all requirements for operation of \dword{pdsp}\cite{pdspdcs_proc} and will be used for \dword{pddp}. The requirements for \dword{protodune} are
+all requirements for operation of \dword{pdsp}~\cite{pdspdcs_proc} and will be used for \dword{pddp}. The requirements for \dword{protodune} are
 nearly identical to those for the \dword{spmod} other than
 total channel count. Of particular note, the \dword{protodune} slow control system unified a heterogenous set of devices and data sources
 through several protocols into a
@@ -1527,7 +1538,6 @@ members have experience using the \dword{pdsp} control system,
 customising and using WinCC-OA in an effective way for developing the
 control system of \dword{dune} requires proper training and a
 non-negligible learning effort.
-
 
 As noted in Sections~\ref{sec:fdgen-slow-cryo-sw} and~\ref{sec:fdgen-slow-cryo-quant},
 the slow control archiver will gradually accumulate terabytes of
@@ -1870,7 +1880,7 @@ right after the pipes are installed. The profilers %will be
 are preassembled before they are delivered to \surf. 
 Installation will follow these steps:
 \begin{enumerate}
-\item anchor the stainless steel top bottom plates to the four bolts on the bottom corner of the cryostat,
+\item anchor the stainless steel bottom plates to the four bolts on the bottom corner of the cryostat,
 \item anchor the stainless steel support holding the two strings to the four bolts on the top corner of the cryostat,
 \item unroll the array with the help of the scissor lift,
 \item anchor the strings to the bottom stainless steel support,   
@@ -1884,7 +1894,7 @@ Individual temperature sensors on pipes and cryostat floor %will be
 are installed immediately after installing the static T-gradient monitors. First, vertical stainless steel strings for cable routing %will be 
 are installed following a procedure similar to the one described above for the static T-gradient monitors. Next, we anchor all cable supports to pipes. Then each cable %will be 
 is routed individually starting from the sensor end (with IDC-4 female connector but without the sensor)
-to the corresponding cryostat port. Once all cables going through the same port have been routed, we cut the cables to the same length, so they can be properly assembled into the corresponding connector(s). To avoid damaging the sensors, they are installed later, just before unfolding the bottom \dwords{gp}.
+to the corresponding cryostat port. Once all cables going through the same port have been routed, we cut the cables to the same length, so they can be properly assembled into the corresponding connector(s). To avoid damaging the sensors, they are installed later (by plugging the IDC-4 male connector on the sensor PCB to the IDC-4 female connector on the cable end), just before unfolding the bottom \dwords{gp}.
 
 For the \dword{sp}, individual sensors on the top \dword{gp} must be integrated with the \dwords{gp}. For each \dshort{cpa} (with its corresponding four  \dword{gp} modules)
 going inside the cryostat, cable and sensor supports will be anchored to the  \dword{gp} threaded rods as soon as possible.
@@ -1962,7 +1972,7 @@ are installed near the tubing switchyard to minimize tubing run length and for c
 is adequate to house the modules.
 
 For integration, the gas analyzers typically have an analog output (\SIrange{4}{20}{mA} or \SIrange{0}{10}{V}), which maps to the input range of the analyzers. They also usually have several relays to indicate the scale they are currently running. These outputs can be connected to the slow controls for readout. However, using a digital readout is preferable because this gives a direct analyzer reading at any scale. Currently, the digital output connections are RS-232, RS-485, USB, and Ethernet. The preferred option is chosen at the time of purchase. 
-The readout usually responds to a simple set of text query commands. Because of the natural time scales of the gas analyzers and lags in gas delivery times (which depend on the length of the tubing run), sampling every minute is adequate.
+The readout usually responds to a simple set of text query commands. Because of the natural time scales of the gas analyzers and lags in gas delivery times (which depend on the length of the tubing run), sampling every minute is adequate. Our current plan is to record both analog and digital signals to have both outputs available.  
 
 The analyzers %should 
 must be brought online and calibrated before beginning the gas phase of the cryostat commissioning.  Calibration varies by module because they are different, but calibration often requires using argon gas with zero contaminants, and argon gas with a known level of the contaminant to check the scale. Contaminants are usually removed with a local inline filter for the first gas sample. %The gas phase of the cryostat 
@@ -2213,7 +2223,7 @@ Room temperature tests are repeated during and immediately after installation to
 \subsubsection{Slow Controls Hardware}
 \label{sec:fdsp-slow-cryo-qc-sc-hard}
 
-Networking and computing systems will be purchased commercially, requiring \dword{qa}. However, the new servers %will be 
+Networking and computing systems will be purchased commercially, requiring manufacturer's \dword{qa}. However, the new servers %will be 
 are tested after delivery to confirm they suffered no damage during shipping. The new system is allowed to burn in overnight or for a few days, 
 running a diagnostics suite on a loop in order to validate %. This should turn up anything that escaped 
 the manufacturer's \dword{qa} process.
