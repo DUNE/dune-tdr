@@ -68,9 +68,9 @@ design and the construction of the detector:
 \item{The \dword{apa} frame shall be connected to the common of
 all the \dword{fe} \dwords{asic};}
 \item{All electrical connections (low voltage power, bias voltage,
-clock, control, and data readout) from one \dwords{apa} shall lead to a 
+clock, control, and data readout) from one \dword{apa} shall lead to a 
 single \dword{sft};}
-\item{All \dwords{apa} shall be insulated from each other;}
+\item{All \dword{apa}s shall be insulated from each other;}
 \item{The common of the \dword{fe} \dword{asic} and the rest of the 
 \dword{tpc} readout electronics shall be connected to
 the common plane of the \dword{femb};}
@@ -1181,7 +1181,7 @@ later in Section~\ref{sec:fdsp-tpcelec-qa-facilities-pdune}).
 Ideally, the \dwords{asic} from the engineering run would be used
 for the second run of \dword{pdsp}, but this is not compatible
 with the currently planned date for the installation of the \dwords{femb}
-on the \dwords{apa}. In order to meet the current goal for the starting
+on the \dword{apa}s. In order to meet the current goal for the starting
 date of the second run of \dword{pdsp}, \dwords{asic} from the
 second round of prototyping would have to be used. In case a
 third round of prototypes is necessary, the second run of 
@@ -1292,10 +1292,11 @@ flanges that are located on the cryostat roof. The data rate from each
 that \dword{lvds} signals can easily be driven over more than \SI{22}{m}
 of twin-axial transmission line. Additional transmission lines
 are available to distribute \dword{lvds} clock and control signals,
-which are transmitted at a lower bit rate.
-Optical fiber is used externally from the \dwords{wib} on the signal 
-flange to the \dword{daq} (see Chapter~\ref{ch:sp-daq}) and slow 
-control systems (see Chapter~\ref{ch:sp-cisc}).
+which are transmitted at a lower bit rate. The connections 
+between the \dwords{wib} on the signal flanges and the 
+\dword{daq} (see Chapter~\ref{ch:daq}) and slow 
+control systems (see Chapter~\ref{ch:sp-cisc}) are made
+using optical fibers.
 
 \begin{dunefigure}
 [TPC cold eletronics \fdth]
@@ -1314,39 +1315,39 @@ The wire bias voltage cables connect to standard \dword{shv}
 connectors machined directly into the \dword{ce} \fdth{}, ensuring 
 no electrical connection between the wire bias voltages and other 
 signals passing through the signal flange. Each \dword{ce} \fdth 
-serves the bias, power, and digital I/O needs of one \dword{apa}.  
+serves the bias voltage, power, and digital I/O needs of one \dword{apa}.  
 
 Data and control cable bundles send system clock and control signals 
 from the signal flange to the \dword{femb} and stream the $\sim$\SI{1}{Gbps} 
 high-speed data from the \dword{femb} to the signal flange. Each 
 \dword{femb} connects to a signal flange via one data cable bundle, 
 leading to \num{20} bundles between one \dword{apa} and one flange. 
-For the reference \dwords{asic} configuration \num{10} low-skew shielded 
+For the reference \dwords{asic} configuration, ten low-skew shielded 
 twin-axial cables are required to transmit the following differential signals
 between the \dword{wib} and the \dword{femb}:
 \begin{itemize}
-\item four \SI{1.28}{Gbps} data (two from each \dword{coldata});
-\item two \SI{64}{MHz} clocks (one input to each \dword{coldata});
+\item four \SI{1.28}{Gbps} data lines (two from each \dword{coldata});
+\item two \SI{64}{MHz} clock signals (one input to each \dword{coldata});
 \item one fast command line (shared between the two \dword{coldata} \dwords{asic});
 \item three \dword{i2c}-like control lines (clock, data-in, and data-out, also shared between the 
 two \dword{coldata} \dwords{asic}).
 \end{itemize}
 As discussed later, this number of connections is compatible with routing
-the cables bringing the power and transmitting the data and controls for
-the lower \dword{apa} through the \dword{apa} frame. We are making the
+the cables that bring the power and transmit the data and controls for
+the lower \dword{apa} through the \dword{apa} frames. We are making the
 assumption that the fast command line can be shared between the two 
 \dword{coldata} \dwords{asic}, but will also consider other possibilities,
-like sharing the \SI{64}{MHZ} clock between the two \dwords{asic} or
+like sharing the \SI{64}{MHz} clock between the two \dwords{asic} or
 increasing the data transmission speed to \SI{2.56}{Gbps}, thereby
 reducing the number of data transmission lines to two for each \dword{femb}.
 This assumption will be tested as soon as the first prototypes of
 \dword{coldata} become available.
 
 The \dword{lv} power is passed from the signal flange to the
-\dword{femb} by bundles of \num{20}AWG twisted-pair wires, with half of
+\dword{femb} by bundles of \SI{20}{AWG} twisted-pair wires, with half of
 the wires serving as power feeds and the other half as returns.
 Using the measured power consumption for \dword{larasic} and \dword{coldadc}
-and the estimates for \dword{coldata} the total power required to
+and the estimates for \dword{coldata}, the total power required to
 operate each \dword{femb} is estimated as \SI{6}{W} (\SI{2.4}{A}
 at \SI{2.5}{V}), including the power dissipated in the linear voltage
 regulators. This assumes that linear voltage regulators are
@@ -1360,18 +1361,19 @@ used on the \dword{femb} to reduce the \SI{2.5}{V} provided by the
 We currently assume that only \SI{2.5}{V} will be provided by the 
 \dword{wib}, since the largest fraction of the power required by
 the \dword{femb} is at \SI{2.25}{V}. We are currently planning on using 
-a total of eight \num{20}AWG twisted-pair wires, seven of which will be used
+a total of eight \SI{20}{AWG} twisted-pair wires, seven of which will be used
 for bringing the \SI{2.25}{V} to the \dword{femb}, with the eighth
 one reserved for the \SI{5}{V} bias for the linear voltage regulators
-(this connection carries a very low current). With this cable plant the
+(this connection carries a very low current). With this cable plant, the
 resistance of the cable bundle is $\SI{41}{\milli\ohm}$ for the upper 
-\dword{apa} (\SI{9}{m} cable length) and $\SI{101}{\milli\ohm}$ for
-the lower \dword{apa} (\SI{22}{m} cable length). To account for the
-voltage drop along the wires and the returns, the \dword{wib} needs to
-provide (operation in warm) \SI{2.7}{V} and \SI{3.0}{V} for the upper
-and lower \dwords{apa}, respectively. For one \dword{femb} the power
+\dword{apa}s (\SI{9}{m} cable length) and $\SI{101}{\milli\ohm}$ for
+the lower \dword{apa}s (\SI{22}{m} cable length). To account for the
+voltage drop along the wires and the returns in the case of operation
+at room temperature, prior to filling the cryostat, the \dword{wib} needs to
+provide \SI{2.7}{V} and \SI{3.0}{V} for the upper
+and lower \dword{apa}s, respectively. For one \dword{femb}, the power
 dissipated in the cables is \SI{0.5}{W} and \SI{1.2}{W} for the upper
-and lower \dwords{apa}, respectively. The figures for the power 
+and lower \dword{apa}s, respectively. The values for the power 
 dissipated in the cables are reduced by a factor of three for operation
 in \dword{lar}, which allows for a reduction of the voltage 
 provided by the \dword{wib}. The voltage drop and power dissipation
@@ -1383,25 +1385,25 @@ provide a better overall noise performance for the readout electronics,
 but will have a slightly larger voltage drop on the cold cables.
 The size of the cable bundles planned
 for \dword{dune} represents a small reduction compared to that used
-for \dword{pdsp}, where bundles of nine \num{20}AWG twisted-pair wires
-were used. Overall the total resistance of the power return wires
+for \dword{pdsp}, where bundles of nine \SI{20}{AWG} twisted-pair wires
+were used. Overall, the total resistance of the power return wires
 are \SI{2}{\milli\ohm} and \SI{5}{\milli\ohm} for the upper and
-lower \dword{apa}, respectively, numbers that are reduced by 
+lower \dword{apa}s, respectively, numbers that are reduced by 
 a factor of three for operation in \dword{lar}. For each \dword{apa} pair, the total power 
 dissipated inside the power cables ($\sim$\SI{11}{W} at \dword{lar} temperature)
 is small compared to the total power dissipated in the \dwords{femb},
 \SI{240}{W}.
 
 \begin{dunetable}
-[Voltage drop and power dissipation in the FEMB power cables inside the cryostat]
+[Voltage drop and power dissipation in the FEMBs power cables inside the cryostat]
 {p{0.35\textwidth}p{0.15\textwidth}p{0.20\textwidth}p{0.20\textwidth}}
 {tab:SPCE:cablesvdrop}
-{Voltage drop and power dissipation in the cables bringing power to the \dword{femb}
+{Voltage drop and power dissipation in the cables bringing power to the \dwords{femb}
 at room and at \dword{lar} temperature for the cable lengths corresponding to the upper (\SI{9}{m})
-and the lower(\SI{22}{m}) \dwords{apa}. The \dword{femb} requires \SI{2.4}{A} at \SI{2.5}{V} to operate.
-At room temperature, the resistances of the seven \num{20}AWG twisted-pair wires are
+and the lower (\SI{22}{m}) \dword{apa}s. The \dwords{femb} require \SI{2.4}{A} at \SI{2.5}{V} to operate.
+At room temperature, the resistances of the seven \SI{20}{AWG} twisted-pair wires are
 $\SI{41}{\milli\ohm}$ and $\SI{101}{\milli\ohm}$ for the upper and the lower 
-\dwords{apa}, respectively. These resistances are reduced to $\SI{14}{\milli\ohm}$ 
+\dword{apa}s, respectively. These resistances are reduced to $\SI{14}{\milli\ohm}$ 
 and $\SI{34}{\milli\ohm}$ inside the \dword{lar}.}
  & Voltage & Voltage drop &  Power dissipation  \\
 WIB output (room temperature) & \SI{2.7}{V} / \SI{3.0}{V} & \SI{0.2}{V} / \SI{0.5}{V} & \SI{0.5}{W} / \SI{1.2}{W} \\ \colhline
@@ -1410,7 +1412,7 @@ WIB output (\dword{lar} temperature) & \SI{2.6}{V} / \SI{2.7}{V} & \SI{0.1}{V} /
 
 
 The cable plant for one \dword{apa} in the \dword{lar} includes
-also the cables that provides the bias voltages applied to the $X$-, $U$-, and $G$-plane
+also the cables that provide the bias voltages applied to the $X$-, $U$-, and $G$-plane
 wire layers, three \dword{fc} terminations, and an electron diverter,
 as shown in Figure~\ref{fig:CR-board}. The voltages are supplied
 through eight \dword{shv} connectors mounted on the signal flange.
@@ -1425,39 +1427,39 @@ that also houses the wire bias voltage filter described
 in Section~\ref{sec:fdsp-tpcelec-design-bias}.
 
 In Sections~\ref{sec:fdsp-apa-intfc-cables} and \ref{sec:fdsp-tpcelec-interfaces-apa}
-we discuss the problem of routing the cold cables (data and control, power, and
-bias voltages) for the bottom \dword{apa} through the frames of both
+we discuss the problem of routing the cold cables (data, control, power, and
+bias voltages) for the bottom \dword{apa}s through the frames of both
 the top and bottom \dword{apa}s. Routing tests were initially performed
 with the \dword{pdsp} cable bundles, and even after increasing
 the cross section of the side tubes from $\num{7.62}\times\SI{7.62}{cm^2}$ ($3"\times3"$)
 to $\num{10.16}\times\SI{10.16}{cm^2}$ ($4"\times4"$), routing was difficult. After understanding that we
 could reduce the number of cables, we ran a second set of tests with fewer sets
 of cables (nine rather than ten sets of 12 data and control cables, nine rather than
-ten sets of nine twisted-pair wires for power, and eight bias voltage cables, as before).
-This insertion test was successful, once
+ten sets of nine twisted-pair wires for power, and eight bias voltage cables as before).
+This insertion test was successful once
 a \SI{6.35}{cm} (2.5") diameter conduit was inserted inside the
 \dword{apa} frame to present a uniform cross section to
 the cables and the cables were restrained with a mesh. We expect that it will be possible
-to route the cold cables through the \dword{apa} frame.
+to route the cold cables through the \dword{apa} frames.
 
-The cable plant discussed above in the case that the three \dword{asic}
-solution is chosen can be used also for \dwords{femb} populated with the
-\dword{cryo} \dword{asic}. In that case the power requirements are 
+The cable plant discussed above for the reference design with the three \dword{asic}s
+can be used also for \dwords{femb} populated with the
+\dword{cryo} \dword{asic}. In that case, the power requirements are 
 reduced (\SI{5}{W} at \SI{2.5}{V}), and the internal \dwords{ldo} do
-not require an external bias line. Six of the eight \num{20}AWG twisted-pair
-wires could be used to bring the low voltage power to the \dword{femb},
+not require an external bias line. Six of the eight \SI{20}{AWG} twisted-pair
+wires could be used to bring the low-voltage power to the \dword{femb},
 while the remaining two could be used to sense the voltage on the \dword{femb}.
 This configuration would entail a small increase ($\sim14$\%) of the 
 total resistance seen on the return wires. The same number of low-skew shielded
 twin-axial cables are required to transmit the following differential signals
 between the \dword{wib} and the \dword{femb}:
 \begin{itemize}
-\item four \SI{896}{Mbps} data (two from each \dword{cryo});
-\item two \SI{56}{MHz} clock signals (one for each \dword{cryo}); and
+\item four \SI{896}{Mbps} data lines (two from each \dword{cryo} \dword{asic});
+\item two \SI{56}{MHz} clock signals (one for each \dword{cryo} \dword{asic}); and
 \item four shared \dword{saci} signals.
 \end{itemize}
-In the current design of \dword{cryo} a total of five \dword{saci} signals
-are required: three of them are shared between the two \dword{asic} on the
+In the current design of \dword{cryo} \dword{asic} a total of five \dword{saci} signals
+are required: three of them are shared between the two \dword{asic}s on the
 \dword{femb}, and two separate ones are required to send commands to the
 two \dword{cryo} \dwords{asic}. We are planning to implement internal 
 addresses in a future version of \dword{cryo}, such that the two \dwords{asic}
@@ -1465,19 +1467,19 @@ can share the command line.
 
 The proposed cable plant is also compatible with the use of the \dword{cots}
 \dword{adc}. The current design of the \dword{sbnd} \dword{femb} uses 
-twelve low-skew shielded twin-axial cables, instead of ten, but some of
-the signals are not used. The low voltage power is transmitted with a 
-bundle of nine \num{20}{AWG} twisted-pair wires, but two of them are
-used for the bias of the linear voltage regulators, which requires very
+\num{12} low-skew shielded twin-axial cables, instead of ten, but some of
+the signals are not used. The low-voltage power is transmitted with a 
+bundle of nine \SI{20}{AWG} twisted-pair wires, but two of them are
+used for the bias of the linear voltage regulators, which require very
 little current.
 
-In all possible configurations of the \dword{femb} it is very likely that
-the cable plant required to bring the low voltage power and the controls
+In all possible configurations of the \dword{femb}, it is very likely that
+the cable plant required to bring the low-voltage power and controls
 to the \dwords{femb} and to read out the data from the \dwords{femb} is
 compatible with the option of routing the cables through the \dword{apa}
-frame. This however does not leave much room for building redundancy in
-the system. The cable connections need to be extremely reliable, since
-the loss of one connection could result in an entire \dword{femb} being
+frames. This, however, does not leave much room for building redundancy in
+the system. The cable connections need to be extremely reliable because
+the loss of one connection could result in an entire \dword{femb} becoming
 unresponsive.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1666,7 +1668,7 @@ for the \dword{dune} \dword{spmod}, correcting for the top-bottom
 inside the \dword{fpga} of the \dword{wib}. The exact correction
 factor could be obtained by measuring the time propagation 
 difference for a sample of short and long cables prior to the 
-installation of the \dwords{femb} on the \dwords{apa}. 
+installation of the \dwords{femb} on the \dword{apa}s. 
 Synchronizing the \dword{ce} with the \dword{pds} requires one
 additional time constants that correspond to the transit 
 time of the Fast Command sent from the \dword{wib} to
@@ -1730,7 +1732,7 @@ draws \SIrange{22}{24}{A}, for a total power of approximately
 The \dword{lv} power is delivered at \SI{48}{V} to the \dword{ptc}, 
 so each \dword{lv} power mainframe is chosen to bracket that value; 
 each has roughly \numrange{30}{60}{V}, \SI{13.5}{A}, \SI{650}{W} 
-maximum capacity per \dword{apa}. Using \num{10}AWG cable, and assuming
+maximum capacity per \dword{apa}. Using \SI{10}{AWG} cable, and assuming
 a distance of \SI{20}{m} between the \dword{lv} power supplies 
 that are situated on the detector mezzanine and the most distant
 cryostat penetration for a row of \dword{apa}s, a voltage
@@ -1744,8 +1746,8 @@ Multiplying by the total number of \dwords{wiec}, less
 than \SI{1}{kW} of power is dissipated in the cabling system 
 over the entire surface of the cryostat. 
 
-Four wires are used for each \dword{ptc} module; two \num{10}AWG, shielded, twisted-pair 
-cables for the power and return; and two \num{20}AWG, shielded, twisted-pair 
+Four wires are used for each \dword{ptc} module; two \SI{10}{AWG}, shielded, twisted-pair 
+cables for the power and return; and two \SI{20}{AWG}, shielded, twisted-pair 
 cables for the sense. The primary protection is the over-current 
 protection circuit in the \dword{lv} supply modules, which is set 
 higher than the $\sim\SI{8}{A}$ current draw of the \dword{wiec}. 
@@ -2101,7 +2103,7 @@ that acts as the ``male'' part of the connector.}
 \end{dunefigure}
 
 \begin{comment}During the integration of the \dwords{femb} onto the \dword{apa}s 
-and the cold tests that preceded the \dwords{apa} installation
+and the cold tests that preceded the \dword{apa}s installation
 inside the \dword{pdsp} cryostat a problem occurred %was observed 
 on the 
 connection between the cold readout and control cables and the
