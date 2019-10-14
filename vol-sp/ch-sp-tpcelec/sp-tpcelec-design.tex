@@ -211,7 +211,7 @@ The \dwords{femb} plug into the \dword{apa} \dword{cr} boards,
 making the connections from the wires to the charge amplifier 
 circuits as short as possible. Each \dword{femb} receives signals 
 from \num{40} $U$ wires, \num{40} $V$ wires, and \num{48} $X$ wires.
-The baseline \dword{femb} design contains eight \num{16}-channel 
+The reference \dword{femb} design contains eight \num{16}-channel 
 \dword{larasic} chips, eight \num{16}-channel 
 \dword{coldadc} \dwords{asic}, and two \dword{coldata} control and 
 communication \dwords{asic} (see Figure~\ref{fig:ce-scheme}).
@@ -518,7 +518,7 @@ turn to one of the two \dword{adc} pipelines.
 as the digitized output of the current stage and presents it to the ADD circuit, which 
 adds it to the result calculated by previous pipeline stages.
 SHA is a sample-and-hold amplifier, and
-ADCS and DASC are low resolution 1.5 bit analog-to-digital and digital-to-analog 
+ADSC and DASC are low resolution 1.5 bit analog-to-digital and digital-to-analog 
 subconverters, respectively.}
 \includegraphics[width=0.9\linewidth]{sp-tpcelec-Pipelinestage.pdf}
 \end{dunefigure}
@@ -895,19 +895,20 @@ demonstrated better performance in cryogenic operation compared to other candida
 During the exploratory phase, fresh samples of the \dword{cots} \dword{adc} 
 AD7274 were stressed with higher than nominal operation voltage, e.g.~\SI{5}{V},
 while power consumption (drawn current) was monitored continuously. 
-Periodically, the sample would be operated at nominal voltage (V$_{DD}$ = \SI{2.5}{V} 
-and V$_{REF}$ = \SI{1.8}{V}) for a performance characterization test, where 
+Periodically, the sample would be operated at nominal voltage (setting the power
+supply input, V$_{DD}$, at \SI{2.5}{V}, and the voltage reference input, 
+V$_{REF}$, at \SI{1.8}{V}) for a performance characterization test, where 
 both the \dword{dnl} and \dword{inl} were monitored and analyzed in addition 
 to the current. Stress test results were used to extrapolate the 
-lifetime of the \dword{cots} \dword{adc}. The relation between the lifetime 
-of \dword{cmos} transistors $\tau$ and the drain-source voltage $V_{ds}$, 
+lifetime of the \dword{cots} \dword{adc}. The relation between the
+\dword{cmos} transistors lifetime $\tau$ and the drain-source voltage $V_{ds}$, 
 $\log\tau\propto1/V_{ds}$, is based on the creation of interface states by hot 
 electrons and has been studies in the past extensively~\cite{Li:CELAr}.
 The linear extrapolation of $\log\tau\propto1/V_{ds}$ is also used in industry (e.g. IBM) 
-in accelerated stress testing. It was determined that a current drop 
-of \num{1}\% on the V$_{DD}$ would be used as the degradation criterion for the lifetime 
-study. In the validation phase, more devices were tested following the developed 
-criteria to collect more data to validate what was learned in the exploratory phase.
+for accelerated stress testing. It was determined that a current drop 
+of \num{1}\% on V$_{DD}$ would be used as the degradation criterion for the lifetime 
+study. Following the development of this criterion, more devices were tested later
+to validate what was learned in the exploratory phase.
 
 The lifetime projection of the AD7274 \dword{adc} from the stress 
 test with V$_{DD} >$ \SI{5}{V} is shown in Figure~\ref{fig:cotsadc-lifetime}. 
@@ -919,7 +920,7 @@ is more than than \num{1e6} years.
 [Lifetime projection of the COTS ADC]
 {fig:cotsadc-lifetime}
 {Lifetime projection of the \dword{cots} \dword{adc} AD7274 from the stress test 
-with V$_{DD} >$ \SI{5}{V}. The current drop of 1\% on the V$_{DD}$ is used as 
+with V$_{DD} >$ \SI{5}{V}. The current drop of 1\% on V$_{DD}$ is used as 
 the degradation criterion. With nominal operation voltage of \SI{3.6}{V} for the 
 \SI{350}{nm} \dword{cmos} technology, the lifetime is projected to be more 
 than 100 years. For \dword{sbnd} and \dword{dune} \dword{fd}, the AD7274 will be
@@ -934,14 +935,14 @@ integration test was carried out with 40\% \dword{apa} at \dword{bnl} and
 showed satisfactory noise performance as seen in Figure~\ref{fig:cotsadc-fembenc}.
 The noise measurements obtained with the  40\% \dword{apa} at \dword{bnl} indicate
 that the AD7274 gives a negligible contribution to the overall system noise, as
-expected given that the \dword{adc} has a \dword{enob}
+expected given that the \dword{adc} has an \dword{enob}
 of \num{11.4}. The \dword{cots} \dword{adc} AD7274 serves as a backup solution for the 
 \dword{dune} \dword{fd} \dword{tpc} readout electronics system. The current 
 plan is to evaluate this \dword{adc} in the small \dword{tpc} installed in
 \dword{iceberg} at \dword{fnal}. Ten \dwords{femb} with the \dword{cots} 
-\dword{adc} are being produced and will be used to instrument the \dword{iceberg} 
-\dword{tpc} for system integration tests in spring 2019. The main drawback of
-the AD7274 \dword{adc} is that it is a single channel chip, complicating the 
+\dword{adc} have been fabricated and will be used to instrument the \dword{iceberg} 
+\dword{tpc} for system integration tests in fall 2019. The main drawback of
+the AD7274 \dword{adc} is that it is a single-channel chip, complicating the 
 assembly of the \dwords{femb}.
 
 \begin{dunefigure}
@@ -950,8 +951,8 @@ assembly of the \dwords{femb}.
 {The noise measurement of \dwords{femb} with \dword{cots} \dwords{adc} 
 mounted on the \num{40}\% APA at \dword{bnl}. A picture of the 
 \dword{femb} is shown in the top left corner. The induction plane 
-(\SI{4}{m} wire) has a noise level of $\sim\SI{400}{e^-}$ with \SI{1}{$\mu$s} 
-peaking time, while the collection plane (\SI{2.8}{m} wire) has a noise level
+(\SI{4}{m} wire length) has an \dword{enc} level of $\sim\SI{400}{e^-}$ with \SI{1}{$\mu$s} 
+peaking time, while the collection plane (\SI{2.8}{m} wire length) has a noise level
 of $\sim\SI{330}{e^-}$ with \SI{1}{$\mu$s} peaking time.}
 \includegraphics[width=0.99\linewidth]{sp-tpcelec-cotsadc-fembenc.pdf}
 \end{dunefigure}
@@ -961,23 +962,23 @@ of $\sim\SI{330}{e^-}$ with \SI{1}{$\mu$s} peaking time.}
 \label{sec:fdsp-tpcelec-design-femb-alt-cryo}
 
 
-The \dword{slac} \dword{cryo} \dword{asic} differs from the baseline three-chip 
+The \dword{slac} \dword{cryo} \dword{asic} differs from the reference three-chip 
 design by combining the functions of an analog preamplifier, \dword{adc}, and 
 data serialization along with transmission for \num{64} wire channels into a single 
 chip. It is based on a design developed for the \dword{nexo} experiment~\cite{nEXO} 
 and differs from it only in the design of the preamplifier, which is modified for 
 the higher capacitance of the \dword{dune} \dword{spmod} wires compared to the short
 strips of \dword{nexo}. The \dwords{femb} constructed using this chip would use only 
-two \dwords{asic}, compared to the \num{18} (eight \dword{larasic}s, eight \dword{coldadc}s and 
-two \dword{coldata}s) needed in the baseline design. This drastic reduction in 
+two \dwords{asic}, compared to the \num{18} (eight \dword{larasic}s, eight \dword{coldadc}s, and 
+two \dword{coldata}s) needed in the reference design. This drastic reduction in 
 part count may significantly improve \dword{femb} reliability, reduce power 
 (\SI{40}{mW} per channel), and reduce costs related to production and testing.
 
 Figure~\ref{fig:cryo-schematic} shows the overall architecture of the 
 \dword{cryo} \dword{asic}, which is implemented in \SI{130}{nm} \dword{cmos}. 
 It comprises two identical 32-channel blocks (banks) and a common section
-providing biasing voltages and currents plus the controls signals, the clocks 
-generation and the configuration of the registers.
+providing biasing voltages and currents, as well as the controls signals, the clocks 
+generation, and the configuration of the registers.
 
 \begin{dunefigure}
 [Overall architecture of the CRYO ASIC]
@@ -986,22 +987,23 @@ generation and the configuration of the registers.
 \includegraphics[width=0.9\textwidth]{sp-tpcelec-cryo-schematic.png}
 \end{dunefigure}
 
-The current signal from each wire is amplified using a preamplifier with pole 
-zero cancellation~\cite{DeGeronimo:2011zz} and an anti-alias fifth-order 
+The current signal from each wire is amplified using a preamplifier with pole-zero
+cancellation~\cite{DeGeronimo:2011zz} and an anti-alias fifth-order 
 Bessel filter (Figure~\ref{fig:cryo-FE}). Provisions are also made for injection 
 of test pulses. Gain and peaking time are adjustable to values similar to 
-those of the baseline design. 
-The four programmable gain settings 6X, 3X, 1.5X, and 1X correspond to full scale signals of 
+those of the reference design. 
+The four programmable gain settings of 6X, 3X, 1.5X, and 1X correspond to full-scale signals of 
 $\SI{3.2e5}{e^{-}}$, $\SI{6.4e5}{e^{-}}$, $\SI{1.28e6}{e^{-}}$, and $\SI{1.92e6}{e^{-}}$. A 
 filter with a Bessel shape has been chosen because of its flat group delay characteristic 
-which minimize waveform distortion as well as providing noise shaping performance similar 
+that minimizes waveform distortion as well as provides noise shaping performance similar 
 to more classic semi-Gaussian shaper implementations. The four programmable peaking times 
-of the filter range from $\SI{0.6}{{\mu}s}$, $\SI{1.2}{{\mu}s}$, $\SI{2.4}{{\mu}s}$, 
+of the filter are $\SI{0.6}{{\mu}s}$, $\SI{1.2}{{\mu}s}$, $\SI{2.4}{{\mu}s}$, 
 and $\SI{3.6}{{\mu}s}$, corresponding to filter bandwidths equivalent to the ones used in 
-the baseline solution. Similarly to the baseline design the channel provides the possibility 
-to set the baseline for operation with either the collection or the induction wires. 
-Baseline level can be set and trimmed independently in each single channel. Channel 
-outputs can be connected one-at-a-time to an analog monitor to probe the analog signal.
+the reference solution. Similarly to the reference design with three \dwords{asic}, each
+channel can be configured, independently from the other channels, to have a 
+baseline for operation consistent with either the collection or the induction wires. 
+The outputs of the \dword{fe} amplifiers can be connected, one-at-a-time, 
+to an analog monitor to probe the analog signal.
 
 \begin{dunefigure}
 [CRYO FE section architecture and typical front-end response]
@@ -1011,12 +1013,13 @@ outputs can be connected one-at-a-time to an analog monitor to probe the analog 
 \includegraphics[width=.45\textwidth,trim={0 5.5cm 6.5cm 3cm},clip]{sp-tpcelec-cryo-filter.pdf}
 \end{dunefigure}
 
-Four input channels are multiplexed onto a single fully differential 12 bit \SI{8}{MSPS} 
-\dword{adc}. Signals from the four channels are concurrently sampled onto a Sample and Hold 
+Four input channels are multiplexed onto a single fully differential 12-bit \SI{8}{MSPS} 
+\dword{adc}. Signals from the four channels are concurrently sampled onto a sample-and-hold 
 stage. An \dword{adc} driver after the multiplexer performs the single-ended to differential 
-conversion. The \dword{adc} has a pure \dword{sar} architecture (Figure~\ref{fig:cryo-ADC}) with a split 
-cap \dword{dac} based on V$_{cm}$ switching~\cite{5482529}, and has the option to be 
-calibrated for offset compensation.
+conversion. The \dword{adc} has a pure \dword{sar} architecture (Figure~\ref{fig:cryo-ADC}) 
+with a split-cap \dword{dac} based on V$_{cm}$ switching~\cite{5482529}, and has the option to be 
+calibrated for offset compensation. External signals can be routed to the input of each single 
+\dword{adc} allowing standalone characterization.
 
 \begin{dunefigure}
 [CRYO ADC architecture]
@@ -1025,38 +1028,37 @@ calibrated for offset compensation.
 \includegraphics[width=.9\textwidth]{sp-tpcelec-cryo-adcschematic.pdf}
 \end{dunefigure}
 
-External signals can be routed to the input of each single \dword{adc} allowing standalone characterization.
 
 The data serialization and transmission block uses a custom 12b/14b encoder, so 32 channels 
-of 12-bit, \SI{2}{MSPS} data can be transmitted with a digital bandwidth of only \SI{896}{Mbps}, 
-which is significantly lower than the required bandwidth of the baseline, which is \SI{1.28}{Gbps}.
+of 12-bit \SI{2}{MSPS} data can be transmitted with a digital bandwidth of only \SI{896}{Mbps}, 
+which is significantly lower than the required bandwidth of the reference design (\SI{1.28}{Gbps}).
 
-One key concern with mixed signal \dwords{asic} is the possibility of interference from the 
+One key concern with mixed-signal \dwords{asic} is the possibility of interference from the 
 digital side causing noise on the very sensitive preamplifier. To avoid this interference, 
-the \dword{cryo} design uses well established techniques for isolating the substrate;
+the \dword{cryo} design uses well-established techniques for isolating the substrate;
 these are described in the literature~\cite{yeh} and have been successfully used in previous 
-\dwords{asic}. Furthermore power domains of the various sections of the \dwords{asic} are 
+\dwords{asic}. Furthermore, power domains of the various sections of the \dwords{asic} are 
 isolated using multiple internal \dwords{ldo}.
 
 For reliability purposes the analog section of the \dword{asic} using thick oxide devices 
-is biased at 2V (20\% less than nominal voltage) and does not use minimum length devices.
-The digital section of the \dword{asic} uses instead core devices biased at 1V (again 20\% 
+is biased at \SI{2}{V} ($\num{20}\%$ less than nominal voltage) and does not use minimum length devices.
+The digital section of the \dword{asic} uses core devices biased at \SI{1}{V} (again $\num{20}\%$ 
 less than nominal voltage).
 
 The infrastructure requirements for a \dword{cryo} \dword{asic}-based system are similar 
-to those of the baseline option. However, in most cases, somewhat fewer resources are 
+to those of the reference option. However, in most cases, somewhat fewer resources are 
 needed; for instance:
 \begin{itemize}
 \item A single voltage is needed for the power supply. This is used to generate the two 
 supply voltages using internal voltage regulators.
 \item The warm interface is different. \dword{cryo} operates synchronously
 with a \SI{56}{MHz} clock, does not require a fast command, and uses the 
-SACI~\cite{SACI} protocol for configuration rather than \dword{i2c}.
+SACI protocol~\cite{SACI} for configuration rather than \dword{i2c}.
 \end{itemize}
 
-Simulation-based studies have been performed; at $\SI{1.2}{{\mu}s}$ peaking time and an 
-input capacitance of \SI{220}{pF} (similar to that expected in the \dword{spmod}), the noise 
-level is approximately $\SI{500}{e^{-}}$, similar to that expected with the baseline 
+Simulation-based studies have been performed: using the $\SI{1.2}{{\mu}s}$ peaking time and an 
+input capacitance of \SI{220}{pF} (close to that expected in the \dword{spmod}), the noise 
+level is approximately $\SI{500}{e^{-}}$, similar to that expected with the reference 
 \dword{larasic} design in \dword{lar} with the same input capacitance.
 
 The first iteration of the \dword{cryo} \dword{asic} design (see Figure~\ref{fig:cryo-photos}) 
@@ -1066,7 +1068,7 @@ delivered at the end of January 2019.
 \begin{dunefigure}
 [Photos of CRYO ASIC prototype]
 {fig:cryo-photos}
-{Photo of the prototype cold board (left); zoomed-in photo of \dword{cryo} \dwords{asic} (right).}
+{Photo of the prototype \dword{cryo} cold board (left); zoomed-in photo of \dword{cryo} \dwords{asic} (right).}
 \includegraphics[width=.3\textwidth]{sp-tpcelec-cryo-coldboard.png}
 \hspace{1cm}
 \includegraphics[width=.4075\textwidth]{sp-tpcelec-cryo-cryophoto.png}
@@ -1077,19 +1079,21 @@ described in Section~\ref{sec:fdsp-tpcelec-qa-initial}. Subsequent system tests 
 using the facilities described in Section~\ref{sec:fdsp-tpcelec-qa-facilities}.
 
 The first prototype of the \dword{asic} is functional at both room temperature and \lntwo 
-temperature. In particular all the key blocks have been verified. Configuration of all the 
+temperature. In particular, all the key blocks have been verified. Configuration of all the 
 64 channel registers (13 bits each) and the 17 (16-bit) global registers has been 
-verified. Optimization of the register values at room temperature and cold is 
-ongoing. Initialization procedures for the \dword{asic} power up have been established. 
+verified. Optimization of the register values is ongoing at both room and cold temperature.
+Initialization procedures for the \dword{asic} power-up have been established. 
 Operation of the on-chip \dwords{ldo} has been verified and expected supply levels are 
-stable across temperature. Injected pulses on the front-end channels are visible on 
-the analog monitor (Figure~\ref{fig:cryo-FEresponse}) as well as they are digitized 
-with the internal \dwords{adc}.
+stable against changes in temperature. The analog monitor can be used to spy on 
+the output of the amplifier for injected pulses on the \dword{fe} channels, prior
+to the digitization of these signals by the internal \dwords{adc}, as shown in
+Figure~\ref{fig:cryo-FEresponse}.
 
 \begin{dunefigure}
 [CRYO ASIC FE response at liquid nitrogen temperature]
 {fig:cryo-FEresponse}
-{\dword{cryo} \dword{asic} front-end response at liquid nitrogen temperature, presented at the analog monitor and acquired with an external \SI{50}{MSPS} \dword{adc}.}
+{\dword{cryo} \dword{asic} front-end response at liquid nitrogen temperature, presented at 
+the analog monitor and acquired with an external \SI{50}{MSPS} \dword{adc}.}
 \includegraphics[width=.65\textwidth]{sp-tpcelec-cryo-pulses.png}
 \end{dunefigure}
 
@@ -1107,22 +1111,22 @@ Data are acquired at \lntwo temperature at the nominal $\sim$\SI{2}{MSPS} rate.
 
 From the functional point of view, a single unexpected behavior has been identified 
 in the digital multiplexer that is used at the input of the encoders. The latches
-at the input of the multiplexer show poor driving capability resulting in a presence
+at the input of the multiplexer show poor driving capability, resulting in the presence
 of a ghost from a previously multiplexed channel. The effect is not present on the 
 first 12 channels of each block which show expected behavior. The effect has been
-understood replicated in simulation and a trivial fix has been implemented for 
+replicated in simulation and a trivial fix has been implemented for 
 the next version of the \dword{asic}.
 
 Initial results on the performance of the \dword{adc} block of \dword{cryo} have
-been obtained by directly injecting a linear ramp (generated by an external
+been obtained by directly injecting a linear voltage ramp (generated by an external
 \num{20}-bit \dword{dac}) into the \dword{adc}. The distributions of the \dword{dnl}
 and \dword{inl} obtained from these measurements are shown in Figure~\ref{fig:cryo-dnlinl}.
 The maximum deviations of the \dword{dnl} and \dword{inl} from the reference
 signal are \num{0.74} and \num{1.27} \dword{adc} counts, respectively, within
 a usable dynamic range of $\sim\num{3000}$ \dword{adc} counts. From these
-distributions the values for the \dword{sndr} of \SI{65.75}{dB} and for
-the \dword{enob} of \num{10.63} is estimated. These results indicate
-that from a static point of view the \dword{adc} block of \dword{cryo}
+distributions, the values of \SI{65.75}{dB} and of \num{10.63} 
+are estimated for the \dword{sndr} and \dword{enob}, respectively. These results indicate
+that, from a static point of view, the \dword{adc} block of \dword{cryo}
 meets the required performance for the \dword{dune} \dword{tpc} readout.
 Further work is ongoing to characterize the dynamic response of the
 \dword{adc} and to determine the overall linearity and noise performance
@@ -1317,7 +1321,7 @@ from the signal flange to the \dword{femb} and stream the $\sim$\SI{1}{Gbps}
 high-speed data from the \dword{femb} to the signal flange. Each 
 \dword{femb} connects to a signal flange via one data cable bundle, 
 leading to \num{20} bundles between one \dword{apa} and one flange. 
-For the baseline \dwords{asic} configuration \num{10} low-skew shielded 
+For the reference \dwords{asic} configuration \num{10} low-skew shielded 
 twin-axial cables are required to transmit the following differential signals
 between the \dword{wib} and the \dword{femb}:
 \begin{itemize}
@@ -1588,7 +1592,7 @@ receive the encoded timing signal over bidirectional optical
 fibers on the front panel and process them using either the on-board
 \dword{fpga}or clock synthesizer chip to provide the clock required
 by the \dword{tpc} electronics.
-The baseline \dword{asic} design 
+The reference \dword{asic} design 
 currently uses 8b/10b encoding; if the \dword{slac} \dword{cryo} 
 \dword{asic} is selected for the \dword{dune} \dword{spmod}, 
 12b/14b encoding will be used instead of 8b/10b.
@@ -2284,7 +2288,7 @@ prototyping iteration. Nevertheless, in Section~\ref{sec:fdsp-tpcelec-risks-desi
 we consider a generic risk for a delay in the availability of \dword{asic}s and
 argue that this delay would not have an impact on the beginning of \dword{dune} operations.
 
-It should be noted that even if the baseline for \dword{spmod} foresees the usage
+It should be noted that even if the reference for \dword{spmod} foresees the usage
 of custom \dwords{asic} for the \dword{adc} and the data serialization, we should
 note that a solution based on commercial components is available and has been 
 demonstrated to work by the \dword{sbnd} collaboration. This solution is based on
@@ -2294,7 +2298,7 @@ a fall-back solution for \dword{dune}. Custom solutions for the \dwords{asic} ar
 being developed to simplify the \dword{femb} assembly and reduce the power dissipated by the
 electronics in the \lar.
 
-The baseline solution for the \dword{adc} and the data serialization is based on two new 
+The reference solution for the \dword{adc} and the data serialization is based on two new 
 \dword{asic}s, \dword{coldadc} and \dword{coldata}.
 The first iteration of the \dword{coldadc} was submitted for fabrication
 at the end of October 2018, and the chips were delivered in January 2019.
