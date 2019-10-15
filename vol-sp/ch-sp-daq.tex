@@ -2,10 +2,10 @@
 \glsresetall
 
 \chapter{Data Acquisition}
-\label{ch:sp-daq}
+\label{ch:daq}
 
 \section{Introduction}
-\label{sec:fd-daq:introduction}
+\label{sec:daq:introduction}
 
 The \dword{fd} \dword{daq} system receives,
 processes, and records data from the \dword{dune} \dword{fd}.
@@ -31,34 +31,35 @@ Its members bring considerable experience from \dword{icarus}, \dword{microboone
 
 The system is designed to service all \dword{fd} \dword{detmodule} designs
 interchangeably.  However, some aspects of the \dword{daq} design described in
-this chapter are tailored to meet the specific needs of the \dword{sp}
+this chapter are tailored to meet the specific needs of the 
+\dword{sp}
 detector module technology.  Adaptations to detector technology are
-implemented upstream of the \dword{daq}, leaving the remainder generic. The
-individual modules are serviced independently and are only loosely
+implemented in the upstream part of the \dword{daq}, leaving the remainder generic. The
+individual detector modules are serviced by the DAQ independently and the two modules are only loosely
 coupled through a cross-module triggering mechanism.
 
 The chapter begins with an overview of the \dword{daq} design
-(Section~\ref{sec:fd-daq:overview}), including requirements that the design
+(Section~\ref{sec:daq:overview}), including requirements that the design
 must meet and specifications for interfaces between the \dword{daq}  and other
 \dword{dune} \dword{fd} systems.  Subsequently,
-Section~\ref{sec:fd-daq:design}, which comprises the bulk of this chapter,
+Section~\ref{sec:daq:design}, which comprises the bulk of this chapter,
 describes the design of the \dword{fd} \dword{daq} in greater detail.
-Section~\ref{sec:fd-daq:validation} describes design validation efforts to
+Section~\ref{sec:daq:validation} describes design validation efforts to
 date, as well as future design development and validation plans. At the center of
 these efforts is the  \dword{protodune} \dword{daq} system (described in
-Section~\ref{sec:fd-daq:protodune}), which has demonstrated
+Section~\ref{sec:daq:protodune}), which has demonstrated
 several key aspects of the  \dword{dune} \dword{fd} \dword{daq}  design and continues
 to serve as a platform for further developing and validating 
 the final design.  The chapter finishes with two sections
-(sections~\ref{sec:sp-daq:production} and \ref{sec:sp-daq:organization}), which
+(sections~\ref{sec:daq:production} and \ref{sec:daq:organization}), which
 detail the management of the \dword{daq} project, including the
 schedule for completing the design,  production, and installation of the
 system, as well as safety considerations.
 
 \section{Design Overview}
-\label{sec:fd-daq:overview}
+\label{sec:daq:overview}
 
-Figure~\ref{fig:fd-daq:layout} provides an overview of the \dword{dune} \dword{fd} \dword{daq} system 
+Figure~\ref{fig:daq:layout} provides an overview of the \dword{dune} \dword{fd} \dword{daq} system 
 servicing a single \dword{fd}
 \dword{detmodule}. The system is
 physically located at the \dword{fd} site, split between the
@@ -71,7 +72,8 @@ which is responsible for
 event-building, run control, and monitoring, resides on the
 surface.
 Data flows through the \dword{daq} from 
-upstream to the back-end parts of the \dword{daq} and then offline. Most raw data is processed and buffered underground, thus controlling consumption of available data bandwidth  to the surface. 
+upstream to the back-end parts of the \dword{daq} and then offline. Most raw data is processed and buffered underground, 
+thus controlling consumption of available data bandwidth  to the surface. 
 
 A
 hierarchical \dword{daqdss} consumes minimally-processed
@@ -89,10 +91,10 @@ common clock, provided by the timing and synchronization
 subsystem. Cross-module communication and communication
 to the outside world for data selection (trigger) purposes is facilitated
 through an \dword{daqeti}, which is part of the \dword{daqdss}. The
-specifics of design implementation and data flow are described in Section~\ref{sec:fd-daq:design}.
+specifics of design implementation and data flow are described in Section~\ref{sec:daq:design}.
 
 \begin{dunefigure}[DAQ conceptual design overview for one
-  module]{fig:fd-daq:layout}{\dword{daq} conceptual design overview focusing
+  module]{fig:daq:layout}{\dword{daq} conceptual design overview focusing
     on a single \nominalmodsize module. Included are the upstream
     \dword{daq} subsystem in orange, the \dword{daqdss} in
     blue, and the \dword{daqbes} subsystem in yellow,
@@ -106,11 +108,13 @@ specifics of design implementation and data flow are described in Section~\ref{s
 
 
 \subsection{Requirements and Specifications}
-\label{sec:fd-daq:requirements}
+\label{sec:daq:requirements}
 
 The \dword{dune} \dword{fd} \dword{daq} system is designed to meet the
 \dword{dune} top-level as well as \dword{daq}-level requirements
-summarized in Table~\ref{tab:specs:SP-DAQ}. The \dword{daq}-level requirements ensure that the 
+summarized in 
+Table~\ref{tab:specs:SP-DAQ}. 
+The \dword{daq}-level requirements ensure that the 
 system
 can record all necessary information for offline 
 analysis of data associated with on- and off-beam physics events, as directed
@@ -131,7 +135,8 @@ and detecting neutrinos from a nearby \dword{snb}. The
 \dword{dune} \dword{fd} \dword{daq} system must facilitate data
 readout to deliver on these main physics drivers while keeping
 within physical (space, power) and resource constraints for
-the system. In particular, the off-beam measurements require continuous readout of the detector, and the lack of external triggers for such
+the system. In particular, the off-beam measurements require continuous readout of the detector, 
+and the lack of external triggers for such
 events requires real-time or online data processing and
 self-triggering capabilities. Because the
 continuous raw data rate of the far detector module, as received by
@@ -140,14 +145,21 @@ terabits per second, significant data buffering and processing
 resources are needed as part of the design, as specified in
 later sections of this chapter.
 
-The \dword{dune} \dword{fd} modules use two active detector components from which the \dword{daq} system must acquire data: the \dword{tpc} and the \dword{pds}. The two components access the physics by sensing and collecting signals associated with very different sensing time scales.
+The \dword{dune} \dword{fd} modules use two active detector components from which the 
+\dword{daq} system must acquire data: the \dword{tpc} and the \dword{pds}. 
+The two components access the physics by sensing and collecting signals associated with very different sensing time scales.
 
-Ionization charge measurement by the \dword{tpc} for any given activity in the detector requires a nominal recording of data over a time window of approximately \SIrange{1}{10}{\milli\second}. 
-This time scale is determined by the ionization electron drift speed in \dword{lar} and the detector dimension along the drift direction, nominally set to \spreadout, corresponding to 2.4$\times$\SI{2.25}{\milli\second}.
+Ionization charge measurement by the \dword{tpc} for any given activity in the detector 
+requires a nominal recording of data over a time window of approximately \SIrange{1}{10}{\milli\second}. 
+This time scale is determined by the ionization electron drift speed in \dword{lar} and the detector 
+dimension along the drift direction, nominally set to 
+\spreadout, 
+corresponding to 2.4$\times$\SI{2.25}{\milli\second}.
 The latter (\SI{2.25}{\milli\second}) assumes a drift electric field of \mindriftfieldgoal.
 The 2.4 factor ensures capturing ionization information from at
 least a full drift before and after the trigger time associated with the
-activity. Early commissioning data will be used to evaluate and optimize this nominal readout time.
+activity. 
+Early commissioning data will be used to evaluate and optimize this nominal readout time.
 
 On the other hand, the \dword{pds} measures argon scintillation light emission, which
 occurs and is detected over a timescale of multiple \si{\nano\second} to
@@ -220,20 +232,20 @@ induction wire readout channels.
 on reconstruction efficiency and energy resolution for low-energy
 events \cite{bib:uBsnreadout2019}.
 Expected data rates from physics signals of interest that fit the
-requirement of \offsitepbpy sent to permanent storage are summarized in Table~\ref{tab:sp-daq:rates} and detailed in~\citedocdb{9240}. Potential bottlenecks are analyzed in~\citedocdb{11461}.
+requirement of \offsitepbpy sent to permanent storage are summarized in Table~\ref{tab:daq:rates} and detailed in~\citedocdb{9240}. Potential bottlenecks are analyzed in~\citedocdb{11461}.
 
 \begin{dunefigure}[Expected physics-related activity
     rates in one FD module]{fig:daq-rates}{Expected physics-related activity
-    rates in a single \nominalmodsize module. \label{sec:fd-daq:rates}
+    rates in a single \nominalmodsize module.
 }
   \includegraphics[width=0.7\textwidth,clip,trim=6cm 6cm 10cm 2cm]{daq-event-type-rates-vs-energy.pdf}
 \end{dunefigure}
 
-\begin{dunetable} [Expected DAQ Yearly Produced TPC Data Volumes] {p{0.3\textwidth}p{0.1\textwidth}p{0.5\textwidth}} {tab:sp-daq:rates}{Summary of expected data volumes produced yearly for initial single-module running.
+\begin{dunetable} [Expected DAQ Yearly Produced TPC Data Volumes] {p{0.3\textwidth}p{0.1\textwidth}p{0.5\textwidth}} {tab:daq:rates}{Summary of expected data volumes produced yearly for initial single-module running.
     The numbers assume \dword{tpc} only rates with no compression and are given for a single
-    \SI{10}{\kilo\tonne} module, assuming the parameters listed in Table~\ref{tab:sp-daq:parameters}. (A 2-4x lossless
+    \SI{10}{\kilo\tonne} module, assuming the parameters listed in Table~\ref{tab:daq:parameters}. (A 2-4x lossless
     compression factor is expected.)
-    Trigger primitives (see Section~\ref{sec:sp-daq:design-data-selection}), fake \dword{snb} data as well as additional data recorded for detector performance studies and debugging need not be stored offline permanently.}
+    Trigger primitives (see Section~\ref{sec:daq:design-data-selection}), fake \dword{snb} data as well as additional data recorded for detector performance studies and debugging need not be stored offline permanently.}
 Source                                              & Annual Data Volume & Assumptions \\\toprowrule
 Beam interactions                                   & \SI{27}{\TB}       & \SI{10}{\MeV} threshold in coincidence with beam
 time, including cosmic coincidence; \spreadout readout \\\colhline
@@ -268,11 +280,10 @@ all channels in the detector will be recorded over an extended and contiguous pe
 trigger. This time has been defined in consultation with the \dword{dune}
 physics groups.
 
-%\input{generated/req-longtable-SP-DAQ} 
-\fixme{anne to uncomment}
+\input{generated/req-longtable-SP-DAQ} 
 
 \subsubsection{Considerations for Design}
-\label{sec:fd-daq:considerations}
+\label{sec:daq:considerations}
 
 The \dword{daq} system is designed as a single, scalable system that can
 service all \dword{fd} modules. It is also designed so the
@@ -285,11 +296,13 @@ the design conservatism with further experience of detector
 operations. At the same time, the system is designed add capacity as required. Most processing and buffering of raw
 detector data is done underground, in the upstream \dword{daq} and low
 level data selection parts of the
-system (see Figure~\ref{fig:fd-daq:layout}), with only event building and data
+system (see Figure~\ref{fig:daq:layout}), with only event building and data
 storage on surface.
 
 Power, cooling, and space are constrained both in the \dword{cuc} and on the surface, limited to \daqpower and \daqracks (out of \cucracks total) in the \dword{cuc}, and \surfdaqpower and \surfdaqracks on the surface for \dword{daq} for all four \dword{fd} modules.
-The underground computing required for the \dword{daq} to service the \dword{sp} detector module should require less than a quarter of the total power and rack space provided for all four detector modules. 
+The underground computing required for the \dword{daq} to service the 
+\dword{sp} 
+detector module should require less than a quarter of the total power and rack space provided for all four detector modules. 
 The hardware for upstream \dword{daq}, low level data selection,
 various services, networking, and the timing system, including spares,
 all kept in the \dword{cuc}, 
@@ -332,12 +345,14 @@ A programmable trigger priority scheme ensures that the readout for the main phy
 
 \end{itemize}
 
-Table~\ref{tab:sp-daq:parameters} summarizes the important parameters driving the \dword{daq} design. These parameters set the scale of data buffering, processing, and transferring resources that must be built into each \dword{fd} module. 
+Table~\ref{tab:daq:parameters} summarizes the important parameters driving the \dword{daq} design. 
+These parameters set the scale of data buffering, processing, and transferring resources that must be built 
+into each \dword{fd} module. 
 
 \begin{dunetable}
 [Key DAQ Parameters]
 {ll}
-{tab:sp-daq:parameters}
+{tab:daq:parameters}
 {Summary of important parameters driving the \dword{daq} design. The \dword{pds}
   system parameters are under study, but the \dword{pds} raw
   data volume that must be handled by the \dword{daq} should be an order of
@@ -361,10 +376,10 @@ Full size of Extended Event Record per Module      & \SI{120}{\TB}\\  \colhline
 
 
 \subsection{Interfaces}
-\label{sec:sp-daq:interfaces}
+\label{sec:daq:interfaces}
 
 The \dword{daq} system scope begins at the optical fibers streaming raw digital data from the detector active components
-(\dword{tpc} and \dword{pds}) and ends at a WAN \fixme{Although this abbreviation is not in the glossary, it is quite familiar to a fairly broad audience. I see no reason to include it in the common glossary or to define it in line.} interface that
+(\dword{tpc} and \dword{pds}) and ends at a wide-area network interface that
 distributes the data from on site at \dword{surf} to offline centers off
 site. The \dword{daq} also provides common computing and network services for
 other \dword{dune} systems, although slow control and safety functions
@@ -374,14 +389,14 @@ Consequently, the \dword{dune} \dword{fd} \dword{daq} system interfaces with the
 readout, computing, \dword{cisc}, and calibration systems of the 
 \dword{fd}, as well as with facilities and underground installation. The
  interface agreements with the \dword{fd} systems 
-are listed in Table~\ref{tab:sp-daq:interfaces} and described
+are listed in Table~\ref{tab:daq:interfaces} and described
 briefly in the following subsections. Interface agreements with
-facilities and underground installation are described in Section~\ref{sec:sp-daq:production}.
+facilities and underground installation are described in Section~\ref{sec:daq:production}.
 
 \begin{dunetable}
 [DAQ System Interface Links]
 {p{0.3\textwidth}p{0.3\textwidth}p{0.2\textwidth}}
-{tab:sp-daq:interfaces}
+{tab:daq:interfaces}
 {Data Acquisition System Interface Links. }
 Interfacing System & Description & Reference \\ \toprowrule
 TPC CE & Data rate and format, number and type of links, timing, inherent noise & \citedocdb{6742}{v6}\\ \colhline
@@ -439,46 +454,53 @@ monitoring information to \dword{cisc}, and power distribution and
 rack status units in \dword{daq} racks. The information from \dword{cisc}
 feeds back into the \dword{daq} for run control operations.
 
-\item[Calibration] The \dword{daq} and calibration interface is described in \citedocdb{7069}. Two calibration systems are envisioned for the \dword{fd}: a laser calibration system and a neutron generator. 
+\item[Calibration] The \dword{daq} and calibration interface is described in \citedocdb{7069}. 
+Two calibration systems are envisioned for the \dword{fd}: a laser calibration system and a neutron generator. 
   Two-way communication between the calibration system and the
   \dword{daq} is needed.  Specifically, the calibration system must
   notify the data selection system, thus informing \dword{trigdecision}
-  when activity has been induced in the detector. At the same time, the \dword{daq} must provide input to the calibration system, so it can avoid inducing activity in the detector during certain periods such as \dword{snb} readout time or during a beam spill.
+  when activity has been induced in the detector. At the same time, 
+the \dword{daq} must provide input to the calibration system, so it can avoid inducing activity in 
+the detector during certain periods such as \dword{snb} readout time or during a beam spill.
 This second communication will be initiated by the data selection
 system and distributed via the \dword{daqeti} and
 subsequently through the
 \dword{daq} timing system.
 
-
-\item[Timing and Synchronization] The timing system of the \dword{dune} \dword{fd} connects with almost all detector systems and with the calibration system and has a uniform interface to each of them. 
+\item[Timing and Synchronization] The timing system of the \dword{dune} 
+\dword{fd} connects with almost all detector systems and with the calibration 
+system and has a uniform interface to each of them. 
   A single interface document \citedocdb{11224} describes all timing interfaces. 
 
-Accuracy of timestamps delivered to  detector endpoints will be $\pm$\SI{500}{\nano\second} with respect to UTC \fixme{UTC is not defined in the common glossary. I'm assuming it does not need to be included there.}. Synchronization between any two endpoints in the detector will be less than \SI{10}{\nano\second}. Between detector modules, synchronization will be less than \SI{25}{\nano\second}.  
+Accuracy of timestamps delivered to  detector endpoints will be 
+$\pm$\SI{500}{\nano\second} with respect to UTC. 
+Synchronization between any two endpoints in the detector will be less than 
+\SI{10}{\nano\second}. Between detector modules, synchronization will be less than \SI{25}{\nano\second}.  
 \end{description}
 
 \section{Data Acquisition System Design}
-\label{sec:fd-daq:design}
+\label{sec:daq:design}
 
 This section begins with an overview of the \dword{daq}
 design followed by
 descriptions of the subsystem designs and implementation specifics.
 
 \subsection{Overview}
-\label{sec:fd-daq:design-overview}
+\label{sec:daq:design-overview}
 
 The  \dword{daq} system comprises five distinct subsystems:
 %
 (1) upstream \dword{daq} (Section~\ref{sec:daq:design-upstream}),
 %
-(2) \dword{daqdss} (Section~\ref{sec:sp-daq:design-data-selection}),
+(2) \dword{daqdss} (Section~\ref{sec:daq:design-data-selection}),
 %
-(3) \dword{daqbes} (Section~\ref{sec:fd-daq:design-backend}), 
+(3) \dword{daqbes} (Section~\ref{sec:daq:design-backend}), 
 %
-(4) \dword{daqccm} (Section~\ref{sec:fd-daq:design-run-control}), and
+(4) \dword{daqccm} (Section~\ref{sec:daq:design-run-control}), and
 %
-(5) \dword{daqtss} (Section~\ref{sec:sp-daq:design-timing}).
+(5) \dword{daqtss} (Section~\ref{sec:daq:design-timing}).
 %
-Figure~\ref{fig:fd-daq:layout} shows the physical extent of the subsystems: the
+Figure~\ref{fig:daq:layout} shows the physical extent of the subsystems: the
 upstream \dword{daq} and \dword{daqtss}  live underground in the \dword{cuc}; \dword{daqdss} occupies
 both underground and above-ground spaces; \dword{daqbes} is above-ground
 and includes data flow orchestration, event building, and buffering before distribution of data
@@ -486,12 +508,17 @@ to offline storage; and \dword{daqccm} extends throughout the entire physical la
 system, supported on a private network throughout the \dword{daq} system. Each of these subsystems is described in further
 detail in the following subsections. 
 
-Front-end readout is carried out by the upstream \dword{daq} using custom data receiver and
-co-processing \dword{fpga} and commodity computing hardware, all of which is hosted in 80-85 servers in the \dword{cuc}. A
+
+
+Front-end readout is carried out by the upstream \dword{daq} using
+custom data receiver and
+co-processing \dword{fpga} and commodity computing hardware, 
+all of which is hosted in 80-85 servers in the \dword{cuc}. A
 corresponding number of additional servers execute
 subsequent software-based low-level processing of trigger
 primitives
-generated in the upstream \dword{daq} for the purposes of \dword{daqdsn}. The trigger candidates constructed from trigger primitives are propagated to a central server responsible
+generated in the upstream \dword{daq} for the purposes of \dword{daqdsn}. 
+The trigger candidates constructed from trigger primitives are propagated to a central server responsible
 for further processing and module-level triggering. The module level
 trigger also
 interfaces to a second server that receives and
@@ -507,11 +534,13 @@ record, which is temporarily stored in (a number of) files. Event records are op
 filter/data reduction stage, which is part of overall data selection,
  before event records are shipped to \dword{dune} offline. Pervasively,
  the  \dfirst{daqccm} orchestrates data taking 
- (Section~\ref{sec:fd-daq:design-run-control}), and the
+ (Section~\ref{sec:daq:design-run-control}), and the
  \dfirst{daqtss} provides synchronization and synchronous command distribution
- (Section~\ref{sec:sp-daq:design-timing}). Figure~\ref{fig:daq-conceptual-overview}
+ (Section~\ref{sec:daq:design-timing}). Figure~\ref{fig:daq-conceptual-overview}
  provides a conceptual illustration of the overall \dword{daq} system
  functionality.
+
+
 
 \begin{dunefigure}[DAQ system overview]{fig:daq-conceptual-overview}{Conceptual
    Overview of \dword{daq} system functionality for a single \nominalmodsize module}
@@ -534,7 +563,7 @@ detector without interrupting normal data taking.
 The upstream \dword{daq} provides the first link in the data flow chain of
 the \dword{daq} system; it receives raw data from detector electronics.
 The upstream \dword{daq} implements a receiver, buffer, and a portion of low-level data
-selection (trigger primitive generation; see Section~\ref{sec:sp-daq:design-data-selection}) as detailed in Figure~\ref{fig:daq:readout}.
+selection (trigger primitive generation; see Section~\ref{sec:daq:design-data-selection}) as detailed in Figure~\ref{fig:daq:readout}.
 It is physically connected to the detector electronics via optical
 fiber(s) and buffers and serves data to other \dword{daq} subsystems,
 namely the \dword{daqdss} and the \dword{daqbes}.
@@ -592,7 +621,7 @@ is handled by the \dwords{daqrou} via software. Dedicated hardware or firmware
 development is not required.
 
 \item The data processing functional block is tasked with identifying and forming \dwords{trigprimitive} (see
-Section~\ref{sec:sp-daq:design-trigger-primitives}), after a stage of data
+Section~\ref{sec:daq:design-trigger-primitives}), after a stage of data
 reorganization and noise filtering for both the \dword{tpc} and \dword{pds}. \Dwords{trigprimitive} summarize time periods on a channel where the digitized waveform is no longer consistent with noise.
 These regions of interest are then used as input to the \dword{daqdss} where they begin the process of forming a \dword{trigdecision}.
 
@@ -601,8 +630,8 @@ R\&D studies are ongoing to evaluate alternative implementations (in GPUs or CPU
 
 \item In \dword{dune}, the upstream \dword{daq} system is in charge of buffering all
 detector data until the \dword{daqdss} has issued a \dword{trigcommand}
-(see Section~\ref{sec:sp-daq:design-data-selection}) and until the
-\dword{daqbes} (Section~\ref{sec:fd-daq:design-backend}) has requested
+(see Section~\ref{sec:daq:design-data-selection}) and until the
+\dword{daqbes} (Section~\ref{sec:daq:design-backend}) has requested
 and received the corresponding selected data. 
 In addition, in the case of a \dword{snb} trigger, data received after
 the issuing of the trigger must be buffered for longer to
@@ -627,7 +656,8 @@ essentially 100\% efficiency for collecting the individual, low-energy
 interactions during any given \dword{snb} burst. 
 To achieve this, the full-stream of data is recorded for a time duration that should cover the time envelope of the burst.
 Guided by \dword{snb} models, this duration is set to \snbtime.
-This requires extracting as much as \SI{120}{\tera\byte} from the \dword{tpc} upstream \dword{daq} across one single-phase detector module.
+This requires extracting as much as \SI{120}{\tera\byte} from the \dword{tpc} upstream \dword{daq} across one 
+single-phase detector module.
 It is not cost effective to design the \dword{daq} to extract such
 extended data record along the same path as nominal readout, so
 additional buffering is needed.
@@ -649,14 +679,21 @@ costs and technology requirements in exploiting this benefit.
 
 \end{itemize}
 
-Figure~\ref{fig:daq:readout-blocks} shows the flow diagram of data and control messages within the upstream \dword{daq} as well as the main interaction of the upstream \dword{daq} with other subsystems.
+
+
+
+Figure~\ref{fig:daq:readout-blocks} shows the flow diagram of data and control messages within the upstream \dword{daq} 
+as well as the main interaction of the upstream \dword{daq} with other subsystems.
 
 \subsection{Data Selection}
-\label{sec:sp-daq:design-data-selection}
+\label{sec:daq:design-data-selection}
 
 The \dword{daqdss}  is a hierarchical, online, primarily
 software-based system. It is responsible for immediate and continuous processing of a substantial fraction of the entire input data stream. 
-This includes data from \dword{tpc} and \dword{pds} subdetectors.
+This includes data from 
+%
+\dword{tpc} and \dword{pds} subdetectors.
+%
 From that input, as well as external inputs provided by
 the accelerator and detector calibration systems, the \dword{daqdss} must form a \dword{trigdecision},
 which in turn produces a \dword{trigcommand}.
@@ -664,17 +701,18 @@ This command summarizes the observed activity that led to the decision
 and provides addresses (in channel-time space) of the data in the
 upstream \dword{daq} buffers that capture raw data
 corresponding to the activity.
-This command is sent to, then consumed, and executed by the \dfirst{daqbes} as described in Section~\ref{sec:fd-daq:design-backend}. 
+This command is sent to, then consumed, and executed by the \dfirst{daqbes} as described in Section~\ref{sec:daq:design-backend}. 
 It may also be propagated to an \dword{etl} stage, and from there, it may be
 distributed to other \dwords{detmodule} or other detector systems
 (e.g., calibration) for further consideration.
 
-To facilitate partitioning, the \dword{daqdss}  can be instantiated several times, and multiple instances can operate in parallel. Within any
+To facilitate partitioning, the \dword{daqdss}  can be instantiated several times, 
+and multiple instances can operate in parallel. Within any
 given partition, the \dword{daqdss} will also be
 informed and aware of current detector configuration and conditions and
 apply certain masks and mapping on subdetectors or their fragments in
 its decision making. This information is delivered to the
-\dword{daqdss} by the \dword{daqccm} system (Section~\ref{sec:fd-daq:design-run-control}).
+\dword{daqdss} by the \dword{daqccm} system (Section~\ref{sec:daq:design-run-control}).
 
 Following \dword{dune} \dword{fd} and \dword{daq} requirements, the
 \dword{daqdss} must select, with sufficiently high ($>$99\%) efficiency, data associated with calibration
@@ -689,7 +727,8 @@ must make \dword{daqdsn} decisions in a way that allows the \dword{daq}
 system to effectively reduce its input data by almost four orders of magnitude,
 without compromising the above efficiencies.
 
-To meet its requirements, the \dword{daqdss} design follows a hierarchical data selection strategy, where low-level decisions are fed forward into higher-level ones until a module-level trigger is activated. 
+To meet its requirements, the \dword{daqdss} design follows a hierarchical data selection strategy, 
+where low-level decisions are fed forward into higher-level ones until a module-level trigger is activated. 
 The hierarchy is illustrated in
 Figure~\ref{fig:daq:data-selection-hierarchy}. 
 At the lowest level, trigger primitives are formed on a per-channel basis, and represent, for the baseline design, a hit on a wire/channel activity summary. 
@@ -779,7 +818,7 @@ records associated with \dwords{trigcommand} that overlap in readout
 record space, the \dword{daqdss} must also time-order and
 prioritize \dwords{trigdecision}. The details for forming this
 command are described next, while the operation of the \dword{daqbes} is
-described in Section~\ref{sec:fd-daq:design-backend}.
+described in Section~\ref{sec:daq:design-backend}.
 
 Viable data selection algorithms for the low level and module level triggers already exist, including
 algorithms for a module level \dword{snb} trigger.  Monte Carlo simulations have demonstrated that the resulting
@@ -801,7 +840,7 @@ generated in upstream \dword{daq} \dword{fpga}.
 
 
 \subsubsection{Low Level Trigger: Trigger Primitive Generation}
-\label{sec:sp-daq:design-trigger-primitives}
+\label{sec:daq:design-trigger-primitives}
 
 A \dword{trigprimitive} is defined nominally on a per-channel basis. In the case of
 the \dword{spmod} \dword{tpc}, it is identified as a
@@ -826,7 +865,7 @@ Such algorithms ( e.g.,~\cite{bib:docdb11236}) have been validated
 using both Monte Carlo simulations and 
 real data from \dword{protodune}. 
 \Dword{trigprimitive} generation performance is summarized in
-Section~\ref{sec:sp-daq:design-validation}.
+Section~\ref{sec:daq:design-validation}.
 
 The format and schema of \dwords{trigprimitive} are subject to further
 optimization because they are further tightly coupled with the generation of
@@ -886,7 +925,7 @@ This stage of data selection is implemented \num{75} (\dword{tpc}) plus eight
 stage, described next, via the \SI{10}{\Gbps} \dword{daq} network. Studies are underway to demonstrate CPU
 resource use and latency, as are efforts to demonstrate online \dword{trigcandidate} generation
 at \dword{protodune}. \Dword{trigcandidate} generation performance is summarized in
-Section~\ref{sec:sp-daq:design-validation}. 
+Section~\ref{sec:daq:design-validation}. 
 
 
 \subsubsection{Module Level Trigger}
@@ -907,7 +946,7 @@ The \dword{trigcommand} packet includes information about the candidates (and pr
 that were used to form it. 
 The decision also provides direction as to what set of detector subcomponents
 should be read out and over what time period (localized or extended as described above). 
-The module level trigger publishes a stream of \dwords{trigcommand} and the primary subscriber should be the \dword{daqdfo} of the \dword{daqbes} as described in Section~\ref{sec:fd-daq:design-backend}.
+The module level trigger publishes a stream of \dwords{trigcommand} and the primary subscriber should be the \dword{daqdfo} of the \dword{daqbes} as described in Section~\ref{sec:daq:design-backend}.
 
 The module level trigger is implemented in \bigo{1} CPU server (with 100\%
 redundancy), which
@@ -917,7 +956,7 @@ of the data selection and distributes \dwords{trigcommand} to the
 underway to demonstrate CPU resource use and latency, as are
 efforts to demonstrate online \dword{trigcommand} generation at \dword{protodune}.
 \Dword{trigcommand} generation performance is summarized in
-Section~\ref{sec:sp-daq:design-validation}.
+Section~\ref{sec:daq:design-validation}.
 
 \subsubsection{External Trigger Interface}
 
@@ -940,7 +979,7 @@ redundancy), with \SI{10}{\Gbps} networking and interfacing hardware
 components (to \dword{wr} and \dword{dune} timing system) for timing and external trigger signal I/O.
 
 \subsubsection{High Level Filter}
-\label{sec:fd-daq:design-data-reduction}
+\label{sec:daq:design-data-reduction}
 
 The last processing stage in the \dword{daqdss} is the
 high level filter, which resides in the \dword{daqbes}, and physically,
@@ -971,7 +1010,7 @@ residing on surface at \dword{surf}.
 
 To fully understand how much and what type of data reduction may be
 beneficial, simulation studies are ongoing \cite{bib:docdb11311},
-summarized in Section~\ref{sec:sp-daq:design-validation}, and will
+summarized in Section~\ref{sec:daq:design-validation}, and will
 must be
 validated with initial data analysis after the
 first \dword{dune} \dword{fd} operation. Development efforts are also ongoing to determine the scale of 
@@ -979,17 +1018,19 @@ processing required by the \dword{fd}.
 
 
 \subsection{Back-end DAQ}
-\label{sec:fd-daq:design-backend}
+\label{sec:daq:design-backend}
 
-The  \dword{daqbes} moves data of interest identified by the data-selection system from the readout \dword{daq} buffers, serving them to the high level filter and storing the filtered data into the output buffer. From there, data will be transferred to permanent storage off-site.
+The  \dword{daqbes} moves data of interest identified by the data-selection system from the readout \dword{daq} buffers, 
+serving them to the high level filter and storing the filtered data into the output buffer. From there, 
+data will be transferred to permanent storage off-site.
 
 The \dword{daqbes} system accepts \dwords{trigcommand} produced by the \dword{daqdss} as described
-in Section~\ref{sec:sp-daq:design-data-selection}.  It queries the upstream \dword{daq} buffers and
+in Section~\ref{sec:daq:design-data-selection}.  It queries the upstream \dword{daq} buffers and
 accepts returned data as described in Section~\ref{sec:daq:design-upstream}. Finally, it records
 \dwords{trigcommand} and the corresponding detector data to the output storage buffer.
 
 The principal components of the \dword{daqbes} are the \dfirst{daqdfo}, \dfirst{eb} and the output
-storage buffer (OB) in Figure~\ref{fig:fd-daq:layout}.
+storage buffer (OB) in Figure~\ref{fig:daq:layout}.
 
 \subsubsection{Data Flow Orchestration}
 
@@ -1001,13 +1042,13 @@ The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes 
 \end{dunefigure}
 
 \begin{itemize}
-\item \dword{daqdfo} accepts a stream of \dwords{trigcommand} and dispatches each to an available \dword{eb} process as described in Section~\ref{sec:fd-daq:design-event-builder} for execution.
+\item \dword{daqdfo} accepts a stream of \dwords{trigcommand} and dispatches each to an available \dword{eb} process as described in Section~\ref{sec:daq:design-event-builder} for execution.
 \item In atypical situations in which there are insufficient event builder resources available to handle the rate of triggers produced by the data selection subsystem, the DFO will alert the DS subsystem that the rate of triggers needs to be reduced.  When such reductions are requested, the \dword{daqdss} will update the calculation of the module-level \dword{daq} livetime appropriately.
 \item The DFO will provide relevant data flow status and statistics information to the monitoring processes that are described in Section~\ref{sec:daq:design:ccm:monitoring}. Given its central role and knowledge of the state of available event builder buffers, it will be able to provide important information about the health and performance of the system.
 \end{itemize}
 
 \subsubsection{Event Builder}
-\label{sec:fd-daq:design-event-builder}
+\label{sec:daq:design-event-builder}
 
 The \dword{daqbes} will provide the instances of the \dfirst{eb} most likely as
 \dword{artdaq}~\cite{artdaq} components of the same name. 
@@ -1046,14 +1087,14 @@ The \dword{eb} and Output buffer hardware will support \SI{100}{\Gbps} directly.
 The \dword{daq} data network is connected to the \fnal network via a WAN interface.
 
 \subsubsection{Data Model}
-\label{sec:fd-daq:design-data-model}
+\label{sec:daq:design-data-model}
 
 The data model for the DUNE far detector describes the format and characteristics of the triggered data at each stage in the analysis chain, the grouping of the data into logical units such as runs, and the characteristics of ancillary data such as detector configuration parameters and calibration results.
 
 The requirements that these place on the \dword{daq} are primarily in the areas of flexibility and traceability.  The \dword{daq} will have the flexibility to handle the readout of triggers that have a time window that is on the order of a single TPC drift time (for example a trigger associated with a beam gate window), triggers that have a time window of many seconds (such as for a supernova burst trigger), and windows between those two extremes (for detector and electronics studies).  In the area of traceability, the \dword{daq} system will provide the necessary level of detail regarding the conditions that triggered each event, the expected and actual regions of the detector that contributed raw data to each event, the conditions of the detector and electronics during data taking, the version and configuration of the software components used in the \dword{daq} chain, etc.
 
 \subsection{Control, Configuration, and Monitoring}
-\label{sec:fd-daq:design-run-control}
+\label{sec:daq:design-run-control}
 
 The \dfirst{daqccm}, illustrated in Figure~\ref{fig:daq-ccm-subsys}, consist of the software
 subsystems to control, configure, and monitor the \dword{daq} system, as well as the detector components
@@ -1142,7 +1183,7 @@ Monitoring being a key requirement in the industry for computer clusters and the
 The DUNE FD \dword{daq} is an asynchronous, parallel distributed data processing system. 
 It is composed of many independent processes which ingest and produce messages. 
 The mechanisms of such message passing are generally called \dword{ipc}. 
-Referring to Figure~\ref{fig:fd-daq:layout}, \dword{ipc} is used for both in-band detector data flow between upstream \dword{daq} and back-end \dwords{eb} and for out-of-band messages as part of \dword{daqccm}.  The \dword{ipc} used by the \dword{daqdss} spans both descriptions as it passes derivations of a subset of detector data (trigger primitives, candidates) and culminates in a source of out-of-band message (\dwords{trigcommand}) to direct the readout by \dword{eb} and other components of detector data that is held in the upstream \dword{daq} buffers.
+Referring to Figure~\ref{fig:daq:layout}, \dword{ipc} is used for both in-band detector data flow between upstream \dword{daq} and back-end \dwords{eb} and for out-of-band messages as part of \dword{daqccm}.  The \dword{ipc} used by the \dword{daqdss} spans both descriptions as it passes derivations of a subset of detector data (trigger primitives, candidates) and culminates in a source of out-of-band message (\dwords{trigcommand}) to direct the readout by \dword{eb} and other components of detector data that is held in the upstream \dword{daq} buffers.
 
 The ZeroMQ~\cite{zeromq} smart socket library is 
 the basis of a system being developed and evaluated for parts of both in-band and out-of-band \dword{ipc}. 
@@ -1151,7 +1192,7 @@ As part of \dword{daqdss}, this includes the transfer of \dword{trigprimitive}, 
 In the upstream \dword{daq} this includes the \dfirst{daqubi} that  provides access to the upstream \dword{daq} primary buffers for queries by \dword{eb} and other components. 
 \dword{ipc}  must be implemented broadly across many \dword{daq} systems and ZeroMQ allows their problems to be solved in common, shared software.  As \dword{daqccm} has the most complex \dword{ipc}  needs, this work is organizationally considered part of this system.
 
-As described in~\ref{sec:fd-daq:design-backend}, \dword{artdaq}~\cite{artdaq} utilizes \dword{ipc}  between its back-end components. 
+As described in~\ref{sec:daq:design-backend}, \dword{artdaq}~\cite{artdaq} utilizes \dword{ipc}  between its back-end components. 
 It has been well tested with \dword{protodune} and other experiments. 
 \dword{artdaq} may be used for some portions of the \dword{ipc}  described above. 
 For example, if the \dword{daqubi} is implemented as an \dword{artdaq} Board Reader it would necessarily use \dword{artdaq} \dword{ipc} . 
@@ -1164,7 +1205,7 @@ Understanding how to optimally select an \dword{ipc}  for such parts of the \dwo
 The \dword{daqccm} software suite will run on approximately 15 servers interconnected by a \SI{1}{\Gbps} ethernet network to upstream \dword{daq}, \dword{daqdss}, \dword{daqbes} as well as detector and calibration daq interface elements. While this network has a lower throughput compared to the data network, it has many more endpoints O(2000).
 
 \subsection{Data Quality Monitoring}
-\label{sec:fd-daq:design-data-quality}
+\label{sec:daq:design-data-quality}
 
 While the \dword{daqccm} contains an element of monitoring (Section~\ref{sec:daq:design:ccm:monitoring}), here \dfirst{dqm} refers to a subsystem that quickly analyzes the data in order to determine the general quality of the detector and \dword{daq} operation.
 This is in order to allow operators to promptly detect and respond to any unexpected changes and assure high exposure times for later physics analyses. 
@@ -1176,7 +1217,7 @@ This system will be designed to allow it to evolve as the detector and its data 
 
 
 \subsection{Timing and Synchronization}
-\label{sec:sp-daq:design-timing}
+\label{sec:daq:design-timing}
 
 The \dfirst{daqtss} provides synchronous time services to the DAQ and the detector electronics.
 All components of the \dword{fd} use clocks derived from a single
@@ -1219,11 +1260,13 @@ one with an antenna at the surface at the Ross shaft, and the other
 with an antenna at the surface at the Yates shaft. Signals from either
 GPS are fed through single-mode optical fibers to the \dword{cuc}, where
 either GPS signal can act as a hot spare while the other is active. 
-Differential delays between these two paths are resolved by a second pair of fibers, one running back from the timing system to each antenna, allowing closed-loop delay estimation.
+Differential delays between these two paths are resolved by a second pair of 
+fibers, one running back from the timing system to each antenna, 
+allowing closed-loop delay estimation.
 
 
 \section{Design Validation and Development Plans}
-\label{sec:fd-daq:validation}
+\label{sec:daq:validation}
 
 The following strategy is being followed in order to validate and
 develop the \dword{dune} \dword{fd} \dword{daq}:
@@ -1240,7 +1283,7 @@ The design and implementation of the \dword{daq} is being carried out using an i
 The advantage of the prototyping model is also that it facilitates the identification of and collaboration among experts from a large number of institutions, through focussed efforts to achieve the short-term objectives established through each prototyping iteration.
 
 Once the identification of applicable technologies are completed and the overall system requirements are refined, the project will switch to an iterative incremental model, ensuring that, step-by-step, functional and performance requirements will be met by each of the sub-components individually, and by the \dword{daq} system globally.
-The overall schedule, summarized in Section~\ref{sec:fd-daq:schedule},
+The overall schedule, summarized in Section~\ref{sec:daq:schedule},
 reflects the different development and production time scales that are
 envisioned for the various \dword{daq} components.
 
@@ -1262,9 +1305,14 @@ will be used to finalize the \dword{daq} design.
 
 \subsection{ProtoDUNE Test Beam}
 
-\label{sec:fd-daq:protodune}
+\label{sec:daq:protodune}
 
-The \dword{fd} \dword{daq} consortium constructed and operated the \dword{daq} system~\cite{Sipos:2018auh} for \dword{protodune}, which included two parallel \dword{daq} readout architectures, one based on \dword{felix}, developed by ATLAS \cite{atlas-felix}, and the other on \dword{rce}, developed at SLAC. \dword{daq} design and construction for \dword{protodune} began in Q3 of 2016, and the system became operational at the start of the beam data run in Q4 of 2018. The detector is continuing to run at the time of writing, recording cosmic ray activity, and providing further input for \dword{daq} development toward \dword{dune}. 
+The \dword{fd} \dword{daq} consortium constructed and operated the \dword{daq} system~\cite{Sipos:2018auh} 
+for \dword{protodune}, which included two parallel \dword{daq} readout architectures, one based on \dword{felix}, 
+developed by ATLAS \cite{atlas-felix}, and the other on \dword{rce}, developed at SLAC. \dword{daq} design and construction for
+\dword{protodune} began in Q3 of 2016, and the system became operational at the start of the beam data run in Q4 of 2018. 
+The detector is continuing to run at the time of writing, recording cosmic ray activity, and providing further input for 
+\dword{daq} development toward \dword{dune}. 
 
 Figure~\ref{fig:daq-protodune} depicts the \dword{protodune} \dword{daq} system. 
 The \dword{daq} is split between the \dword{felix} and \dfirst{rce}
@@ -1319,7 +1367,7 @@ Outcomes specific to \dword{protodune} subsystems are discussed in
 greater detail in~\cite{Hennessy:CDRReview}. 
 
 \subsection{Ongoing Development}
-\label{sec:sp-daq:design-validation}
+\label{sec:daq:design-validation}
 
 \dword{daq} subsystem development is ongoing at \dword{protodune} at the time of
 writing. A detailed schedule for 2019 is available
@@ -1359,7 +1407,7 @@ The \dword{felix} I/O card interfaces with its host PC through 16-lane PCIe 3.0 
 It transfers the incoming WIB data directly into the host PC memory using continuous DMA transfer. The \dword{felix} host PC runs a software process that publishes the data to any client subscribing to it.
 Subscriptions may identify from which input optical links the received data stream will be sourced.
 The clients consuming these streams are ``BoardReader'' processes implemented in the \dword{artdaq} data acquisition toolkit.
-In order to sustain the data rate, modest modifications of the firmware and software were carried out specifically for \dword{protodune}: each \dword{felix} host receives and publishes data at $\sim$\SI{75}{\Gbps}. The BoardReader hosts are equipped with embedded Intel QuickAssist (QAT)~\footnote{Intel\textregistered QuickAssist Technology, \url{https://www.intel.com/content/www/us/en/architecture-and-technology/intel-quick-assist-technology-overview.html}.} technology for hardware accelerated data compression. The \dword{protodune} application of the \dword{felix} front-end readout is shown in Figure~\ref{fig:sp-daq:felix-pd-impl}.
+In order to sustain the data rate, modest modifications of the firmware and software were carried out specifically for \dword{protodune}: each \dword{felix} host receives and publishes data at $\sim$\SI{75}{\Gbps}. The BoardReader hosts are equipped with embedded Intel QuickAssist (QAT)~\footnote{Intel\textregistered QuickAssist Technology, \url{https://www.intel.com/content/www/us/en/architecture-and-technology/intel-quick-assist-technology-overview.html}.} technology for hardware accelerated data compression. The \dword{protodune} application of the \dword{felix} front-end readout is shown in Figure~\ref{fig:daq:felix-pd-impl}.
 
 
 In DUNE only a very small fraction of the data received via the \dword{felix}
@@ -1373,7 +1421,7 @@ implementing hit finding, data buffering, and possibly even local
 
 
 \begin{dunefigure}[Topology of the FELIX-based
-    upstream DAQ of ProtoDUNE]{fig:sp-daq:felix-pd-impl}{The topology of the \dword{felix}-based
+    upstream DAQ of ProtoDUNE]{fig:daq:felix-pd-impl}{The topology of the \dword{felix}-based
     upstream \dword{daq} of \dword{protodune} (from~\cite{pdsp-felix}). The \dword{felix} host servers are publishing the data from the \dwords{wib} over \SI{100}{Gb\per\second} network interfaces. The BoardReader hosts are carrying out trigger matching, data compression and forwarding of fragments to the event builder.}
  \includegraphics[width=0.9\textwidth]{daq-protodune-server-topology-2x2.pdf}
 \end{dunefigure}
@@ -1545,17 +1593,17 @@ crucial to continue working closely with the radiological task force
 to validate radiological the background assumptions.
 
 \begin{dunefigure}[Supernova burst trigger
-  efficiency]{fig:daq-snb-eff-Eweight}{Top: \dword{snb} trigger 
+  efficiency]{fig:daq-snb-eff-Eweight}{Top: \dword{snb} trigger
     efficiency as a function of the number of supernova neutrino
-    interactions in the 10 kton module, for a likelihood trigger
+    interactions in the \SI{10}{\kt} module, for a likelihood trigger
     approach that utilizes sum ADC shape information of
     \dwords{trigcandidate} input into the trigger decision. Bottom:
     For a \dword{snb} at the Large Magellanic Cloud, where 10 neutrino
   interactions are expected, the efficiency gain over a counting-only
-  trigger is significantly improved. }
- \includegraphics[width=0.7\textwidth, trim=0 8cm 3cm 6cm]{daq-efficiency-snb.pdf}%
-%\newline
- \includegraphics[width=0.7\textwidth, angle=-90]{daq-snb-eff-lmc.pdf}%
+  trigger is significantly improved. } %trim=left bottom right top
+\includegraphics[width=0.65\textwidth, trim=0cm 9cm 3cm 6cm]{daq-efficiency-snb.pdf}%
+\newline
+\includegraphics[width=0.65\textwidth, angle=-90,  trim=0cm 2cm 0cm 0cm]{daq-snb-eff-lmc.pdf}%
 \end{dunefigure}
 
 In the case of the high level filter, the consortium is exploring the
@@ -1584,6 +1632,8 @@ more than two orders of magnitude. Details may be found in~\citedocdb{11311}.
 The speed at which machine learning inference may be applied is under study.
 
 
+
+
 \subsubsection{Prototype Trigger Message Passing}
 
 A prototype trigger message passing (PTMP) system using elements of the \dword{ipc} mechanism described in Section~\ref{sec:daq:design-ipc} is currently under development and testing at \dword{protodune}.
@@ -1594,8 +1644,9 @@ Future work will include prototyping \dword{daqccm} functionality including \dwo
 
 PTMP has been successfully exercised to transfer trigger primitives from the software based hit finder. The short-term goal will be to successfully aggregate information from across an APA and feed the result to a trigger candidate finder which identifies horizontal muons. From this output a \dword{trigdecision} can be made.
 
+
 \subsection{Plan for Future Development}
-\label{sec:sp-daq:design-plans}
+\label{sec:daq:design-plans}
 
 As mentioned in the introduction of this section, at present, the development model chosen for the \dword{daq} system is the one of iterative prototyping.
 This model is widely used in projects in which requirements are still
@@ -1604,10 +1655,13 @@ This model will be used throughout 2019, making use of the \dword{protodune} set
 At a later stage, the \dword{daq} development will move to a more streamlined incremental model, ensuring that careful design precedes the final implementation of individual components.
 Most of the development will be carried out emulating the data inputs.
 On the other hand, the \dword{daq} will be validated regularly via test stand integration with detectors, such as \dword{protodune} or pre-installation sites.
-The overall development schedule with the main \dword{daq} milestones is shown in Section~\ref{sec:fd-daq:schedule}.
+The overall development schedule with the main \dword{daq} milestones is shown in Section~\ref{sec:daq:schedule}.
+
+%%%%%%
+
 
 \section{Production, Assembly, Installation and Integration}
-\label{sec:sp-daq:production}
+\label{sec:daq:production}
 
 The \dword{daq} system relies largely on commercial off-the-shelf components, with the exception of the timing system and the first stage of the upstream \dword{daq}.
 Therefore, the production and assembly aspects are simpler than for other systems, while of course the installation and integration stages are very important and have to be planned carefully, due to the large number of interfaces of the \dword{daq} system with other parts of the experiment.
@@ -1651,7 +1705,7 @@ networking and other \dword{daq} computing needs. An initial engineering design 
 
 Starting in Q3~2023, the data room will be ready for the installation of
 the \dword{daq} servers servicing the first module described in
-Section~\ref{sec:fd-daq:considerations}.  This will proceed over the
+Section~\ref{sec:daq:considerations}.  This will proceed over the
 next year, with servers being installed, cabled up, and tested.
 As much configuring and commissioning work as possible will be done over
 the network from the surface (or home institutions), to limit the number
@@ -1668,10 +1722,10 @@ Starting in Q3~2024, the \dword{daq} will thus be ready to connect fibers to the
 \dwords{wib} on the detector top as planes are installed, to allow their commissioning.
 
 The underground installation phase of the \dword{daq} system has the largest safety
-implications, which are discussed in Section~\ref{sec:fd-daq:safety}.
+implications, which are discussed in Section~\ref{sec:daq:safety}.
 
 \section{Organization and Project Management}
-\label{sec:sp-daq:organization}
+\label{sec:daq:organization}
 
 
 \subsection{Consortium Organization}
@@ -1732,14 +1786,14 @@ Stanford Linear Accelerator Lab (SLAC) & USA     \\ \colhline
 
 
 \subsection{Schedule and Milestones}
-\label{sec:fd-daq:schedule}
+\label{sec:daq:schedule}
 
-The high-level \dword{daq} milestones are listed in Table~\ref{tab:daq-sched}, interleaved with the top-level DUNE project milestones, and illustrated in Figure~\ref{fig:fd-daq:schedule}. Since the \dword{daq} project is largely based on commercial off-the-shelf components, it can be seen in the overall timeline that many of the components are procured relatively late in the project schedule.
+The high-level \dword{daq} milestones are listed in Table~\ref{tab:daq-sched}, interleaved with the top-level DUNE project milestones, and illustrated in Figure~\ref{fig:daq:schedule}. Since the \dword{daq} project is largely based on commercial off-the-shelf components, it can be seen in the overall timeline that many of the components are procured relatively late in the project schedule.
 
 \begin{dunetable}
 [DAQ Consortium Schedule]
 {p{0.65\textwidth}p{0.25\textwidth}}
-{tab:daq-sched}ane 
+{tab:daq-sched}
 {\dword{daq} Consortium Schedule}   
 Milestone & Date (Month YYYY)   \\ \toprowrule
 
@@ -1778,13 +1832,13 @@ End of \dword{daq} Standalone Commissioning & December 2025 \\ \colhline
 End of \dword{daq} Commissioning & December 2026  \\ 
 \end{dunetable}
 
-\begin{dunefigure}[DAQ schedule for first \SI{10}{\kilo\tonne} module]{fig:daq-schedule}{\dword{daq} schedule for first \SI{10}{\kilo\tonne} module. \label{fig:fd-daq:schedule}}
+\begin{dunefigure}[DAQ schedule for first \SI{10}{\kilo\tonne} module]{fig:daq-schedule}{\dword{daq} schedule for first \SI{10}{\kilo\tonne} module. \label{fig:daq:schedule}}
   \includegraphics[width=0.95\textwidth,clip,trim=1cm 2cm 1cm 2cm]{daq-schedule.pdf}
 \end{dunefigure}
 
 
 \subsection{Safety and Risks}
-\label{sec:fd-daq:safety}
+\label{sec:daq:safety}
 
 Personnel safety during design, construction, testing, installation, and
 commissioning of the system is crucial for the success of the
@@ -1821,8 +1875,8 @@ $>20$\%, $5-20$\%, and $<5$\% cost increase, respectively; and high
 (H), medium (M), and low (L) schedule impact is identified as 
 $>6$ months, $2-6$ months, and $<2$ months delay, respectively.
 
-%\input{generated/risks-longtable-SP-FD-DAQ}
-\fixme{anne to uncomment}
+\input{generated/risks-longtable-SP-FD-DAQ}
+%\fixme{anne to uncomment}
 
 The following risks and mitigation strategies have been identified:
 
