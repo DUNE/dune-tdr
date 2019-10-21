@@ -1497,7 +1497,7 @@ contains one \dword{ptc}, %power and timing card (\dword{ptc}),
  \dwords{wib} %) 
  and a passive \dword{ptb}
 that fans out clock signals and \dword{lv} power from the \dword{ptc} to the 
-\dwords{wib}. The \dword{wiec} must provide Faraday-shielded housing, 
+\dwords{wib}. The \dword{wiec} must provide Faraday-shielded housing and 
 robust ground connections from the \dwords{wib} to the detector ground 
 (Section~\ref{sec:fdsp-tpcelec-design-grounding}). Only optical
 connections are used for the communication to the \dword{daq} and the
@@ -1507,7 +1507,7 @@ slow controls, to avoid introducing noise in the \dword{ce} \fdth.
 [Exploded view of the cold electronics signal flange for ProtoDUNE-SP]
 {fig:tpcelec-flange}
 {Exploded view of the \dword{ce} signal flange for \dword{pdsp}.  
-The design for the \dword{spmod} \dword{ce} 
+The design for the \dword{dune} \dword{spmod} \dword{ce} 
 signal flange will be very similar (with two \dword{ce} signal flanges per \fdth).}
 \includegraphics[width=0.9\linewidth]{sp-tpcelec-flange.png}
 \end{dunefigure}
@@ -1530,7 +1530,8 @@ The \dword{ptc} provides a bidirectional fiber interface to the
 timing system. The clock and data streams are separately fanned out to the 
 five \dwords{wib} as shown in Figure~\ref{fig:tpcelec-wib-timing}. 
 A clock-data separator on the 
-\dword{wib} separates the signal received from the timing system into clock and data. 
+\dword{wib} separates the signal received from the timing system into 
+clock and data signals.
 Timing endpoint firmware for receiving and transmitting 
 the clock is integrated into the \dword{wib} \dword{fpga}.
 The \dword{spmod} timing system, described in Section~\ref{sec:daq:design-timing}, 
@@ -1540,7 +1541,8 @@ functionality at the \dword{wib} endpoint.
 \begin{dunefigure}
 [PTC and timing distribution to the WIB and FEMBs]
 {fig:tpcelec-wib-timing}
-{\Dword{ptc} and timing distribution to the \dword{wib} and \dwords{femb} used in \dword{pdsp}.}
+{\Dword{ptc} and timing distribution to the \dword{wib} and \dwords{femb} used in \dword{pdsp}.
+A similar design will be adopted for the \dword{dune} \dword{spmod}.}
 \includegraphics[width=0.75\linewidth]{sp-tpcelec-wib-timing-v2.pdf}
 \end{dunefigure}
 
@@ -1554,7 +1556,7 @@ and fanned out on the \dword{ptb} to each \dword{wib}, which provides the
 necessary \SI{12}{V} \dword{dc}-\dword{dc} conversions and fans
 the \dword{lv} power out to each of the  \dwords{femb} supplied 
 by that \dword{wib}, as shown in Figure~\ref{fig:tpcelec-wib-power}. 
-The output of the \dword{wib} converters is further filtered by a 
+The output of the \dword{wib} converters is also filtered by a 
 common-mode choke, and each voltage line provided to the \dwords{femb}
 is individually controlled, regulated, and monitored.
 
@@ -1562,12 +1564,12 @@ is individually controlled, regulated, and monitored.
 [Low voltage power distribution to the WIB and FEMBs]
 {fig:tpcelec-wib-power}
 {\dword{lv} power distribution to the \dword{wib} and \dwords{femb} 
-for \dword{dune}. In the current design, up to \num{4} separate 
+for \dword{dune}. In the current design, up to four separate 
 voltages can be provided from the \dword{wib} to each \dword{femb}.
 Measurements with prototype \dwords{femb} will inform the final
 design of the power distribution, and the number of different
-voltages sent to the \dword{wib} will be chosen to minimize the
-voltage drops along the cold cables and to optimize the readout
+voltages sent to the \dword{wib} will be chosen to reduce the
+voltage drops along the cold cables and to minimize the readout
 noise.}
 \includegraphics[width=0.65\linewidth]{sp-tpcelec-wib-power.pdf}
 \end{dunefigure}
@@ -1584,15 +1586,15 @@ cables and optical fibers connecting to external systems.
 [Warm interface board]
 {fig:tpcelec-dune-wib}
 {\dword{wib} block diagram including the fiber optic connections to
-the \dword{daq} backend, slow controls, and the timing system, and the
+the \dword{daq} backend, slow controls, and the timing system, as well as the
 data readout, clock, and control signals to the \dwords{femb}.}
 \includegraphics[width=0.8\linewidth]{sp-tpcelec-dune-wib.pdf}
 \end{dunefigure}
 
 As shown in Figure~\ref{fig:tpcelec-dune-wib}, the \dword{wib} can
 receive the encoded timing signal over bidirectional optical
-fibers on the front panel and process them using either the on-board
-\dword{fpga}or clock synthesizer chip to provide the clock required
+fibers on the front panel; it can then process them using either the on-board
+\dword{fpga} or clock synthesizer chip to provide the clock required
 by the \dword{tpc} electronics.
 The reference \dword{asic} design 
 currently uses 8b/10b encoding; if the \dword{slac} \dword{cryo} 
@@ -1601,7 +1603,7 @@ currently uses 8b/10b encoding; if the \dword{slac} \dword{cryo}
 
 The \dword{fpga} on the \dword{wib} will have transceivers that can 
 drive the high-speed data to the \dword{daq} system up to
-\SI{10}{Gbps} per link, indicating that all data from
+\SI{10}{Gbps} per link, meaning that all data from
 two \dwords{femb} (2$\times\SI{5}{Gbps}$) could be transmitted 
 on a single link. The \dword{fpga} will have an additional 
 transceiver I/O for an optical \SI{1}{Gbps} Ethernet connection, which 
@@ -1611,20 +1613,20 @@ For system tests, discussed later in Section~\ref{sec:fdsp-tpcelec-qa-facilities
 the \dword{wiec}, \dword{wib}, and \dword{ptc} developed for \dword{pdsp}
 are being used. A special version of the \dword{wib} has been developed
 for use with \dwords{femb} equipped with the \dword{cryo} \dword{asic},
-that require a different power and clock distribution scheme. Plans are
+which require a different power and clock distribution scheme. Plans are
 being put in place to redesign the \dword{wib}, and eventually make 
 minor changes also to the \dword{ptc} and the \dword{wiec}, to use 
 less expensive \dwords{fpga} and to be able to program independently
-the voltage rails used to provide power the \dwords{femb}. While in
+the voltage rails used to provide power to the \dwords{femb}. While in
 the current \dword{wib} it is possible to monitor and turn on and off
-independently these voltage rails, the redesign will include the
+these voltage rails independently, the redesign will include the
 capability of setting independent voltage and current limits on each
-one of them. In addition it is planned to add the possibility of measuring
+one of them. In addition, it is planned to add the possibility of measuring
 the delay of the propagation
-of the clock signal between the \dword{wib} and the \dwords{femb}. With
-this feature it will be possible to align in situ the sampling time of different
-\dwords{femb} to a precision of a few ns, without relying on the 
-measurement of the cable lengths, which is the method that was used
+of the clock signals between the \dword{wib} and the \dwords{femb}. With
+this feature, it will be possible to align the sampling time of different
+\dwords{femb} to a precision of a few ns in situ without relying on the 
+measurement of the cable lengths, which was necessary
 in \dword{pdsp}.
 
 
