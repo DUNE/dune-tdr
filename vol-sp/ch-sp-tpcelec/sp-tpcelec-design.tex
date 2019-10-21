@@ -234,7 +234,7 @@ In addition to
 describing \dword{larasic}, \dword{coldadc}, and \dword{coldata},
 we also discuss two alternative solutions, one based on a 
 \dword{cots} \dword{adc}, and one where the functionality of the
-three \dwords{asic} is implemented in a single chip, \dword{cryo}.
+three-\dword{asic} is implemented in a single chip, \dword{cryo}.
 
 \begin{dunefigure}
 [The complete FEMB assembly as used in ProtoDUNE-SP]
@@ -1636,7 +1636,7 @@ in \dword{pdsp}.
 
 The charge deposited on each wire of the \dword{apa}s installed 
 in the \dword{dune} \dword{spmod} is digitized at a frequency of
-$\sim\,\SI{2}{MHz}$, as discussed in 
+$\SI{2}{MHz}$, as discussed in 
 Section~\ref{sec:fdsp-tpcelec-overview-requirements}. This requires
 that the \dword{tpc} electronics be synchronized to a level of the order of \SI{10}{ns}, which is
 much smaller than the time difference between two charge samples.
@@ -1658,7 +1658,7 @@ protocol~\cite{bib:docdb1651,bib:docdb11233} for aligning
 the phase of the clock at the endpoint of the distribution tree.
 
 The timing distribution and synchronization system ensures that
-all the \dwords{wib} are synchronized to within $\sim\SI{3}{ns}$. 
+all the \dwords{wib} are synchronized to within $\SI{3}{ns}$. 
 One possible way of synchronizing the \dwords{femb} is the one
 that was used in \dword{pdsp}, which relies on the fact that 
 that all the cables connecting the \dwords{wib} to the
@@ -1666,14 +1666,14 @@ that all the cables connecting the \dwords{wib} to the
 difference of \SI{0.5}{m} corresponds to a difference in the
 sampling time of \SI{2.5}{ns}). The same approach could be used
 for the \dword{dune} \dword{spmod}, correcting for the top-bottom 
-\dword{apa} cable length difference (corresponding to $\sim\,\SI{65}{ns}$) 
+\dword{apa} cable length difference (corresponding to $\sim\SI{65}{ns}$) 
 inside the \dword{fpga} of the \dword{wib}. The exact correction
 factor could be obtained by measuring the time propagation 
 difference for a sample of short and long cables prior to the 
 installation of the \dwords{femb} on the \dword{apa}s. 
 Synchronizing the \dword{ce} with the \dword{pds} requires one
 additional time constants that correspond to the transit 
-time of the Fast Command sent from the \dword{wib} to
+time of the fast command sent from the \dword{wib} to
 \dword{coldata} and from there to the \dword{coldadc},
 which includes the propagation time along the cables
 (\SI{45}{ns} for the \SI{9}{m} long cables to the top \dword{apa}s
@@ -1682,8 +1682,8 @@ plus the propagation time inside the \dwords{asic}. This overall
 time constant can be obtained offline from the data, but it represents 
 at most a correction of $\mathcal{O}(\SI{150}{\mu m})$ on the 
 position of a track along the drift distance.
-Instead of relying on cable measurements we are also considering
-the addition of a timer inside the \dword{wib}'s \dword{fpga},
+Instead of relying on cable measurements, we are also considering
+the addition of a timer inside the \dword{wib}'s \dword{fpga}
 to measure the transit time of a command
 sent to the \dword{femb} and its corresponding return
 message. This study will help us understand whether the 
@@ -1691,24 +1691,24 @@ relative phases of the \dword{femb} and the \dword{wib}
 can be aligned more precisely.
 
 The communication between the \dword{wib} and the \dword{daq} 
-backend is asynchronous and the \num{64}-bit time-stamp, that
+backend is asynchronous and the \num{64}-bit time-stamp, which
 is used to indicate the time at which the signal waveform was
 sampled~\ref{sec:daq:design-timing}, is inserted in the data frame
 in the \dword{wib}'s \dword{fpga}. 
-For the three-\dwords{asic} solution, the communication
+For the three-\dword{asic} solution, the communication
 from the \dword{femb} to the \dword{wib} is also
 asynchronous and a \num{8}-bit time stamp is sent to
 count the number of \dword{adc} samples (triggered by
-the \dword{femb} with a ``Fast Command'' signal) from the last
+the \dword{femb} with a fast command) from the last
 ``Sync'' signal, as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-coldata}.
 This \num{8}-bit time stamp is used only to ensure
 that the \dword{femb} and the \dword{wib} are
-still in sync. 
+still synchronized. 
 
-In contrast to the three-\dwords{asic} solution, 
-in the \dword{cryo}-based \dwords{femb} solution 
+In contrast to the three-\dword{asic} solution, 
+in the \dword{cryo} solution 
 the communication between the \dword{femb} and 
-\dword{wib} is entirely synchronous, using a \SI{56}{MHz} 
+\dword{wib} is entirely synchronous, and instead uses a \SI{56}{MHz} 
 clock. In order to properly align the phase of the
 \dword{adc} sampling for the top and bottom \dword{apa}s,
 appropriate delays must be added to the sampling
