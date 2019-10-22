@@ -1767,7 +1767,7 @@ best scheme for connecting the shields of the power cables. In
 \dword{pdsp} the shield of the warm power cables is connected to
 ground on both the power supply side and on the \dword{ce} flange.
 Other shield connection schemes are being investigated in \dword{pdsp}
-and the connection scheme yielding the lowest read-out noise will be
+and the connection scheme yielding the lowest readout noise will be
 used for \dword{dune}.
 
 Switching power supplies controlled by the slow controls system provide
@@ -1820,21 +1820,22 @@ detector are also installed on the detector mezzanine.
 \subsection{ProtoDUNE-SP Results}
 \label{sec:fdsp-tpcelec-overview-pdune}
 
-The \dword{pdsp} detector is a 700-ton fiducial volume
-\dword{lartpc} with 15,360 sense wires. 
-The system was deployed in a beamline at the CERN Neutrino Platform 
+The \dword{pdsp} detector features a \dword{lartpc} with 15,360 sense wires
+with a fiducial mass of roughly \num{700} tons of \lar. 
+The system was deployed in a hadrons and electrons beamline at the CERN Neutrino Platform 
 in 2018 and continues to take cosmic event data into 2019. The goal of 
 the \dword{pdsp} \dword{tpc} readout was to validate the concept 
 and the design of the integrated \dword{apa}+\dword{ce} readout 
 and measure the performance of the \dword{tpc} electronics system with components 
 as close as possible in design to those in the final \dword{dune} \dword{tpc} readout.
 In the case of the \dword{tpc} electronics, most of the detector components 
-used in \dword{pdsp} are prototypes of the \dword{dune} ones discussed in the 
-previous Sections. The major difference is the \dword{femb}, where an
-early version of \dword{larasic} (P2) is used for the \dword{fe}, followed
+used in \dword{pdsp} are prototypes of the \dword{dune} \dword{fd} ones discussed in the 
+previous sections. The major difference is the \dword{femb} (and associated
+\dwords{asic}), where an
+early version of \dword{larasic} (P2) is used for the \dword{fe} \dword{asic}, followed
 by the first prototype (P1) of a different \dword{adc}, using the ``domino'' architecture 
-and implemented in the \SI{180}{nm} technology, and by
-a \dword{fpga} that provided the data serialization functionality.
+and implemented in the \SI{180}{nm} technology, and finally by
+an \dword{fpga} that provided the data serialization functionality.
 
 Each of the six \dword{pdsp} \dword{apa}+\dword{ce}
 readout units consists of 2,560 sense wires, of which 960 are \SI{6}{m} 
@@ -1842,28 +1843,28 @@ long collection wires and 1,600 are \SI{7.4}{m} long induction wires.
 Five of the six \dword{apa}s were tested in a full-scale cold box in 
 cold gaseous nitrogen (GN$_2$) with a complete \dword{tpc} electronics readout system,  
 identical to the one %on the detector, 
-deployed in \dword{pdsp}, before installation in the cryostat,
-while the sixth %one
- was installed without first going through the cold
-box testing. Figure~\ref{fig:apa2-cycle} shows the measured noise, in 
+deployed in \dword{pdsp}, before installation in the cryostat;
+the sixth was installed without first going through the cold
+box testing. Figure~\ref{fig:apa2-cycle} shows the measured noise level, 
+represented by the \dword{enc} in units of 
 electrons, for the collection (X) plane and the two induction (V, U) 
 planes as well as the \dword{femb} temperature in the cold box as a 
 function of the cold cycle time. At a stable temperature of 
-\SI{160}{K} the \dword{enc} for all three wire planes is less than 500~e$^-$.
+\SI{160}{K}, the \dword{enc} for all three wire planes is less than 500~e$^-$.
 
 \begin{dunefigure}
 [ProtoDUNE-SP APA \#2 ENC levels measured in GN$_2$ in the CERN cold box]
 {fig:apa2-cycle}
 {Left $y$ axis: \dword{enc} (in electrons) for U, V, and X (red, blue, and green 
-curves) sense wire planes as a function of time (hours) for the APA \#2 cold 
+curves) sense wire planes as a function of time (hours) for the APA 2 cold 
 cycle in GN$_2$ in the CERN cold box; right $y$ axis: temperature 
 (orange curve) measured at the level of the \dword{fe} electronics.}
 \includegraphics[width=0.95\linewidth]{sp-tpcelec-apa2.png}
 \end{dunefigure}
 After the cryostat was filled with \dword{lar} and the drift and wire 
-bias voltages were set to their nominal values
-99.7\% of the \dword{tpc} readout channels were live.
-There is a total of 42 channels that are not responsive. Of these:
+bias voltages were set to their nominal values,
+99.7\% of the \dword{tpc} readout channels were found to be functioning properly.
+A total of 42 channels were found to be unresponsive. Of these:
 \begin{itemize}
 \item{14 channels were identified based on tests performed prior
 to the insertion of the \dword{apa} into the cryostat as having
@@ -1871,11 +1872,12 @@ no capacitive load on the \dword{fe} electronics, suggesting an open
 connection somewhere upstream  of the \dword{ce} system;}
 \item{24 additional channels showed the same problem after the
 cryostat was filled with \dword{lar} (three of these, all on the
-first APA were already observed during testing in the cold box);}
-\item{in four cases the \dword{fe} electronics is dead: two of these
+first APA, were already observed during testing in the cold box);}
+\item{four channels were associated with the \dword{fe} electronics
+not functioning properly: two of these
 channels appeared in tests performed after the cathode high
-voltage was raised to \SI{120}{KV}, and two more
-appeared when the high voltage reached \SI{160}{KV}.}
+voltage was raised to \SI{120}{kV}, and two more
+appeared when the high voltage reached \SI{160}{kV}.}
 \end{itemize}
 
 As discussed in Section~\ref{sec:fdsp-apa-qa-protodune-ops-dead-channels},
@@ -1920,7 +1922,7 @@ installation on the \dwords{femb}. The channels on all three planes
 with \dword{enc} smaller than \SI{300}{e$^-$} have an open connection somewhere in 
 front of the \dword{ce} system. Figure~\ref{fig:ENC-all} summarizes
 \dword{enc} levels in the entire \dword{pdsp} detector both before and
-after the application of a simple common-mode filter similar
+after the application of a simple offline common-mode noise filter similar
 to the one used in \dword{microboone}~\cite{Acciarri:2017sde};
 an improvement of roughly 100~e$^-$ is seen on all planes. 
 
@@ -1938,7 +1940,7 @@ conditions.}
 [TPC ENC levels for all channels of the ProtoDUNE-SP detector]
 {fig:ENC-all}
 {\dword{enc} levels (in electrons) for all channels of the \dword{pdsp} detector, both
-before and after the application of a simple common-mode filter.}
+before and after the application of a simple offline common-mode filter.}
 \includegraphics[width=0.99\linewidth]{sp-tpcelec-ENC-Combined.pdf}
 \end{dunefigure}
 
@@ -1950,7 +1952,7 @@ listed in Section~\ref{sec:fdsp-tpcelec-overview-requirements}.
 A comparison of the raw data from 
 a \dword{pdsp} event (Figure~\ref{fig:pdsp-display}) to 
 that from a \dword{microboone} event (Figure~\ref{fig:microboone-display}~\cite{Acciarri:2017sde}) 
-demonstrates the improvements achieved in \dwords{lartpc} performance. 
+demonstrates the improvements achieved in \dword{lartpc} performance. 
 The \dword{pdsp} event was collected very early in the data taking
 period when the charge collection efficiency was still limited
 by the amount of impurities in the \dword{lar}; it shows very little
@@ -1960,13 +1962,14 @@ event display after offline noise removal.
 \begin{dunefigure}
 [Raw data from a ProtoDUNE-SP event]
 {fig:pdsp-display}
-{Display of the charge deposited on the collection wires ($x$-axis) as
-a function of the drift time ($y$-axis) for a \dword{pdsp} event 
-that includes two electromagnetic showers and a four-prong interaction.
+{Display of the charge deposited on the collection wires (wire number on the $x$-axis) as
+a function of the drift time (on the $y$-axis) for a \dword{pdsp} event 
+that includes two electromagnetic showers and a four tracks in the
+final state of the interaction.
 The color associated with each time sample on the \dword{apa}
 wires gives a measurement of the charge measured by the \dword{ce}
-readout, increasing from the smallest values (blue) to the largest
-ones (red).}
+readout, with blue representing the smallest charge values and
+red representing the largest charge values.}
 \includegraphics[width=1.0\linewidth]{sp-tpcelec-4prongdisplay.png}
 \end{dunefigure}
 
@@ -1995,25 +1998,25 @@ identified noise sources are subtracted~\cite{Acciarri:2017sde}.}
 \includegraphics[width=0.85\linewidth]{sp-tpcelec-PSNR.pdf}
 \end{dunefigure}
 
-The \dword{snr} has been evaluated a selected cosmic muon sample, with tracks
+The \dword{snr} has been evaluated using a selected cosmic muon sample, with tracks
 crossing the \dword{lar} volume at shallow angle with respect to the anode plane and
-large angle with respect to the direction of the wires in the plane considered
-for \dword{snr} characterization. The charge deposited on each wire in a plane is evaluated
+large angle with respect to the direction of the wires in each plane considered
+for \dword{snr} characterization. The charge deposited on each wire in a given plane is evaluated
 using the pulse height (peak) of the hit found in the raw waveform.
 A correction taking into account different relative angle between track and wire
 direction has been applied to normalize the hit response. The noise value is extracted
-from a fitted Gaussian width on the pedestal distribution of the waveform baseline of the
-wire. The electric field in the \dword{tpc} volume was at nominal level of \SI{500}{V/cm},
+from the width of the Gaussian fitted on the pedestal distribution of the waveform baseline.
+The electric field in the \dword{tpc} volume was at the nominal level of \SI{500}{V/cm},
 and the \dword{lar} purity for the runs considered in this analysis was about \SI{5.5}{ms}
 as measured by the purity monitors, corresponding to $\sim35$\% charge loss due to
 attachment for tracks close to the cathode. This measurement ignores the effect of the
 space charge, which introduces distortions of the electric field in the \dword{tpc} volume that
 may locally change the recombination factor and therefore affect the \dword{snr} value. Finally,
-the measurement is made both before and after the application of a simple common-mode noise filter.
+the measurement is made both before and after the application of a simple offline common-mode noise filter.
 The distribution of the \dword{snr} for all the wires in the sample of muon tracks considered is
 shown in Figure~\ref{fig:pdsp-signalovernoise}~\cite{pend_PDSP_PerfPaper}. Looking before (after)
 the application of the common-mode noise filter, for the collection plane the mean value of the
-distribution of \dword{snr} is 38 (49), for the first induction plane it is 16 (18), and for the
+\dword{snr} distribution is 38 (49), for the first induction plane it is 16 (18), and for the
 second induction plane it is 19 (21).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2161,7 +2164,7 @@ Section~\ref{sec:fdsp-tpcelec-design-femb} discusses the redesign of the connect
 [Spectrum of the noise on the ProtoDUNE-SP APA wires]
 {fig:pdsp-noise}
 {Spectrum of the noise on the first induction plane of the \dword{pdsp} \dword{apa}s before
- and after applying a simple common-mode filter and partially mitigating \dword{adc} issues~\cite{pend_PDSP_PerfPaper}.}
+ and after applying a simple offline ommon-mode filter and partially mitigating \dword{adc} issues~\cite{pend_PDSP_PerfPaper}.}
 %\includegraphics[width=0.49\linewidth]{sp-tpcelec-avgFFT-WithoutFilt.pdf}
 %\includegraphics[width=0.49\linewidth]{sp-tpcelec-avgFFT-WithFilt.pdf}
 \includegraphics[width=0.7\linewidth]{sp-tpcelec-UplaneNoiseFFT.pdf}
@@ -2174,7 +2177,7 @@ between its different components. The level of noise mentioned in Section~\ref{s
 and approximately $\SI{650}{e^-}$ on the induction wires) 
 was measured with raw data, without any
 filtering or selection applied to the pulses on the \dword{apa}
-wires. A simple common-mode filter can significantly reduce the 
+wires. A simple offline common-mode filter can significantly reduce the 
 noise, particularly at low frequencies, as shown in Figure~\ref{fig:pdsp-noise},  
 which compares the noise spectrum of the first induction plane of the \dword{apa}
 before and after the filtering~\cite{pend_PDSP_PerfPaper}. The spectrum prior to the
@@ -2338,7 +2341,7 @@ April 2019, with the delivery of chips expected for July 2019.
 The design of this first complete prototype builds on the success of
 the first partial prototype (CDP1) that was fabricated and tested in 2017.
 This first prototype included the control registers inside the 
-\dword{asic}, the \dword{i2c} interface required to program and read-out
+\dword{asic}, the \dword{i2c} interface required to program and readout
 the status of these registers, the \dword{spi} interface required to
 configure \dword{larasic}, the phase-lock loop required to generate
 clocks internal to the chip, the data serializer, and a current-mode
