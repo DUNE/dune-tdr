@@ -199,11 +199,23 @@ candidates with low deposited energy each (approximately \SI{10}{\MeV}) are foun
 granularity of the detector readout elements, a hierarchical \dword{daqdss} is used to
 provide data processing and triggering and to facilitate optional data reduction and filtering. 
 
-The \dword{daq}  system must have $>$99\% efficiency for particles depositing $>$\SI{100}{\MeV}
-of energy in the detector for localized high-energy triggers; it also must have
-sufficient efficiency for low energy deposition in the detector as
-needed to yield $>$90\% efficiency for a \dword{snb} occurring up to a
-distance of \SI{100}{\kilo\parsec}, per \dword{dune} requirements.
+The \dword{daq}  system must have $>$99\% efficiency for particles
+depositing $>$\SI{100}{\MeV} of energy in the detector for localized
+high-energy triggers. The system's architecture must also provide a 
+mechanism for triggering on galactic supernova bursts with $>$95\%
+efficiency for a supernova burst producing at least 60 
+interactions with a neutrino energy $>$\SI{10}{\MeV} in 12~kt of active
+detector mass, during the first \SI{10}{\second} of the burst, per
+\dword{dune} requirements. This requirement ensures sensitivity to the
+great majority of \dwords{snb} in our galaxy as well as some bursts in small
+nearby galaxies, as described in this document's \dword{snb} physics requirements
+section. The \dword{daq} architecture must also provide a mechanism for recording
+neutrino interactions associated with those bursts over a \SI{30}{\second}
+period, with a goal of \SI{100}{\second}. During this period, the full raw
+data information must be stored. The rationale for the latter is that most
+models of \dwords{snb} show structure in the neutrino flux for up to
+\SI{30}{\second}, and there is potential for interesting measurements to be made
+up to \SI{100}{\second}.
 
 Offline considerations require the \dword{daq} to reduce the
 full \dword{fd} data volume for offline permanent storage to  \offsitepbpy.
@@ -216,7 +228,11 @@ The instantaneous readout rate can be much higher, for example to accommodate ca
 
 
 For planning, the \dword{daq} will allot an average \dword{snb} trigger rate of one per month.
-Given current understanding of \dword{snb} rates and the $>$90\% expected efficiency for \dword{snb} within \SI{100}{\kilo\parsec}, most such triggers will be due to fluctuations of low energy radiological backgrounds and, potentially, excess noise.
+Given current understanding of \dword{snb} rates and the $>$95\%
+expected efficiency for a \dword{snb} with at least 60 interactions
+each of minimum \SI{10}{\MeV} in true neutrino energy, most such triggers will be due to fluctuations
+of low energy radiological backgrounds and, potentially, excess
+noise. 
 Such triggers will prompt \snbtime of data from the entire module to be read out.
 At this average rate and if saved to offline storage, the \dword{snb}
 triggers will produce \SI{1.8}{\peta\byte/\year} uncompressed from one
@@ -266,7 +282,7 @@ Self-triggering on \dword{snb} activity is a unique challenge for the
 \dword{dune} \dword{fd}, and an aspect of the design that has never been demonstrated
 in a \dword{lartpc}. The challenge of \dword{snb} triggering is two-fold. 
 First, the activity of the individual \dword{snb} neutrino interactions
-should be relatively low energy (\SIrange{10}{30}{\mega\electronvolt}),
+should be relatively low energy (\SIrange{5}{30}{\mega\electronvolt}),
 often indistinguishable from pile up of radiological background activity in the
 detector.  Triggering on an ensemble of \bigo{100} events expected on
 average in the case of a galactic supernova burst is, therefore,
@@ -276,7 +292,8 @@ sufficient buffering capability must be designed into the system to
 capture the corresponding signals. 
 Furthermore, to ensure high efficiency in collecting \dword{snb} interactions
 that, individually, are below low-energy activity threshold, data from
-all channels in the detector will be recorded over an extended and contiguous period,  which is specified to \SI{100}{\second}, around every \dword{snb}
+all channels in the detector will be recorded over an extended and
+contiguous period,  which is specified to \SIrange{30}{100}{\second}, around every \dword{snb}
 trigger. This time has been defined in consultation with the \dword{dune}
 physics groups.
 
@@ -720,7 +737,8 @@ signals, as well as beam interactions,
 atmospheric neutrinos, rare baryon-number-violating events, and cosmic
 ray events that deposit visible energy in excess of \SI{100}{\MeV}. 
 It must also select data associated with potential
-\dwords{snb} within \SI{100}{\kilo\parsec} with $>$90\% efficiency. 
+\dwords{snb} producing 60 neutrino interactions over a span of \SI{10}{\second} in 12~ktons of active
+liquid argon mass each with \SI{10}{\MeV} in neutrino energy, with $>$95\% efficiency. 
 Furthermore, to meet the requirement that the \dword{dune} \dword{fd} maintain
 $<$\offsitepbpy to permanent storage, the \dword{daqdss}
 must make \dword{daqdsn} decisions in a way that allows the \dword{daq} 
@@ -736,7 +754,7 @@ At the lowest level, trigger primitives are formed on a per-channel basis, and r
 \Dword{trigcandidate} information is subsequently used to inform a
 module-level \dword{trigdecision}, which generates a \dword{trigcommand};
 this takes the form of either a localized high energy trigger or an
-extended SNB trigger, and each prompts the corresponding readout of an
+extended \dword{snb} trigger, and each prompts the corresponding readout of an
 event record. Details on the
 exact algorithm implementation for \dword{trigprimitive}, \dword{trigcandidate}, and \dword{trigcommand} generation can be found
 in~\citedocdb{11215} and~\citedocdb{14522} and references therein. 
@@ -1561,7 +1579,7 @@ beam $\nu_e$ and $\nu_\mu$ events in excess of 99\% for visible energies
 above \SI{100}{\MeV}, as shown in Figure~\ref{fig:daq-tc-eff-allinc}.
 
 Low-energy \dwords{trigcandidate} furthermore can serve as input to the
-SNB trigger. Simulations demonstrate that the trigger candidate
+\dword{snb} trigger. Simulations demonstrate that the trigger candidate
 efficiency for any individual \dword{snb} neutrino interaction is on the order
 of 20-30\%. However, a multiplicity-based \dword{snb}
 \dword{trigdecision} that integrates low-energy trigger candidates over an up to \SI{10}{\second}
@@ -1630,8 +1648,6 @@ $>$88\%, $>$92\%, or $>$99\%, respectively. Such a
 filter could potentially be applied to reduce the event record size by
 more than two orders of magnitude. Details may be found in~\citedocdb{11311}.
 The speed at which machine learning inference may be applied is under study.
-
-
 
 
 \subsubsection{Prototype Trigger Message Passing}
