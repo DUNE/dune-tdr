@@ -1,0 +1,87 @@
+Some common design considerations for calibration devices include stability, reliability, and longevity, so calibration systems can be operated for the lifetime of the experiment (\dunelifetime). Such longevity is uncommon for any device, so the overall design permits replacing devices where possible, namely the parts that are external to the cryostat. The systems must also adhere to relevant global requirements of the \dword{dune} detector. Table~\ref{tab:specs:DP-CALIB} shows the top-level overall requirements for calibration subsystems along with global \dword{dune} requirements that are relevant for calibration. For example, \dword{dune} requires the \efield  on any instrumentation device inside the cryostat to be less than 30 kV/cm to minimize the risk of dielectric breakdown in \dword{lar}. Another consideration important for event reconstruction is understanding the maximum tolerable level of noise on the readout electronics due to calibration devices and implementing proper grounding schemes to minimize it. \dword{pddp} is evaluating this. In Table~\ref{tab:specs:DP-CALIB}, two values are quoted for most of the parameters: 1) specification, which is the minimum requirement to guarantee baseline performance, and 2) goal, an ideal requirement for achieving improved precision.
+
+Developing the \dword{sp} module calibration systems has already started, so the design considerations for \dword{dp} closely follow \dword{sp} while taking into account some important differences.
+
+The longer drift length of \dpmaxdrift in \dword{dp} (instead of \spmaxdrift in \dword{sp}) suggests that diffusion causes a wider spread in the size of the electron cloud. For the nominal field of \dpnominaldriftfield, the transverse diffusion coefficient is \SI{13.1586}{\square \cm \per \s} \cite{Li:2015rqa,larpropertiesbnl}, leading
+%% calculation sigma = sqrt(2*D_T*t) where t = L/v s the drift time
+%% v = 0.1648 cm/us = 0.1648e6 cm/s
+%% sqrt(2*13.1586*1200/(0.1648e6)) 
+to a maximum spread of \SI{4.4}{\milli\m}; the maximum in \dword{sp}, for a \spmaxdrift drift, is \SI{2.4}{\milli\m}. Taking these values in quadrature with the readout pitch, which is smaller in \dword{dp}, the spatial precision is about \SI{5.3}{\milli\m}, comparable in both detectors. 
+
+The longer drift length in \dword{dp} leads to proportionally higher ion charge accumulation and higher space charge effects. This is compounded by the fact that the charge multiplication in the gas phase leads to ion feedback into the liquid. We therefore expect larger \efield distortions in \dword{dp}, up to about \SI{15}{\%}~\cite{bib:yu2018a}. However, the relative effect of a \SI{1}{\%} distortion of the \efield in the liquid phase on the amount of charge reaching the gas-liquid interface should be similar to the effect of a \SI{1}{\%} distortion of the \efield in the \dword{sp} on the amount of charge reaching the \dword{apa} wires. Therefore, in terms of energy response, the requirements on \efield measurement precision should be similar in both \dword{sp} and \dword{dp}.
+
+For the ionization laser system, the energy and position reconstruction requirements for physics measurements lead to requirements for the necessary precision in measuring the \efield as well as its spatial coverage and granularity. The precision of the \efield measurement with the laser system must be about \SI{1}{\%} so that the effect from \efield on the collected charge, via the dependence of the recombination factor on \efield, is well below \SI{1}{\%}. This is also motivated by consistency with the high level \dword{dune} specification of \SI{1}{\%} on field uniformity throughout the volume for component alignment and the \dword{hv} system. For laser coverage, to keep the \efield measurement at the $\sim$\SI{1}{\%} level, we are aiming for a coverage of \SI{93}{\%} or more of the total \dword{fv}. This is more than in \dword{sp} because the maximum expected distortions are also larger. The granularity requirement for the laser measurement is estimated based on the \dword{fv} uncertainty requirements (\SI{1}{\%}) and corresponding uncertainty requirements (\SI{1.5}{\cm}) in each coordinate. The required voxel size will depend on the magnitude of the \efield distortions. In regions of large distortions (of up to \SI{15}{\%}, which is possible because of gas phase ion feedback), \num{10}$\times$\num{10}$\times$\SI{10}{\cubic\cm} granularity is necessary, but  \num{30}$\times$\num{30}$\times$\SI{30}{\cubic\cm} should be sufficient for distortions up to \SI{5}{\%}, as discussed in Section~\ref{sec:dp-calib-laser-req}
+
+%\todo{Jose, check the paragraph below. This is different in SP?}
+The laser beam location must also meet the level of reconstruction requirement in each coordinate, approximately \SI{4}{\milli\m} over \SI{12}{\m}, where the latter is the distance between two consecutive laser ports in the beam direction. This results in a stringent requirement of \ang{0.03} (or \SI{0.5}{\mrad}). In terms of design constraints, the absence of detector elements (like \dwords{apa} and \dwords{cpa} in \dword{sp}) within the \dword{tpc} makes it easier to cover the \dword{dp} module with fewer beams, as long as \dword{fc} penetration is possible. 
+%\fixme{JM: We already talk about this in the Interface section. Maybe we don't need to repeat here? I'm OK with commenting these next 2 sentences out. SG: agreed.}
+%Interfaces with the \dword{pds} need careful evaluation, since it will not be possible to avoid hitting the reflector panels. The PMTs' HV will likely need to be turned off for the laser calibration. 
+
+%\todo{Make sure these numbers match the numbers in the DAQ section}
+%\todo{JM: they do now, I've updated the DAQ section as well.}
+The data volume for the ionization laser system must be at least \num{37}~TB/year/\SI{10}{\kt}, assuming \num{400}k laser pulses, \num{10}$\times$\num{10}$\times$\SI{10}{\cubic\cm} voxel sizes, a \SI{100}{\micro\s} zero suppression window, and two dedicated calibration campaigns per year.
+
+%\paragraph{\dlong{pns}}
+%{\bf \dlong{pns}:} 
+For the \dword{pns} system, fewer detector elements leads to a more uniform distribution of neutrons, an advantage of \dword{dp}. On the other hand, if injected from the top, the neutrons must penetrate the readout planes, which can reduce the neutron flux going into \lar. This is currently under investigation. For the \dword{pns} system, the system must provide a sufficient neutron event rate to make spatially separated precision measurements across the detector of a comparable size to the voxels probed by the laser (\num{30}$\times$\num{30}$\times$\SI{30}{\cubic\cm}) for most regions of the detector (\SI{75}{\%}). 
+% 1st draft
+%For the supernova program, measurements from the \dword{pns} \fixme{This abbreviation is in neither glossary.} should demonstrate 1\% energy scale, 5\% energy resolution, and 0.5 MeV detection threshold, so each voxel should have sufficient neutron event rate to achieve this. %\todo{KM: Improve or remind connection to SN program? even though it's comparable? SG: maybe for 2nd draft?}
+%rewritten for 2nd draft
+For the \dword{snb} program, the sensitivity to distortions of the neutrino energy spectrum depends on the uncertainties in the detection threshold and the reconstructed energy scale and resolution. Studies discussed in the physics \dword{tdr} present target ranges for the uncertainties in these parameters~\cite{bib:docdb14068} as a function of energy. The measurements with the \dword{pns} system should provide response corrections and performance estimates, so those uncertainty targets are met throughout the whole volume. This ensures that each voxel has sufficient neutron event rate (percent level statistical uncertainty).
+
+%\fixme{Insert correct reference to physics TDR ch7}
+%\fixme{Put PNS in glossary and use that.}
+
+%\fixme{SG: These numbers below should match the numbers in the DAQ section}
+%\fixme{JM: Fixed. But the PNS data volume is now different. Do we need to change the requirements table?}
+
+In terms of data volume requirements, the \dword{pns} system needs approximately \num{170}~TB/year/\SI{10}{\kt}, assuming \num{e5} neutrons/pulse, \num{100} neutron captures/\si{\cubic\m}
+%m$^{3}$ 
+and \num{130} observed neutron captures per pulse, and two calibration runs per year.
+%\todo{Need to update DAQ calculation based on number of channels.} 
+
+Table~\ref{tab:fdgen-calib-all-reqs} shows the full set of requirements related to all calibration subsystems. More details on each requirement can be found under dedicated subsections.   
+%\todo{SP-CALIB-3 is coming out weird in table 1.1, needs to be fixed.}
+
+%\fixme{Can the second part of this title be put in a footnote to Table 1.1? SG: we would prefer to leave it here}
+
+%\fixme{Anne uncommented 5/20 (uncomment when spec table available)}
+%%\input{generated/req-just-DP-CALIB.tex}
+\input{generated/req-longtable-DP-CALIB.tex}
+
+%Full requirements table (not autogenerated) is below for completeness.
+\begin{dunetable}
+[Full specifications for calibration subsystems]
+{p{0.45\linewidth}p{0.25\linewidth}p{0.25\linewidth}}
+{tab:fdgen-calib-all-reqs}
+{Full list of Specifications for the Calibration Subsystems.}   
+Quantity/Parameter	& Specification	& Goal		 \\ \toprowrule      
+
+Noise from calibration devices	 & $\ll$ 1000 enc   & \\ \colhline    Max. \efield near calibration devices & < 30 kV/cm & <15 kV/cm \\ \colhline                     
+
+\textbf{Direct Ionization Laser System} &    &   \\ \colhline   
+\efield measurement precision & 1\% & <1\% \\ \colhline
+\efield measurement coverage & > 93\% & 100\% \\ \colhline
+\efield measurement granularity & < \num{10}$\times$\num{10}$\times$\SI{10}{\cubic\cm} & \num{10}x\num{10}x\num{10}~cm \\ \colhline
+%Top field cage penetrations (alternative design) & to achieve desired laser coverage & \\ \colhline
+DAQ rate per 10~kton & 37 TB/year & 74 TB/year \\ \colhline
+Longevity, internal parts	& \dunelifetime		& > \dunelifetime   \\    \colhline     
+Longevity, external parts	& 5 years			& > \dunelifetime   \\ \colhline
+
+\textbf{Laser Beam Location System} & & \\ \colhline                      
+Laser beam location precision & 0.5~mrad & 0.5~mrad \\ \colhline
+Longevity	& \dunelifetime			& > \dunelifetime   \\ \colhline    
+
+\textbf{Photoelectron Laser System}	   &   &  \\ \colhline            
+Longevity, internal parts	& \dunelifetime		& > \dunelifetime   \\    \colhline 
+Longevity, external parts	& 5 years			& > \dunelifetime   \\ \colhline 
+
+\textbf{Pulsed Neutron Source System}	   &   &  \\ \colhline        
+Coverage & > 75\% & 100\% \\ \colhline
+DAQ rate per 10~kton & 170~TB/year & 340~TB/year \\ \colhline 
+Longevity	& 3 years			& \dunelifetime   \\        
+\end{dunetable}
+
+%\fixme{ Where shall we put the following text?\\
+%For the RSDS, ports will need to be selected close to the end-walls. An advantage of this system in DP is that the source movement is along the drift direction, so several runs can be taken at different positions along the drift coordinate, which is important to check the detector response.
+%}
