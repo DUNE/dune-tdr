@@ -234,7 +234,7 @@ In addition to
 describing \dword{larasic}, \dword{coldadc}, and \dword{coldata},
 we also discuss two alternative solutions, one based on a 
 \dword{cots} \dword{adc}, and one where the functionality of the
-three \dwords{asic} is implemented in a single chip, \dword{cryo}.
+three-\dword{asic} is implemented in a single chip, \dword{cryo}.
 
 \begin{dunefigure}
 [The complete FEMB assembly as used in ProtoDUNE-SP]
@@ -740,7 +740,7 @@ In addition to the configuration commands, \dword{coldata}
 receives a master clock and a fast command signal on a \dword{lv} 
 differential pair from
 the \dword{wib}. Currently the master clock is \SI{64}{MHz}, but it will be
-changed to \SI{62.5}{MHz} to simplify the overall \dword{fd} \dword{spmod} 
+changed to \SI{62.5}{MHz} to simplify the overall \dword{dune} \dword{spmod} 
 synchronization, as already discussed in the case of \dword{coldadc}. The clock 
 used for sampling the \dword{adc} is created inside
 \dword{coldata} by dividing the master clock by \num{32}. The relative phase
@@ -880,7 +880,7 @@ temperature for the \dword{coldata} \SI{1.28}{Gbps} output link.}
 \subsubsubsection{Commercial Off-the-shelf \dshort{adc} Option}
 \label{sec:fdsp-tpcelec-design-femb-alt-cots}
 
-The \dword{sbnd} collaboration has been exploring the \dword{cots} \dword{adc} option 
+The \dword{sbnd} Collaboration has been exploring the \dword{cots} \dword{adc} option 
 for the \dword{tpc} readout electronics development since spring
 2017~\cite{Chen:2018zic}. After a market survey, a few candidate \dwords{adc} 
 using the \dword{sar} architecture were identified that would continue
@@ -963,10 +963,10 @@ of $\sim\SI{330}{e^-}$ with \SI{1}{$\mu$s} peaking time.}
 
 
 The \dword{slac} \dword{cryo} \dword{asic} differs from the reference three-chip 
-design by combining the functions of an analog preamplifier, \dword{adc}, and 
+design by combining the functions of an analog pre-amplifier, \dword{adc}, and 
 data serialization along with transmission for \num{64} wire channels into a single 
 chip. It is based on a design developed for the \dword{nexo} experiment~\cite{nEXO} 
-and differs from it only in the design of the preamplifier, which is modified for 
+and differs from it only in the design of the pre-amplifier, which is modified for 
 the higher capacitance of the \dword{dune} \dword{spmod} wires compared to the short
 strips of \dword{nexo}. The \dwords{femb} constructed using this chip would use only 
 two \dwords{asic}, compared to the \num{18} (eight \dword{larasic}s, eight \dword{coldadc}s, and 
@@ -987,7 +987,7 @@ generation, and the configuration of the registers.
 \includegraphics[width=0.9\textwidth]{sp-tpcelec-cryo-schematic.png}
 \end{dunefigure}
 
-The current signal from each wire is amplified using a preamplifier with pole-zero
+The current signal from each wire is amplified using a pre-amplifier with pole-zero
 cancellation~\cite{DeGeronimo:2011zz} and an anti-alias fifth-order 
 Bessel filter (Figure~\ref{fig:cryo-FE}). Provisions are also made for injection 
 of test pulses. Gain and peaking time are adjustable to values similar to 
@@ -1034,7 +1034,7 @@ of 12-bit \SI{2}{MSPS} data can be transmitted with a digital bandwidth of only 
 which is significantly lower than the required bandwidth of the reference design (\SI{1.28}{Gbps}).
 
 One key concern with mixed-signal \dwords{asic} is the possibility of interference from the 
-digital side causing noise on the very sensitive preamplifier. To avoid this interference, 
+digital side causing noise on the very sensitive pre-amplifier. To avoid this interference, 
 the \dword{cryo} design uses well established techniques for isolating the substrate;
 these are described in the literature~\cite{yeh} and have been successfully used in previous 
 \dwords{asic}. Furthermore, power domains of the various sections of the \dwords{asic} are 
@@ -1228,13 +1228,20 @@ the \dword{ce} box, they must get %these should be
 channeled through the two side tubes
 of the \dword{apa}'s frame, from where they would reach the top of the cryostat.
 As already discussed in Section~\ref{sec:fdsp-tpcelec-overview-requirements},
-a test setup is being prepared at \dword{bnl} to measure the
+a test setup has been prepared at \dword{bnl} to measure the
 maximum power that can be dissipated in \dword{lar} at a
-depth equivalent to those of the \dwords{femb} installed on
-the bottom \dword{apa}. Together with measurements of the
-power consumption by new \dwords{asic}, this will inform
-the need for further design of a system to collect any
-argon bubbles and channel them through the \dword{apa} frames.
+depth equivalent to that of the \dwords{femb} installed on
+the bottom \dword{apa}. Initial measurements indicate that
+the \dwords{asic} mounted on the \dwords{femb} are not going
+to cause boiling of the \lar  inside the \dword{ce} boxes. 
+We have measured the power required to cause boiling at
+a pressure equivalent to that of \SI{12}{m} of \lar.
+We have also observed that with the current \dword{asic} designs
+and power dissipation we have a safety factor of \num{20}
+in terms of total power and of at least two in terms of power
+density. These measurements will be repeated once prototype
+\dwords{femb} with the three-\dword{asic} and 
+\dword{cryo} solutions become available.
 
 \begin{dunefigure}
 [Prototype CE box used in ProtoDUNE-SP]
@@ -1439,8 +1446,9 @@ ten sets of nine twisted-pair wires for power, and eight bias voltage cables as 
 This insertion test was successful once
 a \SI{6.35}{cm} (2.5") diameter conduit was inserted inside the
 \dword{apa} frame to present a uniform cross section to
-the cables and the cables were restrained with a mesh. We expect that it will be possible
-to route the cold cables through the \dword{apa} frames.
+the cables and the cables were restrained with a mesh. These tests have been
+successfully repeated in October 2019 at Ash River using the setup with 
+two stacked \dword{apa} frames, which is described in Section~\ref{sec:fdsp-apa-qa-prototyping}.
 
 The cable plant discussed above for the reference design with the three \dword{asic}s
 can be used also for \dwords{femb} populated with the
@@ -1497,7 +1505,7 @@ contains one \dword{ptc}, %power and timing card (\dword{ptc}),
  \dwords{wib} %) 
  and a passive \dword{ptb}
 that fans out clock signals and \dword{lv} power from the \dword{ptc} to the 
-\dwords{wib}. The \dword{wiec} must provide Faraday-shielded housing, 
+\dwords{wib}. The \dword{wiec} must provide Faraday-shielded housing and 
 robust ground connections from the \dwords{wib} to the detector ground 
 (Section~\ref{sec:fdsp-tpcelec-design-grounding}). Only optical
 connections are used for the communication to the \dword{daq} and the
@@ -1507,7 +1515,7 @@ slow controls, to avoid introducing noise in the \dword{ce} \fdth.
 [Exploded view of the cold electronics signal flange for ProtoDUNE-SP]
 {fig:tpcelec-flange}
 {Exploded view of the \dword{ce} signal flange for \dword{pdsp}.  
-The design for the \dword{spmod} \dword{ce} 
+The design for the \dword{dune} \dword{spmod} \dword{ce} 
 signal flange will be very similar (with two \dword{ce} signal flanges per \fdth).}
 \includegraphics[width=0.9\linewidth]{sp-tpcelec-flange.png}
 \end{dunefigure}
@@ -1530,7 +1538,8 @@ The \dword{ptc} provides a bidirectional fiber interface to the
 timing system. The clock and data streams are separately fanned out to the 
 five \dwords{wib} as shown in Figure~\ref{fig:tpcelec-wib-timing}. 
 A clock-data separator on the 
-\dword{wib} separates the signal received from the timing system into clock and data. 
+\dword{wib} separates the signal received from the timing system into 
+clock and data signals.
 Timing endpoint firmware for receiving and transmitting 
 the clock is integrated into the \dword{wib} \dword{fpga}.
 The \dword{spmod} timing system, described in Section~\ref{sec:daq:design-timing}, 
@@ -1540,7 +1549,8 @@ functionality at the \dword{wib} endpoint.
 \begin{dunefigure}
 [PTC and timing distribution to the WIB and FEMBs]
 {fig:tpcelec-wib-timing}
-{\Dword{ptc} and timing distribution to the \dword{wib} and \dwords{femb} used in \dword{pdsp}.}
+{\Dword{ptc} and timing distribution to the \dword{wib} and \dwords{femb} used in \dword{pdsp}.
+A similar design will be adopted for the \dword{dune} \dword{spmod}.}
 \includegraphics[width=0.75\linewidth]{sp-tpcelec-wib-timing-v2.pdf}
 \end{dunefigure}
 
@@ -1554,7 +1564,7 @@ and fanned out on the \dword{ptb} to each \dword{wib}, which provides the
 necessary \SI{12}{V} \dword{dc}-\dword{dc} conversions and fans
 the \dword{lv} power out to each of the  \dwords{femb} supplied 
 by that \dword{wib}, as shown in Figure~\ref{fig:tpcelec-wib-power}. 
-The output of the \dword{wib} converters is further filtered by a 
+The output of the \dword{wib} converters is also filtered by a 
 common-mode choke, and each voltage line provided to the \dwords{femb}
 is individually controlled, regulated, and monitored.
 
@@ -1562,12 +1572,12 @@ is individually controlled, regulated, and monitored.
 [Low voltage power distribution to the WIB and FEMBs]
 {fig:tpcelec-wib-power}
 {\dword{lv} power distribution to the \dword{wib} and \dwords{femb} 
-for \dword{dune}. In the current design, up to \num{4} separate 
+for \dword{dune}. In the current design, up to four separate 
 voltages can be provided from the \dword{wib} to each \dword{femb}.
 Measurements with prototype \dwords{femb} will inform the final
 design of the power distribution, and the number of different
-voltages sent to the \dword{wib} will be chosen to minimize the
-voltage drops along the cold cables and to optimize the readout
+voltages sent to the \dword{wib} will be chosen to reduce the
+voltage drops along the cold cables and to minimize the readout
 noise.}
 \includegraphics[width=0.65\linewidth]{sp-tpcelec-wib-power.pdf}
 \end{dunefigure}
@@ -1584,15 +1594,15 @@ cables and optical fibers connecting to external systems.
 [Warm interface board]
 {fig:tpcelec-dune-wib}
 {\dword{wib} block diagram including the fiber optic connections to
-the \dword{daq} backend, slow controls, and the timing system, and the
+the \dword{daq} backend, slow controls, and the timing system, as well as the
 data readout, clock, and control signals to the \dwords{femb}.}
 \includegraphics[width=0.8\linewidth]{sp-tpcelec-dune-wib.pdf}
 \end{dunefigure}
 
 As shown in Figure~\ref{fig:tpcelec-dune-wib}, the \dword{wib} can
 receive the encoded timing signal over bidirectional optical
-fibers on the front panel and process them using either the on-board
-\dword{fpga}or clock synthesizer chip to provide the clock required
+fibers on the front panel; it can then process them using either the on-board
+\dword{fpga} or clock synthesizer chip to provide the clock required
 by the \dword{tpc} electronics.
 The reference \dword{asic} design 
 currently uses 8b/10b encoding; if the \dword{slac} \dword{cryo} 
@@ -1601,7 +1611,7 @@ currently uses 8b/10b encoding; if the \dword{slac} \dword{cryo}
 
 The \dword{fpga} on the \dword{wib} will have transceivers that can 
 drive the high-speed data to the \dword{daq} system up to
-\SI{10}{Gbps} per link, indicating that all data from
+\SI{10}{Gbps} per link, meaning that all data from
 two \dwords{femb} (2$\times\SI{5}{Gbps}$) could be transmitted 
 on a single link. The \dword{fpga} will have an additional 
 transceiver I/O for an optical \SI{1}{Gbps} Ethernet connection, which 
@@ -1611,20 +1621,20 @@ For system tests, discussed later in Section~\ref{sec:fdsp-tpcelec-qa-facilities
 the \dword{wiec}, \dword{wib}, and \dword{ptc} developed for \dword{pdsp}
 are being used. A special version of the \dword{wib} has been developed
 for use with \dwords{femb} equipped with the \dword{cryo} \dword{asic},
-that require a different power and clock distribution scheme. Plans are
+which require a different power and clock distribution scheme. Plans are
 being put in place to redesign the \dword{wib}, and eventually make 
 minor changes also to the \dword{ptc} and the \dword{wiec}, to use 
 less expensive \dwords{fpga} and to be able to program independently
-the voltage rails used to provide power the \dwords{femb}. While in
+the voltage rails used to provide power to the \dwords{femb}. While in
 the current \dword{wib} it is possible to monitor and turn on and off
-independently these voltage rails, the redesign will include the
+these voltage rails independently, the redesign will include the
 capability of setting independent voltage and current limits on each
-one of them. In addition it is planned to add the possibility of measuring
+one of them. In addition, it is planned to add the possibility of measuring
 the delay of the propagation
-of the clock signal between the \dword{wib} and the \dwords{femb}. With
-this feature it will be possible to align in situ the sampling time of different
-\dwords{femb} to a precision of a few ns, without relying on the 
-measurement of the cable lengths, which is the method that was used
+of the clock signals between the \dword{wib} and the \dwords{femb}. With
+this feature, it will be possible to align the sampling time of different
+\dwords{femb} to a precision of a few ns in situ without relying on the 
+measurement of the cable lengths, which was necessary
 in \dword{pdsp}.
 
 
@@ -1634,7 +1644,7 @@ in \dword{pdsp}.
 
 The charge deposited on each wire of the \dword{apa}s installed 
 in the \dword{dune} \dword{spmod} is digitized at a frequency of
-$\sim\,\SI{2}{MHz}$, as discussed in 
+$\SI{2}{MHz}$, as discussed in 
 Section~\ref{sec:fdsp-tpcelec-overview-requirements}. This requires
 that the \dword{tpc} electronics be synchronized to a level of the order of \SI{10}{ns}, which is
 much smaller than the time difference between two charge samples.
@@ -1656,7 +1666,7 @@ protocol~\cite{bib:docdb1651,bib:docdb11233} for aligning
 the phase of the clock at the endpoint of the distribution tree.
 
 The timing distribution and synchronization system ensures that
-all the \dwords{wib} are synchronized to within $\sim\SI{3}{ns}$. 
+all the \dwords{wib} are synchronized to within $\SI{3}{ns}$. 
 One possible way of synchronizing the \dwords{femb} is the one
 that was used in \dword{pdsp}, which relies on the fact that 
 that all the cables connecting the \dwords{wib} to the
@@ -1664,14 +1674,14 @@ that all the cables connecting the \dwords{wib} to the
 difference of \SI{0.5}{m} corresponds to a difference in the
 sampling time of \SI{2.5}{ns}). The same approach could be used
 for the \dword{dune} \dword{spmod}, correcting for the top-bottom 
-\dword{apa} cable length difference (corresponding to $\sim\,\SI{65}{ns}$) 
+\dword{apa} cable length difference (corresponding to $\sim\SI{65}{ns}$) 
 inside the \dword{fpga} of the \dword{wib}. The exact correction
 factor could be obtained by measuring the time propagation 
 difference for a sample of short and long cables prior to the 
 installation of the \dwords{femb} on the \dword{apa}s. 
 Synchronizing the \dword{ce} with the \dword{pds} requires one
 additional time constants that correspond to the transit 
-time of the Fast Command sent from the \dword{wib} to
+time of the fast command sent from the \dword{wib} to
 \dword{coldata} and from there to the \dword{coldadc},
 which includes the propagation time along the cables
 (\SI{45}{ns} for the \SI{9}{m} long cables to the top \dword{apa}s
@@ -1680,8 +1690,8 @@ plus the propagation time inside the \dwords{asic}. This overall
 time constant can be obtained offline from the data, but it represents 
 at most a correction of $\mathcal{O}(\SI{150}{\mu m})$ on the 
 position of a track along the drift distance.
-Instead of relying on cable measurements we are also considering
-the addition of a timer inside the \dword{wib}'s \dword{fpga},
+Instead of relying on cable measurements, we are also considering
+the addition of a timer inside the \dword{wib}'s \dword{fpga}
 to measure the transit time of a command
 sent to the \dword{femb} and its corresponding return
 message. This study will help us understand whether the 
@@ -1689,24 +1699,24 @@ relative phases of the \dword{femb} and the \dword{wib}
 can be aligned more precisely.
 
 The communication between the \dword{wib} and the \dword{daq} 
-backend is asynchronous and the \num{64}-bit time-stamp, that
+backend is asynchronous and the \num{64}-bit time-stamp, which
 is used to indicate the time at which the signal waveform was
 sampled~\ref{sec:daq:design-timing}, is inserted in the data frame
 in the \dword{wib}'s \dword{fpga}. 
-For the three-\dwords{asic} solution, the communication
+For the three-\dword{asic} solution, the communication
 from the \dword{femb} to the \dword{wib} is also
 asynchronous and a \num{8}-bit time stamp is sent to
 count the number of \dword{adc} samples (triggered by
-the \dword{femb} with a ``Fast Command'' signal) from the last
+the \dword{femb} with a fast command) from the last
 ``Sync'' signal, as discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-coldata}.
 This \num{8}-bit time stamp is used only to ensure
 that the \dword{femb} and the \dword{wib} are
-still in sync. 
+still synchronized. 
 
-In contrast to the three-\dwords{asic} solution, 
-in the \dword{cryo}-based \dwords{femb} solution 
+In contrast to the three-\dword{asic} solution, 
+in the \dword{cryo} solution 
 the communication between the \dword{femb} and 
-\dword{wib} is entirely synchronous, using a \SI{56}{MHz} 
+\dword{wib} is entirely synchronous, and instead uses a \SI{56}{MHz} 
 clock. In order to properly align the phase of the
 \dword{adc} sampling for the top and bottom \dword{apa}s,
 appropriate delays must be added to the sampling
@@ -1757,7 +1767,7 @@ best scheme for connecting the shields of the power cables. In
 \dword{pdsp} the shield of the warm power cables is connected to
 ground on both the power supply side and on the \dword{ce} flange.
 Other shield connection schemes are being investigated in \dword{pdsp}
-and the connection scheme yielding the lowest read-out noise will be
+and the connection scheme yielding the lowest readout noise will be
 used for \dword{dune}.
 
 Switching power supplies controlled by the slow controls system provide
@@ -1810,21 +1820,22 @@ detector are also installed on the detector mezzanine.
 \subsection{ProtoDUNE-SP Results}
 \label{sec:fdsp-tpcelec-overview-pdune}
 
-The \dword{pdsp} detector is a 700-ton fiducial volume
-\dword{lartpc} with 15,360 sense wires. 
-The system was deployed in a beamline at the CERN Neutrino Platform 
+The \dword{pdsp} detector features a \dword{lartpc} with 15,360 sense wires
+with a fiducial mass of roughly \num{700} tons of \lar. 
+The system was deployed in a hadrons and electrons beamline at the CERN Neutrino Platform 
 in 2018 and continues to take cosmic event data into 2019. The goal of 
 the \dword{pdsp} \dword{tpc} readout was to validate the concept 
 and the design of the integrated \dword{apa}+\dword{ce} readout 
 and measure the performance of the \dword{tpc} electronics system with components 
 as close as possible in design to those in the final \dword{dune} \dword{tpc} readout.
 In the case of the \dword{tpc} electronics, most of the detector components 
-used in \dword{pdsp} are prototypes of the \dword{dune} ones discussed in the 
-previous Sections. The major difference is the \dword{femb}, where an
-early version of \dword{larasic} (P2) is used for the \dword{fe}, followed
+used in \dword{pdsp} are prototypes of the \dword{dune} \dword{fd} ones discussed in the 
+previous sections. The major difference is the \dword{femb} (and associated
+\dwords{asic}), where an
+early version of \dword{larasic} (P2) is used for the \dword{fe} \dword{asic}, followed
 by the first prototype (P1) of a different \dword{adc}, using the ``domino'' architecture 
-and implemented in the \SI{180}{nm} technology, and by
-a \dword{fpga} that provided the data serialization functionality.
+and implemented in the \SI{180}{nm} technology, and finally by
+an \dword{fpga} that provided the data serialization functionality.
 
 Each of the six \dword{pdsp} \dword{apa}+\dword{ce}
 readout units consists of 2,560 sense wires, of which 960 are \SI{6}{m} 
@@ -1832,28 +1843,28 @@ long collection wires and 1,600 are \SI{7.4}{m} long induction wires.
 Five of the six \dword{apa}s were tested in a full-scale cold box in 
 cold gaseous nitrogen (GN$_2$) with a complete \dword{tpc} electronics readout system,  
 identical to the one %on the detector, 
-deployed in \dword{pdsp}, before installation in the cryostat,
-while the sixth %one
- was installed without first going through the cold
-box testing. Figure~\ref{fig:apa2-cycle} shows the measured noise, in 
-electrons, for the collection (X) plane and the two induction (V, U) 
+deployed in \dword{pdsp}, before installation in the cryostat;
+the sixth was installed without first going through the cold
+box testing. Figure~\ref{fig:apa2-cycle} shows the measured noise level, 
+represented by the \dword{enc} in units of 
+electrons, for the collection ($X$) plane and the two induction ($V$, $U$) 
 planes as well as the \dword{femb} temperature in the cold box as a 
 function of the cold cycle time. At a stable temperature of 
-\SI{160}{K} the \dword{enc} for all three wire planes is less than 500~e$^-$.
+\SI{160}{K}, the \dword{enc} for all three wire planes is less than 500~e$^-$.
 
 \begin{dunefigure}
 [ProtoDUNE-SP APA \#2 ENC levels measured in GN$_2$ in the CERN cold box]
 {fig:apa2-cycle}
-{Left $y$ axis: \dword{enc} (in electrons) for U, V, and X (red, blue, and green 
-curves) sense wire planes as a function of time (hours) for the APA \#2 cold 
+{Left $y$ axis: \dword{enc} (in electrons) for $U$, $V$, and $X$ (red, blue, and green 
+curves) sense wire planes as a function of time (hours) for the APA 2 cold 
 cycle in GN$_2$ in the CERN cold box; right $y$ axis: temperature 
 (orange curve) measured at the level of the \dword{fe} electronics.}
 \includegraphics[width=0.95\linewidth]{sp-tpcelec-apa2.png}
 \end{dunefigure}
 After the cryostat was filled with \dword{lar} and the drift and wire 
-bias voltages were set to their nominal values
-99.7\% of the \dword{tpc} readout channels were live.
-There is a total of 42 channels that are not responsive. Of these:
+bias voltages were set to their nominal values,
+99.7\% of the \dword{tpc} readout channels were found to be functioning properly.
+A total of 42 channels were found to be unresponsive. Of these:
 \begin{itemize}
 \item{14 channels were identified based on tests performed prior
 to the insertion of the \dword{apa} into the cryostat as having
@@ -1861,11 +1872,12 @@ no capacitive load on the \dword{fe} electronics, suggesting an open
 connection somewhere upstream  of the \dword{ce} system;}
 \item{24 additional channels showed the same problem after the
 cryostat was filled with \dword{lar} (three of these, all on the
-first APA were already observed during testing in the cold box);}
-\item{in four cases the \dword{fe} electronics is dead: two of these
+first APA, were already observed during testing in the cold box);}
+\item{four channels were associated with the \dword{fe} electronics
+not functioning properly: two of these
 channels appeared in tests performed after the cathode high
-voltage was raised to \SI{120}{KV}, and two more
-appeared when the high voltage reached \SI{160}{KV}.}
+voltage was raised to \SI{120}{kV}, and two more
+appeared when the high voltage reached \SI{160}{kV}.}
 \end{itemize}
 
 As discussed in Section~\ref{sec:fdsp-apa-qa-protodune-ops-dead-channels},
@@ -1910,14 +1922,14 @@ installation on the \dwords{femb}. The channels on all three planes
 with \dword{enc} smaller than \SI{300}{e$^-$} have an open connection somewhere in 
 front of the \dword{ce} system. Figure~\ref{fig:ENC-all} summarizes
 \dword{enc} levels in the entire \dword{pdsp} detector both before and
-after the application of a simple common-mode filter similar
+after the application of a simple offline common-mode noise filter similar
 to the one used in \dword{microboone}~\cite{Acciarri:2017sde};
 an improvement of roughly 100~e$^-$ is seen on all planes. 
 
 \begin{dunefigure}
 [TPC ENC levels measured at ProtoDUNE-SP after \lar fill]
 {fig:apa3-noise}
-{\dword{enc} (in electrons) for all U, V, and X (red, blue, and green curves) sense 
+{\dword{enc} (in electrons) for all $U$, $V$, and $X$ (red, blue, and green curves) sense 
 wire planes for one \dword{pdsp} \dword{apa} %with the detector in 
 under nominal operating 
 conditions.}
@@ -1928,7 +1940,7 @@ conditions.}
 [TPC ENC levels for all channels of the ProtoDUNE-SP detector]
 {fig:ENC-all}
 {\dword{enc} levels (in electrons) for all channels of the \dword{pdsp} detector, both
-before and after the application of a simple common-mode filter.}
+before and after the application of a simple offline common-mode filter.}
 \includegraphics[width=0.99\linewidth]{sp-tpcelec-ENC-Combined.pdf}
 \end{dunefigure}
 
@@ -1940,7 +1952,7 @@ listed in Section~\ref{sec:fdsp-tpcelec-overview-requirements}.
 A comparison of the raw data from 
 a \dword{pdsp} event (Figure~\ref{fig:pdsp-display}) to 
 that from a \dword{microboone} event (Figure~\ref{fig:microboone-display}~\cite{Acciarri:2017sde}) 
-demonstrates the improvements achieved in \dwords{lartpc} performance. 
+demonstrates the improvements achieved in \dword{lartpc} performance. 
 The \dword{pdsp} event was collected very early in the data taking
 period when the charge collection efficiency was still limited
 by the amount of impurities in the \dword{lar}; it shows very little
@@ -1950,13 +1962,14 @@ event display after offline noise removal.
 \begin{dunefigure}
 [Raw data from a ProtoDUNE-SP event]
 {fig:pdsp-display}
-{Display of the charge deposited on the collection wires ($x$-axis) as
-a function of the drift time ($y$-axis) for a \dword{pdsp} event 
-that includes two electromagnetic showers and a four-prong interaction.
+{Display of the charge deposited on the collection wires (wire number on the $x$-axis) as
+a function of the drift time (on the $y$-axis) for a \dword{pdsp} event 
+that includes two electromagnetic showers and a four tracks in the
+final state of the interaction.
 The color associated with each time sample on the \dword{apa}
 wires gives a measurement of the charge measured by the \dword{ce}
-readout, increasing from the smallest values (blue) to the largest
-ones (red).}
+readout, with blue representing the smallest charge values and
+red representing the largest charge values.}
 \includegraphics[width=1.0\linewidth]{sp-tpcelec-4prongdisplay.png}
 \end{dunefigure}
 
@@ -1965,7 +1978,7 @@ ones (red).}
 {fig:microboone-display}
 {\dword{microboone} \twod event display of the V plane from run 3493 
 event 41075 showing the raw signal (a) before and (b) after offline 
-noise filtering. A clean event signature is recovered once all the 
+noise filtering. A clean event signature is recovered once all of the 
 identified noise sources are subtracted~\cite{Acciarri:2017sde}.}
 \includegraphics[width=0.9\linewidth]{sp-tpcelec-microBoone_display.pdf}
 \end{dunefigure}
@@ -1985,25 +1998,25 @@ identified noise sources are subtracted~\cite{Acciarri:2017sde}.}
 \includegraphics[width=0.85\linewidth]{sp-tpcelec-PSNR.pdf}
 \end{dunefigure}
 
-The \dword{snr} has been evaluated a selected cosmic muon sample, with tracks
+The \dword{snr} has been evaluated using a selected cosmic muon sample, with tracks
 crossing the \dword{lar} volume at shallow angle with respect to the anode plane and
-large angle with respect to the direction of the wires in the plane considered
-for \dword{snr} characterization. The charge deposited on each wire in a plane is evaluated
+large angle with respect to the direction of the wires in each plane considered
+for \dword{snr} characterization. The charge deposited on each wire in a given plane is evaluated
 using the pulse height (peak) of the hit found in the raw waveform.
 A correction taking into account different relative angle between track and wire
 direction has been applied to normalize the hit response. The noise value is extracted
-from a fitted Gaussian width on the pedestal distribution of the waveform baseline of the
-wire. The electric field in the \dword{tpc} volume was at nominal level of \SI{500}{V/cm},
+from the width of the Gaussian fitted on the pedestal distribution of the waveform baseline.
+The electric field in the \dword{tpc} volume was at the nominal level of \SI{500}{V/cm},
 and the \dword{lar} purity for the runs considered in this analysis was about \SI{5.5}{ms}
 as measured by the purity monitors, corresponding to $\sim35$\% charge loss due to
 attachment for tracks close to the cathode. This measurement ignores the effect of the
 space charge, which introduces distortions of the electric field in the \dword{tpc} volume that
 may locally change the recombination factor and therefore affect the \dword{snr} value. Finally,
-the measurement is made both before and after the application of a simple common-mode noise filter.
+the measurement is made both before and after the application of a simple offline common-mode noise filter.
 The distribution of the \dword{snr} for all the wires in the sample of muon tracks considered is
 shown in Figure~\ref{fig:pdsp-signalovernoise}~\cite{pend_PDSP_PerfPaper}. Looking before (after)
 the application of the common-mode noise filter, for the collection plane the mean value of the
-distribution of \dword{snr} is 38 (49), for the first induction plane it is 16 (18), and for the
+\dword{snr} distribution is 38 (49), for the first induction plane it is 16 (18), and for the
 second induction plane it is 19 (21).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2014,46 +2027,47 @@ As discussed in Section~\ref{sec:fdsp-tpcelec-overview-pdune}, the initial
 data from \dword{pdsp} show that the \dword{spmod} can meet the noise specification. 
 The experience with the \dword{tpc} electronics in \dword{pdsp} nonetheless motivates 
 several improvements to the \dword{tpc} electronics system design, some of which
-have already been implemented and discussed in the previous Sections.
+have already been implemented and discussed in the previous sections.
 A complete list of the lessons learned from the construction, testing, integration,
 installation, commissioning of the \dword{tpc} electronics detector components
 is available~\cite{bib:docdb12367}. This reference also discusses
 the plans and timeline for addressing the issues observed in \dword{pdsp}. 
 This \dword{tdr} section and the following cover only the main issues 
-and the plans for their resolution and for implementation in the \dword{spmod}. 
+and the plans for their resolution and implementation in the \dword{spmod}. 
 
 During the commissioning of \dword{pdsp}, violations of the
 grounding rules described in Section~\ref{sec:fdsp-tpcelec-design-grounding}
 have been observed with one of the readout
-boards for the \dword{pds}, and with the cameras immersed
+boards for the \dword{pds} and with the cameras immersed
 inside the \lar. The power supply used to provide the \dword{hv} to the 
 cathode plane has also been observed
 to cause noise inside the detector and has been replaced.
 The overall success of \dword{pdsp} owes much to the fact that the
 grounding rules were properly implemented
 and that any violation was discovered and addressed during
-the commissioning.
+the detector commissioning.
 
-The main problem with the \dword{pdsp} \dword{tpc} electronics readout is in the
-P1-\dword{adc} \dword{asic}. This problem was observed as early as 2017 
+The main problem with the \dword{pdsp} \dword{tpc} electronics readout is 
+the poor perforance of the 
+P1-\dword{adc} \dwords{asic}. This problem was observed as early as 2017 
 while these \dwords{asic} were being tested prior to their installation
 on the \dwords{femb}. The ``domino'' architecture~\cite{dominoADC} used in this design relies on
 excellent transistor matching, which unfortunately 
-is worse at \dword{lar} temperature. In \dword{pdsp} this problem
-results a fraction (about \num{3.2}\%) of the readout channels having a fixed value for some of
+is worse at \dword{lar} temperature. In \dword{pdsp}, this problem
+results in a fraction (about \num{3.2}\%) of the readout channels having a fixed value for some of
 the \dword{adc} bits, independent of the input voltage. In a majority
 of the cases an approximate value for the charge can be obtained via
-interpolation. For about \num{0.9}\% of the channels the problem is
+interpolation. For about \num{0.9}\% of the channels, the problem is
 so severe that the only solution is to remove the channels from the
 analysis, resulting in a loss of efficiency. This problem prompted us to abandon
 this design and to develop the completely new \dword{coldadc}, to
 adapt the \dword{cryo} \dword{asic} for use in \dword{dune}, and to
 follow the approach of the \dword{sbnd} Collaboration and consider
-also the \dword{cots} \dword{adc} option.
+the \dword{cots} \dword{adc} option as well.
 
 Initial analysis of the \dword{pdsp} data has uncovered a new problem with \dword{larasic} 
-that occurs when $>$\SI{50}{fC} is collected over a period of \SIrange{10}{50}{$\mu$s}, 
-when the baseline configuration of the amplifier for the collection wires is used. 
+that occurs when more than \SI{50}{fC} is collected over a period of \SIrange{10}{50}{$\mu$s}
+and the baseline configuration of the amplifier for the collection wires is used. 
 The feedback mechanism of the \dword{fe} amplifier stops working for several 
 hundred $\mu$s. During this period, the readout does not function and signals 
 following the large charge deposited can be completely lost. A ledge is observed 
@@ -2064,8 +2078,9 @@ Figure~\ref{fig:pdsp-ledge} shows an example of this behavior.
 \begin{dunefigure}
 [Pulse shape on a ProtoDUNE-SP wire showing the ledge effect]
 {fig:pdsp-ledge}
-{Waveform of an event showing the ledge following a large charge 
-deposition, then a discharge and a final jump to the normal baseline.}
+{Waveform of a channel showing a ledge following significant charge
+deposition on the wire, followed by a discharge and a subsequent jump 
+to the normal baseline \dword{adc} value.}
 \includegraphics[width=1.0\linewidth]{sp-tpcelec-ledge.pdf}
 \end{dunefigure}
 
@@ -2074,10 +2089,10 @@ studied. It affects all versions of \dword{larasic} fabricated after
 the one used for the \dword{microboone} experiment. The problem occurs 
 when the threshold on the injected charge is small and therefore affects
 with larger probability the collection wires, where the \SI{200}{mV} baseline 
-is used, compared to the induction wires, that have a \SI{900}{mV} baseline.
+is used, compared to the induction wires, which have a \SI{900}{mV} baseline.
 After the problem and this difference between the two baselines were 
 observed, the decision was taken to operate the \dword{ce} in \dword{pdsp} 
-using the \SI{900}{mV} baseline also for the collection wires, sacrificing
+using the \SI{900}{mV} baseline for the collection wires as well, sacrificing
 the dynamic range. Data from the wires where the problem occurs can
 be masked in analysis, resulting in a loss of efficiency. This problem 
 affected a very small fraction of the events: with the \SI{200}{mV}
@@ -2085,7 +2100,7 @@ baseline about \num{0.1}\% of the waveforms were affected, and this
 number became almost completely negligible after switching to the 
 \SI{900}{mV} baseline. It should be
 noted that the problem occurs more often in \dword{pdsp} 
-than is expected in the \dword{fd}  \dword{spmod} due to the presence of 
+than is expected in the \dword{dune} \dword{spmod} due to the presence of 
 cosmic rays traveling parallel to the \dword{apa} wires.
 The problem could, however, affect the \dword{spmod}'s ability to detect
 electromagnetic showers -- one of the main physics signals.
@@ -2095,7 +2110,7 @@ for addressing this issue in a new \dword{larasic} prototype.
 \begin{dunefigure}
 [Image of a connector for the cold cables lifted from the FEMB]
 {fig:pdsp-femb-connector}
-{Image of a connector for the cold readout and signal cables lifted from
+{Image of a connector for the cold readout and signal cables, which has been lifted from
 the \dword{femb} due to the presence of excess epoxy on the 
 connection between the cold cables and the printed circuit board
 that acts as the ``male'' part of the connector.}
@@ -2115,10 +2130,10 @@ During the integration of the \dwords{femb} onto the \dword{apa}s
 and the cold tests that preceded the \dword{apa} installation
 inside the \dword{pdsp} cryostat,  multiple connectors  
 detached from
-the \dword{femb}, causing a loss of communication.  
+the \dwords{femb}, causing a loss of communication.  
 %For \dword{pdsp} w
 We replaced the \dwords{femb} %This problem was fixed for 
-on all the \dword{apa}s that had been tested in the cold box. % by replacing the \dword{femb}. 
+on all of the \dword{apa}s that had been tested in the cold box. % by replacing the \dword{femb}. 
 One additional \dword{femb} was 
 replaced on the \dword{apa} that had been installed without undergoing 
 the test in the cold box. This %problem 
@@ -2136,7 +2151,7 @@ as shown in
 Figure~\ref{fig:pdsp-femb-connector}. %This problem is being 
 %addressed by a redesign of the connection between the \dword{femb}
 %and the cold cables, as discussed in 
-Section~\ref{sec:fdsp-tpcelec-design-femb} discusses the redesign of the connection to address the problem.
+Section~\ref{sec:fdsp-tpcelec-design-femb} discusses the redesign of the connection to address this problem.
 
 %\begin{dunefigure}
 %[Spectrum of the noise on the ProtoDUNE-SP APA wires]
@@ -2151,36 +2166,36 @@ Section~\ref{sec:fdsp-tpcelec-design-femb} discusses the redesign of the connect
 [Spectrum of the noise on the ProtoDUNE-SP APA wires]
 {fig:pdsp-noise}
 {Spectrum of the noise on the first induction plane of the \dword{pdsp} \dword{apa}s before
- and after applying a simple common-mode filter and partially mitigating \dword{adc} issues~\cite{pend_PDSP_PerfPaper}.}
+and after applying a simple offline common-mode filter and partially mitigating \dword{adc} issues in software~\cite{pend_PDSP_PerfPaper}.}
 %\includegraphics[width=0.49\linewidth]{sp-tpcelec-avgFFT-WithoutFilt.pdf}
 %\includegraphics[width=0.49\linewidth]{sp-tpcelec-avgFFT-WithFilt.pdf}
 \includegraphics[width=0.7\linewidth]{sp-tpcelec-UplaneNoiseFFT.pdf}
 \end{dunefigure}
 
-Analysis of the \dword{pdsp} data has made significant progress throughout 2019 
+Analysis of the \dword{pdsp} data has made significant progress throughout 2019,
 leading to many insights on the detector behavior and on the interactions
 between its different components. The level of noise mentioned in Section~\ref{sec:fdsp-tpcelec-overview-pdune}
 (approximately $\SI{550}{e^-}$ on the collection wires,
 and approximately $\SI{650}{e^-}$ on the induction wires) 
 was measured with raw data, without any
 filtering or selection applied to the pulses on the \dword{apa}
-wires. A simple common-mode filter can significantly reduce the 
+wires. A simple offline common-mode filter can significantly reduce the 
 noise, particularly at low frequencies, as shown in Figure~\ref{fig:pdsp-noise},  
 which compares the noise spectrum of the first induction plane of the \dword{apa}
 before and after the filtering~\cite{pend_PDSP_PerfPaper}. The spectrum prior to the
-filtering shows a significant increase at frequencies $<$\SI{60}{kHz} that in
+filtering shows a significant increase at frequencies smaller than\SI{60}{kHz} that in
 \dword{microboone} had been associated with the low-voltage regulators that are installed
 on the \dwords{femb}~\cite{Acciarri:2017sde}. This contribution to the noise
-has actually been significantly reduced compared to initial observations at 
-\dword{microboone} thanks to RC filters that have been added
+has been significantly reduced compared to initial observations at 
+\dword{microboone} by means of RC filters that have been added
 on the \dword{pdsp} \dwords{femb}. Further work is required to
-understand why these RC filters do not suppress completely this
+understand why these RC filters do not completely suppress this
 specific noise source, as indicated by tests performed in other setups.
 The noise spectrum prior to the filtering also shows spikes at multiple 
-discrete frequencies, and in some cases the noise sources have been 
-identified (for example, cameras' operation inside the cryostat
-contributes to the peaks at \num{310} and \SI{630}{KHz};
-malfunctioning bias voltage supplies also contribute to the noise). Finally,
+discrete frequencies, and in some cases the associated noise sources have been 
+identified: for example, the operation of cameras inside the cryostat
+contributes to the peaks at \SI{310}{kHz} and \SI{630}{kHz};
+malfunctioning bias voltage supplies also contribute to the noise. Finally,
 the reduced level of white noise in the spectrum at higher frequencies is
 due to the application of an algorithm to partially recover from the \dword{adc}
 problems described above~\cite{pend_PDSP_PerfPaper}. We
@@ -2224,9 +2239,10 @@ other prototypes, and finishing with \dword{pdsp}. \end{comment}
 %
 For example, changing the number and arrangement of cryostat penetrations to accommodate 
  two \dword{ce} flanges in addition to the \dword{pds}
-flange can be considered relatively minimal. It may require some structural reinforcement and additional \dword{fea} simulations to estimate the proper flow of
-argon so as to avoid any back-diffusion of oxygen into the cryostat in case
-of leaks on the flanges and to ensure an acceptable temperature gradient in the \lar.
+flange can be considered a relatively minimal modification. It may require some structural 
+reinforcement and additional \dword{fea} simulations to estimate the proper flow of
+argon in order to avoid any back-diffusion of oxygen into the cryostat (in case
+of leaks on the flanges), as well as to ensure an acceptable temperature gradient in the \lar.
 %
 \begin{comment}At the opposite
 side of the spectrum is the \dword{asic} design, with the
@@ -2241,18 +2257,18 @@ in this Section we analyze the risk that the design
 and prototyping of these components could affect the \dword{dune} detector
 construction schedule.\end{comment}
 %
-On the other hand, the \dword{asic} design, with the
-development of \dword{coldata} and of a completely new \dword{adc} is more involved. 
+On the other hand, changes in the design of the \dwords{asic}, with the
+development of \dword{coldadc} and \dword{coldata}, are more involved. 
 
 \begin{dunetable}
 [Status of the design of the different CE detector components]
 {p{0.27\textwidth}p{0.15\textwidth}p{0.50\textwidth}}
 {tab:SPCE:designstatus}
-{Status of the design of the different CE detector components and expected
+{Status of the design of the different CE detector components as well as the expected
 amount of engineering and prototyping required prior to construction.}
 Component & Status & Expected work \\ \toprowrule
 \dword{larasic} & Advanced & Fix issues observed in \dword{pdsp}, port differential output from \dword{coldadc} design \\ \colhline
-Commercial ADC & Complete & None \\ \colhline
+\dword{cots} \dword{adc} & Complete & None \\ \colhline
 \dword{coldadc} & \multicolumn{2}{l}{See text for details} \\ \colhline
 \dword{coldata} & \multicolumn{2}{l}{See text for details} \\ \colhline
 \dword{cryo} & \multicolumn{2}{l}{See text for details} \\ \colhline
@@ -2269,33 +2285,33 @@ Readout and control fiber plant & Very advanced & Finalize plant layout \\
 
 The area that requires most work is that of the \dword{asic}s that are mounted
 on the \dwords{femb}. \dword{larasic} has already gone through eight design
-iterations, the last three directly targeted for \dword{dune}, and has already been used, 
-in one of its versions, for \dword{microboone} and for \dword{pdsp}, where it has reached the 
+iterations, the last three directly targeted for \dword{dune}, and has already been used 
+(in two of its earlier versions) for \dword{microboone} and for \dword{pdsp}, where it has reached the 
 noise levels specified for the \dword{dune} \dword{spmod}. At least one additional design iteration is
-required to address the issues observed during the \dword{pdsp} operations and
+required to address the issues observed during \dword{pdsp} operations and
 to implement a single-ended to differential converter to improve the interface
 with the newly developed \dword{coldadc}. To ensure the success of the next 
-design iteration we are investing in the development of appropriate transistor
+design iteration, we are investing in the development of appropriate transistor
 models for the \SI{180}{nm} \dword{cmos} technology for operation in \lar, such that the saturation effect observed in 
 \dword{pdsp} can be properly addressed first in simulation and then with improvements 
-in design. It should be noted that so far approximate models, originally developed for 
-the same \SI{180}{nm} technology, but with different design rules, have been used for 
+in design. It should be noted that, so far, approximate models that were originally developed for 
+the same \SI{180}{nm} technology (but with different design rules) have been used for 
 the \dword{larasic} development, and therefore it should not be a surprise
-that the \dword{larasic} may have limitations in some corner of the phase space.
+that \dword{larasic} may have limitations in certain cases.
 The circuitry for the single-ended to differential converter has already been 
 developed in the \SI{65}{nm} technology and needs to be ported to the \SI{180}{nm}
-technology used for \dword{larasic}. We consider that appropriate measures have been
+technology used for \dword{larasic}. Various measures have been
 put in place to minimize the risk associated with the need of a further
-prototyping iteration. Nevertheless, in Section~\ref{sec:fdsp-tpcelec-risks-design}
+prototyping iteration; nevertheless, in Section~\ref{sec:fdsp-tpcelec-risks-design}
 we consider a generic risk for a delay in the availability of \dword{asic}s and
-argue that this delay would not have an impact on the beginning of \dword{dune} operations.
+argue that this delay would not have an impact on the beginning of \dword{dune} \dword{fd} operations.
 
-It should be noted that even if the reference for \dword{spmod} foresees the usage
-of custom \dwords{asic} for the \dword{adc} and the data serialization, we should
-note that a solution based on commercial components is available and has been 
-demonstrated to work by the \dword{sbnd} collaboration. This solution is based on
+It should be noted that even if the reference for \dword{spmod} makes use
+of custom \dwords{asic} for the \dword{adc} and the data serialization functionality, 
+a solution based on commercial components is available and has been 
+demonstrated to work by the \dword{sbnd} Collaboration. This solution is based on
 the use of a \dword{cots} \dword{adc} and an \dword{fpga} for the data serialization,
-and further validation is planned for spring 2019. We consider this solution as
+and further validation is planned for Fall 2019. We consider this solution as
 a fall-back solution for \dword{dune}. Custom solutions for the \dwords{asic} are 
 being developed to simplify the \dword{femb} assembly and reduce the power dissipated by the
 electronics in the \lar.
@@ -2313,40 +2329,27 @@ be characterized as having reached the ``Advanced'' status.
 
 We are also considering an alternative solution for the readout, where
 the three \dword{asic}s are replaced with a single one, the \dword{cryo}
-chip that is going through a development that is proceeding with a 
+chip that has a development 
 timeline similar to that of \dword{coldadc}. Also in this case the
-chips from the first submission have been delivered in January 2019.
-Initial results from the tests of the \dword{cryo} prototypes have
+chips from the first submission have been delivered in January 2019;
+initial results from the tests of the \dword{cryo} prototypes have
 been discussed in Section~\ref{sec:fdsp-tpcelec-design-femb-alt-cryo}.
-Like in the case of \dword{coldadc}, the results obtained so far are
-encouraging, despite the problem observed with the digital multiplexer.
-Depending on the performance of the \dword{asic}, \dword{cryo} should
-also be characterized as having reached the ``Advanced'' status.
+As in the case of \dword{coldadc}, the results obtained so far are
+encouraging. As soon as the noise issue observed in the first prototype
+is understood, \dword{cryo} should also be characterized as 
+having reached the ``Advanced'' status.
 
 The first complete prototype of \dword{coldata} was submitted in 
-April 2019, with the delivery of chips expected for July 2019.
-The design of this first complete prototype builds on the success of
-the first partial prototype (CDP1) that was fabricated and tested in 2017.
-This first prototype included the control registers inside the 
-\dword{asic}, the \dword{i2c} interface required to program and read-out
-the status of these registers, the \dword{spi} interface required to
-configure \dword{larasic}, the phase-lock loop required to generate
-clocks internal to the chip, the data serializer, and a current-mode
-line driver. The transition to the first complete prototype
-involves the addition of interfaces to the \dword{coldadc} (\dword{uart}
-and \dword{i2c}), an additional \dword{i2c} interface to allow programming two
-\dword{coldata} \dword{asic}s on the same \dword{femb}, and the
-addition of a line-driver with pre-emphasis required for operation
-with long cables (up to \SI{22}{m}) in \lar. The same design and
-validation methodology used for the CDP1 prototype and the \dword{coldadc}
-is being used. This should guarantee that after the tests done in
-summer 2019 \dword{coldata} will reach the ``Advanced'' design 
-status. 
+April 2019 and the chips have been delivered in July. As discussed
+in Section~\ref{sec:fdsp-tpcelec-design-femb-coldata}, all test
+results for \dword{coldata} have been positive, and so in this
+case it can also be claimed that the design of the \dword{asic} has
+reached the ``Advanced'' design status.
 
 There have already been multiple iterations of \dwords{femb} that
 have been fabricated and tested and used for data taking in 
 \dword{microboone} and in \dword{pdsp}. The \dword{sbnd} Collaboration
-is starting the production of \dwords{femb} based on the commercial \dword{adc} and
+is starting the production of \dwords{femb} based on the \dword{cots} \dword{adc} and
 \dword{fpga} solution. The design of the \dword{femb} needs to be adapted
 for the different \dword{asic} solutions that are being considered
 for \dword{dune}. This development is already ongoing, as system tests 
@@ -2354,22 +2357,22 @@ where the \dwords{femb} are connected to an \dword{apa} are part
 of the qualification tests. The design status for the \dword{femb}
 is already at the ``Advanced'' level, and it will reach the 
 ``Very advanced'' level at the time of the \dword{asic}
-selection. At that point only minor modifications may be
+selection. At that point, only minor modifications may be
 required. 
 
 The only other \dword{tpc} electronics detector components that do not yet
 reach the ``Very advanced'' level are the cryostat penetrations, as
 discussed above, and the \dword{wib}, where small
-design changes will be done prior to production to use a more
-modern and cheaper \dword{fpga}. Additional changes will be required to
-the power distribution scheme, since the number of power lines
-and the corresponding voltages will be reduced compared to
+design changes will be done prior to production in order to use a more
+modern and cheaper \dword{fpga}. Additional changes to
+the power distribution scheme will be required as the number of power lines
+(and the corresponding voltages) will be reduced compared to
 \dword{pdsp}. The transition to a more modern \dword{fpga} will allow 
 more extensive data monitoring inside the \dword{wib}, but may
 also require developing new software and porting the firmware
 from one family of \dword{fpga}s to another. 
 
-For all other detector components the estimate of the design
+For all other detector components, the estimate of the design
 maturity is considered ``Very advanced'' based on the experience
 gained with commissioning and operation of \dword{pdsp}. The 
 cold signal cables will be modified to reduce the number of
@@ -2380,12 +2383,12 @@ damage from dust and/or chemical residues from  explosives
 during the lifetime of the experiment at \dword{surf}.
 The \dword{ptc} is going to be modified to add an interface to
 the hardware interlocks of the detector safety system. For
-cables and fibers on the top of the cryostat the only work that
+cables and fibers on the top of the cryostat, the only work that
 remains to be done is the design of the actual cable plant, 
-which will then fix the length of the cables. The arrangement
+which will then determine the length of the cables. The arrangement
 of power supplies in the racks on top of the cryostat is the
-only other remaining design task. For many components the
+only other remaining design task. For many components, the
 qualification of additional vendors could also be considered
-as part of value engineering, to reduce the risks of vendor
-lock-in and to minimize costs. 
+as part of value engineering; this will reduce the risk of vendor
+lock-in and help minimize costs. 
 

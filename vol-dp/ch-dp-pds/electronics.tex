@@ -5,7 +5,7 @@
 \subsection{Photomultiplier High Voltage Dividers}
 \label{sec:fddp-pd-4.1}
 
-The \dword{pmt} has a grounded cathode and a positive \dword{hv} applied to the anode. A single cable for each \dword{pmt} carries both power and signal. This configuration, which requires half as many cables and feedthroughs on the detector than the negative voltage configuration, offers a clear advantage given the large number of \dwords{pmt} in the detector. In addition, the cathode grounding shows fewer dark counts than the anode grounding scheme. Although a coupling capacitor must be used to separate the \dword{hv} from the \dword{pmt} signal, this signal and power splitting can be done externally, mitigating this drawback.  Figure~\ref{fig:dppd_4_1} shows the positive power supply and cathode grounding scheme.
+The \dword{pmt} has a grounded cathode and a positive \dword{hv} applied to the anode. A single cable for each \dword{pmt} carries both power and signal. This configuration, which requires half as many cables and feedthroughs on the detector as the negative voltage configuration, offers a clear advantage given the large number of \dwords{pmt} in the detector. In addition, the cathode grounding shows fewer dark counts than the anode grounding scheme. Although a coupling capacitor must be used to separate the \dword{hv} from the \dword{pmt} signal, this signal and power splitting can be done externally, mitigating this drawback.  Figure~\ref{fig:dppd_4_1} shows the positive power supply and cathode grounding scheme.
 
 \begin{dunefigure}[Positive power supply and cathode grounding scheme]{fig:dppd_4_1}
 {Positive power supply and cathode grounding scheme.}
@@ -16,7 +16,6 @@ The \dword{pmt} base circuit uses only resistors and capacitors. The components 
 
 The \dword{pmt} base connects to the \fdth with the RG-303/U cable, selected for its low attenuation and its proven reliability in cryogenic environments. The short cable is directly soldered to the \dword{pmt} base on one end and, on the other end, attaches to the long \dword{hv} cable with an SHV connector. The long cable connects to the feedthrough flange.
 
-%This cable is directly soldered to the \dword{pmt} base on one side, and it ends with an SHV connector on the other side for attachment to the long \dword{hv} cables coming from the feedthrough flanges. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{High Voltage and Signal Splitters}
@@ -44,10 +43,8 @@ Figure \ref{fig:dppd_4_2} shows a generic splitter circuit where R1 and C1 form 
 
 For the connections between the \dword{hv} power supply and the splitters and between the splitters and the cryostat \fdth{}s, HTC 50-3-2 cables have been chosen as baseline. The HTC 50-3-2 has a similar attenuation as the RG-303/U (used inside the cryostat), but costs \numrange{8}{10} times less. Both cables are attached on one end directly to the \dword{hv} splitter and have an SHV connector on the other end. An RG-58 cable terminated on the connector required by the light readout card provides the connection between the splitter and the card. The \dword{pmt} readout card is described in Chapter~\ref{ch:dp-tpcelec}.
 
-%\fixme{Add Antonio's picture of \dword{pddp} HV/signal splitter.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\subsection{Signal Readout Requirements}
 \subsection{Signal Readout}
 \label{sec:fddp-pd-4.3}
 
@@ -57,30 +54,25 @@ To meet the physics requirements, the following is the information that must be 
 \item S1 fast component shape, charge, and timing;
 \item S1 slow component shape and charge;
 \item S2 shape, charge, and timing (distance from S1 and duration);
-\item \dword{spe} charge spectrum for gain calculation during \dword{pmt} calibration;
+\item \dword{spe} charge spectrum for gain calculation during \dword{pmt} calibration; and
 \item trigger signal generation by the coincidence of several \dword{pmt} signals.
 \end{itemize}
 
-%%At this moment, we do not have an estimate of the \textbf{dynamic range }of the light that could reach the \dwords{pmt} on the \dword{dpmod}. Our calculations are based on the signals detected by the \dwords{pmt} on the  \dword{wa105} $3\times1\times1$\,m$^3$ detector. Although this prototype has a different dimension from the \dword{dpmod}, it is the only reference that we have for these estimates, until the \dword{pddp} detector and simulations are operational.
-%There is currently no estimate on the dynamic range of the light expected to reach the \dwords{pmt} in the \dword{dpmod}. Our calculations are based on the signals detected by the \dwords{pmt} in the \dword{wa105}, % $3\times1\times1$\,m$^3$ detector. Although this prototype has a 
-%which has quite different dimensions from the \dword{dpmod}. However, it is the only available reference %that we have for these estimates, until the \dword{pddp} and simulations are operational.
 
-The requirements to both unambiguously reconstruct single-PE short pulses and to avoid saturation of S1 light signals of hundreds of PEs integrated charge distributed over hundreds of nanoseconds determine the readout electronics parameters, in particular \dword{pmt} gain readout sampling time. The \dword{pmt} gains will be set to \num{1e7} and the sampling time to \SI{15.4}{ns}, as justified in the following. In general, the \dword{pmt} signal dynamic range goes from the \si{mV} level to several volts (over \SI{50}{\ohm} load). The lower limit of the \dword{pmt} dynamic range is given by the lowest level of the \dword{spe} signal that meets the signal to noise ratio specification. Thus, the \dword{pmt} gain should be set at least at the value that makes the \dword{spe} level meet this condition. Figure~\ref{fig:dppd_4_3_ab} shows the \dword{spe} waveforms (left) and amplitudes from the WA105 at different voltages (right).
+The requirements to both unambiguously reconstruct single-\phel short pulses and to avoid saturation of S1 light signals of hundreds of \phel{}s, integrated charge distributed over hundreds of nanoseconds determines the readout electronics parameters, in particular \dword{pmt} gain readout sampling time. The \dword{pmt} gains will be set to \num{1e7} and the sampling time to \SI{15.4}{ns}, as justified in the following. In general, the \dword{pmt} signal dynamic range goes from the \si{mV} level to several volts (over \SI{50}{\ohm} load). The lower limit of the \dword{pmt} dynamic range is given by the lowest level of the \dword{spe} signal that meets the \dword{s/n} ratio specification. Thus, the \dword{pmt} gain should be set at least at the value that makes the \dword{spe} level meet this condition. Figure~\ref{fig:dppd_4_3_ab} shows the \dword{spe} waveforms (left) and amplitudes from the WA105 at different voltages (right).
 
 \begin{dunefigure}[\dshort{spe} waveforms and amplitudes from the WA105 at different voltages]{fig:dppd_4_3_ab}{\dword{spe} waveforms (left) and amplitudes from the WA105 at different voltages (right).}
 \includegraphics[width=0.47\textwidth]{dppd_4_3_a}
 \includegraphics[width=0.47\textwidth]{dppd_4_3_b}
 \end{dunefigure}
 
-Because the long cables from the \dwords{pmt} to the \dword{fe} electronics are very long, the cable noise could be high. If a noise level around \SI{1}{mV} is considered,  the \dword{pmt} gain must be set to \num{e7} or higher to have the required S/N ratio of 5, see Table~\ref{tab:specs:DP-PDS}. The average \dword{spe} pulse width is approximately \SI{3.5}{ns} \dword{fwhm}. If an accurate signal reconstruction is required, the sampling period should be of the level of the \si{\ns}. Since only charge information and approximate timing information (at the level of $<\,\SI{100}{ns}$ RMS hit time resolution, see Table~\ref{tab:specs:DP-PDS}) is necessary, the sampling period can be higher, but the signal must be low-pass filtered before sampling. This filtering affects the signal level making the discrimination of signal from noise more difficult, requiring an increase of the \dword{pmt} gain to meet the S/N specification. 
+Because the %long 
+cables from the \dwords{pmt} to the \dword{fe} electronics are very long, the cable noise could be high. If a noise level around \SI{1}{mV} is considered,  the \dword{pmt} gain must be set to \num{e7} or higher to have the required \dword{s/n} ratio of 5, see Table~\ref{tab:specs:DP-PDS}. The average \dword{spe} pulse width is approximately \SI{3.5}{ns} \dword{fwhm}. If an accurate signal reconstruction is required, the sampling period should be of the level of the \si{\ns}. Since only charge information and approximate timing information (at the level of $<\,\SI{100}{ns}$ RMS hit time resolution, see Table~\ref{tab:specs:DP-PDS}) is necessary, the sampling period can be higher, but the signal must be low-pass filtered before sampling. This filtering affects the signal level making the discrimination of signal from noise more difficult, requiring an increase of the \dword{pmt} gain to meet the \dword{s/n} specification. 
 
-%The sampling frequency also affects the time tagging precision. The time uncertainty due to the \dword{pmt} alone is approximately \SI{3}{ns} (transit time spread). Other factors, like Rayleigh scattering, increase this uncertainty, as does the sampling period. 
 
-The upper limit of the required dynamic range is given by the \dword{pmt} signal amplitude for the maximum number of \dwords{pe} expected per sampling time unit. As shown in Figure~\ref{fig:dppd_saturation} for simulated \SI{3}{GeV} beam neutrino interactions, the maximum number expected in this case is about \SI{60}{PEs} for a fast sampling of \SI{4}{ns} and about \SI{500}{PEs} for sampling times comparable to S1 signal durations (about \SI{1}{\micro\second}) or slower. Hence, while single-PE signals can  still be detected with slow sampling times by adjusting the \dword{pmt} gain accordingly, the dynamic range requirement becomes more stringent. 
+The upper limit of the required dynamic range is given by the \dword{pmt} signal amplitude for the maximum number of \dwords{pe} expected per sampling time unit. As shown in Figure~\ref{fig:dppd_saturation} for simulated \SI{3}{GeV} beam neutrino interactions, the maximum number expected in this case is about \SI{60}{PEs} for a fast sampling of \SI{4}{ns} and about \SI{500}{PEs} for sampling times comparable to S1 signal durations (about \SI{1}{\micro\second}) or slower. Hence, while single-\phel signals can  still be detected with slow sampling times by adjusting the \dword{pmt} gain accordingly, the dynamic range requirement becomes more stringent. 
 
-The time sampling of the \dword{pds} waveforms will be \SI{15.4}{ns}, as provided by the \SI{65}{MHz} ADC in the \dword{lro} electronics card (see Section~\ref{ch:dp-tpcelec}). Similar readout electronics parameters as the baseline ones described here are being validated in \dword{pddp}, and are found to meet our specifications. In particular, Hamamatsu R5912-MOD20 \dwords{pmt} operated at a gain of \num{1e7} and whose signals are digitized at a \SI{16}{ns} sampling period yield a single-\dword{pe} signal-to-noise ratio in excess of the required S/N=5 value.
-
-%Therefore, the higher the sampling frequency, the better for detector performance but at the cost of increased data rate and storage requirements.
+The time sampling of the \dword{pds} waveforms will be \SI{15.4}{ns}, as provided by the \SI{65}{MHz} \dword{adc} in the \dword{lro} electronics card (see Section~\ref{ch:dp-tpcelec}). Similar readout electronics parameters as the baseline ones described here are being validated in \dword{pddp}, and are found to meet our specifications. In particular, Hamamatsu R5912-MOD20 \dwords{pmt} operated at a gain of \num{1e7} and whose signals are digitized at a \SI{16}{ns} sampling period yield a single-\dword{pe} \dword{s/n} ratio in excess of the required \dword{s/n}=5 value.
 
 
 The light signal must be synchronized with the \dword{daq}. All \dword{daq} electronics use the \dword{wr} protocol for synchronization. A dedicated \dword{wr} \dword{utca}~\cite{utca} slave node is on the light readout \dword{fe} electronics as sync receiver, distributing clocks to different \dword{fe} cards.
