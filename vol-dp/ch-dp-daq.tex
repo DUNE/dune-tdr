@@ -100,7 +100,7 @@ specifics of design implementation and data flow are described in Section~\ref{s
     synchronization, in gray, and the subsystem for control,
     configuration, and management.
   }
-  %\includegraphics[width=0.8\textwidth,trim=4cm 3cm 4cm 3cm]{daq-layout-2.pdf}
+  \includegraphics[width=0.8\textwidth,trim=4cm 3cm 4cm 3cm]{daq-layout-2.pdf}
 \end{dunefigure}
 
 
@@ -187,11 +187,23 @@ candidates with low deposited energy each (approximately \SI{10}{\MeV}) are foun
 granularity of the detector readout elements, a hierarchical \dword{daqdss} is used to
 provide data processing and triggering and to facilitate optional data reduction and filtering. 
 
-The \dword{daq}  system must have $>$99\% efficiency for particles depositing $>$\SI{100}{\MeV}
-of energy in the detector for localized high-energy triggers; it also must have
-sufficient efficiency for low energy deposition in the detector as
-needed to yield $>$90\% efficiency for a \dword{snb} occurring up to a
-distance of \SI{100}{\kilo\parsec}, per \dword{dune} requirements.
+The \dword{daq}  system must have $>$99\% efficiency for particles
+depositing $>$\SI{100}{\MeV} of energy in the detector for localized
+high-energy triggers. The system's architecture must also provide a 
+mechanism for triggering on galactic supernova bursts with $>$95\%
+efficiency for a supernova burst producing at least 60 
+interactions with a neutrino energy $>$\SI{10}{\MeV} in 12~kt of active
+detector mass, during the first \SI{10}{\second} of the burst, per
+\dword{dune} requirements. This requirement ensures sensitivity to the
+great majority of \dwords{snb} in our galaxy as well as some bursts in small
+nearby galaxies, as described in this document's \dword{snb} physics requirements
+section. The \dword{daq} architecture must also provide a mechanism for recording
+neutrino interactions associated with those bursts over a \SI{30}{\second}
+period, with a goal of \SI{100}{\second}. During this period, the full raw
+data information must be stored. The rationale for the latter is that most
+models of \dwords{snb} show structure in the neutrino flux for up to
+\SI{30}{\second}, and there is potential for interesting measurements to be made
+up to \SI{100}{\second}.
 
 Offline considerations require the \dword{daq} to reduce the
 full \dword{fd} data volume for offline permanent storage to  \offsitepbpy.
@@ -200,8 +212,15 @@ Strategies will be developed and validated during commissioning and early runnin
 
 
 For planning, the \dword{daq} will allot an average \dword{snb} trigger rate of one per month.
-Given current understanding of \dword{snb} rates and the $>$90\% expected efficiency for \dword{snb} within \SI{100}{\kilo\parsec}, most such triggers will be due to fluctuations of low energy radiological backgrounds and, potentially, excess noise.
-Such triggers will prompt \snbtime of data from the entire module to be read out. There is, however, no requirement to
+Given current understanding of \dword{snb} rates and the $>$95\%
+expected efficiency for a \dword{snb} with at least 60 interactions
+each of minimum \SI{10}{\MeV} in true neutrino energy, most such triggers will be due to fluctuations
+of low energy radiological backgrounds and, potentially, excess
+noise. 
+Such triggers will prompt \snbtime of data from the entire module to be read out.
+At this average rate and if saved to offline storage, the \dword{snb}
+triggers will produce \SI{1.8}{\peta\byte/\year} uncompressed from one
+single-phase module. There is, however, no requirement to
 permanently store \dword{snb}
 data that is deemed, after further offline analysis, to be due to fake triggers.
 
@@ -214,7 +233,7 @@ requirement of \offsitepbpy sent to permanent storage are summarized in Table~\r
     rates in one FD module]{fig:daq-rates}{Expected physics-related activity
     rates in a single \nominalmodsize module.
 }
-  %\includegraphics[width=0.7\textwidth,clip,trim=6cm 6cm 10cm 2cm]{daq-event-type-rates-vs-energy.pdf}
+  \includegraphics[width=0.7\textwidth,clip,trim=6cm 6cm 10cm 2cm]{daq-event-type-rates-vs-energy.pdf}
 \end{dunefigure}
 
 \begin{dunetable}
@@ -254,7 +273,8 @@ sufficient buffering capability must be designed into the system to
 capture the corresponding signals. 
 Furthermore, to ensure high efficiency in collecting \dword{snb} interactions
 that, individually, are below low-energy activity threshold, data from
-all channels in the detector will be recorded over an extended and contiguous period,  which is specified to \SI{100}{\second}, around every \dword{snb}
+all channels in the detector will be recorded over an extended and
+contiguous period,  which is specified to \SIrange{30}{100}{\second}, around every \dword{snb}
 trigger. This time has been defined in consultation with the \dword{dune}
 physics groups.
 
@@ -285,7 +305,8 @@ The hardware for upstream \dword{daq}, low level data selection,
 various services, networking, and the timing system, including spares,
 all kept in the \dword{cuc}, 
 %is estimated to consume less than \SI{50}{\kilo\watt} and use less than 200U of rack space \cite{bib:docdb15544}. %sync overleaf w/ recent github update (10/23/19)
-\hlfix{should consume}{These are SP estimates, provide DP versions} less than \SI{63}{\kilo\watt} and all fill less than 300U of rack space \cite{bib:docdb15544}.
+\hlfix{should consume}{These are SP estimates, provide DP versions - 23 kW/100U?} less than \SI{63}{\kilo\watt} and all fill less than 300U of rack space \cite{bib:docdb15544}.
+
 
 There are five key challenges for the \dword{dune} \dword{fd} \dword{daq} system: 
 \begin{itemize}
@@ -445,7 +466,7 @@ subsequently through the
   interfaces. 
   In particular, the DAQ timing system will interface with the White Rabbit
   implementation of IEEE1588-2008 utilized by the \dword{dpmod} electronics by providing the analog signals
-1PPS and  10MHz clock derived from the GPS disciplined oscillator.
+1PPS and 10MHz clock derived from the GPS disciplined oscillator.
 
   Accuracy of timestamps delivered to detector endpoints will be
   $\pm$\SI{500}{\nano\second} with respect to UTC.
@@ -517,7 +538,7 @@ filter/data reduction stage, which is part of overall data selection,
 
 \begin{dunefigure}[DAQ system overview]{fig:daq-conceptual-overview}{Conceptual
    Overview of \dword{daq} system functionality for a single \nominalmodsize module}
-  %\includegraphics[width=0.9\textwidth]{daq-overview.pdf}
+  \includegraphics[width=0.9\textwidth]{daq-overview.pdf}
 \end{dunefigure}
 
 Key to implementing the \dword{daq} design is the requirement that
@@ -542,12 +563,12 @@ fiber(s) and buffers and serves data to other \dword{daq} subsystems,
 namely the \dword{daqdss} and the \dword{daqbes}.
 
 \begin{dunefigure}[DUNE upstream DAQ subsystem and connections]{fig:daq:readout}{\dshort{dune} upstream \dshort{daq} subsystem and its connections.}
-  %\includegraphics[width=0.8\textwidth]{daq-readout}
+  \includegraphics[width=0.8\textwidth]{daq-readout}
 \end{dunefigure}
 
 \begin{dunefigure}[Flow diagram of the DUNE upstream DAQ subsystem.]{fig:daq:readout-blocks}{\dword{dune} upstream
     \dword{daq} subsystem functional blocks.}
- %\includegraphics[width=0.8\textwidth]{daq-ud-func-blocks}
+ \includegraphics[width=0.8\textwidth]{daq-ud-func-blocks}
 \end{dunefigure}
 
 The upstream \dword{daq} system comprises many similar \dwords{daqrou}, each
@@ -674,7 +695,8 @@ signals, as well as beam interactions,
 atmospheric neutrinos, rare baryon-number-violating events, and cosmic
 ray events that deposit visible energy in excess of \SI{100}{\MeV}. 
 It must also select data associated with potential
-\dwords{snb} within \SI{100}{\kilo\parsec} with $>$90\% efficiency. 
+\dwords{snb} producing 60 neutrino interactions over a span of \SI{10}{\second} in 12~ktons of active
+liquid argon mass each with \SI{10}{\MeV} in neutrino energy, with $>$95\% efficiency. 
 Furthermore, to meet the requirement that the \dword{dune} \dword{fd} maintain
 $<$\offsitepbpy to permanent storage, the \dword{daqdss}
 must make \dword{daqdsn} decisions in a way that allows the \dword{daq} 
@@ -690,7 +712,7 @@ At the lowest level, trigger primitives are formed on a per-channel basis, and r
 \Dword{trigcandidate} information is subsequently used to inform a
 module-level \dword{trigdecision}, which generates a \dword{trigcommand};
 this takes the form of either a localized high energy trigger or an
-extended SNB trigger, and each prompts the corresponding readout of an
+extended \dword{snb} trigger, and each prompts the corresponding readout of an
 event record. Details on the
 exact algorithm implementation for \dword{trigprimitive}, \dword{trigcandidate}, and \dword{trigcommand} generation can be found
 in~\citedocdb{11215} and~\citedocdb{14522} and references therein. 
@@ -726,14 +748,14 @@ to global coincidence trigger recipients like \dword{snews}
 
 \begin{dunefigure}[Data selection strategy and hierarchy]{fig:daq:data-selection-hierarchy}{Data selection
     strategy and hierarchy.}
- %\includegraphics[width=0.9\textwidth, trim=0cm 0cm 0cm 0cm]{DS_hierarchy.pdf}
+ \includegraphics[width=0.9\textwidth, trim=0cm 0cm 0cm 0cm]{DS_hierarchy.pdf}
 \end{dunefigure}
 
 \begin{dunefigure}[DUNE DAQ data selection
   subsystem]{fig:daq:data-selection}{Block diagram of the \dword{dune} \dword{daq}
     \dword{daqdss} illustrating hierarchical structure of
     subsystem design, subsystem functionality, and data flow.}
-  %\includegraphics[width=0.95\textwidth, trim=0 2cm 0 0]{DS_summary_2.pdf}
+  \includegraphics[width=0.95\textwidth, trim=0 2cm 0 0]{DS_summary_2.pdf}
 \end{dunefigure}
 
 The first stage of \dword{dune} \dword{fd} operations will trigger on two general
@@ -992,7 +1014,7 @@ The \dword{eb} stage is implemented as a pool of redundant \dword{eb} processes 
 
 
 \begin{dunefigure}[DUNE DAQ back-end operation]{fig:daq:backend}{Illustration of \dword{dune} \dword{daqbes} operation.}
-  %\includegraphics[width=\textwidth]{daq-backend.pdf}
+  \includegraphics[width=\textwidth]{daq-backend.pdf}
 \end{dunefigure}
 
 \begin{itemize}
@@ -1063,7 +1085,7 @@ corresponding interfaces. The detector components and infrastructure elements ac
 subsystems through their provided interfaces. 
 
 \begin{dunefigure}[DAQ CCM subsystem interaction]{fig:daq-ccm-subsys}{Main interaction among the three \dword{daqccm} subsystems.}
- %\includegraphics[width=0.9\textwidth]{daq-ccm-subsys.pdf}
+ \includegraphics[width=0.9\textwidth]{daq-ccm-subsys.pdf}
 \end{dunefigure}
 
 The following sections describe each \dfirst{daqccm} subsystem, covering internal functions and dependencies between each other.
@@ -1079,7 +1101,7 @@ Actions are defined as any kind of human interaction with the \dfirst{daqccm}. T
 The control subsystem consists of several components and utilities, and also has additional subsystems to carry out dedicated roles. It enforces the implementation of required interfaces and actively manages \dword{daq} process lifetimes. It operates in a distributed, fault-tolerant manner due to protocols that will drive the FSM for state sharing. 
 
 \begin{dunefigure}[DAQ control subsystem roles and services]{fig:daq-ccm-control}{Roles and services that compose the \dword{daq} control subsystem.}
-  %\includegraphics[width=0.8\textwidth]{daq-ccm-control.pdf}
+  \includegraphics[width=0.8\textwidth]{daq-ccm-control.pdf}
 \end{dunefigure}
 
 It contains the following core components:
@@ -1097,7 +1119,7 @@ It contains the following core components:
 The configuration subsystem provides several key elements for the configuration management of \dword{daq} components and detector front-end electronics. It provides a description of system configurations, the ability to define and modify configurations, and graphical user interfaces for the human user to access the data. Data access libraries will hide the technology used for the databases implementation. The subsystem is also responsible for the serialization, persistency, and bookkeeping of configurations. 
 
 \begin{dunefigure}[DAQ CCM subsystem interaction]{fig:daq-ccm-config}{Main components of the \dword{daqccm} configuration subsystem.}
-  %\includegraphics[width=0.8\textwidth]{daq-ccm-config.pdf}
+  \includegraphics[width=0.8\textwidth]{daq-ccm-config.pdf}
 \end{dunefigure}
 
 The main components of the configuration subsystem are the following:
@@ -1113,7 +1135,7 @@ The configuration system will mainly consist of standard configuration managemen
 \label{sec:daq:design:ccm:monitoring}
 
 \begin{dunefigure}[DAQ monitoring subsystem roles and services]{fig:daq-ccm-monitoring}{Roles and services that compose the \dword{daq} monitoring subsystem.}
-  %\includegraphics[width=0.8\textwidth]{daq-ccm-monitoring.pdf}
+  \includegraphics[width=0.8\textwidth]{daq-ccm-monitoring.pdf}
 \end{dunefigure}
 
 Highly-scalable and efficient operational monitoring is essential during data-taking periods. Any malfunctioning component of the experiment must be identified and reported as soon as possible. Therefore, the aim of the monitoring subsystem is probing and notifying the status of \dword{daqccm} components, services, and resources. There is also a requirement of \dword{daqccm} infrastructure monitoring and log aggregation. The types of monitoring information vary greatly depending on operational complexity, which require flexibility from the monitoring infrastructure for seamless additions, modifications and aggregated view on service degradation.
@@ -1569,7 +1591,7 @@ module for upstream \dword{daq} electronics, and the remaining space for
 networking and other \dword{daq} computing needs. An initial engineering design of the computer room is shown in Figure~\ref{fig:daq-room}, which meets all requirements for capacity, cooling, safety and installation schedule.
 
 \begin{dunefigure}[DAQ counting room in the CUC]{fig:daq-room}{Initial engineering design for the \dword{daq} counting room in the CUC}
- %\includegraphics[width=0.9\textwidth]{daq-room.jpg}
+ \includegraphics[width=0.9\textwidth]{daq-room.jpg}
 \end{dunefigure}
 
 Starting in Q3~2023, the data room will be ready for the installation of
@@ -1707,7 +1729,7 @@ End of \dword{daq} Commissioning & December 2026  \\
 \end{dunetable}
 
 \begin{dunefigure}[DAQ schedule for first \SI{10}{\kilo\tonne} module]{fig:daq-schedule}{\dword{daq} schedule for first \SI{10}{\kilo\tonne} module. \label{fig:daq:schedule}}
-  %\includegraphics[width=0.95\textwidth,clip,trim=1cm 2cm 1cm 2cm]{daq-schedule.pdf}
+  \includegraphics[width=0.95\textwidth,clip,trim=1cm 2cm 1cm 2cm]{daq-schedule.pdf}
 \end{dunefigure}
 
 
