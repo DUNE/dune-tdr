@@ -208,8 +208,10 @@ up to \SI{100}{\second}.
 Offline considerations require the \dword{daq} to reduce the
 full \dword{fd} data volume for offline permanent storage to  \offsitepbpy.
 
-Strategies will be developed and validated during commissioning and early running that will reduce the data volume through the selection of data based on the activity in the detector (in time and geographical areas), as well as through data compression.
-
+Strategies will be developed and validated during commissioning 
+and early running that will reduce the data volume through the selection
+of data based on the activity in the detector (in time and geographical areas).
+As highlighted earlier the DP front-end electronics already performs data compression. 
 
 For planning, the \dword{daq} will allot an average \dword{snb} trigger rate of one per month.
 Given current understanding of \dword{snb} rates and the $>$95\%
@@ -287,21 +289,14 @@ compression. The system should be evolutionary, taking advantage of the
 staged construction of the \dword{dune} \dword{fd}, thus beginning very
 conservatively for the first \dword{dune} \dword{fd} module, but aggressively reducing
 the design conservatism with further experience of detector
-operations. At the same time, the system is designed add capacity as required. Most processing and buffering of raw
+operations. At the same time, the system is designed to be able to add capacity as required. Most processing and buffering of raw
 detector data is done underground, in the upstream \dword{daq} and low
 level data selection parts of the
 system (see Figure~\ref{fig:daq:layout}), with only event building and data
 storage on surface.
 
 Power, cooling, and space are constrained both in the \dword{cuc} and on the surface, limited to \daqpower and \daqracks (out of \cucracks total) in the \dword{cuc}, and \surfdaqpower and \surfdaqracks on the surface for \dword{daq} for all four \dword{fd} modules.
-The underground computing required for the \dword{daq} to service the 
-\dword{dp} 
-detector module should require less than a quarter of the total power and rack space provided for all four detector modules. 
-The hardware for upstream \dword{daq}, low level data selection,
-various services, networking, and the timing system, including spares,
-all kept in the \dword{cuc}, 
-%is estimated to consume less than \SI{50}{\kilo\watt} and use less than 200U of rack space \cite{bib:docdb15544}. %sync overleaf w/ recent github update (10/23/19)
-\hlfix{should consume}{These are SP estimates, provide DP versions - 23 kW/100U?} less than \SI{63}{\kilo\watt} and all fill less than 300U of rack space \cite{bib:docdb15544}.
+The underground part of the DAQ servicing a DP detector module will require less than half of the active components compared to the DAQ for a SP detector \cite{bib:docdb15544}, and will thus comfortably fit into the space and power allocation foreseen for each detector module.
 
 
 There are five key challenges for the \dword{dune} \dword{fd} \dword{daq} system: 
@@ -358,7 +353,7 @@ TPC \dword{adc} Dynamic Range& \SI{12}{bits}\\ \colhline
 PDS \dword{adc} Sampling Rate & Under study \\ \colhline
 PDS \dword{adc} Dynamic Range & Under study \\ \colhline
 PDS \dword{adc} Readout Length & Under study \\ \colhline
-Localized Event Record Window & \SI{7.5}{\milli\second}\\  \colhline
+Localized Event Record Window & \dpreadout \\  \colhline
 Extended Event Record Window &  \SI{100}{\second}\\  \colhline
 Full size of TPC Localized Event Record per Module (uncompressed) & 4.2 GB \\  \colhline
 Full size of TPC Extended Event Record per Module (uncompressed) & 56 TB\\  \colhline
@@ -416,7 +411,28 @@ Facilities & Physical interfaces &  \citedocdb{6988}{v1} \\ \colhline
 %{This is what WIBs use, what about DP crates?}
   to \dword{minipod} on \dword{felix}.
 
-The data format employs for the charge readout lossless compression, achieved with an optimized version of the Huffman algorithm.  Compression on average reduces by a factor 10 the data volume.  The typical occupancy of a 10 Gbit/s data link is then around 2 Gbit/s. Each charge readout crate includes ten AMC cards, each digitizing 64 channels. The data on the AMC are compressed on the fly, stored on a local memory buffer and continuously streamed to the DAQ.  Data are transmitted by the AMCs to the DAQ, organized in contiguous time-windows. Time-windows are exactly synchronized on the entire detector front-end, thanks to the fact  that the sampling on all AMC is absolutely aligned with respect to the UTC via the White-Rabbit system.  At the beginning of each time window the data compression sequence is reinitialized on all AMC channels starting from the absolute ADC values and the UTC time-stamp of the first sample of the frame is transmitted in a window-header packet to the DAQ. Then each AMC performs, sequentially for its 64 channels, the transmission of the data packets corresponding to the continuous streaming of the  time-window. Given compression, the number of bytes used to transmit the time-window may change dynamically from channel to channel. An example of possible data format is described in the following, assuming a time-window lasting 3 ms and containing 4k samples per channel. The definition of the time-window length is flexible and may be further optimized.  In the given time window the AMC transmits sequentially its data from channel 1 to channel 64 by exploiting multiple data frames. In order to achieve maximum packing per frame, data from several channels are transmitted in the same frame.  Each data frame starts with a header containing the AMC identifier, the frame number, the number of channels included in the frame, including the last transmitted channel  which may be truncated and have its data sequence overflowing in the next frame. Then the frame header provides the list of channel numbers included in the frame and the corresponding number of bytes to be read for each one of them.  For instance in case of a frame containing compressed data from 3 contiguous channels  (n,n+1,n+2) starting from channel number n : n,n+1,n+2,N1,N2,N3.  Where n+2 is the last channel of the frame which may have its data overflowing in the next frame. Immediately after the header the rest of the frame contains the raw compressed data:  N1 bytes for channel n,  N2 bytes for channel n+1, N3 bytes for channel n+2.  The number of channels treated in a frame may vary depending on the compression efficiency. The data format aims at the maximal  occupancy of the data frames, independently of the instantaneous compression fluctuations.
+The data format employs for the charge readout lossless compression, achieved with an 
+optimized version of the Huffman algorithm.  Compression on average reduces by a factor 10 
+the data volume.  The typical occupancy of a 10 Gbit/s data link is then around 2 Gbit/s. 
+Each charge readout crate includes ten AMC cards, each digitizing 64 channels. 
+Data is compressed on the fly on the AMCs, stored on a local memory buffer and continuously streamed to the DAQ.
+Data is transmitted by the AMCs to the DAQ, organized in contiguous time-windows. 
+Time-windows are exactly synchronized on the entire detector front-end, thanks to the fact  
+that the sampling on all AMC is absolutely aligned with respect to the UTC via the White-Rabbit system.  
+At the beginning of each time window the data compression sequence is reinitialized on all AMC channels 
+starting from the absolute ADC values and the UTC time-stamp of the first sample of the frame is 
+transmitted in a window-header packet to the DAQ. Then each AMC performs, sequentially for its 64 channels,
+the transmission of the data packets corresponding to the continuous streaming of the 
+time-window. Given compression, the number of bytes used to transmit the time-window may change 
+dynamically from channel to channel. An example of possible data format is described in the following,
+assuming a time-window lasting \SI{3}{\ms} and containing 4k samples per channel.
+The definition of the time-window length is flexible and may be further optimized.
+In the given time window the AMC transmits sequentially its data from channel 1 to channel 64 by exploiting multiple data frames.
+In order to achieve maximum packing per frame, data from several channels are transmitted in the same frame.
+Each data frame starts with a header containing the AMC identifier, the frame number,
+the number of channels included in the frame, including the last transmitted channel
+which may be truncated and have its data sequence overflowing in the next frame.
+Then the frame header provides the list of channel numbers included in the frame and the corresponding number of bytes to be read for each one of them.  For instance in case of a frame containing compressed data from 3 contiguous channels  (n,n+1,n+2) starting from channel number n : n,n+1,n+2,N1,N2,N3.  Where n+2 is the last channel of the frame which may have its data overflowing in the next frame. Immediately after the header the rest of the frame contains the raw compressed data:  N1 bytes for channel n,  N2 bytes for channel n+1, N3 bytes for channel n+2.  The number of channels treated in a frame may vary depending on the compression efficiency. The data format aims at the maximal  occupancy of the data frames, independently of the instantaneous compression fluctuations.
 
 \item[Computing] The \dword{daq} and computing interface is described in \citedocdb{7123}.
  The computing consortium
@@ -759,7 +775,7 @@ classes of physics, each handled differently at the trigger level:
 
 \begin{description}
 \item[High-energy interactions] High-energy interactions include cosmic muons, neutrino beam interactions, atmospheric neutrinos, and nucleon decays. 
-  The trigger efficiency for these interactions must be $>$99\% for any given particle type (electron, muon, photon, etc.) that has a localized (confined to a few contiguous \dwords{apa}) visible energy deposition above \SI{100}{\MeV}.
+  The trigger efficiency for these interactions must be $>$99\% for any given particle type (electron, muon, photon, etc.) that has a localized (confined to a limited number of neighboring channels) visible energy deposition above \SI{100}{\MeV}.
   To achieve this requirement, algorithms for creating high-energy trigger candidates  target a trigger efficiency of 50\% at \SI{10}{\MeV} visible energy, thus ensuring $>$99\% efficiency or higher at \SI{100}{\MeV}.
   This type of trigger is referred to as localized high energy trigger.
   Pushing the high-energy threshold down could enable detection of diffuse supernova neutrinos and solar neutrinos if radiological and neutron backgrounds are low enough.
@@ -777,7 +793,7 @@ classes of physics, each handled differently at the trigger level:
 
 \noindent Each trigger type prompts readout
 of the entire module but over significantly different time
-ranges: localized triggers prompt readout of \spreadout event records; extended
+ranges: localized triggers prompt readout of \dpreadout event records; extended
 triggers prompt readout of \SI{100}{\second} event records. 
 
 Ultimately, each \dword{trigdecision} culminates in a command sent to
@@ -785,10 +801,7 @@ the \dword{daqbes} subsystem.
 This command contains all logical detector addresses and time ranges
 required, so an \dword{eb} can properly query the upstream \dword{daq}
 buffers and finally collect and output the corresponding detector data
-and the corresponding trigger data. To avoid duplication of data
-records associated with \dwords{trigcommand} that overlap in readout
-record space, the \dword{daqdss} must also time-order and
-prioritize \dwords{trigdecision}. The details for forming this
+and the corresponding trigger data. The details for forming this
 command are described next, while the operation of the \dword{daqbes} is
 described in Section~\ref{sec:daq:design-backend}.
 
@@ -892,8 +905,7 @@ Nominally, individual candidates, or groups of candidates nearby in
 detector space and time, with measures of energy higher than these two
 types of decays, will be passed to the module level trigger. 
 
-This stage of data selection is implemented \num{75} (\dword{tpc}) plus eight
-(\dword{pds}) CPU servers, which receive the \dword{trigprimitive} stream from the upstream \dword{daq} and distribute \dwords{trigcandidate} to the module level trigger
+This stage of data selection is implemented 40 servers, which receive the \dword{trigprimitive} stream from the upstream \dword{daq} and distribute \dwords{trigcandidate} to the module level trigger
 stage, described next, via the \SI{10}{\Gbps} \dword{daq} network. Studies are underway to demonstrate CPU
 resource use and latency, as are efforts to demonstrate online \dword{trigcandidate} generation
 at \dword{protodune}. \Dword{trigcandidate} generation performance is summarized in
@@ -1305,8 +1317,7 @@ will be complete.
 
 The following subsections summarize past, ongoing, and planned development and validation studies and identify how anticipated outcomes will be used to finalize the \dword{daq} design.
 
-\subsection{Design Validation and Development at ProtoDUNEs and Other
-  LArTPC Experiments}
+\subsection{Design Validation and Development at ProtoDUNEs}
 
 
 \label{sec:daq:protodune}
@@ -1558,6 +1569,8 @@ The \dword{wrmch} card  enables clock/timing/trigger distribution to \dwords{amc
 
 
 \subsubsection{Upstream DAQ}
+The readout part of the upstream DAQ relies on FPGA based PCIe cards (FELIX) receiving detector data. Prototype cards implementing parts of the required functionality exist already, but more prototypes are planned before the production readiness review planned in December 2022. 
+While the hardware design will be done at the institutions working in this area, the production of prototypes and final cards will be outsourced, allowing for early identification of those companies that can guarantee a high quality cards production. 
 
 
 \subsubsection{Racks, Servers, Storage and Network}
