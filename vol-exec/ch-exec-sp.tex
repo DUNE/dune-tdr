@@ -12,14 +12,14 @@ To search for leptonic \dword{cp} violation, we must study \nue appearance in th
 
 This chapter gives an overview of the basic operating principles of a \dword{sp} \dword{lartpc}, followed by a description of the \dword{dune} implementation. It then discusses each of the subsystems separately, connecting the design to the overriding physics goals of \dword{dune}.
 
-Figure~\ref{fig:LArTPC} shows the general operating principle of a \dword{sp} \dword{lartpc}. A large volume of \dword{lar} is subjected to a strong \efield of a few hundred volts per centimeter. Charged particles passing through the detector ionize the argon atoms, and the ionization electrons drift in the \efield to the anode wall (called an \dword{apa} array) on a timescale of milliseconds. The \dword{spmod} \dword{apa}s consist of layers of active wires strung at angles to each other to form a grid. The relative voltage between the layers is chosen to ensure that all but the final layer are transparent to the drifting electrons, and these first layers produce bipolar induction signals as the electrons pass through them. The final layer collects the drifting electrons, resulting in a monopolar signal.
+Figure~\ref{fig:LArTPC} shows a schematic of the general operating principle of a \dword{sp} \dword{lartpc}. A large volume of \dword{lar} is subjected to a strong \efield of a few hundred volts per centimeter. Charged particles passing through the detector ionize the argon atoms, and the ionization electrons drift in the \efield to the anode wall (called an \dword{apa} array) on a timescale of milliseconds. The \dword{spmod} \dword{apa}s consist of layers of active wires strung at angles to each other to form a grid. The relative voltage between the layers is chosen to ensure that all but the final layer are transparent to the drifting electrons, and these first layers produce bipolar induction signals as the electrons pass through them. The final layer collects the drifting electrons, resulting in a monopolar signal.
 
 \begin{dunefigure}[The single-phase liquid argon time-projection chamber]{fig:LArTPC}
 {The general operating principle of the single-phase liquid argon time-projection chamber.}
 \includegraphics[trim={5cm 0 5cm 0},clip,width=0.8\textwidth]{graphics/TheBoPicture.pdf}
 \end{dunefigure}
 
-\dword{lar} is also an excellent scintillator, emitting \dword{vuv} light at a wavelength of \SI{126.8}{\nano\meter}. This fast scintillation light, which crosses the detector on a timescale of nanoseconds, is shifted into the visible and collected by \dwords{pd}. The \dword{pd}s can provide a $t_{0}$ determination for events, indicating when the ionization electrons began to drift. Relative to this $t_{0}$, the time at which the ionization electrons reach the anode allows reconstruction of the event topology along the drift direction, which is crucial to fiducialize nucleon-decay events and to apply drift corrections to the ionization charge.
+\dword{lar} is also an excellent scintillator, emitting \dword{vuv} light at a wavelength of \SI{126.8}{\nano\meter}. This prompt scintillation light, which crosses the detector on a timescale of nanoseconds, is shifted into the visible and collected by \dwords{pd}. The \dword{pd}s can provide a $t_{0}$ determination for events, indicating when the ionization electrons began to drift. Relative to this $t_{0}$, the time at which the ionization electrons reach the anode allows reconstruction of the event topology along the drift direction, which is crucial to fiducialize nucleon-decay events and to apply drift corrections to the ionization charge.
 
 The pattern of current observed on the grid of anode wires provides information for reconstruction in the two coordinates perpendicular to the drift direction. The wire pitch on the wire layers is chosen to optimize considerations of  spatial resolution, cost, and \dword{s/n} of the ionization measurement. \dword{s/n} is important because the measurement of the ionization collected is a direct measurement of the $dE/dx$ of the charged particles, which is what enables both calorimetry and particle identification.
 
@@ -28,15 +28,36 @@ The pattern of current observed on the grid of anode wires provides information 
 \includegraphics[width=0.8\textwidth]{DUNESchematic.pdf}
 \end{dunefigure}
 
-Figure~\ref{fig:DUNESchematic} shows a \nominalmodsize \dword{spmod}. Inside a cryostat of outer dimensions \cryostatlen (L) by \cryostatwdth (W) by \cryostatht{} (H), shown in Figure~\ref{fig:Cryostat}, four \spmaxdrift drift volumes are created between five alternating \dword{apa} and \dword{cpa} arrays, each of dimensions \sptpclen (L) by \tpcheight (H).
+Figure~\ref{fig:DUNESchematic} shows a \nominalmodsize fiducial mass \dword{spmod} (\larmass total mass); the key parameters of a \dword{spmod} are listed in Table~\ref{tab:sp-key-parameters}. Inside a cryostat of outer dimensions \cryostatlen (L) by \cryostatwdth (W) by \cryostatht{} (H), shown in Figure~\ref{fig:Cryostat}, four \spmaxdrift drift volumes are created between five alternating \dword{apa} and \dword{cpa} arrays, each of dimensions \sptpclen (L) by \tpcheight (H).
+
+
+\begin{dunetable}
+[Key parameters]
+{p{0.65\textwidth}p{0.25\textwidth}}
+{tab:sp-key-parameters}
+{Key parameters of a \nominalmodsize  \dshort{fd} \dshort{spmod}.}
+Item & Quantity   \\ \toprowrule
+TPC size & \tpcheight$\times \SI{14.0}{\meter} \times$\sptpclen \\ \colhline
+Nominal fiducial mass & \spactivelarmass \\ \colhline
+\dshort{apa} size & $\SI{6}{\meter}\times\SI{2.3}{\meter}$ \\ \colhline
+\dshort{cpa} size & $\SI{1.2}{\meter}\times\SI{4}{\meter}$ \\ \colhline
+Number of \dshort{apa}s & 150 \\ \colhline
+Number of \dshort{cpa}s & 300 \\ \colhline
+Number of \dshort{xarapu} \dshort{pd} bars & 1500 \\ \colhline
+\dshort{xarapu} \dshort{pd} bar size & $\SI{209}{\cm}\times\SI{12}{cm}\times\SI{2}{\cm}$ \\ \colhline
+Design voltage & \sptargetdriftvolt \\ \colhline
+Design drift field & \spmaxfield \\ \colhline
+Drift length & \spmaxdrift \\ \colhline
+Drift speed & $\SI{1.6}{\mm/\micro\second}$ \\
+\end{dunetable}
 
 \begin{dunefigure}[A \dshort{fd} cryostat]{fig:Cryostat}{A  \cryostatlen (L) by \cryostatwdth (W) by \cryostatht{} (H) outer-dimension cryostat that houses a \dword{dune} \nominalmodsize module.}
 \includegraphics[width=0.8\textwidth]{cryostat.pdf}
 \end{dunefigure}
 
-The target purity from electronegative contaminants in the argon is $<\!\!100$\,ppt O$_{2}$ equivalent, enough to ensure a $>\!\!\SI{3}{\milli\second}$ ionization-electron lifetime at the nominal \SI{500}{\volt/\centi\meter} drift voltage. This target electron lifetime ensures \dword{s/n} of $>5$ for the induction planes and $>10$ for the collection planes, which are necessary to perform pattern recognition and two-track separation. 
+The target purity from electronegative contaminants in the argon is $<\!\!100$\,ppt (parts per trillion) O$_{2}$ equivalent, enough to ensure a $>\!\!\SI{3}{\milli\second}$ ionization-electron lifetime at the nominal \SI{500}{\volt/\centi\meter} drift voltage. This target electron lifetime ensures \dword{s/n} of $>5$ for the induction planes and $>10$ for the collection planes, which are necessary to perform pattern recognition and two-track separation. 
 
-Nitrogen contamination must be $<\!25$\,ppm to ensure we achieve our requirement of at least 0.5 \phel{}s per MeV detected for events in all parts of the detector, which in turn ensures %, through the timing requirements discussed in Section~\ref{sec:fdsp-exec-pds}, 
+Nitrogen contamination must be $<\!25$\,ppm (parts per million) to ensure we achieve our requirement of at least 0.5 \phel{}s per MeV detected for events in all parts of the detector, which in turn ensures %, through the timing requirements discussed in Section~\ref{sec:fdsp-exec-pds}, 
 that we can fiducialize nucleon decay events throughout the detector.
 
 \section{Anode Planes}
@@ -54,13 +75,13 @@ short tracks such as few-\si{\cm} kaon tracks from proton-decay events.
 
 \begin{dunefigure}[A stack of two anode plane assemblies]{fig:APAStack}
 {Left: two linked \dword{apa}s form one unit of an \dword{apa} array. \dword{pd} bars are installed across the width of the \dword{apa}s. Right: a zoom into only the top and bottom ends of the \dword{apa} stack. Note the white slashes through the images. This shows the readout electronics and the center of the stack where the \dword{apa}s are connected.}
-\includegraphics[width=\textwidth]{graphics/APAStack.pdf}
+\includegraphics[width=\textwidth]{graphics/APAStack}
 \end{dunefigure}
 
 \section{Cathode Planes and High Voltage}
 
 Each of the module's two \dword{cpa} arrays is formed from 150 \dword{cpa}s (50 along the length, stacked three high), each of which is a $\SI{1.2}{\meter}\times\SI{4}{\meter}$ resistive panel. Each \dword{cpa} has its own independent \dword{hv} supply, providing a current of \SI{0.16}{\milli\ampere} at \sptargetdriftvolt{}. 
-With the  \dword{apa} arrays held close to ground, this results in a uniform \spmaxfield \efield across the drift volume.  A typical \dword{mip} passing through the argon produces roughly 60k ionization electrons per centimeter that drift toward the anodes at approximately $\SI{1.6}{\mm/\micro\second}$. The time to cover the full drift distance is about $\SI{2.4}{\milli\second}$.
+With the  \dword{apa} arrays held close to ground, this results in a uniform \spmaxfield \efield across the drift volume.  A typical \dword{mip} passing through the argon produces roughly 60k ionization electrons per centimeter that drift toward the anodes at approximately $\SI{1.6}{\mm/\micro\second}$. The time to cover the full drift distance is about $\SI{2.2}{\milli\second}$.
 
 An \dword{fc} built from field-shaping aluminum profiles surrounds the drift volumes, keeping  the \efield uniform throughout the active \dword{tpc} volume to within 1\%.  The aluminum profiles are connected via a resistive divider chain; between each profile, two \SI{5}{\giga\ohm} resistors, arranged in parallel, provide  \SI{2.5}{\giga\ohm} resistance to create a nominal \SI{3}{\kilo\volt} drop. The \dword{fc} is illustrated in Figure~\ref{fig:FieldCage}.
 
@@ -81,7 +102,7 @@ To enable us to look at low-energy particles, we plan to keep noise below $1000\
 \label{sec:fdsp-exec-pds}
 
 In addition to the ionization, charged particles passing through the argon produce approximately 24,000 scintillation photons per \si{\mega\electronvolt}. The scintillation photons are fast, arriving at the \dwords{pd} nanoseconds after production. This scintillation light provides a $t_{0}$ for each event. Comparison of the arrival time of ionization at the anode with this $t_{0}$ enables reconstruction in the drift direction. 
-The \dword{spmod} implemenation enables $\sim\,\SI{1}{\mm}$ position resolution for \SI{10}{\mega\electronvolt} \dword{snb} events. The \dword{pd} $t_{0}$ is also vital in fiducializing nucleon-decay events, which allows us to reject cosmic-muon-induced background events that will occur near the edges of the detector modules.
+The \dword{spmod} implementation enables $\sim\,\SI{1}{\mm}$ position resolution for \SI{10}{\mega\electronvolt} \dword{snb} events. The \dword{pd} $t_{0}$ is also vital in fiducializing nucleon-decay events, which allows us to reject cosmic-muon-induced background events that will occur near the edges of the detector modules.
 
 The photons are collected by devices called \dwords{xarapu}\footnote{An ``arapuca'' is a South American bird trap; the name is used here as an analogy to the way the devices trap photons.}, which are mounted in the \dword{apa} frames between the sets of wire layers, as shown in Figure~\ref{fig:APAStack}. 
 The \dword{xarapu} bars consist of layers of dichroic filter and wavelength-shifter, illustrated in Figure~\ref{fig:ArapucaCell}, that shift the \dword{vuv} scintillation light into the visible and trap these visible photons, transporting them to \dword{sipm} devices. \dword{pd} modules are shown in Figure~\ref{fig:PDModules}. The signals from these \dwords{sipm} are sent along cables that pass through the hollow \dword{apa} frames, up to feedthroughs in the cryostat roof. The \dword{pd} and \dword{apa}-wire data-streams are merged at the \dword{daq}.
