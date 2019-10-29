@@ -169,8 +169,7 @@ low-energy solar neutrino interactions. Supernova burst neutrinos,
 expected to arrive at a galactic \dword{snb} rate of once per century, 
 would span the \SIrange{10}{30}{\MeV} range. At higher energies (generally
 more than \SI{100}{\MeV}), rates are dominated by cosmic rays, beam neutrino interactions,
-and atmospheric neutrino interactions. With the exception of supernova
-burst neutrinos, the activity associated with any of these physics
+and atmospheric neutrino interactions. With the exception of \dword{snb} neutrinos, the activity associated with any of these physics
 signals is localized in space and particularly in time. Supernova burst
 activity, on the other hand, is characteristically distinct, because it can
 manifest as up to several thousands of low-energy neutrino interactions
@@ -191,8 +190,8 @@ The \dword{daq}  system must have $>$99\% efficiency for particles
 depositing $>$\SI{100}{\MeV} of energy in the detector for localized
 high-energy triggers. The system's architecture must also provide a 
 mechanism for triggering on galactic supernova bursts with $>$95\%
-efficiency for a supernova burst producing at least 60 
-interactions with a neutrino energy $>$\SI{10}{\MeV} in 12~kt of active
+efficiency for an \dword{snb} producing at least 60 
+interactions with a neutrino energy $>$\SI{10}{\MeV} in \dpactivelarmass of active
 detector mass, during the first \SI{10}{\second} of the burst, per
 \dword{dune} requirements. This requirement ensures sensitivity to the
 great majority of \dwords{snb} in our galaxy as well as some bursts in small
@@ -215,7 +214,7 @@ As highlighted earlier the DP front-end electronics already performs data compre
 
 For planning, the \dword{daq} will allot an average \dword{snb} trigger rate of one per month.
 Given current understanding of \dword{snb} rates and the $>$95\%
-expected efficiency for a \dword{snb} with at least 60 interactions
+expected efficiency for an \dword{snb} with at least 60 interactions
 each of minimum \SI{10}{\MeV} in true neutrino energy, most such triggers will be due to fluctuations
 of low energy radiological backgrounds and, potentially, excess
 noise. 
@@ -239,7 +238,7 @@ requirement of \offsitepbpy sent to permanent storage are summarized in Table~\r
 \end{dunefigure}
 
 \begin{dunetable}
-  [Expected DAQ Yearly Data Rates]
+  [Expected DAQ yearly data rates]
   {p{0.25\textwidth}p{0.1\textwidth}p{0.5\textwidth}}
   {tab:daq:rates}{Summary
       of expected data rates for a \SI{10}{\kilo\tonne} \dword{dpmod}   . The rates for normal (non-SNB triggers) assume a readout window of \SI{7.5}{\milli\second}. These numbers do not include lossless compression which is expected to provide as much as a 10x reduction in data volume.  
@@ -258,7 +257,7 @@ First, the activity of the individual \dword{snb} neutrino interactions
 should be relatively low energy (\SIrange{10}{30}{\mega\electronvolt}),
 often indistinguishable from pile up of radiological background activity in the
 detector.  Triggering on an ensemble of \bigo{100} events expected on
-average in the case of a galactic supernova burst is, therefore,
+average in the case of a galactic \dword{snb} is, therefore,
 advantageous; however, this ensemble of events will likely be rare over the
 entire detector and over an extended period of \bigo{10}\si{s}, so
 sufficient buffering capability must be designed into the system to
@@ -266,7 +265,7 @@ capture the corresponding signals.
 Furthermore, to ensure high efficiency in collecting \dword{snb} interactions
 that, individually, are below low-energy activity threshold, data from
 all channels in the detector will be recorded over an extended and
-contiguous period,  which is specified to \SIrange{30}{100}{\second}, around every \dword{snb}
+continuous period,  which is specified to \SIrange{30}{100}{\second}, around every \dword{snb}
 trigger. This time has been defined in consultation with the \dword{dune}
 physics groups.
 
@@ -315,7 +314,7 @@ There are five key challenges for the \dword{dune} \dword{fd} \dword{daq} system
   The depth of this buffer is determined in
   consultation with physics groups and driven primarily by the need
   to retain all unbiased data while processing up to \SI{10}{s} of
-  data for the \dword{trigdecision} preceding a \dword{snb} trigger.
+  data for the \dword{trigdecision} preceding an \dword{snb} trigger.
   Collecting data containing information on other types of interactions and decays does not pose additional requirements on the upstream \dword{daq} buffer because the latency required for triggers should be well below \SI{10}{s}.
 
 \item Fourth, the \dword{daq} must support a very wide range of readout windows and trigger rates. This includes acquiring localized events in both time and space up to the very large and rare \dword{snb} detector-wide readouts over \SI{100}{s}.
@@ -333,7 +332,7 @@ These parameters set the scale of data buffering, processing, and transferring r
 into each \dword{fd} module. 
 
 \begin{dunetable}
-[Key DAQ Parameters]
+[Key DAQ parameters]
 {ll}
 {tab:daq:parameters}
 {Summary of important parameters driving the \dword{daq} design.  
@@ -372,7 +371,7 @@ briefly in the following subsections. Interface agreements with
 facilities and underground installation are described in Section~\ref{sec:daq:production}.
 
 \begin{dunetable}
-[\dword{daq} System Interface Links]
+[\dshort{daq} system interface links]
 {p{0.3\textwidth}p{0.3\textwidth}p{0.2\textwidth}}
 {tab:daq:interfaces}
 {Data Acquisition System Interface Links.
@@ -405,6 +404,7 @@ Facilities & Physical interfaces &  \citedocdb{6988}{v1} \\ \colhline
 %{This is what WIBs use, what about DP crates?}
   to \dword{minipod} on \dword{felix}.
 
+\fixme{next pgraph needs dwords. anne}
 The data format employs for the charge readout lossless compression, achieved with an 
 optimized version of the Huffman algorithm.  Compression on average reduces by a factor 10 
 the data volume.  The typical occupancy of a 10 Gbit/s data link is then around 2 Gbit/s. 
@@ -426,7 +426,7 @@ In order to achieve maximum packing per frame, data from several channels are tr
 Each data frame starts with a header containing the AMC identifier, the frame number,
 the number of channels included in the frame, including the last transmitted channel
 which may be truncated and have its data sequence overflowing in the next frame.
-Then the frame header provides the list of channel numbers included in the frame and the corresponding number of bytes to be read for each one of them.  For instance in case of a frame containing compressed data from 3 contiguous channels  (n,n+1,n+2) starting from channel number n : n,n+1,n+2,N1,N2,N3.  Where n+2 is the last channel of the frame which may have its data overflowing in the next frame. Immediately after the header the rest of the frame contains the raw compressed data:  N1 bytes for channel n,  N2 bytes for channel n+1, N3 bytes for channel n+2.  The number of channels treated in a frame may vary depending on the compression efficiency. The data format aims at the maximal  occupancy of the data frames, independently of the instantaneous compression fluctuations.
+Then the frame header provides the list of channel numbers included in the frame and the corresponding number of bytes to be read for each one of them.  For instance in case of a frame containing compressed data from three contiguous channels  (n,n+1,n+2) starting from channel number n : n,n+1,n+2,N1,N2,N3.  Where n+2 is the last channel of the frame which may have its data overflowing in the next frame. Immediately after the header the rest of the frame contains the raw compressed data:  N1 bytes for channel n,  N2 bytes for channel n+1, N3 bytes for channel n+2.  The number of channels treated in a frame may vary depending on the compression efficiency. The data format aims at the maximal  occupancy of the data frames, independently of the instantaneous compression fluctuations.
 
 \item[Computing] The \dword{daq} and computing interface is described in \citedocdb{7123}.
  The computing consortium
@@ -633,7 +633,7 @@ detector data until the \dword{daqdss} has issued a \dword{trigcommand}
 (see Section~\ref{sec:daq:design-data-selection}) and until the
 \dword{daqbes} (Section~\ref{sec:daq:design-backend}) has requested
 and received the corresponding selected data. 
-In addition, in the case of a \dword{snb} trigger, data received after
+In addition, in the case of an \dword{snb} trigger, data received after
 the issuing of the trigger must be buffered for longer to
 avoid loss of data due to any possible downstream
 bottlenecks. Localized and extended trigger activity are associated
@@ -644,7 +644,7 @@ A \dword{trigdecision} based on localized
 activity should require buffering the full data stream for no more than one second.
 Extended triggers present a far more challenging set of buffering
 requirements; 
-early activity from a \dword{snb} may occur at a rate near that of radiological activity.
+early activity from an \dword{snb} may occur at a rate near that of radiological activity.
 Theoretical estimates indicate \snbpretime of integration time may be needed for the
 \dword{snb} interaction rate to be deemed significantly enough above
 background rate to form a trigger decision.
@@ -701,7 +701,7 @@ signals, as well as beam interactions,
 atmospheric neutrinos, rare baryon-number-violating events, and cosmic
 ray events that deposit visible energy in excess of \SI{100}{\MeV}. 
 It must also select data associated with potential
-\dwords{snb} producing 60 neutrino interactions over a span of \SI{10}{\second} in 12~ktons of active
+\dwords{snb} producing 60 neutrino interactions over a span of \SI{10}{\second} in \dpactivelarmass of active
 liquid argon mass each with \SI{10}{\MeV} in neutrino energy, with $>$95\% efficiency. 
 Furthermore, to meet the requirement that the \dword{dune} \dword{fd} maintain
 $<$\offsitepbpy to permanent storage, the \dword{daqdss}
@@ -942,7 +942,7 @@ The \dword{daqeti} provides a loose coupling between the
 \dwords{mlt}, sources of external information such as beam spill times
 and information to or from components of \dword{dune} \dword{fd}
 calibration systems. As an interface between \dwords{mlt}, the \dword{daqeti} receives and distributes information about module-level \dword{snb} \dwords{trigcommand}.
-This allows any detector module, which alone may not have satisfied a \dword{snb} trigger requirement, to nonetheless perform an \dword{snb} readout.
+This allows any detector module, which alone may not have satisfied an \dword{snb} trigger requirement, to nonetheless perform an \dword{snb} readout.
 The \dword{daqeti} is also responsible for forming a coincidence between module-level \dword{snb} \dwords{trigcommand} and publishing the results, e.g.,~for consumption by the \dword{snews}.
 
 The \dword{daqeti} also receives information about beam spill times from the accelerator.
@@ -1069,7 +1069,7 @@ The \dword{daq} data network is connected to the \fnal network via a WAN interfa
 
 The data model for the DUNE far detector describes the format and characteristics of the triggered data at each stage in the analysis chain, the grouping of the data into logical units such as runs, and the characteristics of ancillary data such as detector configuration parameters and calibration results.
 
-The requirements that these place on the \dword{daq} are primarily in the areas of flexibility and traceability.  The \dword{daq} will have the flexibility to handle the readout of triggers that have a time window that is on the order of a single TPC drift time (for example a trigger associated with a beam gate window), triggers that have a time window of many seconds (such as for a supernova burst trigger), and windows between those two extremes (for detector and electronics studies).  In the area of traceability, the \dword{daq} system will provide the necessary level of detail regarding the conditions that triggered each event, the expected and actual regions of the detector that contributed raw data to each event, the conditions of the detector and electronics during data taking, the version and configuration of the software components used in the \dword{daq} chain, etc.
+The requirements that these place on the \dword{daq} are primarily in the areas of flexibility and traceability.  The \dword{daq} will have the flexibility to handle the readout of triggers that have a time window that is on the order of a single TPC drift time (for example a trigger associated with a beam gate window), triggers that have a time window of many seconds (such as for an \dword{snb} trigger), and windows between those two extremes (for detector and electronics studies).  In the area of traceability, the \dword{daq} system will provide the necessary level of detail regarding the conditions that triggered each event, the expected and actual regions of the detector that contributed raw data to each event, the conditions of the detector and electronics during data taking, the version and configuration of the software components used in the \dword{daq} chain, etc.
 
 \subsection{Control, Configuration, and Monitoring}
 \label{sec:daq:design-run-control}
@@ -1206,7 +1206,7 @@ This rate is chosen in order for this common clock to satisfy the requirements o
 %
 To make full use of the information from the \dword{pds}, the common clock must be aligned within a single detector 
 module with an accuracy of \bigo{\SI{10}{\nano\second}}. 
-For a common trigger for a \dword{snb} between modules, the timing must have an accuracy of order \SI{1}{\milli\second}.
+For a common trigger for an \dword{snb} between modules, the timing must have an accuracy of order \SI{1}{\milli\second}.
 However, a tighter constraint is the need to calibrate the common clock to universal time derived from \dword{gps} so the \dword{daqdsn} algorithm can be adjusted inside an accelerator spill, which again requires an absolute accuracy of order \SI{1}{\micro\second}. The design of the timing system allows for an order-of-magnitude better synchronization precision than these requirements, allowing a substantial margin of safety and the possibility for future upgrades to front-end electronics.
 
 
@@ -1423,21 +1423,19 @@ ProtoDUNE DAQ hardware as used during beam data taking.
 \subsubsection{\dword{pddp} DAQ architecture}
 
 The \dword{pddp} \dword{daq} system is a Ethernet network based \dword{daq} system which can acquire data at high bandwidth (up to 20 GB/s).
-It includes exactly the same Front-End  (FE) elements design as the system foreseen for the 10 kton dual-phase module and similar back-end (BE) architecture.  
+It includes exactly the same Front-End  (FE) elements design as the system foreseen for the \nominalmodsize \dword{dpmod} and similar back-end (BE) architecture.  
 
 The front-end digitization units (AMCs) are contained in uTCA crates. Each charge readout crate, located in front of the corresponding signal feedthrough chimney on the cryostat roof can include up to 10 AMC reading each 64 channels for a total of 640 channels per crate digitized at 2.5 MHz. A uTCA crate is a 10 Gbit/s network system connecting the AMC with its own switch included in the crate controller (MCH). The MCH of each crate is connected with a dedicated 10 Gbit/s to a Level 1 (L1) event builder.  The back-end  \dword{daq} system of \dword{pddp}  consists of two levels of event builder machines Level 1 and Level 2 (L2)  plus the network infrastructure and the online storage/processing facility.  The L1 event builders are connected via several links at 40 Gbit/s to the Level 2 (L2) event builders and to a high bandwidth distributed storage system (EOS), the network infrastructure ensures total 20 GB/s bandwidth.  
 The task of the event builders is to receive in input the data flow from the front-end system, to build the events and cluster them in data files. Eventually these data files are written on the distributed EOS file system of the local storage servers.
 
 A global sketch of  the network architecture of \dword{pddp} is shown in picture \ref{fig:BE_network}
 
-\begin{figure} [h!]
- \centering
-\includegraphics[width=.7\textwidth]{graphics/network.pdf} 
- \caption{ Sketch of the network architecture of the \dword{pddp} DAQ system}
- \label{fig:BE_network} 
- \end{figure}
+ 
+  \begin{dunefigure}[network architecture of the \dshort{pddp} DAQ system]{fig:BE_network}{Sketch of the network architecture of the \dword{pddp} \dword{daq} system}
+\includegraphics[width=.7\textwidth]{network.pdf} 
+\end{dunefigure}
 
-The data acquisition in \dword{pddp} is currently trigger based. The \dword{daq} front-end transmits the data of the drift window corresponding to each trigger. The FE system consists of 12 uTCA crates for the charge readout and one crate for the light readout.  All these crates are connected to the back-end system with Ethernet optical links operating at 10 Gbit/s. A trigger server handles the white-rabbit time-stamping of external trigger signals (beam counters, cosmic counters, PMTs trigger, calibration triggers, random triggers) and the transmission of these time-stamps to the AMCs via the White-Rabbit network and of the trigger information to the L1 event builders via a dedicated Ethernet network. The White-Rabbit network ensures also the timing and synchronization of the AMC digitization units. 
+The data acquisition in \dword{pddp} is currently trigger based. The \dword{daq} front-end transmits the data of the drift window corresponding to each trigger. The FE system consists of 12 \dword{utca} crates for the charge readout and one crate for the light readout.  All these crates are connected to the back-end system with Ethernet optical links operating at 10 Gbit/s. A trigger server handles the white-rabbit time-stamping of external trigger signals (beam counters, cosmic counters, PMTs trigger, calibration triggers, random triggers) and the transmission of these time-stamps to the AMCs via the White-Rabbit network and of the trigger information to the L1 event builders via a dedicated Ethernet network. The White-Rabbit network ensures also the timing and synchronization of the AMC digitization units. 
 
 Data are acquired via the the network and assembled in events in the RAM memories of the two L1 event builders {\it(np02evbl1a, np02evbl1b)}.
 The task of the L1 event builder is to put together data from the uTCA crates for the same drift widow. Each event builder deals with the data corresponding to half of the detector and its architecture is based on a DELL R730 machine (384 GB RAM, 2 Intel cards R710, 2 Mellanox
@@ -1469,20 +1467,18 @@ As soon as a sequence data file has been transferred to NP02EOS:
 
 The overall activity of the online storage and processing farm is monitored with grafana dashboards. A run control interface ensures the control and monitoring of all the components of the system in order to start and stop runs, and check the data transfer to the local EOS. The  \dword{pddp} back-end system is shown in picture \ref{fig:BE_machines}
 
-\begin{figure} [h!]
- \centering
-\includegraphics[width=.7\textwidth]{graphics/daqroom.pdf} 
- \caption{ Picture of the \dword{pddp} DAQ back-end system including the event builders and the online storage system, the online processing farm is not visible in this picture}
- \label{fig:BE_machines} 
- \end{figure}
+ 
+ \begin{dunefigure}[\dshort{pddp} DAQ back-end system]{fig:BE_machines}{Picture of the \dword{pddp} DAQ back-end system including the event builders and the online storage system, the online processing farm is not visible in this picture}
+ \includegraphics[width=0.7\textwidth]{daqroom.pdf}
+\end{dunefigure}
 
-The FE AMC digitization cards have also a data acquisition mode in continuous streaming with data compression which is foreseen for the trigger-less operation in \dword{dune} 10 kton. The \dword{pddp} back-end can also support this operation mode in which the trigger is defined as back-end by using the L1 event builders for memory buffering and definition of the trigger primitives, interconnected to a trigger definition node deciding which data have to be dumped on disk. The L2 machines will be then still used in order to assemble the files to be written on the distributed storage system. In this operation mode data are supposed to be decompressed on the fly by the L1 network cards in order to perform the search for the trigger primitives. A dedicated R\&D is being performed in order to optimize the decompression and trigger primitives search firmware by using Bittware FPGA cards. This firmware can be then implemented on other network cards with FPGA processing capabilities such as the \dword{felix} cards. It is foreseen in a second phase to replace the Mellanox network cards connecting the L1 event builders to the uTCA crates with \dword{felix} cards in order to have the operation mode of \dword{pddp} compatible with both the trigger based mode which has been designed for beam application and the possibility of performing full scale trigger-less tests of the \dword{dune} operation mode.
+The FE AMC digitization cards have also a data acquisition mode in continuous streaming with data compression which is foreseen for the trigger-less operation in \dword{dune} \nominalmodsize. The \dword{pddp} back-end can also support this operation mode in which the trigger is defined as back-end by using the L1 event builders for memory buffering and definition of the trigger primitives, interconnected to a trigger definition node deciding which data have to be dumped on disk. The L2 machines will be then still used in order to assemble the files to be written on the distributed storage system. In this operation mode data are supposed to be decompressed on the fly by the L1 network cards in order to perform the search for the trigger primitives. A dedicated R\&D is being performed in order to optimize the decompression and trigger primitives search firmware by using Bittware FPGA cards. This firmware can be then implemented on other network cards with FPGA processing capabilities such as the \dword{felix} cards. It is foreseen in a second phase to replace the Mellanox network cards connecting the L1 event builders to the uTCA crates with \dword{felix} cards in order to have the operation mode of \dword{pddp} compatible with both the trigger based mode which has been designed for beam application and the possibility of performing full scale trigger-less tests of the \dword{dune} operation mode.
 
 \subsubsection{\dword{pddp} Outcomes}
 
 The installation of the \dword{daq} system of \dword{pddp} was completed in March 2019 with the installation of the digital front-end and timing systems. The \dword{daq} system was immediately operational without having to implement any configuration changes and since then it  has been constantly collecting  noise data, until August 2019 when the TPC started operating. The data taking for cosmic events started on August 29th 2019, after the Charge Readout Planes commissioning period. Since then more than 1.2 millions of cosmic events have been collected, corresponding to 130 TB. The data taking has been mostly performed with random triggers at a few 10 Hz rate given the fact that the scintillator panels in order to tag cosmic rays were not available yet. This running mode based on random triggers also allowed to stress and test the system at higher rate with respect to the one (<1 Hz) which would have been provided by the cosmic trigger panels.  Events have been also systematically been reconstructed by the online storage facility on real time.
 
-The \dword{daq} system has shown to be very stable with no issues encountered at the level of the event builders and the associated software. The only problems occurred were related to some sporadic cooling failures of the \dword{daq} room (in common for both \dword{pdsp} and \dword{pddp}) which hosts the network infrastructure and the event builders and the storage facility. These cooling failures obliged to shut down the machines for a few hours until when the chilled water re-circulation was properly restarted by the CERN infrastructure. The back-end system implemented for \dword{pddp} is equivalent to the system which will be implemented for a dual-phase 10 kton module, it is fully interfaced with the same front-end electronics foreseen for the 10 kton module and it has shown to be working with no issues, guaranteeing a smooth detector data taking.
+The \dword{daq} system has shown to be very stable with no issues encountered at the level of the event builders and the associated software. The only problems occurred were related to some sporadic cooling failures of the \dword{daq} room (in common for both \dword{pdsp} and \dword{pddp}) which hosts the network infrastructure and the event builders and the storage facility. These cooling failures obliged to shut down the machines for a few hours until when the chilled water re-circulation was properly restarted by the \dword{cern} infrastructure. The back-end system implemented for \dword{pddp} is equivalent to the system which will be implemented for a \nominalmodsize \dword{dpmod}, it is fully interfaced with the same front-end electronics foreseen for the \nominalmodsize module and it has shown to be working with no issues, guaranteeing a smooth detector data taking.
 The online storage system of \dword{pddp} has already the capabilities to satisfy the storage needs of a \dword{dune} far detector module.
 
 
@@ -1573,8 +1569,7 @@ While commercial devices do not need to be produced or assembled, enough time ha
 \subsection{Installation and Integration}
 
 
-The \dword{daq} will be installed in an enclosure in the west end of the Central
-Utilities Cavern (\dword{cuc}) (Figure~\ref{fig:cavern-layout}).  Roughly
+The \dword{daq} will be installed in an enclosure in the west end of the \dword{cuc} (Figure~\ref{fig:cavern-layout}).  Roughly
 half of this space will be office space (including control
 workstations) and the other will be a computer room to hold the \dword{daq}
 front-end computing and network equipment (Figure~\ref{fig:install-cuc}). Further details of the interface of \dword{daq} with underground facilities
@@ -1638,7 +1633,7 @@ R\&D, integration, and, in the future, construction, commissioning and installat
 \end{dunefigure}
 
 \begin{dunetable}
-[DAQ Consortium Board institutional members and countries]
+[DAQ consortium board institutional members and countries]
 {p{0.65\textwidth}p{0.25\textwidth}}
 {tab:daq-ib}
 {DAQ Consortium Board institutional members and countries.}   
@@ -1683,7 +1678,7 @@ Stanford Linear Accelerator Lab (SLAC) & USA     \\ \colhline
 The high-level \dword{daq} milestones are listed in Table~\ref{tab:daq-sched}, interleaved with the top-level DUNE project milestones, and illustrated in Figure~\ref{fig:daq:schedule}. Since the \dword{daq} project is largely based on commercial off-the-shelf components, it can be seen in the overall timeline that many of the components are procured relatively late in the project schedule.
 
 \begin{dunetable}
-[DAQ Consortium Schedule]
+[DAQ consortium milestones]
 {p{0.65\textwidth}p{0.25\textwidth}}
 {tab:daq-sched}
 {\dword{daq} Consortium Schedule}   
