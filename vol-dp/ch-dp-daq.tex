@@ -351,8 +351,8 @@ PDS \dword{adc} Dynamic Range & Under study \\ \colhline
 PDS \dword{adc} Readout Length & Under study \\ \colhline
 Localized Event Record Window & \dpreadout \\  \colhline
 Extended Event Record Window &  \SI{100}{\second}\\  \colhline
-Full size of TPC Localized Event Record per Module (uncompressed) & 4.2 GB \\  \colhline
-Full size of TPC Extended Event Record per Module (uncompressed) & 56 TB\\  \colhline
+Full size of TPC Localized Event Record per Module (uncompressed) & \SI{4.2}{GB} \\  \colhline
+Full size of TPC Extended Event Record per Module (uncompressed) & \SI{56}{TB}\\ 
 \end{dunetable}
 
 
@@ -421,7 +421,9 @@ starting from the absolute ADC values and the UTC time-stamp of the first sample
 transmitted in a window-header packet to the DAQ. Then each AMC performs, sequentially for its 64 channels,
 the transmission of the data packets corresponding to the continuous streaming of the 
 time-window. Given compression, the number of bytes used to transmit the time-window may change 
-dynamically from channel to channel. An example of possible data format is described in the following,
+dynamically from channel to channel. 
+
+An example of possible data format is described in the following,
 assuming a time-window lasting \SI{3}{\ms} and containing 4k samples per channel.
 The definition of the time-window length is flexible and may be further optimized.
 In the given time window the AMC transmits sequentially its data from channel 1 to channel 64 by exploiting multiple data frames.
@@ -470,7 +472,7 @@ subsequently through the
 
 \item[Timing and Synchronization] The timing system of the \dword{dune}
   \dword{fd} connects with almost all detector systems and with the calibration
-  system and has a uniform interface to each of them. 
+  system.  It has a uniform interface to each of them. 
   A single interface document, \citedocdb{11224}, describes all these timing
   interfaces. 
   In particular, the DAQ timing system will interface with the White Rabbit
@@ -1097,7 +1099,7 @@ The following sections describe each \dfirst{daqccm} subsystem, covering interna
 
 \subsubsection{Access}
 \label{sec:daq:design:ccm:access}
-Actions are defined as any kind of human interaction with the \dfirst{daqccm}. The access subsystem is responsible for the action delegation to internal function calls and procedures. It's implementation is driven by the control, configuration and monitoring interface specifications, and protects the direct access to detector and infrastructural resources. It also controls authentication and authorization, which locks different functionalities to certain actor groups and subsystems. As an example, only the detector experts can modify front-end configuration through the configuration interfaces, or only an expert user can exclude an APA's readout from data taking. 
+Actions are defined as any kind of human interaction with the \dfirst{daqccm}. The access subsystem is responsible for the action delegation to internal function calls and procedures. Its implementation is driven by the control, configuration and monitoring interface specifications, and protects the direct access to detector and infrastructural resources. It also controls authentication and authorization, which locks different functionalities to certain actor groups and subsystems. As an example, only the detector experts can modify front-end configuration through the configuration interfaces, or only an expert user can exclude an APA's readout from data taking. 
 
 
 \subsubsection{Control}
@@ -1256,7 +1258,7 @@ the White Rabbit Grand Master switch of the DP electronics timing system.
 
 This section starts with a description of the generic DAQ validation efforts and ends with those specific to interfacing the DAQ with DP
 electronics.  As described above, the majority of design elements of the DUNE FD DAQ
-are intentionally independent from details of the detector, its electronics and the form and content of the data they provide as input
+are intentionally independent from details of the detector, its electronics, and the form and content of the data they provide as input
 to the DAQ. 
 The differences are accommodated by the thin, custom hardware boundary layer composed of FELIX boards. 
 This boundary provides the first and primary translation or ``type
@@ -1266,7 +1268,7 @@ detector technology.
 
 While FELIX absorbs technical differences in formats, rates, etc, some validations described below are sensitive to the information content of
 their input data. 
-Specifically, the fraction, form and type of the data that is input to
+Specifically, the fraction, form, and type of the data that is input to
 self-triggering studies determines to some extent the performance of the DAQ element being validated.
 It can be argued in many cases that a successful validation performed with SP data ensures a successful outcome with equivalent DP data.
 The reasons for this become obvious given the following facts which
@@ -1288,16 +1290,16 @@ Given this practical adaptation of SP data in the validation of DAQ elements for
 governs the general validation and development of the \dword{dune}
 \dword{fd} \dword{daq} design:
 \begin{itemize}
-\item Use of \dword{protodune} as a design demonstration and
+\item use of \dword{protodune} as a design demonstration and
   development platform. 
-\item Use of vertical slice teststands for further development and testing of
+\item use of vertical slice teststands for further development and testing of
   individual \dword{daq} subsystems and for key aspects of the
-  overall \dword{daq}
-\item Use of horizontal slice tests to demonstrate scaling the design
+  overall \dword{daq}.
+\item use of horizontal slice tests to demonstrate scaling the design
   where the multiplicity of components in subsystem layers is important.
-\item Use of \dword{fd} MonteCarlo simulations and emulations in order
+\item use of \dword{fd} MonteCarlo simulations and emulations in order
   to augment actual hardware demonstrations at \dword{protodune} and teststands.
-\item Benefit from developments and measurements from other ongoing
+\item benefit from developments and measurements from other ongoing
   LArTPC experiments, including MicroBooNE, SBND, and ICARUS.
 \end{itemize}
 
@@ -1475,15 +1477,24 @@ The overall activity of the online storage and processing farm is monitored with
  \includegraphics[width=0.7\textwidth]{daqroom.pdf}
 \end{dunefigure}
 
-The FE AMC digitization cards have also a data acquisition mode in continuous streaming with data compression which is foreseen for the trigger-less operation in \dword{dune} \nominalmodsize. The \dword{pddp} back-end can also support this operation mode in which the trigger is defined as back-end by using the L1 event builders for memory buffering and definition of the trigger primitives, interconnected to a trigger definition node deciding which data have to be dumped on disk. The L2 machines will be then still used in order to assemble the files to be written on the distributed storage system. In this operation mode data are supposed to be decompressed on the fly by the L1 network cards in order to perform the search for the trigger primitives. A dedicated R\&D is being performed in order to optimize the decompression and trigger primitives search firmware by using Bittware FPGA cards. This firmware can be then implemented on other network cards with FPGA processing capabilities such as the \dword{felix} cards. It is foreseen in a second phase to replace the Mellanox network cards connecting the L1 event builders to the uTCA crates with \dword{felix} cards in order to have the operation mode of \dword{pddp} compatible with both the trigger based mode which has been designed for beam application and the possibility of performing full scale trigger-less tests of the \dword{dune} operation mode.
+The FE AMC digitization cards have also a data acquisition mode in continuous streaming with data compression, which is foreseen for the triggerless operation in the \nominalmodsize\dword{dpmod}. The \dword{pddp} back-end can also support this operation mode in which the trigger is defined as back-end by using the L1 event builders for memory buffering and definition of the trigger primitives, interconnected to a trigger definition node deciding which data have to be dumped on disk. The L2 machines will be then still used in order to assemble the files to be written on the distributed storage system. In this operation mode data are supposed to be decompressed on the fly by the L1 network cards in order to perform the search for the trigger primitives. Dedicated R\&D is being performed in order to optimize the decompression and trigger primitives search firmware by using Bittware FPGA cards. This firmware can be then implemented on other network cards with FPGA processing capabilities such as the \dword{felix} cards. It is foreseen in a second phase to replace the Mellanox network cards connecting the L1 event builders to the uTCA crates with \dword{felix} cards in order to have the operation mode of \dword{pddp} compatible with both the trigger based mode which has been designed for beam application and the possibility of performing full scale trigger-less tests of the \dword{dune} operation mode.
 
 \subsubsection{\dword{pddp} Outcomes}
+\begin{comment}%Anne rewriting
+The installation of the \dword{daq} system of \dword{pddp} was completed in March 2019 with the installation of the digital front-end and timing systems. The \dword{daq} system was immediately operational without having to implement any configuration changes and since then it  %has been  constantly collecting  
+collected noise data constantly through August 2019 when the TPC started operating. The data taking for cosmic events started on August 29th 2019, after the Charge Readout Planes commissioning period. Since then more than 1.2 million cosmic events have been collected, corresponding to 130 TB. The data taking has been mostly performed with random triggers at a a rate of tens of hertz, %few 10 Hz rate 
+given the fact that the scintillator panels in order to tag cosmic rays were not available yet. This running mode based on random triggers also allowed to stress and test the system at higher rate with respect to the one (<1 Hz) which would have been provided by the cosmic trigger panels.  Events have been also systematically been reconstructed by the online storage facility on real time.
+\end{comment}
 
-The installation of the \dword{daq} system of \dword{pddp} was completed in March 2019 with the installation of the digital front-end and timing systems. The \dword{daq} system was immediately operational without having to implement any configuration changes and since then it  has been constantly collecting  noise data, until August 2019 when the TPC started operating. The data taking for cosmic events started on August 29th 2019, after the Charge Readout Planes commissioning period. Since then more than 1.2 millions of cosmic events have been collected, corresponding to 130 TB. The data taking has been mostly performed with random triggers at a few 10 Hz rate given the fact that the scintillator panels in order to tag cosmic rays were not available yet. This running mode based on random triggers also allowed to stress and test the system at higher rate with respect to the one (<1 Hz) which would have been provided by the cosmic trigger panels.  Events have been also systematically been reconstructed by the online storage facility on real time.
+The installation of the \dword{pddp} \dword{daq} system was completed in March 2019 with the installation of the digital front-end and timing systems. It was immediately operational without having to implement any configuration changes,  and 
+collected noise data constantly through August 2019, when the TPC started operating. The data taking for cosmic events started on August 29, after the \dword{crp} commissioning period. Since then, it has collected more than 1.2 million cosmic events, corresponding to 130 TB. The data taking has been mostly performed with random triggers at a rate of tens of hertz, %few 10 Hz rate 
+given that the scintillator panels were not available  to tag cosmic rays. 
+\fixme{connect rate to fact that panels were not available. anne}
+This running mode -- based on random triggers -- also allowed to stress and test the system at a higher rate than what the cosmic rays would have provided. The online storage facility has  systematically  reconstructed events in real time.
 
-The \dword{daq} system has shown to be very stable with no issues encountered at the level of the event builders and the associated software. The only problems occurred were related to some sporadic cooling failures of the \dword{daq} room (in common for both \dword{pdsp} and \dword{pddp}) which hosts the network infrastructure and the event builders and the storage facility. These cooling failures obliged to shut down the machines for a few hours until when the chilled water re-circulation was properly restarted by the \dword{cern} infrastructure. The back-end system implemented for \dword{pddp} is equivalent to the system which will be implemented for a \nominalmodsize \dword{dpmod}, it is fully interfaced with the same front-end electronics foreseen for the \nominalmodsize module and it has shown to be working with no issues, guaranteeing a smooth detector data taking.
-The online storage system of \dword{pddp} has already the capabilities to satisfy the storage needs of a \dword{dune} far detector module.
 
+%Anne rewriting The \dword{daq} system has shown to be very stable with no issues encountered at the level of the event builders and the associated software. The only problems occurred were related to some sporadic cooling failures of the \dword{daq} room (in common for both \dword{pdsp} and \dword{pddp}) which hosts the network infrastructure and the event builders and the storage facility. These cooling failures obliged to shut down the machines for a few hours until when the chilled water re-circulation was properly restarted by the \dword{cern} infrastructure. The back-end system implemented for \dword{pddp} is equivalent to the system which will be implemented for a \nominalmodsize \dword{dpmod}, it is fully interfaced with the same front-end electronics foreseen for the \nominalmodsize module and it has shown to be working with no issues, guaranteeing a smooth detector data taking. The online storage system of \dword{pddp} has already the capabilities to satisfy the storage needs of a \dword{dune} far detector module.
+The \dword{daq} system has demonstrated good stability with no issues at the level of the event builders and the associated software. The only problems have been related to some sporadic cooling failures in the \dword{daq} room (for both \dword{pdsp} and \dword{pddp}), which houses the network infrastructure, the event builders, and the storage facility. These cooling failures forced us to shut down the machines for a few hours until the chilled water re-circulation was properly restarted. The back-end system implemented for \dword{pddp} is equivalent to that which will be implemented for the \nominalmodsize \dword{dpmod}, fully interfaced with the same front-end electronics.  It has been operating smoothly with no problems. The \dword{pddp} online storage system is already adequate to satisfy the \dword{dpmod} storage needs.
 
 \subsection{Ongoing Development}
 \label{sec:daq:design-validation}
@@ -1493,19 +1504,19 @@ writing. A detailed schedule for 2019 is available
 in \cite{bib:docdb14095}. Major development plan milestones, a number
 of which have already been achieved at the time of this writing, are:
 \begin{itemize}
-\item optimization and tuning of the front-end readout
-\item optimization and tuning of the \dword{artdaq} based dataflow software
-\item enhancement of monitoring and troubleshooting capabilities
-\item introduction of CPU-based hit finding (necessary for \dword{pds} readout)
-\item introduction of \dword{fpga}-based hit finding (for \dword{tpc} readout)
-\item implementation of online software data selection beyond trigger
-primitive stage (introduction of trigger candidate generation, and
-\dword{trigcommand} generation), and tests on well identified interaction
-topologies (e.g. long horizontal tracks, or Michel electrons from muon decay)
+\item optimization and tuning of the front-end readout,
+\item optimization and tuning of the \dword{artdaq} based dataflow software,
+\item enhancement of monitoring and troubleshooting capabilities,
+\item introduction of CPU-based hit finding (necessary for \dword{pds} readout),
+\item introduction of \dword{fpga}-based hit finding (for \dword{tpc} readout),
+\item implementation of online software data selection beyond trigger,
+primitive stage (introduction of trigger candidate generation, 
+\dword{trigcommand} generation), and tests on well identified interaction,
+topologies (e.g. long horizontal tracks, or Michel electrons from muon decay),
 \item integration of online \dword{trigcommand} and modified data flow to event
-builder to facilitate self-triggering of detector
+builder to facilitate self-triggering of detector,
 \item implementation of extended \dword{fpga}-based front-end functionality
-(e.g., compression)
+(e.g., compression), and
 \item prototyping of fake \dword{snb} data flow in front end and the back end.
 \end{itemize}
 
@@ -1524,8 +1535,8 @@ Most of the development will be carried out emulating the data inputs.
 On the other hand, the \dword{daq} will be validated regularly via test stand integration with detectors, such as \dword{protodune} or pre-installation sites.
 The overall development schedule with the main \dword{daq} milestones is shown in Section~\ref{sec:daq:schedule}.
 
-A complete demonstration system in order to test the DUNE dual-phase DAQ has been put in operation at IPNL. This system includes a charge readout uTCA crate with 10 AMC cards and a DAQ server including a FPGA network card (Bittware A10P3S with Altera Arria 10 FPGA,
-4 x 40 GbE QSFP interfaces which can support  x16 10 GbE channels). The purpose of this system is to test the firmware developments in the AMCs for the DUNE continuous streaming DAQ operation and  to develop the back-end firmware for data reception, decoding, decompression and generation of trigger primitives. The data reception and real time decompression have already been implemented with a high degree of parallelism in the Arria 10 FPGA and are already operational. The implementation of the generation of the trigger primitives at the FPGA level after decompression is in progress. The digital front-end electronics at the level of the AMCs can operate in both trigger based mode (\dword{pddp}) or continuous streaming mode (\dword{dune}). This test chains allows performing all the demonstration and benchmarking steps without interfering with the ProtoDUNE-DP DAQ operation which is trigger based. This benchmarking phase is in particular useful in order to correctly dimension the DUNE DAQ for the dual-phase far detector module. The algorithms and the firmware developed on the Arria 10 FPGA could be then transported at the level of the \dword{felix} card or other DAQ elements of the DUNE DAQ. It is also foreseen to plug in the Bittware A10P3S  in \dword{pddp} by replacing or working in parallel with one of the Mellanox ethernet cards of the level 1 event builders in order to provide a direct demonstration with real data. The following step in \dword{pddp} would be to replace the Mellanox network cards which connect the L1 event builder machines to the uTCA crates with \dword{felix} cards. The FPGA in the \dword{felix} could be then used to implement the decompression and trigger primitives firmware developed in the current test bench activities.
+A complete demonstration system to test the DUNE dual-phase DAQ has been put in operation at IPNL. This system includes a charge readout uTCA crate with 10 AMC cards and a DAQ server including a FPGA network card (Bittware A10P3S with Altera Arria 10 FPGA,
+4 x 40 GbE QSFP interfaces which can support  x16 10 GbE channels). The purpose of this system is to test the firmware developments in the AMCs for the DUNE continuous streaming DAQ operation and  to develop the back-end firmware for data reception, decoding, decompression and generation of trigger primitives. The data reception and real time decompression have already been implemented with a high degree of parallelism in the Arria 10 FPGA and are already operational. The implementation of the generation of the trigger primitives at the FPGA level after decompression is in progress. The digital front-end electronics at the level of the AMCs can operate in both trigger based mode (\dword{pddp}) or continuous streaming mode (\dword{dpmod}). This test chains allows performing all the demonstration and benchmarking steps without interfering with the ProtoDUNE-DP DAQ operation which is trigger based. This benchmarking phase is in particular useful in order to correctly dimension the DUNE DAQ for the dual-phase far detector module. The algorithms and the firmware developed on the Arria 10 FPGA could be then transported at the level of the \dword{felix} card or other DAQ elements of the DUNE DAQ. It is also foreseen to plug in the Bittware A10P3S  in \dword{pddp} by replacing or working in parallel with one of the Mellanox ethernet cards of the level 1 event builders in order to provide a direct demonstration with real data. The following step in \dword{pddp} would be to replace the Mellanox network cards which connect the L1 event builder machines to the uTCA crates with \dword{felix} cards. The FPGA in the \dword{felix} could be then used to implement the decompression and trigger primitives firmware developed in the current test bench activities.
 
 
 %%%%%%
@@ -1571,12 +1582,26 @@ While commercial devices do not need to be produced or assembled, enough time ha
 
 \subsection{Installation and Integration}
 
-
-The \dword{daq} will be installed in an enclosure in the west end of the \dword{cuc} (Figure~\ref{fig:cavern-layout}).  Roughly
+\fixme{check my edits. Anne}
+The \dword{daq} will be installed in an enclosure in the west end of the \dword{cuc} (``Data Room'' in Figure~\ref{fig:cavern-layout}.  Roughly
 half of this space will be office space (including control
 workstations) and the other will be a computer room to hold the \dword{daq}
 front-end computing and network equipment (Figure~\ref{fig:install-cuc}). Further details of the interface of \dword{daq} with underground facilities
 may be found in \citedocdb{6988}, and the installation interface document for \dword{daq} in \citedocdb{7015}.
+
+\begin{dunefigure}[Layout of the DUNE underground areas]{fig:cavern-layout}
+  {Top view of the layout at the 4850 level at \dword{surf}. Shown are the three large excavations and the location of detectors in the north (upper) and south caverns. 
+  The \dword{cuc} in the middle houses the \dword{dune} data room where the DAQ will be installed and the underground utilities. }
+\includegraphics[width=.9\textwidth]{cavern-layout}
+\end{dunefigure}
+
+\begin{dunefigure}[Layout of the DUNE data room and work area in CUC]{fig:install-cuc}
+  {Top: The overall layout of the \dword{dune} spaces in the \dword{cuc}. A110 is the \dword{dune} data room, which houses the underground computing, and A111 is a general-purpose work area (not a control room, as labeled) that we call the experimental work area. Bottom: The first row of ten racks in the data room is shown. The first two represent the \dword{cf} interface racks. The images were taken from the ARUP 90\% design drawings U1-FD-A-108 and U1-FD-T-701~\cite{bib:docdb14242}.}
+\includegraphics[width=.85\textwidth]{cuc-layout}
+\vspace{-2pt}
+\includegraphics[width=.9\textwidth]{cuc-cf-racks}
+\end{dunefigure}
+
 
 Infrastructure in the \dword{cuc} will be installed starting in Q4~2022
 (Figure~\ref{fig:high-level-schedule}).  At that point, CF will have
@@ -1587,7 +1612,7 @@ and networking.  The network connection from this data room to the fiber
 trunks going up the shaft will also be made, as will preparations to
 receive the multi-mode fiber connections from the \dword{wib} to the
 \dword{felix} cards housed in servers in these racks. There is space
-for \cucracks racks, with 4 set aside for other consortia, 12 per
+for \cucracks racks, with four set aside for other consortia, 12 per
 module for upstream \dword{daq} electronics, and the remaining space for
 networking and other \dword{daq} computing needs. An initial engineering design of the computer room is shown in Figure~\ref{fig:daq-room}, which meets all requirements for capacity, cooling, safety and installation schedule.
 
@@ -1678,7 +1703,9 @@ Stanford Linear Accelerator Lab (SLAC) & USA     \\ \colhline
 \subsection{Schedule and Milestones}
 \label{sec:daq:schedule}
 
-The high-level \dword{daq} milestones are listed in Table~\ref{tab:daq-sched}, interleaved with the top-level DUNE project milestones, and illustrated in Figure~\ref{fig:daq:schedule}. Since the \dword{daq} project is largely based on commercial off-the-shelf components, it can be seen in the overall timeline that many of the components are procured relatively late in the project schedule.
+The high-level \dword{daq} milestones are listed in Table~\ref{tab:daq-sched}, interleaved with the top-level DUNE project milestones, and illustrated in %Figure~\ref{fig:daq:schedule}.
+Figure~\ref{fig:daq-schedule}. Since the \dword{daq} project is largely based on commercial off-the-shelf components, it can be seen in the overall timeline that many of the components are procured relatively late in the project schedule.
+\fixme{check that Figure~\ref{fig:daq-schedule} is the right figure}
 
 \begin{dunetable}
 [DAQ consortium milestones]
@@ -1695,9 +1722,6 @@ Preliminary Software Design Review & January 2022 \\ \colhline
 Engineering Design Review for Hardware/Firmware & March 2022 \\  \colhline
 \rowcolor{dunepeach} Start of \dword{pddp}-II installation& \startpduneiidpinstall      \\ \colhline
  \dword{prr} dates &      \\ \colhline
-Start of  (component 1) production  &      \\ \colhline
-Start of (component 2) production  &      \\ \colhline
-Start of  (component 3) production  &      \\ \colhline
 \rowcolor{dunepeach}South Dakota Logistics Warehouse available& \sdlwavailable      \\ \colhline
 Start of Racks Procurement & July 2022  \\ \colhline
 Start of \dword{daq} Server Procurement (I) & September 2022  \\ \colhline
@@ -1712,8 +1736,6 @@ Start of \dword{daq} Installation & May 2023 \\ \colhline
 
 End of  \dword{daq} Custom Hardware Production &  December 2023    \\ \colhline
 \rowcolor{dunepeach}Top of \dword{detmodule} \#1 cryostat accessible& \accesstopfirstcryo      \\ \colhline
-End of  (component 1) production  &      \\ \colhline
-... & ...                       \\ \colhline
 \rowcolor{dunepeach}Start of \dword{detmodule} \#1 TPC installation& \startfirsttpcinstall      \\ \colhline
 Start of \dword{daq} Server Procurement  (II) & September 2024  \\ \colhline
 \rowcolor{dunepeach}Top of \dword{detmodule} \#2 accessible& \accesstopsecondcryo      \\ \colhline
@@ -1729,7 +1751,7 @@ End of \dword{daq} Standalone Commissioning & December 2025 \\ \colhline
 End of \dword{daq} Commissioning & December 2026  \\ 
 \end{dunetable}
 
-\begin{dunefigure}[DAQ schedule for first \SI{10}{\kilo\tonne} module]{fig:daq-schedule}{\dword{daq} schedule for first \SI{10}{\kilo\tonne} module. \label{fig:daq:schedule}}
+\begin{dunefigure}[DAQ schedule for first \dshort{dpmod}]{fig:daq-schedule}{\dword{daq} schedule for first \dshort{dpmod}.}
   \includegraphics[width=0.95\textwidth,clip,trim=1cm 2cm 1cm 2cm]{daq-schedule.pdf}
 \end{dunefigure}
 
