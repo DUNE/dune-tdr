@@ -1,16 +1,7 @@
 \section{The Far Detector Simulation and Reconstruction}\label{sec:nu-osc-07}\label{sec:physics-lbnosc-FD}
 %{\it Assigned to:} {\bf Dan Cherdack} with contributions from Nick Grant, Leigh Whitehead, Callum Wilkinson, Elizabeth Worcester and Tingjun Yang.
 \label{sec:physics-lbnosc-simreco}
-%This section describes assumptions in the Near Detector simulation and reconstruction. Some thought has to go into the connection to the Far Detector chapter in the TDR.
 
-%\begin{itemize}
-%    \item Simulations - TY 
-%    \item Reconstruction and kinematic variables including energy reconstruction - TY, NG 
-%    \item Event selections (CVN) - LW
-%    \item Samples - EW, CW
-%    \item Detector response systematic uncertainties - DDC
-%    \item Connection to flux and cross section systematic uncertainties
-%\end{itemize}
 
 The calculation of \dword{dune} sensitivities to oscillation parameter measurements requires predictions for the number of events to be observed in the \dword{fd} fiducial volume, the reconstructed neutrino energy for each of these events, and the probability that they will be correctly identified as signal for each analysis samples. To build these analysis samples a  \dword{geant4} simulation of the \dword{fd} has been developed. The output of that simulation has been used to build neutrino energy estimators, and an event selection discriminant that can separate $\nu_{e}$ \dword{cc}, $\nu_{\mu}$ \dword{cc}, and \dword{nc} events. Each of these components is described in detail in this section. The uncertainties associated with each step in the simulation and reconstruction chain, including the \dword{fd} simulation, reconstructed energy estimators, and selection efficiencies are discussed in Section~\ref{sec:nu-osc-09}. 
 
@@ -36,12 +27,6 @@ neutrino is estimated as the sum of the energy of the reconstructed shower with 
 
 The fractional residuals of reconstructed neutrino energy are shown for $\nu_{\mu}$ \dword{cc} events with contained tracks in figure \ref{fig:enresnumucont}, for $\nu_{\mu}$ \dword{cc} events with exiting tracks in figure \ref{fig:enresnumuexit} and for $\nu_{e}$ \dword{cc} events in figure \ref{fig:enresnue}. The biases and resolutions of reconstructed neutrino energy are summarized in Table~\ref{tab:ressummary}.
 
-%\begin{figure}[h]
-%    \centering
-%        \includegraphics[width=0.55\textwidth]{EnergyResNue.eps}
-%        \caption{Fractional residuals of reconstructed $\nu_{e}$ energy %in $\nu_{e}$ CC events}
-%        \label{fig:enresnue}
-%\end{figure}
 
 \begin{figure}
     \centering
@@ -91,43 +76,31 @@ The \dword{dune} \dword{cvn} classifies neutrino interactions in the \dword{dune
 The primary goal of the \dword{cvn} is to efficiently and accurately produce event selections of the following interactions: $\nu_{\mu}$ \dword{cc} and $\nu_{e}$ \dword{cc} in the FHC beam mode, and $\bar{\nu}_\mu$ \dword{cc} and $\bar{\nu}_e$ \dword{cc} in the \dword{rhc} beam mode. Future goals will include studies of exclusive neutrino interaction final states since separating the event selections by interaction type can improve the sensitivity as interaction types have different energy resolutions and systematic uncertainties. Detailed descriptions of the \dword{cvn} architecture can be found in~\cite{Aurisano:2016jvx}.
 
 %\subsubsection{Network architecture}
-An important feature for the \dword{dune} \dword{cvn} is the fine-grained detail of a \dword{lartpc} encoded in the input images to be propagated further into the \dword{cvn}. This detail is more than what would be possible using a traditional \dword{cnn}, such as the GoogLeNet-inspired network (also called Inception v1)~\cite{GoogLeNet} used by \dword{nova}~\cite{Aurisano:2016jvx}. To accomplish this, the \dword{cvn} design is based on the SE-ResNet architecture, which consists of a standard ResNet (Residual neural network) architecture~\cite{He-et-al-2015-deep} along with Squeeze-and-Excitation blocks~\cite{Hu-et-al-2017-squeeze}. Residual neural networks allow the $n^{th}$ layer access to the output of both the $(n-1)^{th}$ layer and the $(n-k)^{th}$ layer via a residual connection, where $k$ is a positive integer ($\ge 2$).
+An important feature for the \dword{dune} \dword{cvn} is the fine-grained detail of a \dword{lartpc} encoded in the input images to be propagated further into the \dword{cvn}. This detail is more than what would be possible using a traditional \dword{cnn}, such as the GoogLeNet-inspired network (also called Inception v1)~\cite{GoogLeNet} used by \dword{nova}~\cite{Aurisano:2016jvx}. To accomplish this, the \dword{cvn} design is based on the SE-ResNet architecture, which consists of a standard ResNet (residual neural network) architecture~\cite{He-et-al-2015-deep} along with Squeeze-and-Excitation blocks~\cite{Hu-et-al-2017-squeeze}. Residual neural networks allow the $n^{th}$ layer access to the output of both the $(n-1)^{th}$ layer and the $(n-k)^{th}$ layer via a residual connection, where $k$ is a positive integer ($\ge 2$).
 
 %\subsubsection{Inputs to the \dword{cvn}}
 %\label{sec:inputs}
 In order to build the training input to the \dword{dune} \dword{cvn} three images of the neutrino interactions are produced, one for each of the three readout views, using the reconstructed hits on the individual wire planes. The images are not dependent on any further downstream reconstruction algorithms. The images contain 500 $\times$ 500 pixels, each in the (wire, time) parameter space, where the wire is the wire channel number and the time is the peak time of the reconstructed hit. 
-%measured in \dwords{tdc}. \fixme{can you please define TDC here and we can remove it from the glossary (where it's not defined). This is the only instance of it. Or is it supposed to be TPC? Anne}
 The value of each pixel represents the integrated charge of the reconstructed hit. An example simulated 2.2\,GeV $\nu_{e}$ \dword{cc} interaction is shown in all three views in Figure~\ref{fig:views} demonstrating the fine-grained detail available from the \dword{lartpc} technology.
 
 \begin{figure}[htb] 
 \centering
 	\begin{tabular}{ccc}
-%		\includegraphics[scale=0.45]{cvn_nue_view0.pdf} &
-%		\includegraphics[scale=0.45]{cvn_nue_view1.pdf} &
 		\includegraphics[trim={1cm 4cm 5cm 3cm}, clip, scale=2.0]{cvn_nue_view2.pdf}
     \end{tabular}
-%	\caption{A simulated 2.2\,GeV $\nu_{e}$ \dword{cc} interaction shown in the three readout views of the \dword{dune} \dwords{lartpc}. The horizontal axis shows the wire number of the readout plane and the vertical axis shows time. The greyscale shows the charge of the energy deposits on the wires.}
+
 \caption[A simulated \SI{2.2}{GeV} \nue CC interaction viewed by collection wires in the SP \lartpc]{A simulated 2.2\,GeV $\nu_{e}$ \dword{cc} interaction shown in the collection view of the \dword{dune} \dwords{lartpc}. The horizontal axis shows the wire number of the readout plane and the vertical axis shows time. The greyscale shows the charge of the energy deposits on the wires. The interaction looks similar in the other two views.}
 	\label{fig:views}
 \end{figure}
 
-%\subsubsection{Training the \dword{cvn}}
-%\label{sec:training}
+
 
 The \dword{cvn} is trained using approximately three million neutrino interactions from the \dword{mc} simulation. An independent sample is used to generate the physics measurement sensitivities. The training sample is chosen to ensure similar numbers of training examples from the different neutrino flavors. Validation is performed to ensure that similar classification performance is obtained for the training and test samples, i.e., the \dword{cvn} is not overtrained.
 
-%\subsubsection{Outputs from the \dword{cvn}}
-%\label{sec:outputs}
 
-%The \dword{cvn}, as currently constructed, has six different outputs:
-%\begin{itemize}
-%    \item Primary output -- neutrino flavor: returns probabilities that each interaction is one of the following classes: $\nu_{\mu}$ \dword{cc}, $\nu_{e}$ \dword{cc}, $\nu_{\tau}$ \dword{cc} and \dword{nc}.
-%    \item Four particle counting outputs for protons, charged pions, neutral pions and neutrons. Probabilities are returned for the presence of 0, 1, 2 and $>2$ particles of each aforementioned type.  
-%    \item Neutrino / antineutrino discriminator: returns the probability for the interaction to be an antineutrino.
-%\end{itemize}
 
 For the analysis presented here, we have used the primary output of the \dword{cvn}, namely the neutrino flavor which returns probabilities that each interaction is one of the following classes: $\nu_{\mu}$ \dword{cc}, $\nu_{e}$ \dword{cc}, $\nu_{\tau}$ \dword{cc} and \dword{nc}. 
-%As stated, all of the outputs are probabilities that allow neutrino event selections to be easily defined.
+
 
 \subsubsection{Neutrino Flavor Identification Efficiency}
 The primary goal of the \dword{cvn} algorithm is to accurately identify $\nu_{e}$ \dword{cc} interactions and $\nu_{\mu}$ \dword{cc} interactions to allow for the selection of the samples required for the neutrino oscillation analysis. The $\nu_{e}$ \dword{cc} probability distribution, $P(\nu_e \textrm{ \dword{cc}})$, and the $\nu_\mu$ \dword{cc} probability distribution, $P(\nu_\mu \textrm{ \dword{cc}})$, are shown on the left and right of Figure~\ref{fig:cvnprob}, respectively. Excellent separation between the signal and background interactions is seen in both cases.
@@ -138,14 +111,13 @@ The primary goal of the \dword{cvn} algorithm is to accurately identify $\nu_{e}
 		\includegraphics[width=0.45\linewidth]{cvn_nue_prob_log.pdf} &
 		\includegraphics[width=0.45\linewidth]{cvn_numu_prob_log.pdf} 
 	\end{tabular}
-%	\caption{The neutrino flavour classification probabilities $P(\nu_e)$ (left) and $P(\nu_\mu)$ (right) for FHC-mode simulated CC$\nu_\mu$ (purple), CC$\nu_e$ (green), CC$\nu_\tau$ (cyan) and NC (orange) neutrino interactions.}
 	\caption[The CVN \nue CC probability and \numu CC probability for the FHC beam mode]{The \dword{cvn} $\nu_e$ \dword{cc} probability (left) and $\nu_\mu$ \dword{cc} probability (right) for the \dword{fhc} beam mode shown with a log scale.}
     \label{fig:cvnprob}
 \end{figure}
 
 The $\nu_e$ \dword{cc} event selection uses events where $P(\nu_e \textrm{ \dword{cc}}) > 0.85$ for an interaction to be considered a candidate event of this type. Similarly, interactions are selected as $\nu_\mu$ \dword{cc} candidates if $P(\nu_\mu \textrm{ \dword{cc}}) > 0.5$. Note that since all of the flavor classification probabilities must sum to one, the interactions selected in the two event selections are completely independent. The same selection criteria are used for both \dword{fhc} and \dword{rhc} beam modes. The values used in the selection criteria were optimized to produce the best $\delta_{CP}$ sensitivity.
 
-Figure~\ref{fig:nueeff} shows the efficiency as a function of reconstructed energy (under the electron neutrino hypothesis) for the $\nu_e$ event selection. The efficiency in both the FHC and RHC beam modes exceeds 90\% in the neutrino flux peak. %The good agreement with the selection efficiency from the \dword{dune} \dword{cdr}, which were developed using a parameterized detector response, provides reasonable confidence in the \dword{cvn} approach. 
+Figure~\ref{fig:nueeff} shows the efficiency as a function of reconstructed energy (under the electron neutrino hypothesis) for the $\nu_e$ event selection. The efficiency in both the FHC and RHC beam modes exceeds 90\% in the neutrino flux peak.  
 Figure~\ref{fig:numueff} shows the corresponding excellent selection efficiency for the $\nu_\mu$ event selection.
 
 \begin{figure}
