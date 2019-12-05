@@ -12,9 +12,9 @@ To search for leptonic \dword{cp} violation, we must study \nue appearance in th
 
 
 
-Figure~\ref{fig:LArTPC} shows a schematic of the general operating principle of a \dword{sp} \dword{lartpc}. A large volume of \dword{lar} is subjected to a strong \efield of a few hundred volts per centimeter. Charged particles passing through the detector ionize the argon atoms, and the ionization electrons drift in the \efield to the anode wall (called an \dword{apa} array) on a timescale of milliseconds. The \dword{spmod} \dword{apa}s consist of layers of active wires strung at angles to each other to form a grid. The relative voltage between the layers is chosen to ensure that all but the final layer are transparent to the drifting electrons, and these first layers produce bipolar induction signals as the electrons pass through them. The final layer collects the drifting electrons, resulting in a monopolar signal.
+Figure~\ref{fig:spLArTPC} shows a schematic of the general operating principle of a \dword{sp} \dword{lartpc}. A large volume of \dword{lar} is subjected to a strong \efield of a few hundred volts per centimeter. Charged particles passing through the detector ionize the argon atoms, and the ionization electrons drift in the \efield to the anode wall (called an \dword{apa} array) on a timescale of milliseconds. The \dword{spmod} \dword{apa}s consist of layers of active wires strung at angles to each other to form a grid. The relative voltage between the layers is chosen to ensure that all but the final layer are transparent to the drifting electrons, and these first layers produce bipolar induction signals as the electrons pass through them. The final layer collects the drifting electrons, resulting in a monopolar signal.
 
-\begin{dunefigure}[The single-phase (SP) liquid argon time-projection chamber]{fig:LArTPC}
+\begin{dunefigure}[The single-phase (SP) liquid argon time-projection chamber]{fig:spLArTPC}
 {The general operating principle of the single-phase liquid argon time-projection chamber.}
 \includegraphics[trim={5cm 0 5cm 0},clip,width=0.8\textwidth]{graphics/TheBoPicture.pdf}
 \end{dunefigure}
@@ -98,6 +98,7 @@ Outside the cryostat, signals are passed to \dwords{wib} that put the signals on
 
 To enable us to look at low-energy particles, we plan to keep noise below $1000\,e^{-}$ per channel, which should be compared to the 20k--30k $e^{-}$ per channel collected from a \dword{mip} traveling parallel to the wire plane and perpendicular to the wire orientation. For large signals, we require a linear response up to 500k $e^{-}$, which ensures that fewer than 10\% of beam events experience saturation. This can be achieved using 12\, \dword{adc} bits. In addition, the electronics are designed with an \dword{fe} peaking time of \SI{1}{\micro\second}, which matches the time for the electrons to drift between wire planes on the \dword{apa}; this leads to a design sampling frequency of \SI{2}{\mega\hertz} to satisfy the Nyquist criterion.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Photon Detection System}
 \label{sec:fdsp-exec-pds}
 
@@ -126,26 +127,11 @@ $\SI{209}{\cm}\times\SI{12}{\cm}\times\SI{2}{\cm}$ bars, ten of which are mounte
 
 The 48 \dword{sipm}s on each \dword{xarapu} supercell are ganged together, and the signals are collected by \dword{fe} electronics, mounted on the supercell. The design of the \dword{fe}  electronics is inspired by the system used for the \dword{mu2e} cosmic-ray tagger~\cite{bib:mu2e_tdr}, which uses commercial ultrasound \dwords{asic}. The \dword{fe} electronics define the \SI{1}{\micro\second} timing resolution of the \dword{pd} system.
 
-
-
-\section{Data Acquisition}
-\label{sec:exec-sp-daq}
-
-
-The \dword{daq} is divided between an upstream section, located underground in the \dword{cuc}, and a downstream \dword{daqbes} above ground at \dword{surf}. All trigger decisions are made underground, and the data is buffered underground until the \dword{daqbes} indicates it is ready to receive data; this minimizes the rate of data flowing to the surface. An end-goal of the \dword{daq} is to achieve a data-rate to tape of no more than \SI{30}{\peta\byte/\year}.
-
-The \dword{daq} architecture is based on the \dword{felix} system designed at \dshort{cern} and used for the \dword{lhc} 
-experiments. The 150 \dword{apa}s are processed by 75 \dwords{daqrou}; each \dword{daqrou} contains one \dword{felix} board. The \dwords{pd} from the module will have a lower data-rate because the \dword{pd} electronics, unlike the \dword{tpc}, perform zero-suppression; therefore, the \dwords{pd} of a module will be processed by six to eight additional \dwords{daqrou}. The \dword{daq} can be partitioned: it will be possible to run multiple instances of the \dword{daq} simultaneously, so most of the detector can be taking physics data while other \dword{daq} instances are doing test runs for development or special runs such as calibration runs. A key philosophy is that all primary \dword{dune} physics goals can be achieved using only the \dword{tpc} as the trigger; information from the \dwords{pd} can then further enhance the trigger.
-
-Two basic triggers will be operating. Beam, cosmic, and nucleon decay events will be triggered using the localized high-energy trigger 
-that will open a readout window of \SI{5.4}{\ms}, enough to read out the full \dword{tpc} drift around an event. For \dwords{snb}, we will use an extended low-energy trigger. This will look for coincident regions of low-energy deposits, below \SI{10}{\mega\electronvolt}, across an entire module and in a \SI{10}{\second} period. An extended high-energy trigger will open a readout window of \SI{100}{\second} to capture a full \dword{snb}. 
-
-The \dword{daq} must also provide the system clock that keeps the detector components synchronized and provides the timestamp for all data. The timestamp derives from a \dword{gps} \dword{pps} fed into the \dword{daq} with \SI{1}{\micro\second} precision, adequate to timestamp beam and supernova events. To provide finer synchronization between detector components, a \SI{10}{\mega\hertz} reference clock drives the module's \SI{62.5}{\mega\hertz} master clock, which is fanned out to all detector components, providing an overall synchronization to a precision of \SI{1}{\nano\second}.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Calibration}
 \label{sec:exec-sp-calibration}
 
-The challenge of calibrating the \dword{dune} \dword{fd} is controlling the response of a huge cryogenic detector over a period of decades, a challenge amplified by the detector's location deep underground and therefore shielded from the cosmic muons that have been typically used as standard candles by previous \dword{lartpc}s.
+The challenge of calibrating the \dword{dune} \dword{fd} is controlling the response of a huge cryogenic detector over a period of decades, a challenge amplified by the detector's location deep underground and therefore shielded from the cosmic muons that have been typically used as standard candles by previous \dword{lartpc}s.  The \dword{fd} calibration system  has been designed jointly for the \dword{sp} and \dword{dp} technologies, and uses the same strategy and systems for both.
 
 To achieve our \si{\giga\electronvolt}-scale oscillation and nucleon decay physics goals, we must know our fiducial volume to 1--2\% and have a similar understanding of the vertex position resolution; understand the \nue event rate to 2\%; and control our lepton energy scales to 1\% and hadron energy scales to 3\%. At the \si{\mega\electronvolt} scale, our physics requirements are driven by our goal of identifying and measuring the spectral structure of an \dword{snb}; here, we must achieve a 20--30\% energy resolution, understand our event timing to the \SI{1}{\micro\second} level, and measure our trigger efficiency and levels of radiological background. 
 
@@ -156,6 +142,46 @@ The tools available to us for calibration include the \dword{lbnf} beam, atmosph
 Over time, the \dword{fd} calibration program will evolve as statistics from cosmic rays and the \dword{lbnf} beam amass and add to the information gained from the calibration hardware systems. These many calibration tools will work alongside the detector monitoring system, the \dword{cfd} models of the argon flow, and \dword{protodune} data to give us a detailed understanding of the \dword{fd} response across the \dword{dune} physics program.
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Data Acquisition}
+\label{sec:exec-sp-daq}
+
+The \dword{daq} systems for both the \dword{sp} and \dword{dp} technologies have been designed jointly and are identical except for the architecture of the detector readout electronics.  
+The output format of the generated data is common, and both are synchronized to the same global clock signals.  The \dword{daq} architecture is based on the \dword{felix} system designed at \dshort{cern} and used for the \dword{lhc} experiments. 
+
+The \dword{daq} is divided between an upstream section, located underground in the \dword{cuc}, and a downstream \dword{daqbes} above ground at \dword{surf}. All trigger decisions are made underground, and the data is buffered underground until the \dword{daqbes} indicates it is ready to receive data; this minimizes the rate of data flowing to the surface. An end-goal of the \dword{daq} is to achieve a data rate to tape of no more than \SI{30}{\peta\byte/\year}.
+
+For the \dword{spmod}, the 150 \dword{apa}s are processed by 75 \dwords{daqrou}; each \dword{daqrou} contains one \dword{felix} board. The \dwords{pd} from the module will have a lower data rate because the \dword{pd} electronics, unlike the \dword{tpc} electronics, perform zero-suppression; therefore, the \dwords{pd} of a module will be processed by six to eight additional \dwords{daqrou}. The \dword{daq} can be partitioned: it will be possible to run multiple instances of the \dword{daq} simultaneously, so most of the detector can be taking physics data while other \dword{daq} instances are doing test runs for development or special runs such as calibration runs. A key philosophy is that all primary \dword{dune} physics goals can be achieved using only the \dword{tpc} as the trigger; information from the \dwords{pd} can then further enhance the trigger.
+
+
+Two basic triggers will be operating. Beam, cosmic, and nucleon decay events will be triggered using the localized high-energy trigger 
+that will open a readout window of \SI{5.4}{\ms}, enough to read out the full \dword{tpc} drift around an event. For \dwords{snb}, we will use an extended low-energy trigger. This will look for coincident regions of low-energy deposits, below \SI{10}{\mega\electronvolt}, across an entire module and in a \SI{10}{\second} period. An extended high-energy trigger will open a readout window of \SI{100}{\second} to capture a full \dword{snb}. 
+
+The \dword{daq} must also provide the system clock that keeps the detector components synchronized and provides the timestamp for all data. The timestamp derives from a \dword{gps} \dword{pps} fed into the \dword{daq} with \SI{1}{\micro\second} precision, adequate to timestamp beam and \dword{snb} events. To provide finer synchronization between detector components, a \SI{10}{\mega\hertz} reference clock drives the module's \SI{62.5}{\mega\hertz} master clock, which is fanned out to all detector components, providing an overall synchronization to a precision of \SI{1}{\nano\second}.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cryogenics Instrumentation and Slow Controls}
+\label{sec:dp-execsum-sc}
+
+The \dword{cisc} system for both the \dword{sp} and \dword{dp} technologies has been designed jointly and controls the following items:
+
+\begin{itemize}
+\item cryogenic instrumentation: measurements of temperatures (gas and liquid), pressure (gas), liquid level, purity monitors;
+\item \dword{crp} instrumentation: temperatures, pulsing system, precision level meters, readout of \dword{crp} stepping motors;
+\item generation and control of \dword{hv} biasing of \dword{lem} and grid;
+\item generation and control of \dword{hv} biasing for the \dwords{pmt} and calibration (via optical pulsing);
+\item slow control of the \dword{utca} crates, analog \dword{fe} low-voltage control, charge injection control to preamplifiers;
+\item control of the cathode \dword{hv} biasing system;
+\item alignment survey of \dword{crp} position (via external reference points);
+\item control of the laser system; and
+\item analysis of \dword{lar} purity and \dword{lem}  gain calibration.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Installation}
 
 A major challenge in building the \dword{dune} \dword{sp} modules is transporting all detector and infrastructure components down the \SI{1500}{\meter} Ross shaft to the detector caverns. To help plan the installation phase, installation tests will be performed at the \dword{nova} \dword{fd} site in \dword{ashriver}, Minnesota, USA. These tests will allow us to develop our procedures, train installation workers, and develop our labor planning through time and motion studies. Throughout the project, safety, \dword{qa}, and \dword{qc} are written into all processes.
