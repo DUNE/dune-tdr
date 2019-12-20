@@ -2,11 +2,11 @@
 \label{ch:exec-comp}
 
 \textit{
-This chapter briefly describes the \dword{dune} computing model, which touches on all elements of the \dword{dune} \dwords{nd} and \dwords{fd} and their physics programs.  More detailed aspects of the model may be found in Appendix~\ref{appx:es-comp} of this \dword{tdr} volume.  \dword{dune} will produce a complete technical design report for computing over the next two years.}
+This chapter briefly describes the DUNE computing model, which touches on all elements of the \dword{nd} and \dword{fd} and their physics programs.  More detailed aspects of the model may be found in Appendix~\ref{appx:es-comp}.  DUNE will produce a complete technical design report for computing over the next two years.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Executive Summary}
+\section{Overview}
 \label{ch:exec-comp-es}
 
 %\newdword{nersc}{NERSC}{National Energy Research Computing Facility at \dword{lbnl}}
@@ -87,12 +87,12 @@ At least one of the three leadership roles should be held by a scientist from ou
 \dword{csc} management currently %fills other roles by asking for volunteers. (LBNC 12/2)
 appoints people to other roles, typically after a call for nominations.  A more formal structure for institutional contributions and commitments is under consideration. 
 
-\begin{figure}[htp]
-\centering
+\begin{dunefigure}
+[Organization chart for current computing and software consortium]
+{fig:ch-exec-comp-org-es}
+{Organization chart for current \dword{csc}.}
 \includegraphics[height=4in]{graphics/comp-org-chart.pdf}
-\caption[Organization chart for current \dshort{csc}]{Organization chart for current \dword{csc}. }
-\label{fig:ch-exec-comp-org-es}
-\end{figure}
+\end{dunefigure}
 
 \subsection{Scope of the Consortium}
 \label{ch:exec-comp-gov-scope}
@@ -108,14 +108,15 @@ functions properly. Formal interfaces with the \dword{daq} and controls groups a
 The \dword{csc} operates at two levels: at the hardware level, where generic resources can be provided as in-kind contributions to the collaboration, and at the human level, where individuals and groups help develop common software infrastructure.  The technology for hardware contributions (e.g., grid CPU and storage) exists and was successfully used during the \dword{pdsp} data run and its associated %"associated" added by ah
 simulation and reconstruction. Highlights of that effort are discussed below and in \physchtools{}. % the Tools and Methods section of the Physics volume.  
 
-\begin{figure}[htp]
-\centering
+\begin{dunefigure}
+[CPU wall-time from July 2018 to July 2019]
+{fig:ch-exec-comp-cpupie-es}
+{CPU wall-time from July 2018 to July 2019, the first peak shows  \dword{pdsp} reconstruction while the second is dominated by data analysis and \dword{pddp} simulation. A total of 31 million wall-hours were delivered with 24 M-hrs coming from \fnal.}
 \includegraphics[height=3in]{graphics/comp-ComputingLastYear.png}
-\caption[CPU wall-time from July 2018 to July 2019]{CPU wall-time from July 2018 to July 2019, the first peak shows  \dword{pdsp} reconstruction while the second is dominated by data analysis and \dword{pddp} simulation. A total of 31 million wall-hours were delivered with 24 M-hrs coming from \fnal.  }
-\label{fig:ch-exec-comp-cpupie-es}
-\end{figure}
+\end{dunefigure}
 
-\subsection{Hardware Infrastructure}
+
+\subsection{Hardware Resources} 
 \label{sec:exec-comp-hi}
 
 As illustrated in Figure~\ref{fig:ch-exec-comp-cpupie-es}, the \dword{dune} collaboration has already used substantial global resources through the \dword{wlcg} and \dword{osg} mechanisms. As the experiment evolves over the next five years, institutions and collaborating nations will be asked to formally pledge resources (both CPU and storage), and those resources will be accounted for and considered in-kind contributions to the collaboration.  A   computing resources board  will be set up to administer this process and serve as liaison to national resource providers. 
@@ -124,8 +125,9 @@ Several international partners are already contributing substantially to CPU res
 We are working with \dword{osg} and \dword{wlcg} to integrate reporting mechanisms for CPU use, so accurate monitoring of hardware contributions will be in place for the second \dword{protodune} run in 2021-2022 and the buildup to data taking in the mid 2020's. 
 
 \begin{dunetable}
-[DUNE CSC institutions as of September, 2019]{lll}{tab:exec-comp-consortium}{DUNE Computing and Software Consortium members as of July 2019.}%-- indicates sites not yet integrated into production computing. }%\rowtitlestyle
-Institution& Country \\ \colhline%& Integrated\\
+[Computing and software consortium institutions] % as of September, 2019]
+{lll}{tab:exec-comp-consortium}{DUNE computing and software consortium members} % as of July 2019.}%-- indicates sites not yet integrated into production computing. }%\rowtitlestyle
+Institution& Country \\ \colhline %& Integrated\\
 Centro Brasileiro de Pesquisas F\'isicas &	Brazil\\ \colhline
 Universidade Estadual de Campinas &	Brazil\\ \colhline
 York University & Canada\\ \colhline
@@ -385,7 +387,7 @@ The \dword{csc},  \dword{sp} \dword{daq},  and host laboratory %they
 have agreed on a preliminary maximum data transfer rate from the \dword{fd} to \dword{fnal} of \surffnalbw consistent with projected network bandwidths in the mid 2020's, and a limit of \SI{30}{PB/year} raw data stored to tape. 
 %Table \ref{daq:datarates} summarizes the data rates expected from the \dword{daq} section of this proposal. 
 
-\section{ProtoDUNE-SP as an Example}
+\section{ProtoDUNE-SP Data}
 \label{sec:exec-comp-proto-SP}
 The first \dword{protodune} \dword{sp} run at \dword{cern} in late 2018 has already served as a %small-scale 
 substantial test of the global computing model.  In the following, we will describe the \dword{protodune} data design and the lessons learned from our experience. Much of this should help in planning full \dword{fd} operations. 
@@ -476,22 +478,21 @@ signals proportional to charge. Once the data are prepared, hit-level \dword{roi
 
 Figures~\ref{fig:ch-exec-comp-chtraw} and~\ref{fig:ch-exec-comp-chtroi} illustrate the transformation of \dword{tpc} data  during data preparation. Note that this represents one wire plane for 3 ms.  A full 5.4 ms readout of a single \nominalmodsize module would contain a factor of 750 times %\fixme{750 times more?}
 more information than this image.
-
-\begin{figure}[t]
+\begin{dunefigure}
+[Pedestal-subtracted data for a ProtoDUNE-SP  wire plane]
+{fig:ch-exec-comp-chtraw}
+{Example of pedestal-subtracted data for one \dword{pdsp}  wire plane.  The top pane shows the \dword{adc} values in a V (induction) plane with the x-axis as channel number and the y-axis as time slice. The bottom pane shows the bipolar pulses induced on one channel.}
 \includegraphics[width=\textwidth,angle=0]{comp-evd_twq-proj_5449_20926_raw.png}
-\caption[Example of pedestal-subtracted data for one of the ProtoDUNE-SP  wire planes]{Example of pedestal-subtracted data for one \dword{pdsp}  wire plane.  The top pane shows the \dword{adc} values in a V (induction) plane with the x-axis as channel number and the y-axis as time slice. The bottom pane shows the bipolar pulses induced on one channel. 
-}
-\label{fig:ch-exec-comp-chtraw}
-\end{figure}
+\end{dunefigure}
 
 
-\begin{figure}[t]
+\begin{dunefigure}
+[Pedestal-subtracted data for a ProtoDUNE-SP  wire plane, after additional processing]
+{fig:ch-exec-comp-chtroi}
+{Pedestal-subtracted data for one \dword{pdsp} wire plane, as in Figure~\ref{fig:ch-exec-comp-chtraw}, after calibration, cleanup, deconvolution, and finding \dword{roi}.}
  \includegraphics[width=\textwidth]{comp-evd_twq-proj_5449_20926_decon.png}
-\caption[Pedestal-subtracted data for one of the ProtoDUNE-SP  wire planes, additional processing]{
-Pedestal-subtracted data for one \dword{pdsp} wire plane, as in Figure~\ref{fig:ch-exec-comp-chtraw}, after calibration, cleanup, deconvolution, and finding \dword{roi}. 
-}
-\label{fig:ch-exec-comp-chtroi}
-\end{figure}
+\end{dunefigure}
+
 
 
 \subsection{Computational Characteristics of Data Preparation and Deconvolution }
@@ -519,15 +520,15 @@ Full reconstruction of these \dword{pdsp} interactions, with beam particles and 
 All these algorithms are run on conventional %UNIX 
 Linux CPUs using \dword{osg}/\dword{wlcg} grid computing  infrastructure. Deep learning techniques based on image pattern recognition algorithms are also being developed. Many of these algorithms can be adapted to run on \dwords{hpc} assets, although the optimal architecture for \threed reconstruction likely differs from the optimum for hit finding.
 
-
-\begin{figure}[htp]
-\centering
-\includegraphics[height=4in]{graphics/BeamParticleEfficiencyVsMomentum.pdf}
-\caption[Efficiency of reconstruction for the triggered test beam particle]{The efficiency of reconstruction for the triggered test beam particle as a function of particle
+\begin{dunefigure}
+[Efficiency of reconstruction for the triggered test beam particle]
+{fig:ch-exec-comp-tracking}
+{The efficiency of reconstruction for the triggered test beam particle as a function of particle
 momentum in data (red) and simulation (black). Figure~5.27 from Volume~\volnumberphysics{}, \voltitlephysics{}.}
-\label{fig:ch-exec-comp-tracking}
-\end{figure}
+\includegraphics[height=4in]{graphics/BeamParticleEfficiencyVsMomentum.pdf}
+\end{dunefigure}
 
+\fixme{double-check fig 5.27 in vol 2 in case its position moves}
 
 
 
@@ -693,7 +694,7 @@ This work continues and informs  the  joint  calibration, \dword{csc} and \dword
 
 
 \section{Conclusion}
-
+\fixme{No other chapter has a ``conclusion'' section}
 The \dword{dune} \dword{csc} has undergone a substantial test with the successful run of \dword{pdsp}, including demonstrating data movement to storage at \SI{2}{GB/s}, reconstructing the full test beam sample with high-quality algorithms, and starting analysis of the multiple PB reconstructed data. 
 
 The \dword{csc} is now working with the global \dword{hep} computing community to evaluate and specify modern infrastructure that will service \dword{dune} and the rest of the \dword{hep} community.  We continue to collaborate with other data-intensive experiments where we have common technical challenges. However, the extremely large but straightforward events generated by \dword{lar} \dwords{tpc}, even with short readouts, present a unique challenge. 
