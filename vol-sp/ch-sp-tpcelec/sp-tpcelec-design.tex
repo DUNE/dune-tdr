@@ -1722,32 +1722,52 @@ valid for this case.
 \subsection{Services on Top of the Cryostat}
 \label{sec:fdsp-tpcelec-design-services}
 
-A fully-loaded \dword{wib} (one \dword{wib} plus four \dwords{femb}) 
-requires \SI{12}{V} and draws \SIrange{4.3}{4.7}{A}, including the
-power required by the \dword{fpga} and the optical components (the range 
-covers the difference between upper and lower \dword{apa}, and operation
-at \lntwo and room temperature). In 
-\dword{pdsp} the full electronics for one \dword{apa} (one \dword{ptc}, 
-five \dwords{wib}, and \num{20} \dwords{femb}) requires \SI{12}{V} and 
-draws \SIrange{22}{24}{A}, for a total power of approximately 
-\SI{240}{W}. 
+Table~\ref{tab:fdsp-tpcelec-power} summarizes the power requirements of the
+\dwords{femb}, \dwords{wib}, and \dwords{wiec}, which were discussed in
+Sections~\ref{sec:fdsp-tpcelec-design-ft} and~\ref{sec:fdsp-tpcelec-design-warm}. As
+shown in Figure~\ref{fig:tpcelec-wib-power}, each \dword{ptc} receives \SI{48}{V}
+from a power supply installed on the top of the cryostat; this voltage is stepped down
+via voltage regulators to  \SI{12}{V}, which is distributed to each \dword{wib}.
+Inside each \dword{wib} the \SI{12}{V} is further reduced to the \num{2.7} or \SI{3.0}{V}
+that is  used to power the \dwords{femb}, as discussed in Section~\ref{sec:fdsp-tpcelec-design-ft}.
+For these estimates, an efficiency of \num{80}\% is assumed for each voltage
+regulation step, while the power requirements for the \dword{fpga} and the
+optical components on the \dwords{wib} are based on the measurements from \dword{pdsp}.
 
-The \dword{lv} power is delivered at \SI{48}{V} to the \dword{ptc}, 
-so each \dword{lv} power mainframe is chosen to bracket that value; 
-each has roughly \numrange{30}{60}{V}, \SI{13.5}{A}, \SI{650}{W} 
-maximum capacity per \dword{apa}. Using \SI{10}{AWG} cable, and assuming
-a distance of \SI{20}{m} between the \dword{lv} power supplies 
-that are situated on the detector mezzanine and the most distant
-cryostat penetration for a row of \dword{apa}s, a voltage
-drop of at most \SI{1}{V} should occur along the cable with a required power of 
-\num{335} to \SI{360}{W} out of \SI{650}{W} available.
-At most $\sim\SI{150}{W}$ is dissipated inside the cryostat, and another
-$\sim\SI{200}{W}$ is dissipated inside the \dword{wiec}, that is
-air-cooled, and only a few watts are dissipated in the warm cables
-that are located below the false flooring on top of the cryostat.
-Multiplying by the total number of \dwords{wiec}, less 
-than \SI{1}{kW} of power is dissipated in the cabling system 
-over the entire surface of the cryostat. 
+The overall power required for each \dword{wiec} is in the range \SIrange{335}{360}{W},
+corresponding to the range \SIrange{7}{7.5}{A} at \SI{48}{V}. The \dword{lv} power is delivered
+to the \dword{ptc} using a power mainframe that can operate in the \SIrange{30}{60}V range,
+providing a maximum of \SI{13.5}{A} and \SI{650}{W} to each \dword{apa}. Using a \SI{10}{AWG}
+cable, and assuming a distance of \SI{20}{m} between a \dword{lv} power supply
+ on the detector mezzanine and the most distant cryostat penetration
+for a row of \dword{apa}s, no voltage drop over \SI{1}{V} should occur along
+the cable. At most $\sim\,\SI{150}{W}$ is dissipated inside the cryostat, and another
+$\sim\,\SI{200}{W}$ is dissipated inside the (air-cooled) \dword{wiec};
+only a few watts are dissipated in the warm cables located below the
+false flooring on top of the cryostat. Multiplying by the total number of \dwords{wiec},
+less than \SI{1}{kW} of power is dissipated in the cabling system over the entire
+surface of the cryostat.
+
+\begin{dunetable}
+[Power requirements of FEMBs, WIBs, and WIECs]
+{p{0.30\textwidth}p{0.15\textwidth}p{0.15\textwidth}p{0.15\textwidth}p{0.15\textwidth}}
+{tab:fdsp-tpcelec-power}
+{Power requirements for the \dwords{femb}, \dwords{wib}, and \dwords{ptc}.}
+Component & \multicolumn{3}{c}{Current} & Power \\ \colhline
+\multicolumn{5}{c}{FEMB (assume \num{80}\% efficiency in the \SI{12}{V} $\rightarrow$ \SI{2.7 / 3.0}{V} conversion)} \\ \colhline
+Lower APA & \SI{2.4}{A} at \SI{2.7}{V} & \SI{0.68}{A} at \SI{12}{V} & & \\ \colhline
+Upper APA & \SI{2.4}{A} at \SI{3.0}{V} & \SI{0.75}{A} at \SI{12}{V} & & \\ \colhline
+\multicolumn{5}{c}{WIB (\num{4} FEMB $+$ FPGA, assume \num{80}\% efficiency in the \SI{48}{V} $\rightarrow$ \SI{12}{V} conversion)} \\ \colhline
+\num{4} FEMBs lower APA & & \SI{2.7}{A} at \SI{12}{V} & & \\ \colhline
+\num{4} FEMBs upper APA & & \SI{3.0}{A} at \SI{12}{V} & & \\ \colhline
+FPGA and optical components & & \SI{1.7}{A} at \SI{12}{V} & & \\ \colhline
+Total lower APA & & \SI{4.4}{A} at \SI{12}{V} & \SI{1.4}{A} at \SI{48}{V} & \SI{67}{W} \\ \colhline
+Total upper APA & & \SI{4.7}{A} at \SI{12}{V} & \SI{1.5}{A} at \SI{48}{V} & \SI{72}{W} \\ \colhline
+\multicolumn{5}{c}{WIEC (\num{5} WIBs $+$ PTC)} \\ \colhline
+Total lower APA & & & \SI{7}{A} at \SI{48}{V} & \SI{335}{W} \\ \colhline
+Total upper APA & & & \SI{7.5}{A} at \SI{48}{V} & \SI{360}{W} \\ 
+\end{dunetable}
+
 
 Four wires are used for each \dword{ptc} module; two \SI{10}{AWG}, shielded, twisted-pair 
 cables for the power and return; and two \SI{20}{AWG}, shielded, twisted-pair 
