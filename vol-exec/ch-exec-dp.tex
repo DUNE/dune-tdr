@@ -8,13 +8,12 @@
 \label{sec:dp-execsum-introduction}
 
 
-\dword{dune}'s rich physics program, with discovery potential for \dword{cp} violation in the neutrino sector and its capability to make significant observations of nucleon decay and astrophysical events is enabled by the exquisite resolution of the \dword{lartpc} detector technique, which the \dword{dp} design further augments relative to the \dword{sp} design. 
+\dword{dune}'s rich physics program, with discovery potential for \dword{cpv} in the neutrino sector and its capability to make significant observations of nucleon decay and astrophysical events is enabled by the exquisite resolution of the \dword{lartpc} detector technique, which the \dword{dp} design further augments relative to the \dword{sp} design. 
 The operating principle of a \dword{dp} \dword{lartpc}, illustrated in Figure~\ref{fig:figure-label-DPprinciple}, is very similar to that of the \dword{sp} design (Figure~\ref{fig:LArTPC1ch1}).  Charged particles that traverse the active volume of the \dword{lartpc} ionize the medium while also producing scintillation light. 
 In a \dword{dpmod} ionization charges drift vertically in \dword{lar} and are transferred
 into a layer of gas above the liquid where they deposit their charge on a segmented anode. This design allows for a single, fully homogeneous \dword{lar} volume, offering a much longer drift length and reducing  the quantity of nonactive materials in the \dword{lar}.
-The design also improves the \dword{s/n} ratio in the charge readout, reducing the threshold for the smallest observable signals, while also achieving a finer readout granularity.  
-Other advantages of the \dword{dp} design include accessible readout electronics and fewer detector components, reducing both costs and installation logistics.
-  %The ionization electrons drift along an \efield towards a segmented anode where they deposit their charge. 
+While the longer drift length requires a higher voltage (up to \SI{600}{kV}) on the cathode, the \dword{dp} design improves the \dword{s/n} ratio in the charge readout, reducing the threshold for the smallest observable signals, while also achieving a finer readout granularity.  
+Other advantages of the \dword{dp} design include accessible readout electronics and fewer detector components, reducing costs and simplifying installation logistics.
 The precision tracking and calorimetry offered by the \dword{dp} technology provides excellent capabilities for identifying interactions of interest while mitigating sources of background.  
 
 \begin{dunefigure}[Principle of the \dual readout]{fig:figure-label-DPprinciple}{Principle of the DP readout.}
@@ -26,7 +25,7 @@ The argon scintillation light, at a wavelength of  \SI{127}{nm}, is deep in the 
 Two of the key factors that affect the performance of a \dword{lartpc} are argon purity and noise.  The \dword{dp} and \dword{sp} designs have slightly different purity requirements to cope optimally with the different drift lengths. We express the purity level in terms of electron lifetime: a minimum of \SI{5}{ms} for \dword{dp} versus \SI{3}{ms} for \dword{sp}. In both cases the levels of electronegative contaminants in the \dword{lar} (e.g., oxygen and water) must remain 
 at \dword{ppt} levels.  
 To clearly discern the drifting electrons over the baseline of the electronics, the \dword{tpc}  electronic readout noise must be kept very low. This requires use of low-noise cryogenic electronics. 
-Amplification of the electron signal in the gas phase mitigates the potential effect of both factors on the performance.  On the other hand, due to the longer drift length, the \dword{dp} design requires a higher voltage (up to \SI{600}{kV}) on the cathode. \fixme{how does higher voltage affect the purity and noise?}
+Amplification of the electron signal in the gas phase mitigates the potential effect of both factors on the performance. % On the other hand, due to the longer drift length, the \dword{dp} design requires a higher voltage (up to \SI{600}{kV}) on the cathode. 
 
 
 
@@ -52,7 +51,7 @@ Slow-control \fdth{}s,  one per \dword{crp}, are used for level meter and temper
 Signals in each \dword{crp} unit are collected via three \dwords{sftchimney} on the roof of the cryostat that house the \dword{fe} cards with the (replaceable) cryogenic \dword{asic} amplifiers.  The only active electronics elements inside the cryostat are the \dword{pmt} bases.  Each \dword{sftchimney} is coupled to a \dword{utca} crate to provide signal digitization and \dword{daq}. These crates are connected  via optical fiber links to the \dword{daq} back-end. The total number of readout channels  per \nominalmodsize module is \dpnumcrpch.
 %%
 
-Figure~\ref{fig:DPdet1} shows the \dword{dpmod}'s main components.
+Figure~\ref{fig:DPdet1} shows the \dword{dpmod}'s main components. The number of components and corresponding parameters for a \dpactivelarmass \dword{dpmod} are summarized in Table~\ref{tab:DP_numbers}.
 
 \begin{dunefigure}[Diagram of a \dshort{dpmod}]{fig:DPdet1}
   {A \dword{dpmod} with cathode, \dwords{pmt}, \dword{fc}, and anode plane with \dwords{sftchimney}.}
@@ -60,7 +59,7 @@ Figure~\ref{fig:DPdet1} shows the \dword{dpmod}'s main components.
 \end{dunefigure}
 
 
-The number of components and corresponding parameters for a \dpactivelarmass \dword{dpmod} are summarized in Table~\ref{tab:DP_numbers}.
+
 
 \begin{dunetable}[\dshort{dpmod} component quantities and parameters]{ll}{tab:DP_numbers}{\dshort{dpmod} component quantities and parameters.}  Component & Value    \\ \toprowrule
 Anode plane size & W = \dptpcwdth, L = \dptpclen \\ \colhline
@@ -158,12 +157,7 @@ Digitization cards in the \dword{amc} format read \num{64} channels per card. Ea
 
 The light-readout digitization system uses \dword{utca} \dword{amc} card design derived from that of the charge readout system, but that implements a circuitry based on the \dword{catiroc} \dword{asic} to trigger the readout. 
 
-\fixme{not sure about next pgraph...  it's not clear to me -- is it synchronization between the tpc and pd readout electronics? is the info useful?}
-
 The timing synchronization is based on the \dword{wr} standard. Specifically developed timing \dword{mch} connected to a \dword{wr} network ensures the distribution of clock, absolute timing, and trigger information on the backplane of the \dword{utca} crates. The \dword{wrmch} are connected via \SI{1}{Gbit/s} optical fibers to a system of \dword{wr} switches that interconnect the \dword{wr} network. This ensures that the digitization performed by the various \dword{amc} cards is completely aligned; it also refers to the absolute UTC time. 
-
-%The \dword{wrgm} switch is connected to a GPS disciplined oscillator unit providing absolute time and the clock frequency reference to the system. The timing system includes \num{16} \dword{wr} switches and \num{240} (charge readout) + \num{5} (light readout) \dword{mch} units.    
-
 
 
 
@@ -194,8 +188,6 @@ The \dword{dp} readout architecture can be organized into \num{20} regions of in
 Triggers are searched on the level-1 event builder machines, interconnecting multiple \dword{utca} crates, on a sliding windows of \SI{10}{s} contained in the event builder RAM.
 Figure~\ref{fig:dp-execsum-daq-interface-scheme} illustrates the \dword{dp} readout architecture (bottom) and its interface to the \dword{daq} system.
   
-  \fixme{I do not find similar language in the DP DAQ chapter. Just sayin'.}
-
 \begin{dunefigure}[Interface of DP TPC electronics to DAQ]{fig:dp-execsum-daq-interface-scheme}
 {Schematic illustration of the interface of \dword{dp} \dword{tpc} electronics to \dword{daq}.}
 \includegraphics[width=0.95\textwidth]{dp-tpcelec-daq-interface-scheme}
