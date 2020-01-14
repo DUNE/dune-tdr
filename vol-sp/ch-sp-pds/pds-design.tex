@@ -185,9 +185,11 @@ To this end, we have developed a solution based on lower-sampling-rate commercia
 Both \dword{ssp} and the new design are used in the \dword{pd} validation process summarized in Section~\ref{sec:fdsp-pd-validation} to allow direct comparison.
 
 Development of the readout electronics to date has been primarily by US groups. 
-However, since fabrication of the \dword{dune} readout electronics will be conducted by a collaboration of Latin American institutions (including groups in Peru, Colombia, Paraguay, and Brazil), further development is being performed by these groups, with support from the US groups.  Engineers from several of the groups will meet at \dword{fnal} in the summer of 2019 to continue the development of the system. The \dword{iceberg} facility at \dword{fnal} will provide a realistic system test of the prototypes.  Pre-production \dword{mu2e}-based electronics readout will also be tested in the \dword{pdsp2} run at \dword{cern} in 2021-2022.
+However, since fabrication of the \dword{dune} readout electronics will be conducted by a collaboration of Latin American institutions (including groups in Peru, Colombia, Paraguay, and Brazil), further development is being performed by these groups, with support from the US groups.  
+The engineers met and worked together at \dword{fnal} in summer 2019, and that collaboration is continuing.  We expect the first \dword{daphne} prototypes to be complete and tested in \dword{iceberg} in April/May 2020.  
+%Engineers from several of the groups will meet at \dword{fnal} in the summer of 2019 to continue the development of the system. The \dword{iceberg} facility at \dword{fnal} will provide a realistic system test of the prototypes.  
+Pre-production \dword{mu2e}-based electronics readout will also be tested in the \dword{pdsp2} run at \dword{cern} in 2021-2022.
 
-\fixme{met in summer 2019? check all tenses in prev pgraph} %%% to here Anne
 
 \subsubsection{Front-end Board and Controller}
 
@@ -196,7 +198,7 @@ at \dword{fnal}. As discussed in Section~\ref{sec:pds-valid-ganging}, preliminar
 the board is designed to utilize commercial, off-the-shelf parts only, and is therefore quite inexpensive compared to other designs. In particular, the digitization implements the low-noise, high-gain, and high-dynamic-range commercial \dwords{adc} used in ultrasonic transducers. 
 
 The \dword{feb} is the centerpiece of the baseline readout electronics system.  
-The current 64~channel\footnote{This text assumes 64 channels/\dword{feb} when presenting the \dword{feb} and controller. However, we envision 40~channels/\dword{feb} in the final design, corresponding to a single \dword{apa} as described in Section~\ref{subsec:pds-fe-next}.} \dword{feb} relies on commercial ultrasound chips\footnote{Texas Instruments\texttrademark{} 12~bit, 80~MS/s; AFE5807.},
+The current 64~channel\footnote{This text assumes 64 channels/\dword{feb} when presenting the \dword{feb} and controller. However, we envision 40~channels/\dword{feb} in the final design, corresponding to a single \dword{apa} as described in Section~\ref{subsec:pds-fe-next}.} \dword{feb} relies on commercial ultrasound chips\footnote{Texas Instruments\texttrademark{} 12~bit, 80~megasamples/s (MS/s); AFE5807.},
 with programmable anti-alias filters and gain stages, to read out the \dword{mppc} signals from the active ganging boards inside the \dword{pd} modules. The board currently takes HDMI inputs, with four channels per input.  Each of the eight ultrasound chips on an \dword{feb} handles eight channels (\SI{120}{mW} per channel) of data using a low-noise preamplifier, a programmable gain amplifier, and a programmable low-pass filter. The information is buffered with a total of \SI{1}{GB} DDR SDRAM, divided in four places, and a set of Spartan~6\texttrademark~\dwords{fpga} are used for parallelizing the serial \dword{adc} data, zero suppression, and timing. Each of the four \dwords{fpga} on a board, corresponding to 16 channels, handles two \dword{adc} chips with an available \SI{256}{MB} DDR SDRAM. 
 
 After digitization, the data from each \dword{feb}, in the form of pulses (time-stamp and pulse height), is sent via Ethernet to a master controller that aggregates the signals from 24 \dword{feb}s, or $64\times24=1536$ channels. The 24 \dword{feb}s corresponding to a single controller will come in sets of 12, with each set of 12 \dword{feb}s referenced to a single chassis as shown in %. A picture and schematic of the controller is seen in 
@@ -205,8 +207,7 @@ Figure~\ref{fig:controller}. A trigger decision (e.g., accelerator timing signal
 \subsubsection{Bandwidth, readout rates, and zero suppression}
 
 \dword{daq} system and data storage limitations impose constraints on the  data flow from the \dword{fe} electronics system. 
-For example, if it were necessary to read out a \SI{5.5}{\micro\second} waveform in order to include more of the longer time constant scintillation light component, the \SI{80}{MS/s}, 12-bit \dword{adc} device would produce a \SI{5.3}{kbit} waveform. For an envisioned dark count (DC) rate of 250~Hz/channel, this corresponds to a data transfer rate of \SI{53}{Mb/s}/\dword{apa} (1~\dword{apa}=40 channels) or \SI{6.6}{MB/s} \dword{feb}-to-controller DC rate. This rate approaches the crucial bottleneck in the electronics readout system with a maximum rate of \SI{10}{MB/s} (per \dword{feb}). However, zero-suppression techniques and multi-channel coincidence/threshold requirements at the \dword{feb} firmware level can be used to significantly mitigate this issue, noting that each on-\dword{feb} \dword{fpga} handles 16 channels. 
-\fixme{what's MS in MS/s? Should it be MB? And should Mb be MB? (more MS and Mb below)}
+For example, if it were necessary to read out a \SI{5.5}{\micro\second} waveform in order to include more of the longer time constant scintillation light component, the \SI{80}{megasamples/s} (MS/s), 12-bit \dword{adc} device would produce a \SI{5.3}{kbit} waveform. For an envisioned dark count (DC) rate of 250~Hz/channel, this corresponds to a data transfer rate of \SI{53}{MB/s}/\dword{apa} (1~\dword{apa}=40 channels) or \SI{6.6}{MB/s} \dword{feb}-to-controller DC rate. This rate approaches the crucial bottleneck in the electronics readout system with a maximum rate of \SI{10}{MB/s} (per \dword{feb}). However, zero-suppression techniques and multi-channel coincidence/threshold requirements at the \dword{feb} firmware level can be used to significantly mitigate this issue, noting that each on-\dword{feb} \dword{fpga} handles 16 channels. 
 
 The design is flexible enough to accommodate modest changes in system requirements, such as the suppression factor determined by parameters like the readout window length and limits on the overall trigger rate. 
 Firmware and zero-suppression technique development is in progress and can easily adapt to the physics and calibration requirements of the \dword{pd}.
@@ -214,7 +215,7 @@ In addition to its bandwidth and DC rate readout capabilities, the system can al
 For example, the controllers' 24-board write speed of \SI{150}{MB/s} could handle even the unlikely all-detector event featuring 6000~channels firing at once (corresponding to \SI{4}{MB} event size). 
 
 The baseline electronics readout system performance is consistent with the \dword{daq} interface specification of \SI{8}{Gb/s} per connection, given that
-each \dword{feb} signal corresponds to a maximum of \SI{10}{Mb/s} (\SI{240}{Mb/s} total).  
+each \dword{feb} signal corresponds to a maximum of \SI{10}{MB/s} (\SI{240}{MB/s} total).  
 
 \subsubsection{Power, grounding, and rack schemes} 
 
