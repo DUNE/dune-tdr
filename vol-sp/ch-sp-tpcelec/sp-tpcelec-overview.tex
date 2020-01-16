@@ -1,14 +1,14 @@
 \section{System Overview}
 \label{sec:fdsp-tpcelec-overview}
 
-The TPC electronics encompass the hardware systems necessary to 
+The \dword{tpc} electronics encompass the hardware systems necessary to 
 amplify, digitize, and transmit the \dword{tpc} ionization charge 
-signals out of the \dword{dune} \dword{sp} \dword{detmodule}. This 
-includes the cryogenic front-end electronics (amplifiers, digitizers, 
+signals out of a \dword{dune} \dword{sp} \dword{lartpc}. This 
+includes the cryogenic \dword{fe} electronics (amplifiers, digitizers, 
 digital controllers), power and data cabling and their cryostat 
 feedthroughs, external (non-cryogenic) digital control electronics and 
 power supplies, in addition to the system providing the bias voltage
-to the \dwords{apa}.  The TPC electronics as presented here does not 
+to the \dwords{apa}.  The \dword{tpc} electronics as presented here does not 
 include the electronics associated with the detection 
 and recording of \dword{lar} scintillation photons, nor the \dword{daq} 
 computing systems needed to capture and record these data.
@@ -18,13 +18,13 @@ and previous experiments or prototypes using \dword{lar} technology is
 that for the first time all the signal processing for the readout of the
 wires of the \dword{apa}s takes place inside the \dword{lar}, in boards that 
 are directly mounted on the \dword{apa}. This approach to the \dword{tpc}
-readout has been tested for the first time in the \dword{dune} \dword{35t},
-and also extensively tested in the \dword{pdsp} prototype. It has also 
-been adopted by the \dword{sbnd} experiment. Sometimes, the 
-\dword{tpc} readout components immersed in the \dword{lar} are referred 
+readout was tested for the first time in the \dword{dune} \dword{35t},
+and extensively tested in the \dword{pdsp} prototype. It has also 
+been adopted by the \dword{sbnd} experiment. %Sometimes, the 
+The \dword{tpc} \dword{fe} readout components immersed in the \dword{lar} are also referred 
 to as the \dword{ce}. 
 
-The electronics are mounted inside the \dword{lar} to exploit the fact that 
+The \dword{fe}  electronics are mounted inside the \dword{lar} to exploit the fact that 
 charge carrier mobility in silicon is higher, and thermal fluctuations are lower,  
 at \dword{lar} temperature than at room temperature. For \dword{cmos} 
 electronics, this results in substantially higher gain and lower noise 
@@ -40,6 +40,7 @@ many components on the warm side of the cryostat as well, the \dword{dune}
 consortium designated to develop this system is formally called 
 the \dword{dune} \dword{sp} \dword{tpc} electronics consortium.
 
+\fixme{not sure the next pgraph is needed} 
 This overview section starts with a review of the considerations that
 have led to the proposed design for the \dword{dune} \dword{sp} detector, 
 then discusses how the detector requirements follow from the physics goals 
@@ -69,8 +70,8 @@ of the resources required.
 In the \dword{dune} \dword{spmod} a \dword{mip} deposits on average between
 \SI{20}{k}{e$^-$} and \SI{30}{k}{e$^-$} on each collection wire, assuming a drift \efield
 of \spmaxfield and an electron lifetime of \SI{6}{ms}, as discussed in
-Chapter~\ref{ch:fdsp-execsum}, and assuming full transparency during the 
-electron transport through the grid plane and the two planes of induction
+Chapter~\ref{ch:fdsp-execsum}, \fixme{I don't find 6 ms in ch 1} and assuming full transparency during the 
+electron transport through the grid plane of the \dword{apa} and its two planes of induction
 wires, as discussed in Chapter~\ref{ch:fdsp-apa}. The larger of the two numbers 
 is for \dwords{mip} close to the anode plane, and the smaller
 takes into account the electron capture by electronegative impurities during the electron
@@ -88,21 +89,24 @@ The signal duration is of the order of microseconds, and tends to be narrower
 for the collection plane due to the enhancement of the weighting field for
 the collection wires. Due to the lack of amplification of electrons inside 
 \dword{lar}, low noise is essential for the \dword{ce} to reliably extract the 
-ionization electron signal from both the collection and induction wire planes 
-in a \dword{sp} \dword{lartpc}. 
+ionization electron signal from both the collection and induction wire planes. 
+%in a \dword{sp} \dword{lartpc}. 
 
-The reduction in noise level obtained with the \dword{fe} electronics at 
-\dword{lar} temperature greatly extends the reach of the \dword{dune} 
+The reduction in noise level obtained with the \dword{ce} 
+%\dword{fe} electronics at \dword{lar} temperature 
+greatly extends the reach of the \dword{dune} 
 physics program. It allows measurement of smaller charge deposits, which 
-mitigates against the risk of inability to reach the desired drift field 
+mitigates  the risks of inability to reach the desired drift field 
 or a lower electron lifetime than desired due to electronegative impurities.
 For example, given an electron lifetime of \SI{3}{ms} and a drift \efield
 of \SI{0.25}{kV/cm}, the charge deposited in the collection wires from a 
 \dword{mip} close to the cathode plane is reduced to \SI{10}{k}{e$^-$}.
-The exact requirement of the minimal \dword{s/n} required for pattern
+The exact %requirement of the 
+minimal \dword{s/n} required for pattern
 recognition depends on the tracking algorithms and the offline signal 
-processing. For the design of the \dword{tpc} electronics we use the
-minimal requirement of a total \dword{enc} of less than 1000 e$^-$, consistent 
+processing. %For the design of the \dword{tpc} electronics we 
+We use the
+minimal requirement of a total \dword{enc} less than 1000 e$^-$, consistent 
 with a \dword{s/n} of at least 10 on the collection wires, even in the
 pessimistic case where the electron lifetime and the \efield just meet 
 the required design values discussed in Chapter~\ref{ch:sp-hv}. Considering
@@ -150,14 +154,14 @@ input to a charge-sensitive amplifier, followed by a pulse-shaping circuit and
 an \dword{adc}. To minimize the number of cables and cryostat penetrations, 
 the \dwords{adc} as well as the amplifier/shapers are located in the \dword{lar}, 
 and digitized data from many wires merge onto a much smaller set of high-speed 
-serial links. The \dword{tpc} signal processing is implemented in \dfirsts{asic}
+serial links. The \dword{tpc} signal processing is implemented in \dwords{asic} 
 using \dword{cmos} technology. The \dword{tpc} is continuously read out, resulting 
 in a digitized \dword{adc} sample from each \dword{apa} channel (wire). The 
 \dwords{asic} used for the readout of the \num{2560} wires of each \dword{apa} 
 are mounted on \dfirsts{femb}, as shown in Figure~\ref{fig:ce-scheme}. These are
 connected to \dwords{wib} located outside of the cryostat via the \dword{ce} signal 
 cable flange located at the \dword{ce} \fdth at the top of the cryostat.
-The \dwords{wib} are installed, together with \dword{ptc} that distribute
+The \dwords{wib} are installed, together with \dfirsts{ptc} that distribute
 the power and the clock and control signals, in a \dword{wiec} that is
 mounted on the signal flange. From the \dwords{wib} the data is sent to 
 the \dword{daq} back-end on an optical fiber network, as discussed in 
@@ -172,7 +176,7 @@ SP-FD in Table~\ref{tab:specs:SP-ELEC}, are derived from \dword{dune}'s
 overall physics goals. The rest, labeled as SP-ELEC, are engineering specifications 
 derived from the design choices for the \dword{ce}.
 
-\pagebreak
+%\pagebreak  test if this is really needed
 \input{generated/req-longtable-SP-ELEC}
 
 \begin{itemize}
@@ -269,7 +273,7 @@ required processing power in the \dword{fpga} inside the
 \dword{wib}.
 
 \item SP-ELEC-7: Each \dword{wib} must transmit data to the \dword{daq}
-back end on optical links at a speed of $\sim\,\SI{10}{Gbps}$. This speed 
+back end on optical links at a speed of $\sim\!\SI{10}{Gbps}$. This speed 
 is a compromise between the cost of optical transmitters and
 receivers and the complexity of the readout fiber plant.
 
@@ -277,7 +281,7 @@ receivers and the complexity of the readout fiber plant.
 and the control and readout for the \dwords{femb} mounted on
 the bottom \dword{apa}, plus the bias voltage cables for
 the same \dword{apa}, must fit inside two conduits with a
-diameter of \SI{6.35}{cm} (2.5") that are inserted in the frame of
+diameter of \SI{6.35}{cm} (2.5 inch) that are inserted in the frame of
 the \dword{apa}, as discussed in Section~\ref{sec:fdsp-tpcelec-interfaces-apa}. 
 \end{itemize}
 
@@ -288,8 +292,8 @@ the \dword{apa}, as discussed in Section~\ref{sec:fdsp-tpcelec-interfaces-apa}.
 The reference design of the \dword{tpc} electronics detector components is
 based on the specifications presented in Section~\ref{sec:fdsp-tpcelec-overview-requirements}. 
 Each individual \dword{apa} has \num{2560} channels read out by \num{20} 
-\dfirsts{femb}, with each \dshort{femb} enabling digitized wire readout 
-from \num{128} channels. One cable bundle connects each \dshort{femb} to
+\dfirsts{femb}, with each \dword{femb} enabling digitized wire readout 
+from \num{128} channels. One cable bundle connects each \dword{femb} to
 the outside of the cryostat via a \dword{ce} signal cable flange located 
 at the \dword{ce} \fdth at the top of the cryostat, where a single flange 
 services each \dword{apa}, as shown in Figure~\ref{fig:connections}. 
@@ -302,19 +306,19 @@ digital-control signal distribution. Eight separate cables carry the
 wire bias boards, in addition to the bias voltages for the field cage 
 termination electrodes and for the electron diverters. An additional 
 flange on the top of each \fdth services the \dword{pds} cables associated 
-with the \dword{apa} pair. Low voltage power supplies and bias voltage
+with the \dword{apa} pair. Low-voltage power supplies and bias-voltage
 power supplies are located on the top of the cryostat. 
 
 \begin{dunefigure}
 [Connections between the signal flanges and APA]
 {fig:connections}
 {Connections between the signal flanges and \dword{apa}. The lower 
-\dword{apa} shares the photon detector flange with the 
+\dword{apa} shares the \dword{pd} flange with the 
 upper \dword{apa} but has a separate TPC readout flange.}
 \includegraphics[width=0.7\textwidth]{sp-tpcelec-DUNE-FD-APA-readout-scheme-v1.pdf}
 \end{dunefigure}
 
-The reference design for the \dword{spmod} \dword{tpc} electronics (the \dword{ce}) calls for three 
+The reference design for the \dword{ce} calls for three 
 types of custom \dwords{asic} inside  the \dword{lar}:
 \begin{itemize}
 \item{a \num{16}-channel \dword{fe} \dword{asic} for amplification 
@@ -340,7 +344,7 @@ the corresponding cryostat penetrations and spool pieces;}
 containing the \dwords{wib} and a \dword{ptc} for further processing
 and distribution of the signals entering and exiting the cryostat;
 low voltage power and clock and control signals are transmitted
-from the \dword{ptc} to the \dwords{wib} on 
+from the \dwords{ptc} to the \dwords{wib} on 
 the \dword{ptb}.}
 \item{cables for \dword{lv} power and wire bias voltages between 
 the signal flange and external power supplies (warm cables); and}
@@ -358,7 +362,7 @@ components is given in Table~\ref{tab:elecNums}.
 {TPC electronics components and quantities for a single \dword{apa} of the DUNE \dword{spmod}.}
 \textbf{Element} &\textbf{Quantity} & \textbf{Channels per element}\\ \toprowrule
 Front-end mother board (\dword{femb}) & \num{20} per \dword{apa} & \num{128} \\ \colhline
-FE \dword{asic} chip & \num{8} per \dword{femb} & \num{16} \\ \colhline
+\dword{fe} \dword{asic} chip & \num{8} per \dword{femb} & \num{16} \\ \colhline
 \dword{adc} \dword{asic} chip & \num{8} per \dword{femb} & \num{16} \\ \colhline
 \dword{coldata} \dword{asic} chip & \num{2} per \dword{femb} & \num{64} \\ \colhline
 Cold cable bundle & \num{1} per \dword{femb} & \num{128} \\ \colhline
