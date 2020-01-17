@@ -35,7 +35,7 @@ this chapter are tailored to meet the specific needs of the
 \dword{sp}
 detector module technology.  Adaptations to detector technology are
 implemented in the upstream part of the \dword{daq}, leaving the remainder generic. The
-individual detector modules are serviced by the DAQ independently and the two modules are only loosely
+individual detector modules are serviced by the \dword{daq} independently and the two modules are only loosely
 coupled through a cross-module triggering mechanism.
 
 The chapter begins with an overview of the \dword{daq} design
@@ -257,7 +257,7 @@ requirement of \offsitepbpy sent to permanent storage are summarized in Table~\r
   \includegraphics[width=0.7\textwidth,clip,trim=6cm 6cm 10cm 2cm]{daq-event-type-rates-vs-energy.pdf}
 \end{dunefigure}
 
-\begin{dunetable} [Expected DAQ Yearly Produced TPC Data Volumes] {p{0.3\textwidth}p{0.1\textwidth}p{0.5\textwidth}} {tab:daq:rates}{Summary of expected data volumes produced yearly for initial single-module running.
+\begin{dunetable} [Expected DAQ yearly produced TPC data volumes] {p{0.3\textwidth}p{0.1\textwidth}p{0.5\textwidth}} {tab:daq:rates}{Summary of expected data volumes produced yearly for initial single-module running.
     The numbers assume \dword{tpc} only rates with no compression and are given for a single
     \SI{10}{\kilo\tonne} module, assuming the parameters listed in Table~\ref{tab:daq:parameters}. (A 2-4x lossless
     compression factor is expected.)
@@ -367,7 +367,7 @@ These parameters set the scale of data buffering, processing, and transferring r
 into each \dword{fd} module. 
 
 \begin{dunetable}
-[Key DAQ Parameters]
+[Key DAQ parameters]
 {ll}
 {tab:daq:parameters}
 {Summary of important parameters driving the \dword{daq} design. The \dword{pds}
@@ -411,7 +411,7 @@ briefly in the following subsections. Interface agreements with
 facilities and underground installation are described in Section~\ref{sec:daq:production}.
 
 \begin{dunetable}
-[DAQ System Interface Links]
+[DAQ system interfaces]
 {p{0.3\textwidth}p{0.3\textwidth}p{0.2\textwidth}}
 {tab:daq:interfaces}
 {Data Acquisition System Interface Links. }
@@ -1234,7 +1234,7 @@ This system will be designed to allow it to evolve as the detector and its data 
 \subsection{Timing and Synchronization}
 \label{sec:daq:design-timing}
 
-The \dfirst{daqtss} provides synchronous time services to the DAQ and the detector electronics.
+The \dfirst{daqtss} provides synchronous time services to the \dword{daq} and the detector electronics.
 All components of the \dword{fd} use clocks derived from a single
 \dfirst{gps} disciplined source, and all module components are
 synchronized to a common \SI{62.5}{MHz} clock.
@@ -1334,7 +1334,7 @@ Figure~\ref{fig:daq-protodune} depicts the \dword{protodune} \dword{daq} system.
 The \dword{daq} is split between the \dword{felix} and \dfirst{rce}
 \cite{bib:docdb1881} implementations. The two architectures share the
 same back end and timing and trigger systems.  
-Neither of these tested architectures explicitly represents the baseline design for the DUNE \dword{fd}. Instead, each roughly maps onto one of two data processing approaches: one in which the data is processed exclusively in custom-designed \dword{fpga} firmware and carrier board, and the other in which the data is processed primarily with custom software run in commodity servers. The baseline design presented here merges elements of the two approaches. Specifically, it uses \dword{felix} as the hardware platform for data receiving and handling, and a co-processor FELIX daughter card (analogous to the \dword{rce} platform used at \dword{protodune}) to provide additional, dedicated data processing resources.
+Neither of these tested architectures explicitly represents the baseline design for the DUNE \dword{fd}. Instead, each roughly maps onto one of two data processing approaches: one in which the data is processed exclusively in custom-designed \dword{fpga} firmware and carrier board, and the other in which the data is processed primarily with custom software run in commodity servers. The baseline design presented here merges elements of the two approaches. Specifically, it uses \dword{felix} as the hardware platform for data receiving and handling, and a co-processor \dword{felix} daughter card (analogous to the \dword{rce} platform used at \dword{protodune}) to provide additional, dedicated data processing resources.
 
 
 \begin{dunefigure}[ProtoDUNE DAQ system]{fig:daq-protodune}{The \dword{protodune} \dword{daq} system.}
@@ -1350,16 +1350,15 @@ main component of current and future \dword{daq} development plans.
 
 
 \subsubsection{ProtoDUNE Outcomes}
-\fixme{can we make it SP-specific?}
 
-The \dword{protodune} \dword{daq} supported a test-beam experiment, and the requirements of the DUNE \dword{daq} are substantially different in scale and performance.
-However, the successful operation of the \dword{protodune} \dword{daq} has provided several key demonstrations for final system, in particular the data flow architecture, run configuration and control, and back-end functionality.
+The \dword{pdsp} \dword{daq} supported a test-beam experiment, and the requirements of the DUNE \dword{daq} are substantially different in scale and performance.
+However, the successful operation of the \dword{pdsp} \dword{daq} has provided several key demonstrations for final system, in particular the data flow architecture, run configuration and control, and back-end functionality.
 
-Specifically, \dword{protodune} has demonstrated: 
+Specifically, \dword{pdsp} has demonstrated: 
 \begin{itemize}
 \item Upstream \dword{daq}: front-end readout hardware and data flow functionality servicing two out of the six \dwords{apa}.
-  The data from each APA was continuously streamed to a single FELIX board hosted in a dedicated computer which then transferred it to two other computers for buffering and readout.
-  The baseline upstream \dword{daq} for \dword{dune} FD will retain one APA per FELIX board but place two FELIX boards and the buffering and readout functionality all together in a single \dword{fec}. 
+  The data from each APA was continuously streamed to a single \dword{felix} board hosted in a dedicated computer which then transferred it to two other computers for buffering and readout.
+  The baseline upstream \dword{daq} for \dword{dune} FD will retain one APA per \dword{felix} board but place two \dword{felix} boards and the buffering and readout functionality all together in a single \dword{fec}. 
   In addition to data flow functionality, \dword{protodune} front-end readout also demonstrates the interface to the front-end TPC electronics, and scalability to DUNE. It also supports host server requirements and specifications. Finally, it serves as platform for further development involving co-processor implementation and data selection aspects.
 \item \dword{daqbes}, \dword{daqccm} and software infrastructure:
  Successful \dword{daqbes} implementation, including event builder
@@ -1467,7 +1466,7 @@ Tests using the development board will focus on functionality rather than data t
     In this test, the data has been pre-formatted to facilitate the use of SIMD hardware accelerated functions (AVX2). 
     Per thread CPU utilization (right) to process live data from a \dword{protodune} \dword{apa}.
     Processing includes data reformatting, trigger primitive generation, and output message formation.
-    Each thread, one per FELIX link, requires about 75\% CPU core utilization to keep up.
+    Each thread, one per \dword{felix} link, requires about 75\% CPU core utilization to keep up.
     Variation in utilization reflects the variations in levels of ionization and noise activity in the input data and is due to output message formation.
     The peak usage at the start arises from input buffering while the process is initializing. 
     Once operational state is achieved, this brief backlog is processed.}
@@ -1703,7 +1702,7 @@ may be found in \citedocdb{6988}, and the installation interface document for \d
 
 \begin{dunefigure}[Layout of the DUNE underground areas]{fig:cavern-layout}
   {Top view of the layout at the 4850 level at \dword{surf}. Shown are the three large excavations and the location of detectors in the north (upper) and south caverns. 
-  The \dword{cuc} in the middle houses the \dword{dune} data room where the DAQ will be installed and the underground utilities. }
+  The \dword{cuc} in the middle houses the \dword{dune} data room where the \dword{daq} will be installed and the underground utilities. }
 \includegraphics[width=.9\textwidth]{cavern-layout}
 \end{dunefigure}
 
@@ -1774,7 +1773,7 @@ R\&D, integration, and, in the future, construction, commissioning and installat
 \end{dunefigure}
 
 \begin{dunetable}
-[DAQ Consortium Board institutional members and countries]
+[DAQ consortium institutions]
 {p{0.65\textwidth}p{0.25\textwidth}}
 {tab:daq-ib}
 {DAQ Consortium Board institutional members and countries.}   
@@ -1819,7 +1818,7 @@ Stanford Linear Accelerator Lab (SLAC) & USA     \\ \colhline
 The high-level \dword{daq} milestones are listed in Table~\ref{tab:daq-sched}, interleaved with the top-level DUNE project milestones, and illustrated in Figure~\ref{fig:daq:schedule}. Since the \dword{daq} project is largely based on commercial off-the-shelf components, it can be seen in the overall timeline that many of the components are procured relatively late in the project schedule.
 
 \begin{dunetable}
-[DAQ Consortium Schedule]
+[DAQ consortium schedule]
 {p{0.65\textwidth}p{0.25\textwidth}}
 {tab:daq-sched}
 {\dword{daq} Consortium Schedule}   
@@ -1904,7 +1903,7 @@ $>20$\%, $5-20$\%, and $<5$\% cost increase, respectively; and high
 $>6$ months, $2-6$ months, and $<2$ months delay, respectively.
 
 \input{generated/risks-longtable-SP-FD-DAQ}
-%\fixme{anne to uncomment}
+
 
 The following risks and mitigation strategies have been identified:
 
