@@ -97,7 +97,6 @@ def tarball(task):
 
     globs = task.inputs[0].read() + ' ' + extra
     nodes = bld.path.ant_glob(globs)
-
     tfname = task.outputs[0].abspath()
     ext = os.path.splitext(tfname)[1][1:]
     with tarfile.open(tfname, 'w:'+ext, ) as tf:
@@ -112,6 +111,7 @@ from waflib.TaskGen import feature, after_method, before_method
 @feature('tex') 
 @after_method('apply_tex') 
 def create_another_task(self): 
+    #print ("create another task")
     tex_task = self.tasks[-1] 
     doc = tex_task.outputs[0]
     man = os.path.splitext(str(doc))[0] + '.manifest'
@@ -122,6 +122,7 @@ def create_another_task(self):
     at.tex_task = tex_task 
     # rebuild whenever the tex task is rebuilt 
     at.dep_nodes.extend(tex_task.outputs)
+    #print(tex_task.outputs) 
     # There is an, apparently harmless, warning about the .manifest
     # file being created more than once, and by the same task
     # generator.  This suppresses the error message.
@@ -135,6 +136,8 @@ class manifest(Task):
         idx = self.tex_task.uid() 
         nodes = self.generator.bld.node_deps[idx]
         with open(man_node.abspath(), 'w') as fp:
+            # cheat and add this by hand
+            fp.write("tdr-authors.pdf")
             for node in nodes:
                 fp.write(nice_path(node) + '\n')
     
@@ -320,6 +323,7 @@ def build(bld):
                                   chmaintex.change_ext('.pdf', '.tex'))
 
         if bld.options.arxiv:
+            #print (voltar)
             bld(source=[volman, voltex],
                 target=[voltar],
                 prefix = '%s-%s-%s/' % (APPNAME, volname, VERSION),
