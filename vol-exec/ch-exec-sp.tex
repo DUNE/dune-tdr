@@ -102,7 +102,6 @@ Outside the cryostat, signals are passed to \dwords{wib} that put the signals on
 
 To enable observation of low-energy particles, we plan to keep noise below $1000\,e^{-}$ per channel, which should be compared to the 20k -- 30k $e^{-}$ per channel collected from a \dword{mip} traveling parallel to the wire plane and perpendicular to the wire orientation. For large signals, we require a linear response up to 500k $e^{-}$, which ensures that fewer than 10\% of beam events experience saturation. This can be achieved using 12\, \dword{adc} bits. %In addition, t
 The \dword{ce} are designed with an \dword{fe} peaking time of \SI{1}{\micro\second}, which matches the time for the electrons to drift between wire planes on the \dword{apa}; this leads to a design sampling frequency of \SI{2}{\mega\hertz} to satisfy the Nyquist criterion.
-\fixme{seems like this needs a reference}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Photon Detection System}
@@ -155,12 +154,10 @@ Over time, the \dword{fd} calibration program will evolve as statistics from cos
 The \dword{daq} systems for the \dword{sp} and \dword{dp} technologies have been designed jointly and are identical except for the architecture of the detector readout electronics.  
 The output format of the generated data is common, and both are synchronized to the same global clock signals.  The \dword{daq} architecture is based on the \dword{felix} system designed at \dshort{cern} and used for the \dword{lhc} experiments. 
 
-The \dword{daq} is divided between an upstream section, located underground in the \dword{cuc}, and a downstream \dword{daqbes} to be located above ground at the \dword{surf}. All trigger decisions are made %underground
-upstream, and the data is buffered underground until the \dword{daqbes} indicates it is ready to receive data; this minimizes the rate of data flowing to the surface. An end-goal of the \dword{daq} is to achieve a data rate to tape of no more than \SI{30}{\peta\byte/\year}.
-\fixme{do we really want to ``minimize the data rate to the surface''? or just control it?}
+The \dword{daq} is divided between an upstream section, located underground in the \dword{cuc}, and a downstream \dword{daqbes} to be located above ground at the \dword{surf}. All trigger decisions are made 
+upstream, and the data is buffered underground until the \dword{daqbes} indicates it is ready to receive data; this controls the rate of data flowing to the surface. An end-goal of the \dword{daq} is to achieve a data rate to tape of no more than \SI{30}{\peta\byte/\year}.
 
-For the \dword{spmod}, the 150 \dword{apa}s are processed by 75 \dwords{daqrou}; each \dword{daqrou} contains one \dword{felix} board. The \dwords{pd} from the module will have a lower data rate because the \dword{pd} electronics, unlike the \dword{tpc} electronics, perform zero-suppression; therefore, the \dwords{pd} of a module will be processed by six to eight additional \dwords{daqrou}. The \dword{daq} can be partitioned: it will be possible to run multiple instances of the \dword{daq} simultaneously, so most of the detector can be taking physics data while other \dword{daq} instances are doing test runs for development or special runs such as calibration runs. A key philosophy is that all primary \dword{dune} physics goals can be achieved using only the \dword{tpc} as the trigger; information from the \dwords{pd} can then further enhance the trigger.
-\fixme{is that true?}
+For the \dword{spmod}, the 150 \dword{apa}s are processed by 75 \dwords{daqrou}; each \dword{daqrou} contains one \dword{felix} board. The \dwords{pd} from the module will have a lower data rate because the \dword{pd} electronics, unlike the \dword{tpc} electronics, perform zero-suppression; therefore, the \dwords{pd} of a module will be processed by six to eight additional \dwords{daqrou}. The \dword{daq} can be partitioned: it will be possible to run multiple instances of the \dword{daq} simultaneously, so most of the detector can be taking physics data while other \dword{daq} instances are doing test runs for development or special runs such as calibration runs. 
 
 Two basic triggers will be operating. Beam, cosmic, and nucleon decay events will be triggered using the localized high-energy trigger 
 that will open a readout window of \SI{5.4}{\ms}, enough to read out the full \dword{tpc} drift around an event. For \dwords{snb}, we will use an extended low-energy trigger. This will look for coincident regions of low-energy deposits, below \SI{10}{\mega\electronvolt}, across an entire module and in a \SI{10}{\second} period. An extended high-energy trigger will open a readout window of \SI{100}{\second} to capture a full \dword{snb}. 
