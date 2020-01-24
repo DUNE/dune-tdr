@@ -137,7 +137,7 @@ class manifest(Task):
         nodes = self.generator.bld.node_deps[idx]
         with open(man_node.abspath(), 'w') as fp:
             # cheat and add this by hand
-            fp.write("tdr-authors.pdf")
+            fp.write("tdr-authors.pdf\n")
             for node in nodes:
                 fp.write(nice_path(node) + '\n')
     
