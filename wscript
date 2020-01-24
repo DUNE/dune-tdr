@@ -50,6 +50,12 @@ top='.'
 # "top-level" reqs/spec names
 TOP_LEVEL_SPECS = ('SP-FD','DP-FD')
 
+import waflib.Tools.tex
+
+# Add extensions so matches get into the manifest for arxiv tarball.
+waflib.Tools.tex.exts_deps_tex.extend(['.jpg', '.jpeg', '.PDF', '.JPG', '.PNG'])
+
+
 def options(opt):
     opt.load('tex')
     opt.add_option('--debug', default=False, action='store_true',
@@ -132,6 +138,7 @@ from waflib.Task import Task
 class manifest(Task):
     def run(self):
         man_node = self.outputs[0]
+        print ("create manifest %s" % man_node.name)
         self.outputs.append(man_node)
         idx = self.tex_task.uid() 
         nodes = self.generator.bld.node_deps[idx]
