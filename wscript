@@ -55,6 +55,15 @@ import waflib.Tools.tex
 # Add extensions so matches get into the manifest for arxiv tarball.
 waflib.Tools.tex.exts_deps_tex.extend(['.jpg', '.jpeg', '.PDF', '.JPG', '.PNG'])
 
+# Return the cover PDF file name or None.
+#
+# This function bakes in whatever naming convention used.  
+def volume_cover(volname):
+    if volname in "vol-exec vol-physics vol-tc vol-sp vol-dp".split():
+        return "graphics/cover-%s.pdf" % volname
+    return None
+
+
 
 def options(opt):
     opt.load('tex')
@@ -93,6 +102,8 @@ def configure(cfg):
 def nice_path(node):
     return node.path_from(node.ctx.launch_node())
 
+
+
 # it's stuff like this, abyss:
 # https://www.phy.bnl.gov/~bviren/pub/topics/waf-latex-arxiv/
 # staring back at me.
@@ -100,7 +111,6 @@ import tarfile
 def tarball(task):
     bld = task.generator.bld
     prefix, extra = task.generator.prefix, task.generator.extra
-
     globs = task.inputs[0].read() + ' ' + extra
     nodes = bld.path.ant_glob(globs)
     tfname = task.outputs[0].abspath()
@@ -134,17 +144,22 @@ def create_another_task(self):
     # generator.  This suppresses the error message.
     at.no_errcheck_out = True
 
+
+
 from waflib.Task import Task
 class manifest(Task):
     def run(self):
         man_node = self.outputs[0]
         print ("create manifest %s" % man_node.name)
+        title = volume_cover(os.path.splitext(man_node.name)[0])
         self.outputs.append(man_node)
         idx = self.tex_task.uid() 
         nodes = self.generator.bld.node_deps[idx]
         with open(man_node.abspath(), 'w') as fp:
-            # cheat and add this by hand
+            # cheat and add some things by hand
             fp.write("tdr-authors.pdf\n")
+            if title:
+                fp.write(title + "\n")
             for node in nodes:
                 fp.write(nice_path(node) + '\n')
     
