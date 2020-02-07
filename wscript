@@ -130,7 +130,8 @@ def create_another_task(self):
     #print ("create another task")
     tex_task = self.tasks[-1] 
     doc = tex_task.outputs[0]
-    man = os.path.splitext(str(doc))[0] + '.manifest'
+    volname = os.path.splitext(str(doc))[0]
+    man = volname + '.manifest'
     man_node = self.bld.path.find_or_declare(man)
     at = self.create_task('manifest', tex_task.outputs, man_node) 
     #at.outputs.append(man_node)
@@ -158,6 +159,10 @@ class manifest(Task):
         with open(man_node.abspath(), 'w') as fp:
             # cheat and add some things by hand
             fp.write("tdr-authors.pdf\n")
+            for ext in 'bbl glo gls'.split():
+                want = man_node.name.replace('.manifest','.'+ext)
+                fp.write('build/%s\n'%want)
+
             if title:
                 fp.write(title + "\n")
             for node in nodes:
