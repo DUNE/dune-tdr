@@ -163,7 +163,7 @@
   \renewcommand{\headrulewidth}{0pt}
   \renewcommand{\footrulewidth}{0pt}
   \fancyhead[RO]{\titlepagecornerblock}
-  \fancyfoot[C]{\includegraphics[width=0.4\textwidth]{dunelogo_colorhoriz}}
+  \fancyfoot[C]{\includegraphics[width=0.4\textwidth]{graphics/dunelogo_colorhoriz.jpg}}
 }
 \fancypagestyle{plain}{
   \fancyhf{}
