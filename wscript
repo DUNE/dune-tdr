@@ -133,13 +133,14 @@ def create_another_task(self):
     volname = os.path.splitext(str(doc))[0]
     man = volname + '.manifest'
     man_node = self.bld.path.find_or_declare(man)
-    at = self.create_task('manifest', tex_task.outputs, man_node) 
+    fls_node = self.bld.path.find_or_declare(volname + '.fls')
+    at = self.create_task('manifest', [fls_node]+tex_task.outputs, man_node) 
     #at.outputs.append(man_node)
     # make tex task info available to manifest task
     at.tex_task = tex_task 
     # rebuild whenever the tex task is rebuilt 
     at.dep_nodes.extend(tex_task.outputs)
-    #print(tex_task.outputs) 
+    #print("CREATE MANIFEST",tex_task.outputs) 
     # There is an, apparently harmless, warning about the .manifest
     # file being created more than once, and by the same task
     # generator.  This suppresses the error message.
@@ -150,23 +151,50 @@ def create_another_task(self):
 from waflib.Task import Task
 class manifest(Task):
     def run(self):
+        fls_node = self.inputs[0]
         man_node = self.outputs[0]
-        print ("create manifest %s" % man_node.name)
+        top_dir = man_node.parent.parent.abspath()
+
+        print ("create manifest", man_node)
+
+        content = set()
+        for line in fls_node.read().split('\n'):
+            chunks = line.strip().split()
+            if len(chunks) != 2:
+                continue
+            if chunks[0] != "INPUT":
+                continue
+            if not chunks[1].startswith(top_dir):
+                continue
+            relpath = chunks[1][len(top_dir)+1:].strip()
+            if relpath:
+                content.add(relpath)
+
         title = volume_cover(os.path.splitext(man_node.name)[0])
-        self.outputs.append(man_node)
+        if title:
+            content.add(title.strip())
+
+        for ext in 'bbl glo gls'.split():
+            want = man_node.name.replace('.manifest','.'+ext).strip()
+            content.add('build/%s'%want)
+            
         idx = self.tex_task.uid() 
         nodes = self.generator.bld.node_deps[idx]
-        with open(man_node.abspath(), 'w') as fp:
-            # cheat and add some things by hand
-            fp.write("tdr-authors.pdf\n")
-            for ext in 'bbl glo gls'.split():
-                want = man_node.name.replace('.manifest','.'+ext)
-                fp.write('build/%s\n'%want)
+        for node in nodes:
+            content.add(nice_path(node).strip())
 
-            if title:
-                fp.write(title + "\n")
-            for node in nodes:
-                fp.write(nice_path(node) + '\n')
+        content.add("tdr-authors.pdf")
+
+        content = list(content)
+        content.sort()
+
+        # print("MANIFEST",nodes)
+        with open(man_node.abspath(), 'w') as fp:
+            for one in content:
+                one = one.strip()
+                if not one:
+                    continue
+                fp.write(one.strip() + '\n')
     
 
 def spreadsheet_updater(bld):
