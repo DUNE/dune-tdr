@@ -153,9 +153,10 @@ class manifest(Task):
     def run(self):
         fls_node = self.inputs[0]
         man_node = self.outputs[0]
-        top_dir = man_node.parent.parent.abspath()
+        top_node = man_node.parent.parent
+        top_dir = top_node.abspath()
 
-        print ("create manifest", man_node)
+        #print ("create manifest", man_node)
 
         content = set()
         for line in fls_node.read().split('\n'):
@@ -194,6 +195,10 @@ class manifest(Task):
                 one = one.strip()
                 if not one:
                     continue
+                
+                n = top_node.make_node(one)
+                if not n.exists():
+                    print("WARNING: no such file for manifest: %s" % n.abspath())
                 fp.write(one.strip() + '\n')
     
 
@@ -329,8 +334,8 @@ def build(bld):
         "vol-physics.tex",
         "vol-sp.tex",
         "vol-dp.tex",
-        "vol-nd.tex",
-        "vol-swc.tex",
+#        "vol-nd.tex",
+#        "vol-swc.tex",
         "vol-tc.tex",
 #        "vol-spec.tex"
     ]
